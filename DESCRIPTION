@@ -1,0 +1,28 @@
+Package: rvec
+Type: Package
+Title: Vector Representing a Random Variable
+Version: 0.0.0.9000
+Authors@R: 
+    person("John", "Bryant", ,
+           "john@bayesiandemography.com", role = c("aut", "cre"))
+Description: An object of class "rvec" holds represents a random
+    vector, but tries to behave as much as possible like a regular
+    vector, including working well in data frames.
+    Among other things, an "rvec" object can be used
+    to hold results from a Bayesian model.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Depends:
+    R (>= 3.5.0)
+Imports:
+    cli,
+    rlang,
+    tibble,
+    tidyselect
+Suggests:
+    dplyr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
