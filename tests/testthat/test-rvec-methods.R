@@ -25,7 +25,7 @@ test_that("'sum' works with non-empty logical", {
 test_that("'sum' works with empty vector", {
     x <- rvec_int()
     ans_obtained <- sum(x)
-    ans_expected <- rvec_int(list(c(5L, 7L, 9L)))
+    ans_expected <- rvec_int(matrix(0L, nr = 1L))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -38,7 +38,8 @@ test_that("'sum' works with empty vector", {
 
 test_that("'vec_cast' works with logical to integer", {
     x <- rvec_lgl(matrix(c(TRUE, FALSE, TRUE, NA), nr = 1))
-    ans_obtained <- vec_cast(x = x, to = rvec_int())
+    to <- rvec_int(matrix(1L, nr = 0L, ncol = 4))
+    ans_obtained <- vec_cast(x = x, to = to)
     ans_expected <- rvec_int(matrix(c(1L, 0L, 1L, NA), nr = 1))
     expect_identical(ans_obtained, ans_expected)
 })

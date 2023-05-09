@@ -148,7 +148,7 @@ to_rvecs.data.frame <- function(data,
     values <- rlang::enquo(values)
     colnum_draw <- tidyselect::eval_select(draw, data = data)
     colnums_values <- tidyselect::eval_select(values, data = data)
-    colnums_all <- get_colnames_all(data)
+    colnums_all <- get_colnums_all(data)
     colnums_id <- colnums_all[!(colnums_all %in% c(colnum_draw, colnums_values))]
     to_rvecs_inner(data = data,
                    colnum_data = colnum_data,

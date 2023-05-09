@@ -1,4 +1,31 @@
 
+arith_data <- function(op, x, y) {
+    data_x <- field(x, "data")
+    data_y <- field(y, "data")
+    vec_arith_base(op, x = data_x, y = data_y)
+}
+
+
+abbr_elements <- function(x) {
+    if (is.double(x))
+        signif(x, 3L)
+    else if (is.logical(x))
+        ifelse(x, "T", "F")
+    else
+        x
+}
+
+
+
+## NO_TESTS
+coerce_matrix <- function(x, ptype) {
+    x <- unname(x)
+    ncol <- ncol(x)
+    matrix_ptype <- matrix(ptype, nrow = 0L, ncol = ncol)
+    vec_cast(x, to = matrix_ptype)
+}
+
+
 
 ## HAS_TESTS
 #' Construct a named vector of column indices
@@ -136,4 +163,31 @@ prepare_x_for_new_rvec <- function(x) {
     x
 }
 
-    
+
+get_new_rvec_fun <- function(x) {
+    type <- typeof(x)
+    switch(type,
+           character = new_rvec_chr,
+           double = new_rvec_dbl,
+           integer = new_rvec_int,
+           logical = new_rvec_lgl,
+           cli::cli_abort("Internal error: Can't handle {.arg x} with type {.type {type}}"))
+}
+
+rvec_inner <- function(x, ptype) {
+    if (is.null(x))
+        data <- matrix(ptype, nrow = 0L, ncol = 1L)
+    else if (is.matrix(x)) {
+        check_x_has_at_least_one_col(x)
+        data <- coerce_matrix(x, ptype)
+    }
+    else if (is.vector(x)) {
+        check_x_at_least_length_one(x)
+        data <- vec_cast(x, to = ptype)
+    }
+    else
+        cli::cli_abort(c("{.arg x} must be a matrix, a vector, or {.val NULL}",
+                         "i" = "{.arg x} has class {.cls {class(x)}}"))
+    new_rvec_fun <- get_new_rvec_fun(ptype)
+    new_rvec_fun(data)
+}

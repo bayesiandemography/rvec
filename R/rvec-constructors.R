@@ -37,124 +37,70 @@
 #' rvec(dicerolls)
 #' @export
 rvec <- function(x) {
-    data <- matrix_to_list_of(x, .ptype = NULL)
-    new_rvec(data)
+    if (is.matrix(x)) {
+        check_x_has_at_least_one_col(x)
+    }
+    else if (is.vector(x)) {
+        check_x_at_least_length_one(x)
+    }
+    else
+        cli::cli_abort(c("{.arg x} must be a matrix or a vector",
+                         "i" = "{.arg x} has class {.cls {class(x)}}"))
+    new_rvec(x)
 }
 
 
 #' @export
 #' @rdname rvec
-rvec_chr <- function(x = matrix(character())) {
-    data <- matrix_to_list_of(x, .ptype = character())
-    new_rvec_chr(data)
+rvec_chr <- function(x = NULL) {
+    rvec_inner(x = x, ptype = character())
 }
 
 #' @export
 #' @rdname rvec
-rvec_dbl <- function(x = matrix(double())) {
-    data <- matrix_to_list_of(x, .ptype = double())
-    new_rvec_dbl(data)
+rvec_dbl <- function(x = NULL) {
+    rvec_inner(x = x, ptype = double())
 }
 
 #' @export
 #' @rdname rvec
-rvec_int <- function(x = matrix(integer())) {
-    data <- matrix_to_list_of(x, .ptype = integer())
-    new_rvec_int(data)
+rvec_int <- function(x = NULL) {
+    rvec_inner(x = x, ptype = integer())
 }
 
 #' @export
 #' @rdname rvec
-rvec_lgl <- function(x = matrix(logical())) {
-    data <- matrix_to_list_of(x, .ptype = logical())
-    new_rvec_lgl(data)
+rvec_lgl <- function(x = NULL) {
+    rvec_inner(x = x, ptype = logical())
 }
+
+
+
 
 
 ## Internal constructors ------------------------------------------------------
 
-## Low-level constructors
-
-#' Create new 'rvec' object with class
-#' dependent on inputs
-#'
-#' @param data Object of class "list_of".
-#'
-#' @returns Object belonging to a subclass of `"rvec"`
-#'
-#' @noRd
 new_rvec <- function(data) {
-    ptype <- attr(data, "ptype")
-    type <- typeof(ptype)
-    fun <- switch(type,
-                  character = new_rvec_chr,
-                  double = new_rvec_dbl,
-                  integer = new_rvec_int,
-                  logical = new_rvec_lgl,
-                  cli::cli_abort("Internal error: Can't handle type {.class type}"))
+    fun <- get_new_rvec_fun(data)
     fun(data)
 }
            
-
-#' Create new "rvec_chr" object
-#'
-#' Create a new object of class `"rvec_chr"`.
-#'
-#' @param data Object of class "list_of",
-#' with a character prototype.
-#'
-#' @return An object of class `"rvec_chr"`.
-#'
-#' @noRd
-new_rvec_chr <- function(data = list_of(.ptype = character())) {
+new_rvec_chr <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_chr", "rvec"))
 }
 
-
-#' Create new "rvec_dbl" object
-#'
-#' Create a new object of class `"rvec_dbl"`.
-#'
-#' @param data Object of class "list_of",
-#' with a double prototype.
-#' 
-#' @return An object of class `"rvec_dbl"`.
-#'
-#' @noRd
-new_rvec_dbl <- function(data = list_of(.ptype = double())) {
+new_rvec_dbl <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_dbl", "rvec"))
 }
 
-
-#' Create new "rvec_int" object
-#'
-#' Create a new object of class `"rvec_int"`.
-#'
-#' @param data Object of class "list_of",
-#' with an integer prototype.
-#'
-#' @return An object of class `"rvec_int"`.
-#'
-#' @noRd
-new_rvec_int <- function(data = list_of(.ptype = integer())) {
+new_rvec_int <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_int", "rvec"))
 }
 
-
-#' Create new "rvec_lgl" object
-#'
-#' Create a new object of class `"rvec_lgl"`.
-#'
-#' @param data Object of class "list_of",
-#' with a logical prototype.
-#'
-#' @return An object of class `"rvec_lgl"`.
-#'
-#' @noRd
-new_rvec_lgl <- function(data = list_of(.ptype = logical())) {
+new_rvec_lgl <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_lgl", "rvec"))
 }
