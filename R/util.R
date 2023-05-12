@@ -1,30 +1,24 @@
 
-arith_data <- function(op, x, y) {
-    data_x <- field(x, "data")
-    data_y <- field(y, "data")
-    vec_arith_base(op, x = data_x, y = data_y)
-}
-
-
-abbr_elements <- function(x) {
-    if (is.double(x))
-        signif(x, 3L)
+## HAS_TESTS
+#' Format elements of atomic vectors
+#' underlying 'rvec' objects, for use
+#' in 'format.rvec'
+#'
+#' @param x An matrix
+#'
+#' @returns A character matrix,
+#' with the same dimensions as x
+#'
+#' @noRd
+format_elements_rvec <- function(x) {
+    if (is.numeric(x))
+        ans <- formatC(x, format = "fg")
     else if (is.logical(x))
-        ifelse(x, "T", "F")
+        ans <- ifelse(x, "T", "F")
     else
-        x
+        ans <- as.character(x)
+    array(ans, dim = dim(x))
 }
-
-
-
-## NO_TESTS
-coerce_matrix <- function(x, ptype) {
-    x <- unname(x)
-    ncol <- ncol(x)
-    matrix_ptype <- matrix(ptype, nrow = 0L, ncol = ncol)
-    vec_cast(x, to = matrix_ptype)
-}
-
 
 
 ## HAS_TESTS
@@ -118,52 +112,108 @@ get_rvec_funs <- function(type) {
 
 
 ## HAS_TESTS
-#' Turn a matrix into a list_of object
+#' Test whether an object is an rvec
 #'
-#' Given a matrix 'm', create a 'list_of'
-#' object, of size nrow(m),
-#' each element of which is
-#' a row of 'm'. The prototype can be
-#' specified, or derived from the data.
+#' Test whether `x` inherits from
+#' class `"rvec"`.
+#'
+#' @param x An object
+#'
+#' @returns `TRUE` or `FALSE`.
+#'
+#' @seealso
+#' - [rvec()] to create an rvec
+#' - [as_rvec()] to convert an object
+#' into an rvec
+#' - [as.matrix()], [as_list_col()],
+#' [as_rvar()][rvec::as_rvar()] to convert an
+#' rvec into something else
+#' 
+#' @examples
+#' x <- rvec_dbl()
+#' is_rvec(x)
+#' @export
+is_rvec <- function(x) {
+    inherits(x, "rvec")
+}
+
+
+## HAS_TESTS
+#' Given one or more interval widths, construct
+#' the 'probs' argument to use for calculating
+#' quantiles.
+#'
+#' @param width A numeric vector, where all
+#' entries between 0 and 1, inclusive.
+#' The elements of widths are unique and
+#' decreasing.
+#'
+#' @return A numeric vector with length
+#' 2 * length(width).
+#'
+#' @noRd
+make_probs <- function(width) {
+    half_alpha <- 0.5 * (1 - width)
+    c(half_alpha, rev(1 - half_alpha))
+}
+
+
+## HAS_TESTS
+#' Turn a matrix into a list of columns
+#'
+#' Given a matrix 'm', create a list,
+#' each element of which contains a
+#' a column from 'm'.
 #'
 #' @param m A matrix
-#' @param .ptype A prototype, or NULL.
 #'
 #' @return A list of vectors.
 #'
 #' @noRd
-matrix_to_list_of <- function(m, .ptype = NULL) {
-    if (is.null(.ptype))
-        .ptype <- vector(mode = typeof(m), length = 0L)
-    if (nrow(m) > 0L)
-        x <- apply(m,
-                   MARGIN = 1L,
-                   FUN = function(y) y,
-                   simplify = FALSE)
+matrix_to_list_of_cols <- function(m, .ptype = NULL) {
+    if (ncol(m) > 0L)
+        apply(m,
+              MARGIN = 2L,
+              FUN = function(y) y,
+              simplify = FALSE)
     else
-       x <- list()
-    as_list_of(x, .ptype = .ptype)
+        list()
 }
 
 
-n_obs <- function(x) vec_size(x)
-
-prepare_x_for_new_rvec <- function(x) {
-    if (is.list(x)) {
-        check_lengths_equal(x)
-    }
-    else if (is.matrix(x)) {
-        x <- matrix_to_list_of(x)
-    }
-    else {
-        cl <- class(x)
-        cli::cli_abort(c("{.var x} must be a list or a matrix.",
-                         "i" = "{.var x} has class {.class cl}."))
-    }
-    x
+## Has_TESTS
+#' Turn a matrix into a list of rows
+#'
+#' Given a matrix 'm', create a list,
+#' each element of which contains a
+#' a row from 'm'.
+#'
+#' @param m A matrix
+#'
+#' @return A list of vectors.
+#'
+#' @noRd
+matrix_to_list_of_rows <- function(m, .ptype = NULL) {
+    if (nrow(m) > 0L)
+        apply(m,
+              MARGIN = 1L,
+              FUN = function(y) y,
+              simplify = FALSE)
+    else
+        list()
 }
 
 
+## HAS_TESTS
+#' Choose the appropriate rvec constructor function,
+#' based on the type of 'x'
+#'
+#' @param An object with a type,
+#' typically a vector or matrix.
+#'
+#' @returns A function.
+#'
+#' @noRd
 get_new_rvec_fun <- function(x) {
     type <- typeof(x)
     switch(type,
@@ -171,23 +221,5 @@ get_new_rvec_fun <- function(x) {
            double = new_rvec_dbl,
            integer = new_rvec_int,
            logical = new_rvec_lgl,
-           cli::cli_abort("Internal error: Can't handle {.arg x} with type {.type {type}}"))
-}
-
-rvec_inner <- function(x, ptype) {
-    if (is.null(x))
-        data <- matrix(ptype, nrow = 0L, ncol = 1L)
-    else if (is.matrix(x)) {
-        check_x_has_at_least_one_col(x)
-        data <- coerce_matrix(x, ptype)
-    }
-    else if (is.vector(x)) {
-        check_x_at_least_length_one(x)
-        data <- vec_cast(x, to = ptype)
-    }
-    else
-        cli::cli_abort(c("{.arg x} must be a matrix, a vector, or {.val NULL}",
-                         "i" = "{.arg x} has class {.cls {class(x)}}"))
-    new_rvec_fun <- get_new_rvec_fun(ptype)
-    new_rvec_fun(data)
+           cli::cli_abort("Internal error: {.arg x} is {.obj_type_friendly {x}}"))
 }

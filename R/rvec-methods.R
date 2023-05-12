@@ -1,11 +1,12 @@
 
 ## as.matrix ------------------------------------------------------------------
 
+## HAS_TESTS
 #' @export
 as.matrix.rvec <- function(x, ...) {
     field(x, "data")
 }
-                  
+
 
 ## 'format' -------------------------------------------------------------------
 
@@ -16,18 +17,75 @@ format.rvec <- function(x, ...) {
     if (nc == 1L)
         return(m[, 1L])
     if (nc == 2L) {
-        m <- abbr_elements(m)
+        m <- format_elements_rvec(m)
         paste(m[, 1L], m[, 2L], sep = ",")
     }
     else if (nc == 3L) {
-        m <- abbr_elements(m)
+        m <- format_elements_rvec(m)
         paste(m[, 1L], m[, 2L], m[, 3L], sep = ",")
     }
     else {
         m <- m[, c(1L, nc), drop = FALSE]
-        m <- abbr_elements(m)
+        m <- format_elements_rvec(m)
         paste(m[, 1L], "..", m[, 2L], sep = ",")
     }
+}
+
+
+## 'median' -------------------------------------------------------------------
+
+## HAS_TESTS
+#' @export
+median.rvec_chr <- function(x, na.rm = FALSE, ...) {
+    m <- field(x, "data")
+    ans <- apply(m, 2L, median, na.rm = na.rm, ...)
+    ans <- matrix(ans, nrow = 1L)
+    rvec(ans)
+}
+
+## HAS_TESTS
+#' @export
+median.rvec_dbl <- function(x, na.rm = FALSE, ...) {
+    m <- field(x, "data")
+    if (nrow(m) > 0L)
+        ans <- matrixStats::colMedians(m, na.rm = na.rm, ...)
+    else
+        ans <- rep(NA_real_, times = ncol(m)) ## emulate behavior of base 'median'
+    ans <- matrix(ans, nrow = 1L)
+    rvec_dbl(ans)
+}
+
+## HAS_TESTS
+#' @export
+median.rvec_int <- function(x, na.rm = FALSE, ...) {
+    m <- field(x, "data")
+    if (nrow(m) > 0L) {
+        ans <- matrixStats::colMedians(m, na.rm = na.rm, ...)
+        ans_int <- as.integer(ans) ## emulate behavior of base 'median'
+        if (all(ans == ans_int, na.rm = TRUE))        
+            ans <- ans_int
+    }
+    else
+        ans <- rep(NA_integer_, times = ncol(m)) ## emulate behavior of base 'median'
+    ans <- matrix(ans, nrow = 1L)
+    rvec(ans)
+}
+
+## HAS_TESTS
+#' @export
+median.rvec_lgl <- function(x, na.rm = FALSE, ...) {
+    m <- field(x, "data")
+    if (nrow(m) > 0L) {
+        m <- 1 * m
+        ans <- matrixStats::colMedians(m, na.rm = na.rm, ...)
+        ans_lgl <- as.logical(ans) ## emulate behavior of base 'median'
+        if (all(ans == ans_lgl, na.rm = TRUE))        
+            ans <- ans_lgl
+    }
+    else
+        ans <- rep(NA, times = ncol(m)) ## emulate behavior of base 'median'
+    ans <- matrix(ans, nrow = 1L)
+    rvec(ans)
 }
 
 
@@ -449,7 +507,7 @@ vec_cast.rvec_dbl.double <- function(x, to, ...) {
 }
 
 #' @export
-vec_cast.integer.rvec_int <- function(x, to, ...) {
+vec_cast.rvec_int.integer <- function(x, to, ...) {
     check_length_n_draw_compatible(x = x,
                                    y = to,
                                    x_arg = "x",
@@ -458,7 +516,7 @@ vec_cast.integer.rvec_int <- function(x, to, ...) {
 }
 
 #' @export
-vec_cast.logical.rvec_lgl <- function(x, to, ...) {
+vec_cast.rvec_lgl.logical <- function(x, to, ...) {
     check_length_n_draw_compatible(x = x,
                                    y = to,
                                    x_arg = "x",
@@ -499,52 +557,69 @@ vec_cast.rvec_int.logical <- function(x, to, ...) {
 
 ## 'vec_math' -----------------------------------------------------------------
 
+## Note that vec_math methods not currently implemented for
+## 'median' (not clear why) or for 'sd' and 'var' (neither of which
+## are generic functions in base R).
 #' @export
 vec_math.rvec <- function(.fn, .x, ...) {
     m <- field(.x, "data")
-    if (.fn == "prod") {
-        ans <- matrixStats::colProds(m, method = "expSumLog")
-        ans <- matrix(ans, nrow = 1L)
-    }
-    else if (.fn %in% c("sum", "any", "all", "cummax", "cummin", "cumprod", "cumsum")) {
+    ## summary function in Summary group, has matrixStats fun:
+    if (.fn %in% c("prod", "sum", "any", "all")) {
         matrix_fun <- switch(.fn,
+                             prod = function(x, ...)
+                                 matrixStats::colProds(x, method = "expSumLog", ...),
                              sum = matrixStats::colSums2,
                              any = matrixStats::colAnys,
-                             all = matrixStats::colAlls,
+                             all = matrixStats::colAlls)
+        data <- matrix_fun(m, ...)
+        data <- matrix(data, nrow = 1L)
+    }
+    ## summary function not in Summary group but implemented by vec_math:
+    else if (.fn == "mean") {
+        data <- matrixStats::colMeans2(m, ...)
+        data <- matrix(data, nrow = 1L)
+    }        
+    ## in Math group and has matrixStats fun
+    else if (.fn %in% c("cummax", "cummin", "cumprod", "cumsum")) {
+        matrix_fun <- switch(.fn,
                              cummax = matrixStats::colCummaxs,
                              cummin = matrixStats::colCummins,
                              cumprod = matrixStats::colCumprods,
                              cumsum = matrixStats::colCumsums)
-        ans <- matrix_fun(m)
-        if (.fn %in% c("sum", "any", "all"))
-            ans <- matrix(ans, nrow = 1L)
+        data <- matrix_fun(m, ...)
     }
+    ## not in Math group but implemented by vec_math:
+    else if (.fn %in% c("is.nan", "is.finite", "is.infinite")) {
+        .fn <- match.fun(.fn)
+        data <- .fn(m, ...)
+    }
+    ## everything else in Math group:
     else {
         .fn <- match.fun(.fn)
-        ans <- .fn(m)
+        data <- .fn(m, ...)
     }
-    new_rvec(ans)
+    new_rvec(data)
 }
 
 ## give same types as base functions
 #' @export
 vec_math.rvec_int <- function(.fn, .x, ...) {
-    ans <- vec_math.rvec(.fn = .fn, .x = .x, ...)
+    ans_original <- vec_math.rvec(.fn = .fn, .x = .x, ...)
     if (.fn == "sum") {
-        m <- field(ans, "data")
+        m <- field(ans_original, "data")
         rvec_int(m)
     }
     else if (.fn == "cumprod") {
-        m <- field(ans, "data")
+        m <- field(ans_original, "data")
         rvec_dbl(m)
     }
     else
-        ans
+        ans_original
 }
 
 #' @export
 vec_math.rvec_lgl <- function(.fn, .x, ...) {
-    data <- field(x, "data")
+    data <- field(.x, "data")
     .x <- rvec_int(data)
     vec_math.rvec_int(.fn = .fn, .x = .x, ...)
 }

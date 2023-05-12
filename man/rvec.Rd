@@ -6,7 +6,7 @@
 \alias{rvec_dbl}
 \alias{rvec_int}
 \alias{rvec_lgl}
-\title{Create a random vector}
+\title{Create an rvec}
 \usage{
 rvec(x)
 
@@ -19,10 +19,10 @@ rvec_int(x = NULL)
 rvec_lgl(x = NULL)
 }
 \arguments{
-\item{x}{A matrix.}
+\item{x}{A matrix or vector.}
 }
 \value{
-A random vector with the following class:
+An rvec with the following class:
 \itemize{
 \item \code{rvec_dbl()}: \code{"rvec_dbl"}
 \item \code{rvec_int()}: \code{"rvec_int"}
@@ -34,8 +34,10 @@ A random vector with the following class:
 }
 }
 \description{
-Create a vector of class \code{"rvec"}. Class
-\code{"rvec"} has four subclasses, each dealing with
+Create an object of class \code{"rvec"}.
+}
+\details{
+Class \code{"rvec"} has four subclasses, each dealing with
 a diffent type:
 \itemize{
 \item \code{"rvec_dbl"} doubles
@@ -44,9 +46,20 @@ a diffent type:
 \item \code{"rvec_chr"} character
 }
 
-Argument \code{x} is a matrix in which each
-row represents a set of draws for a particular
-quantity.
+These subclasses are analogous to \code{\link[=double]{double()}},
+\code{\link[=integer]{integer()}}, \code{\link[=logical]{logical()}}, and \code{\link[=character]{character()}}
+vectors.
+
+Function \code{rvec()} chooses the subclass, based on
+\code{x}. Functions \code{rvec_dbl()}, \code{rvec_int()},
+\code{rvec_lgl()}, and \code{rvec_chr()} each create
+objects of a particular subclass.
+
+\code{x} is typically a matrix, where each row is
+a set of draws for a particular unknown quantity.
+However, \code{x} can also be a vector, which is
+treated as a single-row matrix. \code{x} can be
+doubles, integers, logical, or character.
 }
 \examples{
 birdweight

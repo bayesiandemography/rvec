@@ -193,10 +193,15 @@ to_rvecs_inner <- function(data,
     if (length(colnums_values) == 0L)
         cli::cli_abort("No {.var values} columns selected.")
     if (colnum_draw %in% colnums_values)
-        cli::cli_abort(paste("{.arg draw} and {.arg values} both use",
-                             "column {.var names(colnum_draw)}."))
-    check_to_rvecs_types(types = types,
-                         colnums_values = colnums_values)
+        cli::cli_abort(paste("Same column (.var {names(colnum_draw)} used for",
+                             "{.var draw} and for {.var cols}"))
+    n_cols <- length(colnums_cols)
+    check_types(types)
+    if (!identical(nchar(types), length(colnums_cols)))
+        cli::cli_abort(c(paste("Number of characters in {.arg types} must equal",
+                               "number of columns in in {.arg cols}."),
+                         "i" = "{.arg types} has {nchar(types)} characters.",
+                         "i" = "{.arg cols} has {length(colnums_cols)} columns."))
     rvecs <- lapply(colnums_values, list())
     rvec_funs <- get_rvec_funs(types)
     if (nrow(data) > 0L) {
@@ -209,13 +214,15 @@ to_rvecs_inner <- function(data,
         draw_ans <- sort(unique(draw_data))
         idx <- cbind(match(key_id_data, key_id_ans),
                      match(draw_data, draw_ans))
-        check_to_rvecs_idx_dup(idx = idx,
+        check_idx_dup(idx = idx,
                                data = data,
                                colnum_draw = colnum_draw,
-                               colnums_id = colnums_id)
-        check_to_rvecs_idx_gap(idx = idx,
-                               idvars_ans = idvars_ans,
-                               draw_ans = draw_ans)
+                      colnums_id = colnums_id)
+        nm_draw <- name(colnum_draw)
+        check_idx_gap(idx = idx,
+                      idvars_ans = idvars_ans,
+                      draw_ans = draw_ans,
+                      nm_draw = nm_draw)
         ## make rvec objects
         x <- matrix(nrow = nrow(idvars_ans), ncol = length(draw_ans))
         for (i in seq_along(colnums_values)) {
@@ -238,3 +245,4 @@ to_rvecs_inner <- function(data,
 
 
 
+    

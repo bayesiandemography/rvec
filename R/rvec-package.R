@@ -19,29 +19,27 @@
 #' - [rvec_chr()]
 #'
 #' Reformat an entire data frame:
-#' - [collapse_to_rvecs()]
-#' - [expand_from_rvecs()]
+#' - [collapse_to_rvec()]
+#' - [expand_from_rvec()]
 #'
-#' Convert between `rvec`s, list columns, and matrices
+#' Casting to other formats:
 #' - [as_list_col()]
 #' - [as_rvec()]
-#' - [as_matrix()], [as.matrix()]
+#' - [as.matrix()]
 #' - [posterior::as_rvar()]
 #'
 #'
 #' ## Map operations
 #'
 #' - vctrs vs base vectors
-#' - [rvec_if_else()]
+#' - [if_else_rvec()]
 #'
 #'
 #' ## Reduce operations
 #'
-#' [reduce_to_means()]
-#' [reduce_to_medians()]
-#' [reduce_to_modes()]
-#' [reduce_to_ci()]
-#'
+#' [reduce_rvec()]
+#' [reduce_rvec_cols()]
+#' 
 #' 
 #'
 #' @aliases rvec-package NULL

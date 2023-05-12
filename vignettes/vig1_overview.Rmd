@@ -1,0 +1,83 @@
+---
+title: "vig1_overview"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vig1_overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(rvec)
+```
+
+
+## Stats background
+
+- Simulation based inference (Bayesian or other) gives samples from target distribution 
+- Example
+   - Note includes correlations
+- Power from fact that can approximate distribution of $f(\theta)$ by distribution of $f(\theta_d)$.
+- Algorithm
+    1. calculate in parallel
+    2. combine
+- Examples
+- Want to make that easy
+    - Store output
+    - Parallel
+    - Reduce
+    
+
+## Existing solutions
+
+- 'database' format: easy but large
+- list columns, matrix columns: small but awkward to work with
+- rvar: doesn't play well with data frames
+
+
+## Example: rvec
+
+- holding info
+- parallel
+- reduce
+
+
+## Creating
+
+- individual vector (within functions)
+- database
+
+## Structure
+
+- builds on vctrs
+- part matrix, part vector
+- double, integer, logical, character
+
+## Map operations
+
+- indefinitly large number of possibilities
+- try to have it happen automatically, invisibly (thanks to vctrs, classes)
+- 
+
+- Note that follows vctrs rules
+    - is.na
+    - coercion
+    
+## Reducing
+
+- much smaller number of operations
+- specific functions
+
+
+
+
+
+
+
