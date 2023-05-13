@@ -72,7 +72,7 @@ test_that("'get_rvec_funs' works with valid inputs", {
 ## 'is_rvec' ------------------------------------------------------------------
 
 test_that("'is_rvec' works", {
-    expect_true(is_rvec(rvec(1)))
+    expect_true(is_rvec(rvec(matrix(1))))
     expect_false(is_rvec(NULL))
 })
 

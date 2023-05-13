@@ -55,14 +55,10 @@ methods::setOldClass(c("rvec_lgl", "rvec", "vctrs_vctr"))
 #' rvec(dicerolls)
 #' @export
 rvec <- function(x) {
-    if (is.matrix(x)) {
+    if (is.matrix(x))
         check_x_has_at_least_one_col(x)
-    }
-    else if (is.vector(x)) {
-        check_x_length_at_least_one(x)
-    }
     else
-        cli::cli_abort(c("{.arg x} must be a matrix or a vector",
+        cli::cli_abort(c("{.arg x} must be a matrix",
                          "i" = "{.arg x} has class {.cls {class(x)}}"))
     ptype <- vector(mode = typeof(x), length = 0L)
     rvec_inner(x, ptype = ptype)
@@ -147,17 +143,8 @@ rvec_inner <- function(x, ptype) {
         ptype <- matrix(ptype, nrow = 0L, ncol = ncol(x))
         data <- vec_cast(x, to = ptype)
     }
-    else if (is.character(x)
-             || is.double(x)
-             || is.integer(x)
-             || is.logical(x)) {
-        check_x_length_at_least_one(x)
-        data <- vec_cast(x, to = ptype)
-        data <- matrix(data, nrow = 1L)
-    }
     else
-        cli::cli_abort(c(paste("{.arg x} must be a matrix, a character, double,",
-                               "integer, or logical vector, or NULL}"),
+        cli::cli_abort(c(paste("{.arg x} must be a matrix or NULL}"),
                          "i" = "{.arg x} has class {.cls {class(x)}}"))
     fun <- get_new_rvec_fun(ptype)
     fun(data)

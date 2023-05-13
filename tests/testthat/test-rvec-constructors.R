@@ -17,20 +17,13 @@ test_that("'rvec' works with valid matrices", {
     expect_s3_class(ans, "rvec_dbl")
 })
 
-test_that("'rvec' works with valid vectors", {
-    expect_s3_class(rvec(1L), "rvec_int")
-    expect_s3_class(rvec(letters), "rvec_chr")
-    expect_s3_class(rvec(NA), "rvec_lgl")
-    expect_s3_class(rvec(NA_real_), "rvec_dbl")
-})
-
 
 ## 'rvec_chr' -----------------------------------------------------------------
 
 test_that("'rvec_chr' works with valid inputs", {
     expect_s3_class(rvec_chr(matrix("a", 2, 3)), "rvec_chr")
-    expect_s3_class(rvec_chr("a"), "rvec_chr")
-    expect_s3_class(rvec_chr("1"), "rvec_chr")
+    expect_s3_class(rvec_chr(matrix("a")), "rvec_chr")
+    expect_s3_class(rvec_chr(matrix("1")), "rvec_chr")
 })
 
 test_that("'rvec_chr' throws error with invalid inputs", {
@@ -43,8 +36,8 @@ test_that("'rvec_chr' throws error with invalid inputs", {
 
 test_that("'rvec_dbl' works with valid inputs", {
     expect_s3_class(rvec_dbl(matrix(Inf, 1, 3)), "rvec_dbl")
-    expect_s3_class(rvec_dbl(1L), "rvec_dbl")
-    expect_s3_class(rvec_dbl(TRUE), "rvec_dbl")
+    expect_s3_class(rvec_dbl(matrix(1L)), "rvec_dbl")
+    expect_s3_class(rvec_dbl(matrix(TRUE)), "rvec_dbl")
 })
 
 test_that("'rvec_dbl' throws error with invalid inputs", {
@@ -57,8 +50,8 @@ test_that("'rvec_dbl' throws error with invalid inputs", {
 
 test_that("'rvec_int' works with valid inputs", {
     expect_s3_class(rvec_int(matrix(1L, 2, 3)), "rvec_int")
-    expect_s3_class(rvec_int(1L), "rvec_int")
-    expect_s3_class(rvec_int(TRUE), "rvec_int")
+    expect_s3_class(rvec_int(matrix(1L)), "rvec_int")
+    expect_s3_class(rvec_int(matrix(TRUE)), "rvec_int")
 })
 
 test_that("'rvec_int' throws error with invalid inputs", {
@@ -71,13 +64,13 @@ test_that("'rvec_int' throws error with invalid inputs", {
 
 test_that("'rvec_lgl' works with valid inputs", {
     expect_s3_class(rvec_lgl(matrix(FALSE, 2, 3)), "rvec_lgl")
-    expect_s3_class(rvec_lgl(NA), "rvec_lgl")
-    expect_s3_class(rvec_lgl(TRUE), "rvec_lgl")
+    expect_s3_class(rvec_lgl(matrix(NA)), "rvec_lgl")
+    expect_s3_class(rvec_lgl(matrix(TRUE)), "rvec_lgl")
 })
 
 test_that("'rvec_lgl' throws error with invalid inputs", {
     expect_error(rvec_lgl(matrix("a", 2, 3)))
-    expect_error(rvec_lgl(3.1))
+    expect_error(rvec_lgl(matrix(3.1)))
 })
 
 
@@ -130,8 +123,7 @@ test_that("'new_rvec_lgl' works", {
 
 test_that("'rvec_inner' throws expected error with invalid input", {
     expect_error(rvec_inner(list()),
-                 paste("`x` must be a matrix, a character, double, integer,",
-                       "or logical vector, or NULL"))
+                 "`x` must be a matrix or NULL")
 })
 
     

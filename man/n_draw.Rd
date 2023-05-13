@@ -20,8 +20,7 @@ vector being sampled as no elements.
 Number of draws in a random sample
 }
 \examples{
-data <- matrix(sample(c(TRUE, FALSE), size = 40, replace = TRUE),
-               nrow = 4)
-x <- rvec(data)
+m <- matrix(1:40, nrow = 4, ncol = 10)
+x <- rvec(m)
 n_draw(x)
 }

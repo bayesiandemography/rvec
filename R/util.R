@@ -181,7 +181,7 @@ matrix_to_list_of_cols <- function(m, .ptype = NULL) {
 }
 
 
-## Has_TESTS
+## HASx_TESTS
 #' Turn a matrix into a list of rows
 #'
 #' Given a matrix 'm', create a list,
