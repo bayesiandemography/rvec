@@ -1,25 +1,4 @@
 
-## HAS_TESTS
-#' Format elements of atomic vectors
-#' underlying 'rvec' objects, for use
-#' in 'format.rvec'
-#'
-#' @param x An matrix
-#'
-#' @returns A character matrix,
-#' with the same dimensions as x
-#'
-#' @noRd
-format_elements_rvec <- function(x) {
-    if (is.numeric(x))
-        ans <- formatC(x, format = "fg")
-    else if (is.logical(x))
-        ans <- ifelse(x, "T", "F")
-    else
-        ans <- as.character(x)
-    array(ans, dim = dim(x))
-}
-
 
 ## HAS_TESTS
 #' Construct a named vector of column indices

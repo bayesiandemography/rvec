@@ -26,7 +26,7 @@
 #' - [as_list_col()]
 #' - [as_rvec()]
 #' - [as.matrix()]
-#' - [posterior::as_rvar()]
+#' - [as_rvar()]
 #'
 #'
 #' ## Map operations

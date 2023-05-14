@@ -1,25 +1,3 @@
-
-## 'format_elements_rvec' -----------------------------------------------------
-
-test_that("format_elements_rvec works with character", {
-    expect_identical(format_elements_rvec(matrix(c("a", NA))),
-                     matrix(c("a", "NA")))
-})
-
-test_that("format_elements_rvec works with double", {
-    expect_identical(format_elements_rvec(matrix(c(1.2345, -3, 1000000, NA))),
-                     matrix(c("1.234", "-3", "1000000", "NA")))
-})
-
-test_that("format_elements_rvec works with integer", {
-    expect_identical(format_elements_rvec(matrix(c(1L, -3L, 1000000L, NA))),
-                     matrix(c("1", "-3", "1000000", "NA")))
-})
-
-test_that("format_elements_rvec works with logical", {
-    expect_identical(format_elements_rvec(matrix(c(TRUE, FALSE, NA))),
-                     matrix(c("T", "F", "NA")))
-})                     
                      
 
 ## 'get_colnums_all' ----------------------------------------------------------

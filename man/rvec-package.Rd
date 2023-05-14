@@ -42,7 +42,7 @@ Casting to other formats:
 \item \code{\link[=as_list_col]{as_list_col()}}
 \item \code{\link[=as_rvec]{as_rvec()}}
 \item \code{\link[=as.matrix]{as.matrix()}}
-\item \code{\link[posterior:as_rvar]{posterior::as_rvar()}}
+\item \code{\link[=as_rvar]{as_rvar()}}
 }
 }
 
