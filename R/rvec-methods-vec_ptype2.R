@@ -1,19 +1,52 @@
 
 
-## When combining an rvec objects with a vector, it is
-## tempting to compare n_draw with the length of the vector,
-## but this length is not available since vec_ptype2 works
-## with zero-length prototypes, not the original vector.
-## Instead do comparison within vec_cast.
-
-## rvec with current rvec
+## rvec_chr -------------------------------------------------------------------
 
 #' @export
 vec_ptype2.rvec_chr.rvec_chr <- function(x, y, ...) {
     check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
     x
 }
-    
+
+#' @export
+vec_ptype2.rvec_chr.rvec_dbl <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    x
+}
+
+#' @export
+vec_ptype2.rvec_chr.rvec_int <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    x
+}
+
+#' @export
+vec_ptype2.rvec_chr.rvec_lgl <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    x
+}
+
+#' @export
+vec_ptype2.rvec_chr.character <- function(x, y, ...) x
+
+#' @export
+vec_ptype2.rvec_chr.double <- function(x, y, ...) x
+
+#' @export
+vec_ptype2.rvec_chr.integer <- function(x, y, ...) x
+
+#' @export
+vec_ptype2.rvec_chr.logical <- function(x, y, ...) x
+
+
+## rvec_dbl -------------------------------------------------------------------
+
+#' @export
+vec_ptype2.rvec_dbl.rvec_chr <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    y
+}
+
 #' @export
 vec_ptype2.rvec_dbl.rvec_dbl <- function(x, y, ...) {
     check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
@@ -21,29 +54,9 @@ vec_ptype2.rvec_dbl.rvec_dbl <- function(x, y, ...) {
 }
 
 #' @export
-vec_ptype2.rvec_int.rvec_int <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
-}
-
-#' @export
-vec_ptype2.rvec_lgl.rvec_lgl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
-}
-
-## rvec with higher-resolution rvec 
-
-#' @export
 vec_ptype2.rvec_dbl.rvec_int <- function(x, y, ...) {
     check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
     x
-}
-
-#' @export
-vec_ptype2.rvec_int.rvec_dbl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    y
 }
 
 #' @export
@@ -53,9 +66,36 @@ vec_ptype2.rvec_dbl.rvec_lgl <- function(x, y, ...) {
 }
 
 #' @export
-vec_ptype2.rvec_lgl.rvec_dbl <- function(x, y, ...) {
+vec_ptype2.rvec_dbl.character <- function(x, y, ...) to_ptype_rvec_chr(x)
+
+#' @export
+vec_ptype2.rvec_dbl.double <- function(x, y, ...) x
+
+#' @export
+vec_ptype2.rvec_dbl.integer <- function(x, y, ...) x
+
+#' @export
+vec_ptype2.rvec_dbl.logical <- function(x, y, ...) x
+
+
+## rvec_int -------------------------------------------------------------------
+
+#' @export
+vec_ptype2.rvec_int.rvec_chr <- function(x, y, ...) {
     check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
     y
+}
+
+#' @export
+vec_ptype2.rvec_int.rvec_dbl <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    y
+}
+
+#' @export
+vec_ptype2.rvec_int.rvec_int <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    x
 }
 
 #' @export
@@ -65,56 +105,112 @@ vec_ptype2.rvec_int.rvec_lgl <- function(x, y, ...) {
 }
 
 #' @export
-vec_ptype2.rvec_lgl.rvec_int <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    y
-}
- 
-
-## base vector with corresponding rvec
+vec_ptype2.rvec_int.character <- function(x, y, ...) to_ptype_rvec_chr(x)
 
 #' @export
-vec_ptype2.character.rvec_chr <- function(x, y, ...) y
-
-#' @export
-vec_ptype2.rvec_chr.character <- function(x, y, ...) x
-
-#' @export
-vec_ptype2.double.rvec_dbl <- function(x, y, ...) y
-
-#' @export
-vec_ptype2.rvec_dbl.double <- function(x, y, ...) x
-
-#' @export
-vec_ptype2.integer.rvec_int <- function(x, y, ...) y
+vec_ptype2.rvec_int.double <- function(x, y, ...) to_ptype_rvec_dbl(x)
 
 #' @export
 vec_ptype2.rvec_int.integer <- function(x, y, ...) x
 
 #' @export
-vec_ptype2.logical.rvec_lgl <- function(x, y, ...) y
+vec_ptype2.rvec_int.logical <- function(x, y, ...) x
+
+
+## rvec_lgl -------------------------------------------------------------------
+
+#' @export
+vec_ptype2.rvec_lgl.rvec_chr <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    y
+}
+
+#' @export
+vec_ptype2.rvec_lgl.rvec_dbl <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    y
+}
+
+#' @export
+vec_ptype2.rvec_lgl.rvec_int <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    y
+}
+
+#' @export
+vec_ptype2.rvec_lgl.rvec_lgl <- function(x, y, ...) {
+    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
+    x
+}
+
+#' @export
+vec_ptype2.rvec_lgl.character <- function(x, y, ...) to_ptype_rvec_chr(x)
+
+#' @export
+vec_ptype2.rvec_lgl.double <- function(x, y, ...) to_ptype_rvec_dbl(x)
+
+#' @export
+vec_ptype2.rvec_lgl.integer <- function(x, y, ...) to_ptype_rvec_int(x)
 
 #' @export
 vec_ptype2.rvec_lgl.logical <- function(x, y, ...) x
 
 
-## base vector and higher-resolution rvec
+## character ------------------------------------------------------------------
+
+#' @export
+vec_ptype2.character.rvec_chr <- function(x, y, ...) y
+
+#' @export
+vec_ptype2.character.rvec_dbl <- function(x, y, ...) as_ptype_rvec_chr(y)
+
+#' @export
+vec_ptype2.character.rvec_int <- function(x, y, ...) as_ptype_rvec_chr(y)
+
+#' @export
+vec_ptype2.character.rvec_lgl <- function(x, y, ...) as_ptype_rvec_chr(y)
+
+
+## double ---------------------------------------------------------------------
+
+#' @export
+vec_ptype2.double.rvec_chr <- function(x, y, ...) y
+
+#' @export
+vec_ptype2.double.rvec_dbl <- function(x, y, ...) y
+
+#' @export
+vec_ptype2.double.rvec_int <- function(x, y, ...) as_ptype_rvec_dbl(y)
+
+#' @export
+vec_ptype2.double.rvec_lgl <- function(x, y, ...) as_ptype_rvec_dbl(y)
+
+
+## integer --------------------------------------------------------------------
+
+#' @export
+vec_ptype2.integer.rvec_chr <- function(x, y, ...) y
 
 #' @export
 vec_ptype2.integer.rvec_dbl <- function(x, y, ...) y
 
 #' @export
-vec_ptype2.rvec_dbl.integer <- function(x, y, ...) x
+vec_ptype2.integer.rvec_int <- function(x, y, ...) y
+
+#' @export
+vec_ptype2.integer.rvec_lgl <- function(x, y, ...) as_ptype_rvec_int(y)
+
+
+## logical --------------------------------------------------------------------
+
+#' @export
+vec_ptype2.logical.rvec_chr <- function(x, y, ...) y
 
 #' @export
 vec_ptype2.logical.rvec_dbl <- function(x, y, ...) y
 
 #' @export
-vec_ptype2.rvec_dbl.logical <- function(x, y, ...) x
+vec_ptype2.logical.rvec_int <- function(x, y, ...) y
 
 #' @export
-vec_ptype2.logical.rvec_dbl <- function(x, y, ...) y
-
-#' @export
-vec_ptype2.rvec_dbl.logical <- function(x, y, ...) x
-
+vec_ptype2.logical.rvec_lgl <- function(x, y, ...) y

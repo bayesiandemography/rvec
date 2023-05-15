@@ -1,3 +1,29 @@
+## NO_TESTS
+as_ptype_rvec_chr <- function(x) {
+    n_draw <- n_draw(x)
+    m <- matrix(character(),
+                nrow = 0L,
+                ncol = n_draw)
+    new_rvec_chr(m)
+}
+
+## NO_TESTS
+as_ptype_rvec_dbl <- function(x) {
+    n_draw <- n_draw(x)
+    m <- matrix(double(),
+                nrow = 0L,
+                ncol = n_draw)
+    new_rvec_dbl(m)
+}
+
+## NO_TESTS
+as_ptype_rvec_int <- function(x) {
+    n_draw <- n_draw(x)
+    m <- matrix(integer(),
+                nrow = 0L,
+                ncol = n_draw)
+    new_rvec_dbl(m)
+}
 
 
 ## HAS_TESTS
@@ -47,6 +73,27 @@ get_colnums_groups <- function(data) {
     names(ans) <- nms_groups
     ans
 }
+
+## HAS_TESTS
+#' Choose the appropriate rvec constructor function,
+#' based on the type of 'x'
+#'
+#' @param An object with a type,
+#' typically a vector or matrix.
+#'
+#' @returns A function.
+#'
+#' @noRd
+get_new_rvec_fun <- function(x) {
+    type <- typeof(x)
+    switch(type,
+           character = new_rvec_chr,
+           double = new_rvec_dbl,
+           integer = new_rvec_int,
+           logical = new_rvec_lgl,
+           cli::cli_abort("Internal error: {.arg x} is {.obj_type_friendly {x}}"))
+}
+
 
 
 ## HAS_TESTS
@@ -160,7 +207,7 @@ matrix_to_list_of_cols <- function(m, .ptype = NULL) {
 }
 
 
-## HASx_TESTS
+## HAS_TESTS
 #' Turn a matrix into a list of rows
 #'
 #' Given a matrix 'm', create a list,
@@ -183,22 +230,4 @@ matrix_to_list_of_rows <- function(m, .ptype = NULL) {
 }
 
 
-## HAS_TESTS
-#' Choose the appropriate rvec constructor function,
-#' based on the type of 'x'
-#'
-#' @param An object with a type,
-#' typically a vector or matrix.
-#'
-#' @returns A function.
-#'
-#' @noRd
-get_new_rvec_fun <- function(x) {
-    type <- typeof(x)
-    switch(type,
-           character = new_rvec_chr,
-           double = new_rvec_dbl,
-           integer = new_rvec_int,
-           logical = new_rvec_lgl,
-           cli::cli_abort("Internal error: {.arg x} is {.obj_type_friendly {x}}"))
-}
+

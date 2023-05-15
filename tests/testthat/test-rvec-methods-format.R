@@ -35,7 +35,7 @@ test_that("'format' method for rvec works - four columns", {
 
 test_that("format_elements_rvec works with character", {
     expect_identical(format_elements_rvec(matrix(c("a", NA), nr = 1)),
-                     matrix(c("a", NA), nr = 1))
+                     matrix(c('"a"', NA), nr = 1))
 })
 
 test_that("format_elements_rvec works with double", {

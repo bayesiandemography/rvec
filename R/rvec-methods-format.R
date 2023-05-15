@@ -42,7 +42,9 @@ format_elements_rvec <- function(x) {
         ans <- formatC(x, format = "fg")
     else if (is.logical(x))
         ans <- ifelse(x, "T", "F")
-    else
-        ans <- as.character(x)
+    else {
+        ans <- sprintf('"%s"', as.character(x))
+        ans[is.na(x)] <- NA
+    }
     array(ans, dim = dim(x))
 }
