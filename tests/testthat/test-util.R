@@ -67,8 +67,9 @@ test_that("'make_probs' works", {
 
 test_that("'matrix_to_list_of_cols' works with nrow > 0, ncol > 0", {
     m <- matrix(1:12, nr = 4, nc = 3)
+    colnames(m) <- c("a", "b", "c")
     ans_obtained <- matrix_to_list_of_cols(m)
-    ans_expected <- list(1:4, 5:8, 9:12)
+    ans_expected <- list(a = 1:4, b = 5:8, c = 9:12)
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -98,8 +99,9 @@ test_that("'matrix_to_list_of_cols' works with nrow = 0, ncol = 0", {
 
 test_that("'matrix_to_list_of_rows' works with nrow > 0, ncol > 0", {
     m <- matrix(1:12, nr = 4, nc = 3, byrow = TRUE)
+    rownames(m) <- c("a", "b", "c", "d")
     ans_obtained <- matrix_to_list_of_rows(m)
-    ans_expected <- list(1:3, 4:6, 7:9, 10:12)
+    ans_expected <- list(a = 1:3, b = 4:6, c = 7:9, d = 10:12)
     expect_identical(ans_obtained, ans_expected)
 })
 

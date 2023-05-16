@@ -200,8 +200,8 @@ to_rvecs_inner <- function(data,
     if (!identical(nchar(types), length(colnums_cols)))
         cli::cli_abort(c(paste("Number of characters in {.arg types} must equal",
                                "number of columns in in {.arg cols}."),
-                         "i" = "{.arg types} has {nchar(types)} characters.",
-                         "i" = "{.arg cols} has {length(colnums_cols)} columns."))
+                         i = "{.arg types} has {nchar(types)} characters.",
+                         i = "{.arg cols} has {length(colnums_cols)} columns."))
     rvecs <- lapply(colnums_values, list())
     rvec_funs <- get_rvec_funs(types)
     if (nrow(data) > 0L) {

@@ -9,15 +9,15 @@
 ## @returns An rvec
 
 
-## to_rvec_chr ----------------------------------------------------------------
+## rvec_to_rvec_chr -----------------------------------------------------------
 
-to_rvec_chr <- function(x) {
-    UseMethod("to_rvec_chr")
+rvec_to_rvec_chr <- function(x) {
+    UseMethod("rvec_to_rvec_chr")
 }
 
 ## conversion to double always allowed
 #' @export
-to_rvec_chr.rvec <- function(x) {
+rvec_to_rvec_chr.rvec <- function(x) {
     data_old <- field(x, "data")
     data_new_vec <- as.character(data_old)
     data_new <- array(data_new_vec,
@@ -27,10 +27,10 @@ to_rvec_chr.rvec <- function(x) {
 }
 
 
-## to_rvec_dbl ----------------------------------------------------------------
+## rvec_to_rvec_dbl -----------------------------------------------------------
 
-to_rvec_dbl <- function(x) {
-    UseMethod("to_rvec_dbl")
+rvec_to_rvec_dbl <- function(x) {
+    UseMethod("rvec_to_rvec_dbl")
 }
 
 ## no method for rvec_chr
@@ -39,7 +39,7 @@ to_rvec_dbl <- function(x) {
 
 ## conversion to double always allowed
 #' @export
-to_rvec_dbl.rvec_int <- function(x) {
+rvec_to_rvec_dbl.rvec_int <- function(x) {
     data_old <- field(x, "data")
     data_new_vec <- as.double(data_old)
     data_new <- array(data_new_vec,
@@ -50,7 +50,7 @@ to_rvec_dbl.rvec_int <- function(x) {
 
 ## conversion to double always allowed
 #' @export
-to_rvec_dbl.rvec_lgl <- function(x) {
+rvec_to_rvec_dbl.rvec_lgl <- function(x) {
     data_old <- field(x, "data")
     data_new_vec <- as.double(data_old)
     data_new <- array(data_new_vec,
@@ -60,17 +60,18 @@ to_rvec_dbl.rvec_lgl <- function(x) {
 }
 
 
-## to_rvec_int ----------------------------------------------------------------
 
-to_rvec_int <- function(x) {
-    UseMethod("to_rvec_int")
+## rvec_to_rvec_int -----------------------------------------------------------
+
+rvec_to_rvec_int <- function(x) {
+    UseMethod("rvec_to_rvec_int")
 }
 
 ## no method for rvec_chr
 
 ## conversion to integer only allowed if information preserved
 #' @export
-to_rvec_int.rvec_dbl <- function(x) {
+rvec_to_rvec_int.rvec_dbl <- function(x) {
     data_old <- field(x, "data")
     data_old_vec <- as.double(data_old)
     data_new_vec <- vec_cast(x = data_old_vec, to = integer())
@@ -84,7 +85,7 @@ to_rvec_int.rvec_dbl <- function(x) {
 
 ## conversion to integer always allowed
 #' @export
-to_rvec_int.rvec_lgl <- function(x) {
+rvec_to_rvec_int.rvec_lgl <- function(x) {
     data_old <- field(x, "data")
     data_new_vec <- as.integer(data_old)
     data_new <- array(data_new_vec,
@@ -94,17 +95,17 @@ to_rvec_int.rvec_lgl <- function(x) {
 }
 
 
-## to_rvec_lgl ----------------------------------------------------------------
+## rvec_to_rvec_lgl -----------------------------------------------------------
 
-to_rvec_lgl <- function(x) {
-    UseMethod("to_rvec_lgl")
+rvec_to_rvec_lgl <- function(x) {
+    UseMethod("rvec_to_rvec_lgl")
 }
 
 ## no method for rvec_chr
 
 ## conversion to logical only allowed if information preserved
 #' @export
-to_rvec_lgl.rvec_dbl <- function(x) {
+rvec_to_rvec_lgl.rvec_dbl <- function(x) {
     data_old <- field(x, "data")
     data_old_vec <- as.double(data_old)
     data_new_vec <- vec_cast(x = data_old_vec, to = logical())
@@ -116,7 +117,7 @@ to_rvec_lgl.rvec_dbl <- function(x) {
 
 ## conversion to logical only allowed if information preserved
 #' @export
-to_rvec_lgl.rvec_int <- function(x) {
+rvec_to_rvec_lgl.rvec_int <- function(x) {
     data_old <- field(x, "data")
     data_old_vec <- as.integer(data_old)
     data_new_vec <- vec_cast(data_old_vec, logical())

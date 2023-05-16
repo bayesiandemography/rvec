@@ -6,8 +6,10 @@
 format.rvec <- function(x, ...) {
     m <- field(x, "data")
     nc <- ncol(m)
-    if (nc == 1L)
+    if (nc == 1L) {
+        m <- format_elements_rvec(m)
         return(m[, 1L])
+    }
     if (nc == 2L) {
         m <- format_elements_rvec(m)
         paste(m[, 1L], m[, 2L], sep = ",")

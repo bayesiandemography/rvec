@@ -66,7 +66,7 @@ vec_ptype2.rvec_dbl.rvec_lgl <- function(x, y, ...) {
 }
 
 #' @export
-vec_ptype2.rvec_dbl.character <- function(x, y, ...) to_ptype_rvec_chr(x)
+vec_ptype2.rvec_dbl.character <- function(x, y, ...) as_ptype_rvec_chr(x)
 
 #' @export
 vec_ptype2.rvec_dbl.double <- function(x, y, ...) x
@@ -105,10 +105,10 @@ vec_ptype2.rvec_int.rvec_lgl <- function(x, y, ...) {
 }
 
 #' @export
-vec_ptype2.rvec_int.character <- function(x, y, ...) to_ptype_rvec_chr(x)
+vec_ptype2.rvec_int.character <- function(x, y, ...) as_ptype_rvec_chr(x)
 
 #' @export
-vec_ptype2.rvec_int.double <- function(x, y, ...) to_ptype_rvec_dbl(x)
+vec_ptype2.rvec_int.double <- function(x, y, ...) as_ptype_rvec_dbl(x)
 
 #' @export
 vec_ptype2.rvec_int.integer <- function(x, y, ...) x
@@ -144,13 +144,13 @@ vec_ptype2.rvec_lgl.rvec_lgl <- function(x, y, ...) {
 }
 
 #' @export
-vec_ptype2.rvec_lgl.character <- function(x, y, ...) to_ptype_rvec_chr(x)
+vec_ptype2.rvec_lgl.character <- function(x, y, ...) as_ptype_rvec_chr(x)
 
 #' @export
-vec_ptype2.rvec_lgl.double <- function(x, y, ...) to_ptype_rvec_dbl(x)
+vec_ptype2.rvec_lgl.double <- function(x, y, ...) as_ptype_rvec_dbl(x)
 
 #' @export
-vec_ptype2.rvec_lgl.integer <- function(x, y, ...) to_ptype_rvec_int(x)
+vec_ptype2.rvec_lgl.integer <- function(x, y, ...) as_ptype_rvec_int(x)
 
 #' @export
 vec_ptype2.rvec_lgl.logical <- function(x, y, ...) x

@@ -5,59 +5,87 @@
 \alias{rvec-package}
 \title{Package 'rvec'}
 \description{
-\itemize{
-\item logic from \code{vctrs}
-\item uses \code{matrixStats} for speed
-}
+Many modern statistical methods, including Bayesian methods,
+yield draws from a distribution for the quantities of interest.
+An enormously useful feature of draws from a distribution is
+that they can used to generate distributions for new
+quantities. Posterior distributions for death rates, for instance,
+can be turned into posterior distributions for life expectancies.
 }
 \details{
-\itemize{
-\item motivation
-\itemize{
-\item reduce size of data frames
-\item make
-}
-}
-}
-\section{Functions}{
-\subsection{Creating and converting}{
+Starting with a sample
 
-Create individual \code{rvec}s:
-\itemize{
-\item \code{\link[=rvec]{rvec()}}
-\item \code{\link[=rvec_dbl]{rvec_dbl()}}
-\item \code{\link[=rvec_int]{rvec_int()}}
-\item \code{\link[=rvec_lgl]{rvec_lgl()}}
-\item \code{\link[=rvec_chr]{rvec_chr()}}
-}
+\deqn{x_1, x_2, \dots, x_n}
 
-Reformat an entire data frame:
-\itemize{
-\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}}
-\item \code{\link[=expand_from_rvec]{expand_from_rvec()}}
-}
+we apply one or more functions to each draw,
+to obtain a sample
 
-Casting to other formats:
-\itemize{
-\item \code{\link[=as_list_col]{as_list_col()}}
-\item \code{\link[=as_rvec]{as_rvec()}}
-\item \code{\link[=as.matrix]{as.matrix()}}
-\item \code{\link[=as_rvar]{as_rvar()}}
+\deqn{f(g(x_1)), f(g(x_2)), \dots, f(g(x_n))},
+
+from the distribution of the  quantity \eqn{f(g(x))}.
+This derived distribution can, like any distribution,
+be summarised through indicators such as means and
+quantiles.
+
+Package \code{rvec} makes  recipe easy to follow.
 }
+\section{Standard workflow}{
+
+
+\strong{Step 1: Create an \code{rvec}}
+
+Create an \code{rvec} object holding draws from a posterior sample.
+\itemize{
+\item \code{\link[=rvec]{rvec()}} - class depends on input
+\item \code{\link[=rvec_dbl]{rvec_dbl()}} - doubles
+\item \code{\link[=rvec_int]{rvec_int()}} - integers
+\item \code{\link[=rvec_lgl]{rvec_lgl()}} - logical
+\item \code{\link[=rvec_chr]{rvec_chr()}} - character
 }
 
-\subsection{Map operations}{
+\strong{Step 2: Manipulate the \code{rvec}}
+
+Perform calculations on the \code{rvec}, treating it like an ordinary vector.
+Internally, the calculations the manipulations are applied independenly
+to each draw.
 \itemize{
-\item vctrs vs base vectors
-\item \code{\link[=if_else_rvec]{if_else_rvec()}}
+\item Standard mathematical and statistical operations
+\item Special rvec operations
+}
+
+\strong{Step 3: Summarise the \code{rvec}}
+\itemize{
+\item \code{\link[=draw_median]{draw_median()}}
+\item \code{\link[=draw_mean]{draw_mean()}}
+\item \code{\link[=draw_mode]{draw_mode()}}
+\item \code{\link[=draw_quantile]{draw_quantile()}}
 }
 }
 
-\subsection{Reduce operations}{
+\section{Other functions}{
 
-\code{\link[=reduce_rvec]{reduce_rvec()}}
-\code{\link[=reduce_rvec_cols]{reduce_rvec_cols()}}
+
+\link{collapse_to_rvec}
 }
+
+\section{Design}{
+
+
+\code{rvec} are built from \link[vctrs:vctrs-package]{vctrs} package, which
+look after many of the tricky details, and give it a sound
+conceptual basis. Internally, many of the calculations are
+done using the \link{matrixStats} package, is fast.
+}
+
+\section{Other packages}{
+
+
+posterior: different type of data structure,
+but also lots of diagnostics
+
+ggdist
+
+distributional
 }
 
 \author{

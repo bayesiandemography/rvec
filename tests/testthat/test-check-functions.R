@@ -33,7 +33,34 @@ test_that("'check_and_tidy_width' throws expected error with NAs", {
 })
 
 
-## 'check_idx_dup' ---------------------------------------------------
+## 'check_lengths_equal' ------------------------------------------------------
+
+test_that("'check_lengths_equal' returns TRUE with valid inputs", {
+    expect_true(check_lengths_equal(list(1:2, 2:3)))
+    expect_true(check_lengths_equal(list(1:2)))
+    expect_true(check_lengths_equal(list()))
+})
+
+test_that("'check_lengths_equal' throws expected error unequal lengths", {
+    expect_error(check_lengths_equal(list(1:3, 1:4)),
+                 "Elements of `x` do not have equal lengths.")
+})
+
+
+## 'check_lengths_nonzero' ----------------------------------------------------
+
+test_that("'check_lengths_nonzero' returns TRUE with valid inputs", {
+    expect_true(check_lengths_nonzero(list(1:2, 2:3)))
+    expect_true(check_lengths_nonzero(list()))
+})
+
+test_that("'check_lengths_nonzero' throws expected error unequal lengths", {
+    expect_error(check_lengths_nonzero(list(1L, integer())),
+                 "All elements of `x` must have non-zero length.")
+})
+
+
+## 'check_idx_dup' ------------------------------------------------------------
 
 test_that("'check_idx_dup' returns TRUE with valid inputs", {
     idx <- rbind(c(1L, 1L),

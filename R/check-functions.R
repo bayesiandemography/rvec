@@ -25,6 +25,53 @@ check_and_tidy_width <- function(width) {
 
 
 ## HAS_TESTS
+#' Check that elements of list all have same length
+#'
+#' @param A list
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_lengths_equal <- function(x) {
+    if (length(x) >= 2L) {
+        lengths <- lengths(x)
+        len1 <- lengths[[1L]]
+        is_same <- lengths == len1
+        i_diff <- match(FALSE, is_same, nomatch = 0L)
+        if (i_diff > 0L) {
+            len_diff <- lengths[[i_diff]]
+            cli::cli_abort(c("Elements of {.arg x} do not have equal lengths.",
+                             i = "Element 1 of {.arg x} has length {len1}.",
+                             i = "Element {i_diff} of {.arg x} has length {len_diff}."))
+        }
+    }
+    invisible(TRUE)
+}
+
+
+## NO_TESTS
+#' Check that all elements of a list have non-zero length
+#'
+#' @param A list
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_lengths_nonzero <- function(x) {
+    if (length(x) > 0L) {
+        lengths <- lengths(x)
+        i_zero <- match(0L, lengths, nomatch = 0L)
+        if (i_zero > 0L) {
+            cli::cli_abort(c("All elements of {.arg x} must have non-zero length.",
+                             i = "Element {i_zero} of {.arg x} has length 0."))
+        }
+    }
+    invisible(TRUE)
+}
+
+    
+
+## HAS_TESTS
 #' Check that indices for position in data
 #' part of rvec have no duplicates
 #'
@@ -125,10 +172,10 @@ check_length_n_draw_compatible <- function(x, y, x_arg, y_arg) {
                                     "of draws of rvec `{y_arg}`.",
                                     x_arg = x_arg,
                                     y_arg = y_arg),
-                         "i" = glue::glue("`{x_arg}` has length {length}",
+                         i = glue::glue("`{x_arg}` has length {length}",
                                           x_arg = x_arg,
                                           length = length),
-                         "i" = glue::glue("`{y_arg}` has {n_draw} draws",
+                         i = glue::glue("`{y_arg}` has {n_draw} draws",
                                           y_arg = y_arg,
                                           n_draw = n_draw))
             stop_incompatible_type(x = x,
@@ -160,10 +207,10 @@ check_n_draw_equal <- function(x, y, x_arg, y_arg) {
                                 "of draws of rvec `{y_arg}`.",
                                 x_arg = x_arg,
                                 y_arg = y_arg),
-                     "i" = glue::glue("`{x_arg}` has {n_x} draws",
+                     i = glue::glue("`{x_arg}` has {n_x} draws",
                                       x_arg = x_arg,
                                       n_x = n_x),
-                     "i" = glue::glue("`{y_arg}` has {n_y} draws",
+                     i = glue::glue("`{y_arg}` has {n_y} draws",
                                       y_arg = y_arg,
                                       n_y = n_y))
         stop_incompatible_type(x = x,
@@ -182,6 +229,7 @@ check_n_draw_equal <- function(x, y, x_arg, y_arg) {
 #' @param na_rm TRUE or FALSE
 #'
 #' @returns TRUE, invisibly
+#' @noRd
 check_na_rm <- function(na_rm) {
     if (!identical(length(na_rm), 1L))
         cli::cli_abort("{.arg na_rm} does not have length 1")
@@ -219,8 +267,9 @@ check_types <- function(types) {
     i_invalid <- match(FALSE, is_valid, nomatch = 0L)
     if (i_invalid > 0L)
         cli::cli_abort(c("{.val {code[[i_invalid]]}} is not a valid code for {.arg types}",
-                         "i" = "Valid codes: {.val {choices}}"))
+                         i = "Valid codes: {.val {choices}}"))
     invisible(TRUE)
+
 }
 
 

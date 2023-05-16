@@ -196,14 +196,17 @@ make_probs <- function(width) {
 #' @return A list of vectors.
 #'
 #' @noRd
-matrix_to_list_of_cols <- function(m, .ptype = NULL) {
-    if (ncol(m) > 0L)
-        apply(m,
-              MARGIN = 2L,
-              FUN = function(y) y,
-              simplify = FALSE)
+matrix_to_list_of_cols <- function(m) {
+    if (ncol(m) > 0L) {
+        ans <-  apply(m,
+                      MARGIN = 2L,
+                      FUN = function(y) y,
+                      simplify = FALSE)
+        names(ans) <- colnames(m)
+    }
     else
-        list()
+        ans <- list()
+    ans
 }
 
 
@@ -219,14 +222,17 @@ matrix_to_list_of_cols <- function(m, .ptype = NULL) {
 #' @return A list of vectors.
 #'
 #' @noRd
-matrix_to_list_of_rows <- function(m, .ptype = NULL) {
-    if (nrow(m) > 0L)
-        apply(m,
-              MARGIN = 1L,
-              FUN = function(y) y,
-              simplify = FALSE)
+matrix_to_list_of_rows <- function(m) {
+    if (nrow(m) > 0L) {
+        ans <- apply(m,
+                     MARGIN = 1L,
+                     FUN = function(y) y,
+                     simplify = FALSE)
+        names(ans) <- rownames(m)
+    }
     else
-        list()
+        ans <- list()
+    ans
 }
 
 

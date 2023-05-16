@@ -5,7 +5,7 @@
 test_that("'format' method for rvec works - one column", {
     x <- rvec(matrix("a", nr = 1))
     ans_obtained <- format(x)
-    ans_expected <- "a"
+    ans_expected <- '"a"'
     expect_identical(ans_obtained, ans_expected)
 })
 

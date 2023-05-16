@@ -2,16 +2,6 @@
 ## # Equality ----------------------------------------------------------------
 
 ## #' @export
-## `==.vctrs_vctr` <- function(e1, e2) {
-##   vec_equal(e1, e2)
-## }
-
-## #' @export
-## `!=.vctrs_vctr` <- function(e1, e2) {
-##   !vec_equal(e1, e2)
-## }
-
-## #' @export
 ## is.na.vctrs_vctr <- function(x) {
 ##   vec_detect_missing(x)
 ## }
@@ -92,26 +82,6 @@
 ## # Comparison ----------------------------------------------------------------
 
 ## #' @export
-## `<=.vctrs_vctr` <- function(e1, e2) {
-##   vec_compare(e1, e2) <= 0
-## }
-
-## #' @export
-## `<.vctrs_vctr` <- function(e1, e2) {
-##   vec_compare(e1, e2) < 0
-## }
-
-## #' @export
-## `>=.vctrs_vctr` <- function(e1, e2) {
-##   vec_compare(e1, e2) >= 0
-## }
-
-## #' @export
-## `>.vctrs_vctr` <- function(e1, e2) {
-##   vec_compare(e1, e2) > 0
-## }
-
-## #' @export
 ## xtfrm.vctrs_vctr <- function(x) {
 ##   proxy <- vec_proxy_order(x)
 ##   type <- typeof(proxy)
@@ -130,13 +100,6 @@
 ##   vec_rank(proxy, ties = "dense", incomplete = "na")
 ## }
 
-## #' @importFrom stats median
-## #' @export
-## median.vctrs_vctr <- function(x, ..., na.rm = FALSE) {
-##   # nocov start
-##   stop_unimplemented(x, "median")
-##   # nocov end
-## }
 
 ## #' @importFrom stats quantile
 ## #' @export
@@ -153,47 +116,7 @@
 ##   )
 ## }
 
-## #' @export
-## min.vctrs_vctr <- function(x, ..., na.rm = FALSE) {
-##   if (vec_is_empty(x)) {
-##     return(vec_cast_or_na(Inf, x))
-##   }
 
-##   # TODO: implement to do vec_arg_min()
-##   rank <- xtfrm(x)
-
-##   if (isTRUE(na.rm)) {
-##     idx <- which.min(rank)
-##     if (vec_is_empty(idx)) {
-##       return(vec_cast_or_na(Inf, x))
-##     }
-##   } else {
-##     idx <- which(vec_equal(rank, min(rank), na_equal = TRUE))
-##   }
-
-##   x[[idx[[1]]]]
-## }
-
-## #' @export
-## max.vctrs_vctr <- function(x, ..., na.rm = FALSE) {
-##   if (vec_is_empty(x)) {
-##     return(vec_cast_or_na(-Inf, x))
-##   }
-
-##   # TODO: implement to do vec_arg_max()
-##   rank <- xtfrm(x)
-
-##   if (isTRUE(na.rm)) {
-##     idx <- which.max(rank)
-##     if (vec_is_empty(idx)) {
-##       return(vec_cast_or_na(-Inf, x))
-##     }
-##   } else {
-##     idx <- which(vec_equal(rank, max(rank), na_equal = TRUE))
-##   }
-
-##   x[[idx[[1]]]]
-## }
 
 ## #' @export
 ## range.vctrs_vctr <- function(x, ..., na.rm = FALSE) {
@@ -218,37 +141,7 @@
 ##   c(x[[idx_min[[1]]]], x[[idx_max[[1]]]])
 ## }
 
-## # Numeric -----------------------------------------------------------------
 
-## #' @export
-## Math.vctrs_vctr <- function(x, ...) {
-##   vec_math(.Generic, x, ...)
-## }
-
-## #' @export
-## Summary.vctrs_vctr <- function(..., na.rm = FALSE) {
-##   vec_math(.Generic, vec_c(...), na.rm = na.rm)
-## }
-
-## #' @export
-## mean.vctrs_vctr <- function(x, ..., na.rm = FALSE) {
-##   vec_math("mean", x, na.rm = na.rm)
-## }
-
-## #' @export
-## is.finite.vctrs_vctr <- function(x) {
-##   vec_math("is.finite", x)
-## }
-
-## #' @export
-## is.infinite.vctrs_vctr <- function(x) {
-##   vec_math("is.infinite", x)
-## }
-
-## #' @export
-## is.nan.vctrs_vctr <- function(x) {
-##   vec_math("is.nan", x)
-## }
 
 ## # Arithmetic --------------------------------------------------------------
 
@@ -268,47 +161,7 @@
 ##   } else {
 ##     vec_arith("-", e1, e2)
 ##   }
-## }
 
-## #' @export
-## `*.vctrs_vctr` <- function(e1, e2) {
-##   vec_arith("*", e1, e2)
-## }
-
-## #' @export
-## `/.vctrs_vctr` <- function(e1, e2) {
-##   vec_arith("/", e1, e2)
-## }
-
-## #' @export
-## `^.vctrs_vctr` <- function(e1, e2) {
-##   vec_arith("^", e1, e2)
-## }
-
-## #' @export
-## `%%.vctrs_vctr` <- function(e1, e2) {
-##   vec_arith("%%", e1, e2)
-## }
-
-## #' @export
-## `%/%.vctrs_vctr` <- function(e1, e2) {
-##   vec_arith("%/%", e1, e2)
-## }
-
-## #' @export
-## `!.vctrs_vctr` <- function(x) {
-##   vec_arith("!", x, MISSING())
-## }
-
-## #' @export
-## `&.vctrs_vctr` <- function(e1, e2) {
-##   vec_arith("&", e1, e2)
-## }
-
-## #' @export
-## `|.vctrs_vctr` <- function(e1, e2) {
-##   vec_arith("|", e1, e2)
-## }
 
 ## # Unimplemented ------------------------------------------------------------
 
@@ -350,32 +203,3 @@
 ## `is.na<-.vctrs_vctr` <- function(x, value) {
 ##   vec_assign(x, value, vec_init(x))
 ## }
-
-## # Helpers -----------------------------------------------------------------
-
-## # This simple class is used for testing as defining methods inside
-## # a test does not work (because the lexical scope is lost)
-## # nocov start
-## new_hidden <- function(x = double()) {
-##   stopifnot(is.numeric(x))
-##   new_vctr(vec_cast(x, double()), class = "hidden", inherit_base_type = FALSE)
-## }
-## format.hidden <- function(x, ...) rep("xxx", length(x))
-
-## local_hidden <- function(frame = caller_env()) {
-##   local_bindings(.env = global_env(), .frame = frame,
-##     vec_ptype2.hidden.hidden  = function(x, y, ...) new_hidden(),
-##     vec_ptype2.hidden.double  = function(x, y, ...) new_hidden(),
-##     vec_ptype2.double.hidden  = function(x, y, ...) new_hidden(),
-##     vec_ptype2.hidden.logical = function(x, y, ...) new_hidden(),
-##     vec_ptype2.logical.hidden = function(x, y, ...) new_hidden(),
-
-##     vec_cast.hidden.hidden   = function(x, to, ...) x,
-##     vec_cast.hidden.double   = function(x, to, ...) new_hidden(vec_data(x)),
-##     vec_cast.double.hidden   = function(x, to, ...) vec_data(x),
-##     vec_cast.hidden.logical  = function(x, to, ...) new_hidden(as.double(x)),
-##     vec_cast.logical.hidden  = function(x, to, ...) as.logical(vec_data(x))
-##   )
-## }
-
-## # nocov end
