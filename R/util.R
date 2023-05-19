@@ -1,3 +1,36 @@
+5
+## HAS_TESTS
+#' Insert a column into a data frame
+#'
+#' Try not to change class and attributes
+#' of 'df'.
+#'
+#' Assume that 'df' does not already
+#' have a column called nm.
+#'
+#' @param df A data frame.
+#' @param value The values to insert.
+#' @param after Column number. The value is inserted
+#' before this. Min value is 0, max is ncol(df).
+#' @param nm Name of the new column.
+#'
+#' @returns A data frame with one more column than 'df'.
+#'
+#' @noRd
+append_col <- function(df, value, after, nm) {
+    n <- ncol(df)
+    if (n == 0L)
+        cli::cli_abort("Internal error: {.arg df} has length 0")
+    if (!(after %in% 0:n))
+        cli::cli_abort("Internal error: {.arg after} invalid")
+    if (nm %in% names(df))
+        cli::cli_abort("Internal error: {.arg df} already has column called {.val {nm}}")
+    df[[nm]] <- value
+    perm <- order(c(seq_len(n), after), c(rep(0L, n), 1))
+    df[perm]
+}
+        
+
 ## NO_TESTS
 as_ptype_rvec_chr <- function(x) {
     n_draw <- n_draw(x)
@@ -22,7 +55,7 @@ as_ptype_rvec_int <- function(x) {
     m <- matrix(integer(),
                 nrow = 0L,
                 ncol = n_draw)
-    new_rvec_dbl(m)
+    new_rvec_int(m)
 }
 
 
@@ -236,4 +269,50 @@ matrix_to_list_of_rows <- function(m) {
 }
 
 
+#' Given a data frame containing rvecs,
+#' calculate 'n_draw'
+#'
+#' If 'n_draw' is the same across all rvecs,
+#' return it. Otherwise raise an error.
+#'
+#' @param df A data 
+#' the
+n_draw_df <- function(df) {
+    is_rvec <- vapply(df, is_rvec, TRUE)
+    if (!any(is_rvec))
+        cli::cli_abort("Internal error: {.arg df} does not contain any rvecs.")
+    n_draw <- vapply(df[is_rvec], n_draw, 1L)
+    if (length(n_draw) > 1L) {
+        n_draw_1 <- n_draw[[1L]]
+        is_equal <- n_draw == n_draw_1
+        i_not_equal <- match(FALSE, is_equal, nomatch = 0L)
+        if (i_not_equal > 0L) {
+            nms <- names(n_draw)
+            nm_1 <- nms[[1L]]
+            nm_not <- nms[[i_not_equal]]
+            n_draw_not <- n_draw[[i_not_equal]]
+            cli::cli_abort("Internal error: Value for {.arg n_draw} varies across rvecs.")
+        }
+        n_draw <- n_draw_1
+    }
+    n_draw
+}
 
+
+## HAS_TESTS
+#' Set cols of a data frame to list columns of NULLs
+#'
+#' @param df A data frame
+#' @param colnums Indices of columns to set to blank
+#'
+#' @returns Modified version of 'df'
+#'
+#' @noRd
+set_cols_to_blank <- function(df, colnums) {
+    n <- nrow(df)
+    blank_col <- rep(list(NULL), times = n)
+    for (colnum in colnums) {
+        df[[colnum]] <- blank_col
+    }
+    df
+}

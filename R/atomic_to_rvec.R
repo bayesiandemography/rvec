@@ -27,6 +27,7 @@ atomic_to_rvec_chr.character <- function(x, n_draw) {
     new_rvec_chr(data)
 }
 
+## HAS_TESTS
 ## conversion to character always allowed
 #' @export
 atomic_to_rvec_chr.double <- function(x, n_draw) {
@@ -37,6 +38,7 @@ atomic_to_rvec_chr.double <- function(x, n_draw) {
     new_rvec_chr(data)
 }
 
+## HAS_TESTS
 ## conversion to character always allowed
 #' @export
 atomic_to_rvec_chr.integer <- function(x, n_draw) {
@@ -47,6 +49,7 @@ atomic_to_rvec_chr.integer <- function(x, n_draw) {
     new_rvec_chr(data)
 }
 
+## HAS_TESTS
 ## conversion to character always allowed
 #' @export
 atomic_to_rvec_chr.logical <- function(x, n_draw) {
@@ -57,6 +60,7 @@ atomic_to_rvec_chr.logical <- function(x, n_draw) {
     new_rvec_chr(data)
 }
 
+
 ## atomic_to_rvec_dbl ---------------------------------------------------------
 
 atomic_to_rvec_dbl <- function(x, n_draw) {
@@ -65,6 +69,7 @@ atomic_to_rvec_dbl <- function(x, n_draw) {
 
 ## no method for character
 
+## HAS_TESTS
 #' @export
 atomic_to_rvec_dbl.double <- function(x, n_draw) {
     data <- matrix(x,
@@ -75,6 +80,7 @@ atomic_to_rvec_dbl.double <- function(x, n_draw) {
 }
 
 ## conversion to double always allowed
+## HAS_TESTS
 #' @export
 atomic_to_rvec_dbl.integer <- function(x, n_draw) {
     data <- matrix(as.double(x),
@@ -85,6 +91,7 @@ atomic_to_rvec_dbl.integer <- function(x, n_draw) {
 }
 
 ## conversion to double always allowed
+## HAS_TESTS
 #' @export
 atomic_to_rvec_dbl.logical <- function(x, n_draw) {
     data <- matrix(as.double(x),
@@ -102,6 +109,7 @@ atomic_to_rvec_int <- function(x, n_draw) {
 }
 
 ## conversion to integer only allowed if information preserved
+## HAS_TESTS
 #' @export
 atomic_to_rvec_int.double <- function(x, n_draw) {
     data <- vec_cast(x, to = integer())
@@ -112,6 +120,7 @@ atomic_to_rvec_int.double <- function(x, n_draw) {
     new_rvec_int(data)
 }
 
+## HAS_TESTS
 #' @export
 atomic_to_rvec_int.integer <- function(x, n_draw) {
     data <- matrix(x,
@@ -122,6 +131,7 @@ atomic_to_rvec_int.integer <- function(x, n_draw) {
 }
 
 ## conversion to integer always allowed
+## HAS_TESTS
 #' @export
 atomic_to_rvec_int.logical <- function(x, n_draw) {
     data <- matrix(as.integer(x),
@@ -141,6 +151,7 @@ atomic_to_rvec_lgl <- function(x, n_draw) {
 ## no method for rvec_chr
 
 ## conversion to logical only allowed if information preserved
+## HAS_TESTS
 #' @export
 atomic_to_rvec_lgl.double <- function(x, n_draw) {
     data <- vec_cast(x, to = logical())
@@ -152,6 +163,7 @@ atomic_to_rvec_lgl.double <- function(x, n_draw) {
 }
 
 ## conversion to logical only allowed if information preserved
+## HAS_TESTS
 #' @export
 atomic_to_rvec_lgl.integer <- function(x, n_draw) {
     data <- vec_cast(x, to = logical())
@@ -162,6 +174,7 @@ atomic_to_rvec_lgl.integer <- function(x, n_draw) {
     new_rvec_lgl(data)
 }
 
+## HAS_TESTS
 #' @export
 atomic_to_rvec_lgl.logical <- function(x, n_draw) {
     data <- matrix(x,

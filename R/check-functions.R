@@ -1,75 +1,4 @@
 
-## HAS_TESTS
-#' Check widths argument, and return a
-#' strictly decreasing version
-#'
-#' @param width A positive-length numeric vector
-#' with values between 0 and 1 (inclusive).
-#'
-#' @return A vector of strictly decreasing values.
-#'
-#' @noRd
-check_and_tidy_width <- function(width) {
-    if (!is.numeric(width))
-        cli::cli_abort("{.arg width} has class {.class {class(width)}}")
-    if (identical(length(width), 0L))
-        cli::cli_abort("{.arg width} has length 0")
-    if (anyNA(width))
-        cli::cli_abort("{.arg width} has {.val {NA}}s")
-    if (any(width < 0))
-        cli::cli_abort("{.arg width} has negative values")
-    if (any(width > 1))
-        cli::cli_abort("{.arg width} has values greater than 1")
-    sort(unique(width), decreasing = TRUE)
-}
-
-
-## HAS_TESTS
-#' Check that elements of list all have same length
-#'
-#' @param A list
-#'
-#' @returns TRUE, invisibly
-#'
-#' @noRd
-check_lengths_equal <- function(x) {
-    if (length(x) >= 2L) {
-        lengths <- lengths(x)
-        len1 <- lengths[[1L]]
-        is_same <- lengths == len1
-        i_diff <- match(FALSE, is_same, nomatch = 0L)
-        if (i_diff > 0L) {
-            len_diff <- lengths[[i_diff]]
-            cli::cli_abort(c("Elements of {.arg x} do not have equal lengths.",
-                             i = "Element 1 of {.arg x} has length {len1}.",
-                             i = "Element {i_diff} of {.arg x} has length {len_diff}."))
-        }
-    }
-    invisible(TRUE)
-}
-
-
-## NO_TESTS
-#' Check that all elements of a list have non-zero length
-#'
-#' @param A list
-#'
-#' @returns TRUE, invisibly
-#'
-#' @noRd
-check_lengths_nonzero <- function(x) {
-    if (length(x) > 0L) {
-        lengths <- lengths(x)
-        i_zero <- match(0L, lengths, nomatch = 0L)
-        if (i_zero > 0L) {
-            cli::cli_abort(c("All elements of {.arg x} must have non-zero length.",
-                             i = "Element {i_zero} of {.arg x} has length 0."))
-        }
-    }
-    invisible(TRUE)
-}
-
-    
 
 ## HAS_TESTS
 #' Check that indices for position in data
@@ -190,6 +119,52 @@ check_length_n_draw_compatible <- function(x, y, x_arg, y_arg) {
 
 
 ## HAS_TESTS
+#' Check that elements of list all have same length
+#'
+#' @param A list
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_lengths_equal <- function(x) {
+    if (length(x) >= 2L) {
+        lengths <- lengths(x)
+        len1 <- lengths[[1L]]
+        is_same <- lengths == len1
+        i_diff <- match(FALSE, is_same, nomatch = 0L)
+        if (i_diff > 0L) {
+            len_diff <- lengths[[i_diff]]
+            cli::cli_abort(c("Elements of {.arg x} do not have equal lengths.",
+                             i = "Element 1 of {.arg x} has length {len1}.",
+                             i = "Element {i_diff} of {.arg x} has length {len_diff}."))
+        }
+    }
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check that all elements of a list have non-zero length
+#'
+#' @param A list
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_lengths_nonzero <- function(x) {
+    if (length(x) > 0L) {
+        lengths <- lengths(x)
+        i_zero <- match(0L, lengths, nomatch = 0L)
+        if (i_zero > 0L) {
+            cli::cli_abort(c("All elements of {.arg x} must have non-zero length.",
+                             i = "Element {i_zero} of {.arg x} has length 0."))
+        }
+    }
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
 #' Check that two rvec objects have the same number
 #' of draws
 #'
@@ -237,6 +212,53 @@ check_na_rm <- function(na_rm) {
         cli::cli_abort("{.arg na_rm} has class {.cls {class(na_rm)}}")
     if (is.na(na_rm))
         cli::cli_abort("{.arg na_rm} is {.val {NA}}")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check that 'nm_draw' is a valid string
+#'
+#' @param nm_draw Name of the 'draw' variable.
+#' A string.
+#'
+#' @returns TRUE, invisibly.
+#'
+#' @noRd
+check_nm_draw <- function(nm_draw) {
+    if (!identical(length(nm_draw), 1L))
+        cli::cli_abort("{.arg nm_draw} does not have length 1")
+    if (is.na(nm_draw))
+        cli::cli_abort("{.arg nm_draw} is {.val {NA}}")
+    if (!is.character(nm_draw))
+        cli::cli_abort("{.arg nm_draw} has class {.cls {class(nm_draw)}}")
+    if (nchar(nm_draw) == 0L)
+        cli::cli_abort("{.arg nm_draw} is blank")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check probs argument
+#'
+#' @param probs A positive-length numeric vector
+#' with values between 0 and 1 (inclusive).
+#'
+#' @return TRUE, invisibly.
+#'
+#' @noRd
+check_probs <- function(probs) {
+    if (!is.numeric(probs))
+        cli::cli_abort(c("{.arg probs} must be numeric",
+                         i = "{.arg probs} has class {.class {class(probs)}}"))
+    if (identical(length(probs), 0L))
+        cli::cli_abort("{.arg probs} has length 0")
+    if (anyNA(probs))
+        cli::cli_abort("{.arg probs} has {.val {NA}}s")
+    if (any(probs < 0))
+        cli::cli_abort("{.arg probs} has negative values")
+    if (any(probs > 1))
+        cli::cli_abort("{.arg probs} has values greater than 1")
     invisible(TRUE)
 }
 

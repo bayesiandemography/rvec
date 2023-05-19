@@ -24,7 +24,7 @@
 #' - converting `rvec`s to 
 #' - Functions for summarising and plotting
 #' distributions in package
-#' [https://CRAN.R-project.org/package=ggdist]
+#' [ggdist][https://CRAN.R-project.org/package=ggdist]
 #' understand list columns.
 #' 
 #' @examples

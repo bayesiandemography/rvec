@@ -8,21 +8,23 @@ format.rvec <- function(x, ...) {
     nc <- ncol(m)
     if (nc == 1L) {
         m <- format_elements_rvec(m)
-        return(m[, 1L])
+        ans <- m[, 1L]
     }
-    if (nc == 2L) {
+    else if (nc == 2L) {
         m <- format_elements_rvec(m)
-        paste(m[, 1L], m[, 2L], sep = ",")
+        ans <- paste(m[, 1L], m[, 2L], sep = ",")
     }
     else if (nc == 3L) {
         m <- format_elements_rvec(m)
-        paste(m[, 1L], m[, 2L], m[, 3L], sep = ",")
+        ans <- paste(m[, 1L], m[, 2L], m[, 3L], sep = ",")
     }
     else {
         m <- m[, c(1L, nc), drop = FALSE]
         m <- format_elements_rvec(m)
-        paste(m[, 1L], "..", m[, 2L], sep = ",")
+        ans <- paste(m[, 1L], "..", m[, 2L], sep = ",")
     }
+    names(ans) <- rownames(m)
+    ans
 }
 
 
@@ -48,5 +50,29 @@ format_elements_rvec <- function(x) {
         ans <- sprintf('"%s"', as.character(x))
         ans[is.na(x)] <- NA
     }
-    array(ans, dim = dim(x))
+    array(ans,
+          dim = dim(x),
+          dimnames = dimnames(x))
+}
+
+
+
+#' rvec method for vctrs method 'obj_print_data'
+#'
+#' Needed because the default method sets
+#' the names to NULL
+#'
+#' @param x An rvec
+#' @param ... Not used
+#'
+#' @returns x, invisibly.
+#' 
+#' @noRd
+#' @export
+obj_print_data.rvec <- function(x, ...) {
+    if (length(x) == 0) 
+        return(invisible(x))
+    out <- format(x)
+    print(out, quote = FALSE)
+    invisible(x)
 }

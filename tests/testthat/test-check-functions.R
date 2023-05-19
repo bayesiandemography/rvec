@@ -1,65 +1,4 @@
 
-## 'check_and_tidy_width' -----------------------------------------------------
-
-test_that("'check_and_tidy_width' works with valid inputs", {
-    expect_identical(check_and_tidy_width(0.95), 0.95)
-    expect_identical(check_and_tidy_width(c(0.5, 0.95)), c(0.95, 0.5))
-    expect_identical(check_and_tidy_width(c(0.5, 0.5, 0.95)), c(0.95, 0.5))
-})
-
-test_that("'check_and_tidy_width' throws expected error with non-numeric width", {
-    expect_error(check_and_tidy_width("a"),
-                 "`width` has class character")
-})
-
-test_that("'check_and_tidy_width' throws expected error with 0-length width", {
-    expect_error(check_and_tidy_width(numeric()),
-                 "`width` has length 0")
-})
-
-test_that("'check_and_tidy_width' throws expected error with NAs", {
-    expect_error(check_and_tidy_width(c(0.5, NA)),
-                 "`width` has NAs")
-})
-
-test_that("'check_and_tidy_width' throws expected error with NAs", {
-    expect_error(check_and_tidy_width(c(0.5, -1)),
-                 "`width` has negative values")
-})
-
-test_that("'check_and_tidy_width' throws expected error with NAs", {
-    expect_error(check_and_tidy_width(c(0.5, 1.00001)),
-                 "`width` has values greater than 1")
-})
-
-
-## 'check_lengths_equal' ------------------------------------------------------
-
-test_that("'check_lengths_equal' returns TRUE with valid inputs", {
-    expect_true(check_lengths_equal(list(1:2, 2:3)))
-    expect_true(check_lengths_equal(list(1:2)))
-    expect_true(check_lengths_equal(list()))
-})
-
-test_that("'check_lengths_equal' throws expected error unequal lengths", {
-    expect_error(check_lengths_equal(list(1:3, 1:4)),
-                 "Elements of `x` do not have equal lengths.")
-})
-
-
-## 'check_lengths_nonzero' ----------------------------------------------------
-
-test_that("'check_lengths_nonzero' returns TRUE with valid inputs", {
-    expect_true(check_lengths_nonzero(list(1:2, 2:3)))
-    expect_true(check_lengths_nonzero(list()))
-})
-
-test_that("'check_lengths_nonzero' throws expected error unequal lengths", {
-    expect_error(check_lengths_nonzero(list(1L, integer())),
-                 "All elements of `x` must have non-zero length.")
-})
-
-
 ## 'check_idx_dup' ------------------------------------------------------------
 
 test_that("'check_idx_dup' returns TRUE with valid inputs", {
@@ -147,6 +86,33 @@ test_that("'check_length_n_draw_compatible' throws expected error with non-compa
 })
 
 
+## 'check_lengths_equal' ------------------------------------------------------
+
+test_that("'check_lengths_equal' returns TRUE with valid inputs", {
+    expect_true(check_lengths_equal(list(1:2, 2:3)))
+    expect_true(check_lengths_equal(list(1:2)))
+    expect_true(check_lengths_equal(list()))
+})
+
+test_that("'check_lengths_equal' throws expected error unequal lengths", {
+    expect_error(check_lengths_equal(list(1:3, 1:4)),
+                 "Elements of `x` do not have equal lengths.")
+})
+
+
+## 'check_lengths_nonzero' ----------------------------------------------------
+
+test_that("'check_lengths_nonzero' returns TRUE with valid inputs", {
+    expect_true(check_lengths_nonzero(list(1:2, 2:3)))
+    expect_true(check_lengths_nonzero(list()))
+})
+
+test_that("'check_lengths_nonzero' throws expected error unequal lengths", {
+    expect_error(check_lengths_nonzero(list(1L, integer())),
+                 "All elements of `x` must have non-zero length.")
+})
+
+
 ## 'check_n_draw_equal' -------------------------------------------------------
 
 test_that("'check_n_draw_equal' works with valid inputs", {
@@ -172,21 +138,85 @@ test_that("'check_na_rm' returns TRUE with valid inputs", {
     expect_true(check_na_rm(FALSE))
 })
 
-test_that("'check_n_draw_equal' throws expected error non-length-1", {
+test_that("'check_na_rm' throws expected error non-length-1", {
     expect_error(check_na_rm(logical()),
                  "`na_rm` does not have length 1")
     expect_error(check_na_rm(c(TRUE, TRUE)),
                  "`na_rm` does not have length 1")
 })
 
-test_that("'check_n_draw_equal' throws expected error non-logical", {
+test_that("'check_na_rm' throws expected error non-logical", {
     expect_error(check_na_rm("T"),
                  "`na_rm` has class <character>")
 })
 
-test_that("'check_n_draw_equal' throws expected error NA", {
+test_that("'check_na_rm' throws expected error NA", {
     expect_error(check_na_rm(NA),
                  "`na_rm` is NA")
+})
+
+
+## 'check_nm_draw' ------------------------------------------------------------
+
+test_that("'check_nm_draw' returns TRUE with valid inputs", {
+    expect_true(check_nm_draw("draw"))
+    expect_true(check_nm_draw("sim"))
+})
+
+test_that("'check_nm_draw' throws expected error non-length-1", {
+    expect_error(check_nm_draw(character()),
+                 "`nm_draw` does not have length 1")
+    expect_error(check_nm_draw(c("a", "b")),
+                 "`nm_draw` does not have length 1")
+})
+
+test_that("'check_nm_draw' throws expected error non-character", {
+    expect_error(check_nm_draw(TRUE),
+                 "`nm_draw` has class <logical>")
+})
+
+test_that("'check_nm_draw' throws expected error NA", {
+    expect_error(check_nm_draw(NA_character_),
+                 "`nm_draw` is NA")
+})
+
+test_that("'check_nm_draw' throws expected error blank", {
+    expect_error(check_nm_draw(""),
+                 "`nm_draw` is blank")
+})
+
+
+## 'check_probs' -----------------------------------------------------
+
+test_that("'check_probs' works with valid inputs", {
+    expect_true(check_probs(0.95))
+    expect_true(check_probs(c(0.5, 0.95)))
+    expect_true(check_probs(c(0.5, 0.5, 0.95)))
+})
+
+test_that("'check_probs' throws expected error with non-numeric width", {
+    expect_error(check_probs("a"),
+                 "`probs` must be numeric")
+})
+
+test_that("'check_probs' throws expected error with 0 length", {
+    expect_error(check_probs(numeric()),
+                 "`probs` has length 0")
+})
+
+test_that("'check_probs' throws expected error with NAs", {
+    expect_error(check_probs(c(0.5, NA)),
+                 "`probs` has NAs")
+})
+
+test_that("'check_probs' throws expected error with negative values", {
+    expect_error(check_probs(c(0.5, -1)),
+                 "`probs` has negative values")
+})
+
+test_that("'check_probs' throws expected error with values greater than 1", {
+    expect_error(check_probs(c(0.5, 1.00001)),
+                 "`probs` has values greater than 1")
 })
 
 

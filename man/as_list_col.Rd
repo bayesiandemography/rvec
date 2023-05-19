@@ -47,7 +47,7 @@ columns.
 \item converting \code{rvec}s to
 \item Functions for summarising and plotting
 distributions in package
-\link{https://CRAN.R-project.org/package=ggdist}
+\link[=https://CRAN.R-project.org/package=ggdist]{ggdist}
 understand list columns.
 }
 }
