@@ -2,7 +2,7 @@
 ## HAS_TESTS
 #' Number of draws in a random sample
 #'
-#' @param An object holding a random sample.
+#' @param x An object holding a random sample.
 #'
 #' @returns A count, or `NULL`, if the
 #' vector being sampled as no elements.

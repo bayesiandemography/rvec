@@ -10,7 +10,7 @@ n_draw(x)
 \method{n_draw}{rvec}(x)
 }
 \arguments{
-\item{An}{object holding a random sample.}
+\item{x}{An object holding a random sample.}
 }
 \value{
 A count, or \code{NULL}, if the

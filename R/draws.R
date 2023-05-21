@@ -36,10 +36,10 @@
 #' format that `tidybayes` and `ggdist` can work with.
 #' 
 #' @examples
-#' m <- cbind(a = c(1, 1, 1, 2, 3),
+#' m <- rbind(a = c(1, 1, 1, 2, 3),
 #'            b = c(2, 4, 0, 2, 3),
 #'            c = c(0, 0, 1, 0, 100))
-#' x <- rvecs(m)
+#' x <- rvec(m)
 #' x
 #' draws_median(x)
 #' draws_mean(x)
@@ -153,10 +153,9 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' data frame columns, so the results from
 #' `draws_quantile()` can be inserted into a
 #' data frame. See below for an example.
-#' Function `unnest_wider()` in package
-#' [tidyr] can be used to expand the
-#' a data frame column, if desired. See
-#' <LINK TO VIGNETTE> for an example.
+#'
+#' To expand a data frame column, use
+#' [tidyr::unnest_wider()](https://tidyr.tidyverse.org/reference/hoist.html)
 #'
 #' @inheritParams draws_median
 #' @param probs Vector of probabilities.
@@ -170,20 +169,19 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #'
 #' @examples
 #' set.seed(0)
-#' m <- cbind(a = rnorm(100, mean = 5, sd = 2),
+#' m <- rbind(a = rnorm(100, mean = 5, sd = 2),
 #'            b = rnorm(100, mean = -3, sd = 3),
 #'            c = rnorm(100, mean = 0, sd = 20))
-#' x <- rvecs(m)
+#' x <- rvec(m)
 #' x
 #' draws_quantile(x)
 #'
 #' ## results from 'draw_quantile'
-#' ## assigned to a column in a
-#' ## data frame
-#' df <- data.frame(g = c("a", "b", "c"),
-#'                  x = x)
-#' df$cred_int <- draws_quantile(x)
-#' df
+#' ## assigned to a data frame
+#' library(dplyr)
+#' df <- tibble(x)
+#' df %>%
+#'   mutate(draws_quantile(x))
 #' @export
 draws_quantile <- function(x,
                            probs = c(0.025, 0.5, 0.975),
@@ -197,15 +195,19 @@ draws_quantile <- function(x,
 draws_quantile.rvec <- function(x,
                                 probs = c(0.025, 0.5, 0.975),
                                 na_rm = FALSE) {
+    x_str <- deparse1(substitute(x))
+    ## x_expr <- rlang::expr(x)
+    ## x_str <- rlang::expr_deparse(x_expr)
     check_probs(probs)
     check_na_rm(na_rm)
     m <- field(x, "data")
     if (nrow(m) == 0L)
-        ans <- quantile(double(), probs = probs)
+        ans <- stats::quantile(double(), probs = probs)
     else {
         ans <- matrixStats::rowQuantiles(m, probs = probs, na.rm = na_rm)
         ans <- matrix_to_list_of_cols(ans)
     }
+    names(ans) <- paste(x_str, names(ans), sep = "_")
     ans <- tibble::tibble(!!!ans)
     ans
 }
@@ -241,10 +243,10 @@ draws_quantile.rvec_chr <- function(x,
 #' 
 #' @examples
 #' set.seed(0)
-#' m <- cbind(a = rnorm(100, mean = 5, sd = 2),
+#' m <- rbind(a = rnorm(100, mean = 5, sd = 2),
 #'            b = rnorm(100, mean = -3, sd = 3),
 #'            c = rnorm(100, mean = 0, sd = 20))
-#' x <- rvecs(m)
+#' x <- rvec(m)
 #' x
 #' draws_fun(x, fun = mad)
 #' draws_fun(x, fun = range)

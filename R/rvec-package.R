@@ -48,22 +48,25 @@
 #'
 #' **Step 3: Summarise the `rvec`**
 #'
-#' - [draw_median()]
-#' - [draw_mean()]
-#' - [draw_mode()]
-#' - [draw_quantile()]
+#' - [draws_median()]
+#' - [draws_mean()]
+#' - [draws_mode()]
+#' - [draws_quantile()]
+#' - [draws_fun()]
 #' 
 #'
 #' @section Other functions:
 #'
-#' [collapse_to_rvec]
+#' - [collapse_to_rvec()]
+#' - [collapse_to_rvec()]
 #'
 #' @section Design:
 #'
 #' `rvec` are built from [vctrs][vctrs::vctrs] package, which
 #' look after many of the tricky details, and give it a sound
 #' conceptual basis. Internally, many of the calculations are
-#' done using the [matrixStats] package, is fast.
+#' done using the [matrixStats][matrixStats::matrixStats-package]
+#' package, is fast.
 #'
 #'
 #' @section Other packages:
@@ -78,8 +81,19 @@
 #'
 #' @aliases rvec-package NULL
 #' @import vctrs
+#' @importFrom methods setOldClass
+#' @importFrom stats median
+#' @importFrom utils globalVariables
 "_PACKAGE"
 
 ## usethis namespace: start
 ## usethis namespace: end
 NULL
+
+globalVariables('value') ## to allow use in collapse_to_rvec
+
+## for compatibility with the S4 system
+setOldClass(c("rvec_chr", "rvec", "vctrs_vctr"))
+setOldClass(c("rvec_dbl", "rvec", "vctrs_vctr"))
+setOldClass(c("rvec_int", "rvec", "vctrs_vctr"))
+setOldClass(c("rvec_lgl", "rvec", "vctrs_vctr"))

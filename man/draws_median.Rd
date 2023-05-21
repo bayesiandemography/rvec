@@ -56,10 +56,10 @@ observation. When there is a tie, it returns
 \code{NA}.
 }
 \examples{
-m <- cbind(a = c(1, 1, 1, 2, 3),
+m <- rbind(a = c(1, 1, 1, 2, 3),
            b = c(2, 4, 0, 2, 3),
            c = c(0, 0, 1, 0, 100))
-x <- rvecs(m)
+x <- rvec(m)
 x
 draws_median(x)
 draws_mean(x)

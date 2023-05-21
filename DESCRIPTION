@@ -21,8 +21,12 @@ Imports:
     cli,
     glue,
     rlang,
+    matrixStats,
+    methods,
+    stats,
     tibble,
     tidyselect,
+    utils,
     vctrs
 Suggests:
     dplyr,

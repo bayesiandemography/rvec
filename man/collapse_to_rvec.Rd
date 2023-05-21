@@ -10,31 +10,32 @@
 \title{Convert a data frame between 'database'
 and 'rvec' formats}
 \usage{
-collapse_to_rvec(data, draw = draw, values = value, type = NULL)
+collapse_to_rvec(data, draw = "draw", values = value, type = NULL)
 
-\method{collapse_to_rvec}{data.frame}(data, draw = draw, values = value, type = NULL)
+\method{collapse_to_rvec}{data.frame}(data, draw = "draw", values = value, type = NULL)
 
-\method{collapse_to_rvec}{grouped_df}(data, draw = draw, values = value, type = NULL)
+\method{collapse_to_rvec}{grouped_df}(data, draw = "draw", values = value, type = NULL)
 
-expand_from_rvec(data, draw = draw)
+expand_from_rvec(data, draw = "draw")
 
-\method{expand_from_rvec}{data.frame}(data, draw = draw)
+\method{expand_from_rvec}{data.frame}(data, draw = "draw")
 
-\method{expand_from_rvec}{grouped_df}(data, draw = draw)
+\method{expand_from_rvec}{grouped_df}(data, draw = "draw")
 }
 \arguments{
 \item{data}{A data frame, possibly
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}.}
 
-\item{draw}{<\code{\link[tidyselect:language]{tidyselect}}>
-The column that uniquely identifies random draws
-within each combination of ID variables.}
+\item{draw}{The variable that uniquely identifies
+random draws within each combination of
+values for the ID variables. A string.}
 
 \item{values}{<\code{\link[tidyselect:language]{tidyselect}}>
-One or more columns of \code{data} that hold measurements.}
+One or more variables of \code{data} that hold measurements.}
 
-\item{type}{A string, each letter of which
-represents an rvec constructor function. Optional.}
+\item{type}{Code specifying the class of rvec
+to use for each value, combined into a string.
+Optional.}
 }
 \value{
 A data frame.
@@ -43,12 +44,11 @@ A data frame.
 by a factor of \code{\link[=n_draw]{n_draw()}}.
 \item \code{expand_from_rvec()} \strong{increases} the number of rows
 by a factor of \code{\link[=n_draw]{n_draw()}}.
-\item If \code{data} is a
+\item \code{collapse_to_rvec()} silently drops all variables
+that are not draw, value or grouping variables
+if \code{data} is a
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}
-data frame, then \code{collapse_to_rvec()} and
-\code{expand_from_rvec()} silently drop all columns
-that are not specified by \code{draw} or \code{value}
-and that are not grouping columns.
+data frame.
 }
 }
 \description{
@@ -60,7 +60,7 @@ from an rvecs format to a database format.
 \details{
 In database format, each row represents
 one random draw. The data frame contains
-a 'draw' column that distinguishes different
+a 'draw' variable that distinguishes different
 draws within the same combination
 of ID variables. In rvec format,
 each row represents one
@@ -68,34 +68,33 @@ combination of ID variables, and
 multiple draws are stored in an \link[=rvec]{rvec}.
 See below for examples.
 }
-\section{Data frame columns}{
+\section{Data frame variables}{
 
 
 \code{collapse_to_rvec()} and \code{expand_from_rvec()}
-operate with three kinds of columns:
+operate with three kinds of variables:
 \itemize{
-\item Values columns, holding hold measurements
+\item Values variables, holding hold measurements
 of some random or uncertain quantity.
 In \code{collapse_to_rvec()},
-values columns are specified by the
+values variables are specified by the
 \code{values} argument. \code{expand_from_rvec()}
-treats all rvecs as value columns.
-\item The draw column, used to uniquely identify
+treats all rvecs as value variables.
+\item The draw variable, used to uniquely identify
 each draw in a database format, within
 each combination of ID values. Specified
 by the \code{draw} argument.
-\item ID columns, which hold covariates or
+\item ID variables, which hold covariates or
 classification variables.
-- In an ordinary data frame,
+- If \code{data} is an ordinary data frame, then
 \code{collapse_to_rvec()} and \code{expand_from_rvec()}
-assume that all columns that are not
-values or draw columns are ID columns.
-- In a
+assume that all variables that are not
+values or draw variables are ID variables.
+- If \code{data} is a
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}
-data frame, \code{collapse_to_rvec()} and \code{expand_from_rvec()}
-assume that all \emph{grouping} columns
-that are not values or draw columns are
-ID columns.
+data frame, then \code{collapse_to_rvec()}
+and \code{expand_from_rvec()} assume that the
+grouping variables are ID variables.
 }
 }
 
@@ -103,16 +102,15 @@ ID columns.
 
 
 By default, \code{collapse_to_rvec()} calls function
-\code{\link[=rvec]{rvec()}} on each values column in \code{data}.
+\code{\link[=rvec]{rvec()}} on each values variable in \code{data}.
 \code{\link[=rvec]{rvec()}} chooses between \verb{rvec_chr, }rvec_dbl\verb{, }rvec_int\verb{,and  }rvec_lgl`, based
-on the contents of each values column.
+on the contents of each values variable.
 
-Instead of leaving the decision to \code{\link[=rvec]{rvec()}},
-the choice of rvec class can be specified
-in advance, using the \code{type} argument.
-\code{type} is a string, with the number of
-characters equal to the number of values columns.
-The characters have the following interpretations:
+Instead of leaving the choice of class to \code{\link[=rvec]{rvec()}},
+it can be specified in advance, using the \code{type} argument.
+\code{type} is a string, each character of which
+specifies the class of the corresponding values variable.
+The characters have the following meanings:
 \itemize{
 \item \code{"c"}: \code{rvec_chr}
 \item \code{"d"}: \code{rvec_dbl}
@@ -121,12 +119,13 @@ The characters have the following interpretations:
 \item \code{"?"}: Depends on inputs.
 }
 
-These codes are modified from codes used by the
+These codes are modified from ones used by the
 \href{https://readr.tidyverse.org}{readr} package.
 }
 
 \examples{
-data_db <- tibble::tribble(
+library(dplyr)
+data_db <- tribble(
   ~occupation,    ~sim, ~pay,
   "Statistician", 1,    100,
   "Statistician", 2,    80,
@@ -138,47 +137,47 @@ data_db <- tibble::tribble(
 
 ## database format to rvec format
 data_rv <- data_db \%>\%
-  collapse_to_rvecs(draw = sim,
-                    values = pay)
+  collapse_to_rvec(draw = "sim",
+                   values = pay)
 data_rv
 
 ## rvec format to database format
 data_rv \%>\%
-  expand_from_rvecs()
+  expand_from_rvec()
 
-## provide a name for the draw columnnn
+## provide a name for the draw variable
 data_rv \%>\%
-  expand_from_rvecs(draw = "sim")
+  expand_from_rvec(draw = "sim")
 
-## specify that rvec column
+## specify that rvec variable
 ## must be rvec_int
 data_rv <- data_db \%>\%
-  collapse_to_rvecs(draw = sim,
-                    values = pay,
-                    type = "i")
+  collapse_to_rvec(draw = "sim",
+                   values = pay,
+                   type = "i")
 
-## if we add add a redundant column.
+## if we add add a redundant variable,
 ## then our earlier call no longer works
 data_db2 <- data_db \%>\%
   mutate(newcol = "pointless")
 try(
   data_db2 \%>\%
-    collapse_to_rvec(draw = sim,
+    collapse_to_rvec(draw = "sim",
                      values = pay)
 )
 
 ## one solution: use 'group_by' to
-## specify the ID columns
+## specify the ID variables
 data_db2 \%>\%
   group_by(occupation) \%>\%
-  collapse_to_rvec(draw = sim,
+  collapse_to_rvec(draw = "sim",
                    values = pay)
 }
 \seealso{
 \itemize{
 \item \code{\link[=rvec]{rvec()}} to construct a single \code{rvec}.
 \item \code{\link[=as_list_col]{as_list_col()}} to convert an \code{rvec}
-to a list column.
+to a list variable.
 \item \href{https://dplyr.tidyverse.org/reference/group_data.html}{dplyr::group_vars()}
 gives the names of the grouping variables
 in a grouped data frame.

@@ -1,5 +1,4 @@
 
-
 test_that("vec_ptype2 works when x is rvec_chr", {
     expect_identical(vec_ptype2(rvec_chr(matrix("a")), rvec_chr(matrix("b"))),
                      rvec_chr())
@@ -75,6 +74,51 @@ test_that("vec_ptype2 works when x is rvec_lgl", {
     expect_identical(vec_ptype2(rvec_lgl(matrix(TRUE)), logical()),
                      rvec_lgl())
 })
+
+test_that("vec_ptype2 works when x is character", {
+    expect_identical(vec_ptype2("a", rvec_chr(matrix("b"))),
+                     rvec_chr())
+    expect_identical(vec_ptype2("a", rvec_dbl(matrix(1))),
+                     rvec_chr())
+    expect_identical(vec_ptype2("a", rvec_int(matrix(1L))),
+                     rvec_chr())
+    expect_identical(vec_ptype2("a", rvec_lgl(matrix(TRUE))),
+                     rvec_chr())
+})
+
+test_that("vec_ptype2 works when x is double", {
+    expect_identical(vec_ptype2(1, rvec_chr(matrix("b"))),
+                     rvec_chr())
+    expect_identical(vec_ptype2(1, rvec_dbl(matrix(1))),
+                     rvec_dbl())
+    expect_identical(vec_ptype2(1, rvec_int(matrix(1L))),
+                     rvec_dbl())
+    expect_identical(vec_ptype2(1, rvec_lgl(matrix(TRUE))),
+                     rvec_dbl())
+})
+
+test_that("vec_ptype2 works when x is integer", {
+    expect_identical(vec_ptype2(1L, rvec_chr(matrix("b"))),
+                     rvec_chr())
+    expect_identical(vec_ptype2(1L, rvec_dbl(matrix(1))),
+                     rvec_dbl())
+    expect_identical(vec_ptype2(1L, rvec_int(matrix(1L))),
+                     rvec_int())
+    expect_identical(vec_ptype2(1L, rvec_lgl(matrix(TRUE))),
+                     rvec_int())
+})
+
+test_that("vec_ptype2 works when x is logical", {
+    expect_identical(vec_ptype2(TRUE, rvec_chr(matrix("b"))),
+                     rvec_chr())
+    expect_identical(vec_ptype2(TRUE, rvec_dbl(matrix(1))),
+                     rvec_dbl())
+    expect_identical(vec_ptype2(TRUE, rvec_int(matrix(1L))),
+                     rvec_int())
+    expect_identical(vec_ptype2(TRUE, rvec_lgl(matrix(TRUE))),
+                     rvec_lgl())
+})
+
 
 
 

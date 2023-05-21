@@ -41,6 +41,52 @@ test_that("'append_col' throws correct error with zero-length df", {
 })
 
 
+## 'as_ptype_rvec_chr' --------------------------------------------------------
+
+test_that("'as_ptype_rvec_chr' works with valid inputs", {
+    x <- rvec(matrix(1:6, nr = 2))
+    ans_obtained <- as_ptype_rvec_chr(x)
+    ans_expected <- new_rvec(matrix(character(), nrow = 0, ncol = 3))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'as_ptype_rvec_dbl' --------------------------------------------------------
+
+test_that("'as_ptype_rvec_dbl' works with valid inputs", {
+    x <- rvec(matrix(1:6, nr = 2))
+    ans_obtained <- as_ptype_rvec_dbl(x)
+    ans_expected <- new_rvec(matrix(double(), nrow = 0, ncol = 3))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'as_ptype_rvec_int' --------------------------------------------------------
+
+test_that("'as_ptype_rvec_int' works with valid inputs", {
+    x <- rvec(matrix(1:6, nr = 2))
+    ans_obtained <- as_ptype_rvec_int(x)
+    ans_expected <- new_rvec(matrix(integer(), nrow = 0, ncol = 3))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'get_colnum_draw' ----------------------------------------------------------
+
+test_that("'get_colnum_draw' works with valid inputs", {
+    data <- data.frame(a = -1, b = 99, c = "x")
+    ans_obtained <- get_colnum_draw(draw = "b", data = data)
+    ans_expected <- c(b = 2L)
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'get_colnum_draw' throws correct error with invalid inputs", {
+    data <- data.frame(a = -1, b = 99, c = "x")
+    expect_error(get_colnum_draw(draw = "wrong", data = data),
+                 "Variable specified by `draw` not found in `data`.")
+})
+
+
 ## 'get_colnums_all' ----------------------------------------------------------
 
 test_that("'get_colnums_all' works with valid inputs", {
@@ -58,6 +104,16 @@ test_that("'get_colnums_groups' works with valid inputs", {
     data <- dplyr::group_by(data, c, a)
     ans_obtained <- get_colnums_groups(data)
     ans_expected <- c(c = 3L, a = 1L)
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'get_colnums_rvec' ---------------------------------------------------------
+
+test_that("'get_colnums_rvec' works with valid inputs", {
+    data <- data.frame(a = 1, b = rvec(matrix(1)), c = rvec(matrix("x")))
+    ans_obtained <- get_colnums_rvec(data)
+    ans_expected <- c(b = 2L, c = 3L)
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -80,8 +136,8 @@ test_that("'get_new_rvec_fun' throws correct error invalid input", {
 ## 'get_rvec_fun' -------------------------------------------------------------
 
 test_that("'get_rvec_fun' works with valid inputs", {
-    expect_identical(get_rvec_fun("c"), new_rvec_chr)
-    expect_identical(get_rvec_fun("?"), new_rvec)
+    expect_identical(get_rvec_fun("c"), rvec_chr)
+    expect_identical(get_rvec_fun("?"), rvec)
 })
 
 test_that("'get_rvec_fun' thows correct error invalid inputs", {
@@ -92,14 +148,24 @@ test_that("'get_rvec_fun' thows correct error invalid inputs", {
 
 ## 'get_rvec_funs' ------------------------------------------------------------
 
-test_that("'get_rvec_funs' works with valid inputs", {
-    expect_identical(get_rvec_funs("c?ldi?"),
-                     list(new_rvec_chr,
-                          new_rvec,
-                          new_rvec_lgl,
-                          new_rvec_dbl,
-                          new_rvec_int,
-                          new_rvec))
+test_that("'get_rvec_funs' works with valid inputs - type non-NULL", {
+    expect_identical(get_rvec_funs("c?ldi?",
+                                   colnums_values = c(a = 1L, b = 2L, c = 3L,
+                                                      d = 4L, e = 5L, f = 6L)),
+                     list(rvec_chr,
+                          rvec,
+                          rvec_lgl,
+                          rvec_dbl,
+                          rvec_int,
+                          rvec))
+})
+
+
+test_that("'get_rvec_funs' works with valid inputs - type NULL", {
+    expect_identical(get_rvec_funs(NULL,
+                                   colnums_values = c(a = 1L, b = 2L)),
+                     list(rvec,
+                          rvec))
 })
 
 
@@ -203,6 +269,16 @@ test_that("'n_draw_df' throws expected error when n_draw varies", {
     df$y <- rvec(matrix(10:1, nr = 2))
     expect_error(n_draw_df(df),
                  "Internal error: Value for `n_draw` varies across rvecs.")
+})
+
+
+## 'paste_dot' ----------------------------------------------------------------
+
+test_that("'paste_dot' works with valid inputs", {
+    df <- data.frame(a = 1:2, b = 3:4, c = 5:6)
+    ans_obtained <- paste_dot(df)
+    ans_expected <- c("1.3.5", "2.4.6")
+    expect_identical(ans_obtained, ans_expected)
 })
 
 

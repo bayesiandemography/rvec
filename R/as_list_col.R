@@ -5,7 +5,7 @@
 #' to a list that can be used
 #' as a list column in a data frame.
 #'
-#' @param An [rvecs][rvec()] or matrix.
+#' @param x An [rvecs][rvec()] or matrix.
 #'
 #' @returns A list:
 #' - If `x` is an `rvec`, then the list contains
@@ -17,14 +17,14 @@
 #'
 #' @seealso 
 #' - [rvec()] to construct an `rvec`.
-#' - [expand_from_rvecs()] to convert a data frame
+#' - [expand_from_rvec()] to convert a data frame
 #' from using `rvec`s to using `draw` and `value`
 #' columns.
 #' - as_rvar???
 #' - converting `rvec`s to 
 #' - Functions for summarising and plotting
 #' distributions in package
-#' [ggdist][https://CRAN.R-project.org/package=ggdist]
+#' [ggdist](https://CRAN.R-project.org/package=ggdist)
 #' understand list columns.
 #' 
 #' @examples

@@ -55,17 +55,20 @@ to each draw.
 
 \strong{Step 3: Summarise the \code{rvec}}
 \itemize{
-\item \code{\link[=draw_median]{draw_median()}}
-\item \code{\link[=draw_mean]{draw_mean()}}
-\item \code{\link[=draw_mode]{draw_mode()}}
-\item \code{\link[=draw_quantile]{draw_quantile()}}
+\item \code{\link[=draws_median]{draws_median()}}
+\item \code{\link[=draws_mean]{draws_mean()}}
+\item \code{\link[=draws_mode]{draws_mode()}}
+\item \code{\link[=draws_quantile]{draws_quantile()}}
+\item \code{\link[=draws_fun]{draws_fun()}}
 }
 }
 
 \section{Other functions}{
 
-
-\link{collapse_to_rvec}
+\itemize{
+\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}}
+\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}}
+}
 }
 
 \section{Design}{
@@ -74,7 +77,8 @@ to each draw.
 \code{rvec} are built from \link[vctrs:vctrs-package]{vctrs} package, which
 look after many of the tricky details, and give it a sound
 conceptual basis. Internally, many of the calculations are
-done using the \link{matrixStats} package, is fast.
+done using the \link[matrixStats:matrixStats-package]{matrixStats}
+package, is fast.
 }
 
 \section{Other packages}{

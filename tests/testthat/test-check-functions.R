@@ -1,4 +1,34 @@
 
+## 'check_colnum_draw' --------------------------------------------------------
+
+test_that("'check_colnum_draw' returns TRUE with valid inputs", {
+    expect_true(check_colnum_draw(colnum_draw = c(draw = 3L)))
+})
+
+test_that("'check_colnum_draw' throws expected error when length 0", {
+    expect_error(check_colnum_draw(colnum_draw = integer()),
+                 "No `draw` variable selected")
+})
+
+
+test_that("'check_colnum_draw' throws expected error when length 2", {
+    expect_error(check_colnum_draw(colnum_draw = c(draw = 3, sim = 4L)),
+                 "More than one `draw` variable selected")
+})
+
+
+## 'check_colnums_values' -----------------------------------------------------
+
+test_that("'check_colnums_values' returns TRUE with valid inputs", {
+    expect_true(check_colnums_values(colnums_values = c(val = 3L)))
+})
+
+test_that("'check_colnum_draw' throws expected error when length 0", {
+    expect_error(check_colnums_values(colnums_values = integer()),
+                 "No `values` variables selected")
+})
+
+
 ## 'check_idx_dup' ------------------------------------------------------------
 
 test_that("'check_idx_dup' returns TRUE with valid inputs", {
@@ -60,13 +90,27 @@ test_that("'check_idx_gap' throws expected error", {
                               idvars_ans = data[1, 1:2],
                               draw_ans = 1:3,
                               nm_draw = "DRAW"),
-                 "Missing combination of values for ID and draw columns:")
+                 "Missing combination of values for ID and draw variables:")
+})
+
+
+## 'check_has_no_rvecs' --------------------------------------------------------
+
+test_that("'check_has_no_rvecs' returns TRUE with valid inputs", {
+    df <- data.frame(a = 1, b = 2)
+    expect_true(check_has_no_rvecs(df, nm_df = "data"))
+})
+
+test_that("'check_has_no_rvecs' raises correct error invalid inputs", {
+    df <- data.frame(a = 1, b = rvec(matrix("a")))
+    expect_error(check_has_no_rvecs(df, nm_df = "data"),
+                 "`data` contains an rvec")
 })
 
 
 ## 'check_length_n_draw_compatible' -------------------------------------------
 
-test_that("'check_length_n_draw_compatible' works with valid inputs", {
+test_that("'check_length_n_draw_compatible' returns TRUE with valid inputs", {
     expect_true(check_length_n_draw_compatible(x = 1:2,
                                                y = rvec(matrix(1:6, 3)),
                                                x_arg = "x",
@@ -156,37 +200,79 @@ test_that("'check_na_rm' throws expected error NA", {
 })
 
 
-## 'check_nm_draw' ------------------------------------------------------------
+## 'check_draw' ---------------------------------------------------------------
 
-test_that("'check_nm_draw' returns TRUE with valid inputs", {
-    expect_true(check_nm_draw("draw"))
-    expect_true(check_nm_draw("sim"))
+test_that("'check_draw' returns TRUE with valid inputs", {
+    expect_true(check_draw("draw"))
+    expect_true(check_draw("sim"))
 })
 
-test_that("'check_nm_draw' throws expected error non-length-1", {
-    expect_error(check_nm_draw(character()),
+test_that("'check_draw' throws expected error non-length-1", {
+    expect_error(check_draw(character()),
                  "`nm_draw` does not have length 1")
-    expect_error(check_nm_draw(c("a", "b")),
+    expect_error(check_draw(c("a", "b")),
                  "`nm_draw` does not have length 1")
 })
 
-test_that("'check_nm_draw' throws expected error non-character", {
-    expect_error(check_nm_draw(TRUE),
+test_that("'check_draw' throws expected error non-character", {
+    expect_error(check_draw(TRUE),
                  "`nm_draw` has class <logical>")
 })
 
-test_that("'check_nm_draw' throws expected error NA", {
-    expect_error(check_nm_draw(NA_character_),
+test_that("'check_draw' throws expected error NA", {
+    expect_error(check_draw(NA_character_),
                  "`nm_draw` is NA")
 })
 
-test_that("'check_nm_draw' throws expected error blank", {
-    expect_error(check_nm_draw(""),
+test_that("'check_draw' throws expected error blank", {
+    expect_error(check_draw(""),
                  "`nm_draw` is blank")
 })
 
 
-## 'check_probs' -----------------------------------------------------
+## 'check_overlap_draw_groups' ------------------------------------------------
+
+test_that("'check_overlap_draw_groups' returns TRUE with valid inputs", {
+    expect_true(check_overlap_draw_groups(colnum_draw = c(draw = 3L),
+                                          colnums_groups = c(v1 = 1L, v2 = 5L)))
+})
+
+test_that("'check_overlap_draw_groups' throws expected error with overlap", {
+    expect_error(check_overlap_draw_groups(colnum_draw = c(v2 = 3L),
+                                           colnums_groups = c(v1 = 1L, v2 = 3L)),
+                 "`v2` is a grouping variable, so cannot be used for `draw`.")
+})
+
+
+## 'check_overlap_draw_values' ------------------------------------------------
+
+test_that("'check_overlap_draw_values' returns TRUE with valid inputs", {
+    expect_true(check_overlap_draw_values(colnum_draw = c(draw = 3L),
+                                          colnums_values = c(v1 = 1L, v2 = 5L)))
+})
+
+test_that("'check_overlap_draw_values' throws expected error with overlap", {
+    expect_error(check_overlap_draw_values(colnum_draw = c(v2 = 3L),
+                                           colnums_values = c(v1 = 1L, v2 = 3L)),
+                 "`v2` used in `draw` and in `values`")
+})
+
+
+## 'check_overlap_values_groups' ------------------------------------------------
+
+test_that("'check_overlap_values_groups' returns TRUE with valid inputs", {
+    expect_true(check_overlap_values_groups(colnums_values = c(v1 = 1L, v2 = 5L),
+                                            colnums_groups = c(v3 = 2L)))
+})
+
+test_that("'check_overlap_values_groups' throws expected error with overlap", {
+    expect_error(check_overlap_values_groups(colnums_values = c(v1 = 1L, v2 = 3L),
+                                             colnums_groups = c(v2 = 3L, v3 = 4L)),
+                 "`v2` is a grouping variable, so cannot be included in `values`")
+})
+
+
+## 'check_probs' --------------------------------------------------------------
 
 test_that("'check_probs' works with valid inputs", {
     expect_true(check_probs(0.95))
@@ -220,27 +306,49 @@ test_that("'check_probs' throws expected error with values greater than 1", {
 })
 
 
-## 'check_types' --------------------------------------------------------------
+## 'check_type' --------------------------------------------------------------
 
-test_that("'check_types' returns TRUE with valid inputs", {
-    expect_true(check_types("cdil?"))
-    expect_true(check_types("c"))
-    expect_true(check_types(""))
+test_that("'check_type' returns TRUE with valid inputs", {
+    expect_true(check_type("cdil?"))
+    expect_true(check_type("c"))
+    expect_true(check_type(""))
+    expect_true(check_type(NULL))
 })
 
-test_that("'check_types' throws expected error with non-character", {
-    expect_error(check_types(NULL),
-                 "`types` must have class <character>.")
+test_that("'check_type' throws expected error with non-character", {
+    expect_error(check_type(1L),
+                 "`type` must have class <character>.")
 })
 
-test_that("'check_types' throws expected error with wrong length", {
-    expect_error(check_types(c("c", "d")),
-                 "`types` must be a single string.")
+test_that("'check_type' throws expected error with wrong length", {
+    expect_error(check_type(c("c", "d")),
+                 "`type` must be a single string.")
 })
 
-test_that("'check_types' throws expected error with invalid character", {
-    expect_error(check_types("cwd"),
-                 "\"w\" is not a valid code for `types`.")
+test_that("'check_type' throws expected error with invalid character", {
+    expect_error(check_type("cwd"),
+                 "\"w\" is not a valid code for `type`.")
+})
+
+
+## 'check_values_type_consistent' ---------------------------------------------
+
+test_that("'check_values_type_consistent' returns TRUE with valid inputs", {
+    expect_true(check_values_type_consistent(colnums_values = c(v = 1L),
+                                             type = "d"))
+    expect_true(check_values_type_consistent(colnums_values = c(v = 1L, x = 2L),
+                                             type = "di"))
+    expect_true(check_values_type_consistent(colnums_values = c(v = 1L, x = 2L),
+                                             type = NULL))
+})
+
+test_that("'check_values_type_consistent' throws expected error with diff lengths", {
+    expect_error(check_values_type_consistent(colnums_values = c(a = 1L, b = 2L),
+                                              type = "dd?"),
+                 "Number of characters in `type` must equal number of values variables")
+    expect_error(check_values_type_consistent(colnums_values = c(a = 1L, b = 2L),
+                                              type = "i"),
+                 "Number of characters in `type` must equal number of values variables")
 })
 
 

@@ -37,28 +37,25 @@ and \link[tibble:tibble]{tibbles} both allow
 data frame columns, so the results from
 \code{draws_quantile()} can be inserted into a
 data frame. See below for an example.
-Function \code{unnest_wider()} in package
-\link{tidyr} can be used to expand the
-a data frame column, if desired. See\if{html}{\out{
-<LINK TO VIGNETTE> for an example.
-}}
+
+To expand a data frame column, use
+\href{https://tidyr.tidyverse.org/reference/hoist.html}{tidyr::unnest_wider()}
 }
 \examples{
 set.seed(0)
-m <- cbind(a = rnorm(100, mean = 5, sd = 2),
+m <- rbind(a = rnorm(100, mean = 5, sd = 2),
            b = rnorm(100, mean = -3, sd = 3),
            c = rnorm(100, mean = 0, sd = 20))
-x <- rvecs(m)
+x <- rvec(m)
 x
 draws_quantile(x)
 
 ## results from 'draw_quantile'
-## assigned to a column in a
-## data frame
-df <- data.frame(g = c("a", "b", "c"),
-                 x = x)
-df$cred_int <- draws_quantile(x)
-df
+## assigned to a data frame
+library(dplyr)
+df <- tibble(x)
+df \%>\%
+  mutate(draws_quantile(x))
 }
 \seealso{
 \itemize{

@@ -7,7 +7,7 @@
 is_rvec(x)
 }
 \arguments{
-\item{x}{An object}
+\item{x}{An object.}
 }
 \value{
 \code{TRUE} or \code{FALSE}.
@@ -23,10 +23,7 @@ is_rvec(x)
 \seealso{
 \itemize{
 \item \code{\link[=rvec]{rvec()}} to create an rvec
-\item \code{\link[=as_rvec]{as_rvec()}} to convert an object
-into an rvec
 \item \code{\link[=as.matrix]{as.matrix()}}, \code{\link[=as_list_col]{as_list_col()}},
-\link[=as_rvar]{as_rvar()} to convert an
-rvec into something else
+to convert an rvec into other formats
 }
 }

@@ -1,4 +1,4 @@
-5
+
 ## HAS_TESTS
 #' Insert a column into a data frame
 #'
@@ -31,7 +31,15 @@ append_col <- function(df, value, after, nm) {
 }
         
 
-## NO_TESTS
+## HAS_TESTS
+#' Create a rvec_chr prototype
+#'
+#' @param x An rvec with the desired
+#' number of draws.
+#'
+#' @returns An rvec_chr
+#'
+#' @noRd
 as_ptype_rvec_chr <- function(x) {
     n_draw <- n_draw(x)
     m <- matrix(character(),
@@ -40,7 +48,16 @@ as_ptype_rvec_chr <- function(x) {
     new_rvec_chr(m)
 }
 
-## NO_TESTS
+
+## HAS_TESTS
+#' Create a rvec_dbl prototype
+#'
+#' @param x An rvec with the desired
+#' number of draws.
+#'
+#' @returns An rvec_dbl
+#'
+#' @noRd
 as_ptype_rvec_dbl <- function(x) {
     n_draw <- n_draw(x)
     m <- matrix(double(),
@@ -49,13 +66,47 @@ as_ptype_rvec_dbl <- function(x) {
     new_rvec_dbl(m)
 }
 
-## NO_TESTS
+
+## HAS_TESTS
+#' Create a rvec_int prototype
+#'
+#' @param x An rvec with the desired
+#' number of draws.
+#'
+#' @returns An rvec_int
+#'
+#' @noRd
 as_ptype_rvec_int <- function(x) {
     n_draw <- n_draw(x)
     m <- matrix(integer(),
                 nrow = 0L,
                 ncol = n_draw)
     new_rvec_int(m)
+}
+
+
+## HAS_TESTS
+#' Get a named length-1 vector giving the
+#' location of the draw variable,
+#'
+#' Assume that 'draw' has already been
+#' verified to be a string.
+#' 
+#' @param draw Name of the draw variable. A string.
+#' @param data A data frame
+#'
+#' @returns A named integer vector of length 1.
+#'
+#' @noRd
+get_colnum_draw <- function(draw, data) {
+    nms <- names(data)
+    ans <- match(draw, nms, nomatch = 0L)
+    if (ans == 0L)
+        cli::cli_abort(c("Variable specified by {.arg draw} not found in {.arg data}.",
+                         i = "{.arg draw}: {.val {draw}}.",
+                         i = "Variables in {.arg data}: {nms}"))
+    names(ans) <- draw
+    ans
 }
 
 
@@ -107,6 +158,20 @@ get_colnums_groups <- function(data) {
     ans
 }
 
+
+## HAS_TESTS
+#' Get a named vector of column indices
+#' for columns with rvecs
+#' 
+#' @param data A data frame.
+#'
+#' @returns A named integer vector.
+#'
+#' @noRd
+get_colnums_rvec <- function(data)
+    which(vapply(data, is_rvec, TRUE))
+
+
 ## HAS_TESTS
 #' Choose the appropriate rvec constructor function,
 #' based on the type of 'x'
@@ -141,11 +206,11 @@ get_new_rvec_fun <- function(x) {
 #' @noRd
 get_rvec_fun <- function(code) {
     switch(code,
-           c = new_rvec_chr,
-           d = new_rvec_dbl,
-           i = new_rvec_int,
-           l = new_rvec_lgl,
-           "?" = new_rvec,
+           c = rvec_chr,
+           d = rvec_dbl,
+           i = rvec_int,
+           l = rvec_lgl,
+           "?" = rvec,
            cli::cli_abort("Internal error: {.val {code}} is not a valid code."))
 }
 
@@ -155,16 +220,24 @@ get_rvec_fun <- function(code) {
 #' of rvec constructor functions
 #'
 #' @param type A string
+#' @param colnums_values Named integer vector
+#' giving locations of values variables.
 #'
 #' @returns A list of functions.
 #'
 #' @noRd
-get_rvec_funs <- function(type) {
-    n <- nchar(type)
-    ans <- vector(mode = "list", length = n)
-    for (i in seq_len(n)) {
-        code <- substr(type, start = i, stop = i)
-        ans[[i]] <- get_rvec_fun(code)
+get_rvec_funs <- function(type, colnums_values) {
+    if (is.null(type)) {
+        n <- length(colnums_values)
+        ans <- rep(list(rvec), times = n)
+    }
+    else {
+        n <- nchar(type)
+        ans <- vector(mode = "list", length = n)
+        for (i in seq_len(n)) {
+            code <- substr(type, start = i, stop = i)
+            ans[[i]] <- get_rvec_fun(code)
+        }
     }
     ans
 }    
@@ -176,17 +249,14 @@ get_rvec_funs <- function(type) {
 #' Test whether `x` inherits from
 #' class `"rvec"`.
 #'
-#' @param x An object
+#' @param x An object.
 #'
 #' @returns `TRUE` or `FALSE`.
 #'
 #' @seealso
 #' - [rvec()] to create an rvec
-#' - [as_rvec()] to convert an object
-#' into an rvec
 #' - [as.matrix()], [as_list_col()],
-#' [as_rvar()][rvec::as_rvar()] to convert an
-#' rvec into something else
+#'   to convert an rvec into other formats
 #' 
 #' @examples
 #' x <- rvec_dbl()
@@ -297,6 +367,19 @@ n_draw_df <- function(df) {
     }
     n_draw
 }
+
+
+#' Paste together the columns from a data frame,
+#' separated by a dot
+#'
+#' @param df A data frame.
+#'
+#' @returns A string with length equal
+#' to nrow(df)
+#'
+#' @noRd
+paste_dot <- function(df)
+    do.call(function(...) paste(..., sep = "."), args = df)
 
 
 ## HAS_TESTS

@@ -26,10 +26,10 @@ in an \code{rvec}, using a function.
 }
 \examples{
 set.seed(0)
-m <- cbind(a = rnorm(100, mean = 5, sd = 2),
+m <- rbind(a = rnorm(100, mean = 5, sd = 2),
            b = rnorm(100, mean = -3, sd = 3),
            c = rnorm(100, mean = 0, sd = 20))
-x <- rvecs(m)
+x <- rvec(m)
 x
 draws_fun(x, fun = mad)
 draws_fun(x, fun = range)

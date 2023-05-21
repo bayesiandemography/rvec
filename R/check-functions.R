@@ -1,4 +1,35 @@
 
+## HAS_TESTS
+#' Check that 'colnum_draw' has length 1
+#'
+#' @param colnum_draw A named integer vector of length 1
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_colnum_draw <- function(colnum_draw) {
+    if (length(colnum_draw) == 0L)
+        cli::cli_abort("No {.var draw} variable selected.")
+    if (length(colnum_draw) > 1L)
+        cli::cli_abort("More than one {.var draw} variable selected.")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check that 'colnum_values' does not have length 0
+#'
+#' @param colnums_values A named integer vector.
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_colnums_values <- function(colnums_values) {
+    if (length(colnums_values) == 0L)
+        cli::cli_abort("No {.var values} variables selected.")
+    invisible(TRUE)
+}
+
 
 ## HAS_TESTS
 #' Check that indices for position in data
@@ -48,7 +79,7 @@ check_idx_dup <- function(idx,
 #' used in answer.
 #' @param draw_ans Vector with draws used
 #' in answer.
-#' @param nm_draw The name of the 'draw' column.
+#' @param nm_draw The name of the 'draw' variable.
 #'
 #' @returns TRUE, invisibly
 #'
@@ -74,9 +105,32 @@ check_idx_gap <- function(idx,
         .envir <- vals_id
         .envir[[nm_draw]] <- val_draw
         .envir <- as.environment(.envir)
-        cli::cli_abort(c("Missing combination of values for ID and draw columns:",
+        cli::cli_abort(c("Missing combination of values for ID and draw variables:",
                          msg),
                        .envir = .envir)
+    }
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check that a data frame does not contain
+#' any rvecs
+#'
+#' @param df A data frame
+#' @param nm_df Name for df to be used in error message.
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_has_no_rvecs <- function(df, nm_df) {
+    is_rv <- vapply(df, is_rvec, FALSE)
+    i_rv <- match(TRUE, is_rv, nomatch = 0L)
+    if (i_rv > 0L) {
+        nm_rv <- names(df)[[i_rv]]
+        cls_rv <- class(df[[i_rv]])
+        cli::cli_abort(c("{.arg {nm_df}} contains an rvec",
+                         i = "{.var {nm_rv}} has class {.cls cls_rv}"))
     }
     invisible(TRUE)
 }
@@ -225,15 +279,99 @@ check_na_rm <- function(na_rm) {
 #' @returns TRUE, invisibly.
 #'
 #' @noRd
-check_nm_draw <- function(nm_draw) {
+check_draw <- function(nm_draw) {
     if (!identical(length(nm_draw), 1L))
-        cli::cli_abort("{.arg nm_draw} does not have length 1")
+        cli::cli_abort("{.arg nm_draw} does not have length 1.")
     if (is.na(nm_draw))
-        cli::cli_abort("{.arg nm_draw} is {.val {NA}}")
+        cli::cli_abort("{.arg nm_draw} is {.val {NA}}.")
     if (!is.character(nm_draw))
-        cli::cli_abort("{.arg nm_draw} has class {.cls {class(nm_draw)}}")
+        cli::cli_abort("{.arg nm_draw} has class {.cls {class(nm_draw)}}.")
     if (nchar(nm_draw) == 0L)
         cli::cli_abort("{.arg nm_draw} is blank")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check that draw variable not used as grouping variable
+#'
+#' Assume that the colnum_draw and colnums_groups
+#' are both valid.
+#'
+#' @param colnum_draw A named integer vector of
+#' length 1 giving the location of the draw variable
+#' @param colnums_groups A named vector of
+#' length >0, giving the location(s) of the
+#' grouping variable(s)
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_overlap_draw_groups <- function(colnum_draw, colnums_groups) {
+    if (colnum_draw %in% colnums_groups) {
+        nm <- names(colnum_draw)
+        nms_gp <- names(colnums_groups)
+        cli::cli_abort(c("{.var {nm}} is a grouping variable, so cannot be used for {.arg draw}.",
+                         i = "grouping variables: {nms_gp}",
+                         i = "{.arg draw}: {nm}"))
+    }
+    invisible(TRUE)
+}    
+
+
+## HAS_TESTS
+#' Check that draw variable not used as values variable
+#'
+#' Assume that the colnum_draw and colnums_values
+#' are both valid.
+#'
+#' @param colnum_draw A named integer vector of
+#' length 1 giving the location of the draw variable
+#' @param colnums_values A named vector of
+#' length >0, giving the location(s) of the
+#' values variable(s)
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_overlap_draw_values <- function(colnum_draw, colnums_values) {
+    if (colnum_draw %in% colnums_values) {
+        nm <- names(colnum_draw)
+        nms_val <- names(colnums_values)
+        cli::cli_abort(c("{.var {nm}} used in {.arg draw} and in {.arg values}.",
+                         i = "{.arg draw}: {nm}",
+                         i = "{.arg values}: {nms_val}"))
+    }
+    invisible(TRUE)
+}    
+                                      
+
+## HAS_TESTS
+#' Check if any values variables are also groups variables
+#'
+#' Assume that colnums_values and colnums_groups are both valid.
+#'
+#' @param colnums_values A named vector of
+#' length >0, giving the location(s) of the
+#' values variable(s)
+#' @param colnums_groups A named vector of
+#' length >0, giving the location(s) of the
+#' grouping variable(s)
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_overlap_values_groups <- function(colnums_values, colnums_groups) {
+    is_in_gp <- colnums_values %in% colnums_groups
+    i_in_gp <- match(TRUE, is_in_gp, nomatch = 0L)
+    if (i_in_gp > 0L) {
+        nms_val <- names(colnums_values)
+        nms_gp <- names(colnums_groups)
+        nm_in <- nms_val[[i_in_gp]]
+        cli::cli_abort(c("{.var {nm_in}} is a grouping variable, so cannot be included in {.arg values}",
+                         i = "grouping variable{?s}: {nms_gp}",
+                         i = "{.arg values}: {nms_val}"))
+    }
     invisible(TRUE)
 }
 
@@ -274,27 +412,54 @@ check_probs <- function(probs) {
 #' @returns TRUE, invisibly.
 #'
 #' @noRd
-check_types <- function(types) {
+check_type <- function(type) {
     choices <- c("c", "d", "i", "l", "?")
-    if (!is.character(types))
-        cli::cli_abort(c("{.arg types} must have class {.cls character}.",
-                         "x" = "{.arg types} has class {.cls {class(types)}}."))
-    if (length(types) != 1L)
-        cli::cli_abort(c("{.arg types} must be a single string",
-                         "x" = "{.arg types} has length {length(types)}."))
-    n_char <- nchar(types)
-    get_char <- function(i) substr(types, i, i)
-    code <- vapply(seq_len(n_char), get_char, " ")
-    is_valid <- code %in% choices
-    i_invalid <- match(FALSE, is_valid, nomatch = 0L)
-    if (i_invalid > 0L)
-        cli::cli_abort(c("{.val {code[[i_invalid]]}} is not a valid code for {.arg types}",
-                         i = "Valid codes: {.val {choices}}"))
+    if (!is.null(type)) {
+        if (!is.character(type))
+            cli::cli_abort(c("{.arg type} must have class {.cls character}.",
+                             "x" = "{.arg type} has class {.cls {class(type)}}."))
+        if (length(type) != 1L)
+            cli::cli_abort(c("{.arg type} must be a single string",
+                             "x" = "{.arg type} has length {length(type)}."))
+        n_char <- nchar(type)
+        get_char <- function(i) substr(type, i, i)
+        code <- vapply(seq_len(n_char), get_char, " ")
+        is_valid <- code %in% choices
+        i_invalid <- match(FALSE, is_valid, nomatch = 0L)
+        if (i_invalid > 0L)
+            cli::cli_abort(c("{.val {code[[i_invalid]]}} is not a valid code for {.arg type}",
+                             i = "Valid codes: {.val {choices}}"))
+    }
     invisible(TRUE)
-
 }
 
 
+## HAS_TESTS
+#' Check that number of characters in 'type'
+#' equal to length of values
+#'
+#' @param colnums_values A named integer vector
+#' giving locations of values variables
+#' @param type A string
+#'
+#' @return TRUE, invisibly
+#'
+#' @noRd
+check_values_type_consistent <- function(colnums_values, type) {
+    if (!is.null(type)) {
+        n_values <- length(colnums_values)
+        n_type <- nchar(type)
+        if (!identical(n_type, n_values))
+            cli::cli_abort(c("Number of characters in {.arg type} must equal number of values variables",
+                             i = "{.arg type} has {n_type} character{?s}.",
+                             i = "{.arg values} has length {n_values}."))
+    }
+    invisible(TRUE)
+}
+
+
+
+    
 ## HAS TESTS
 #' Check that 'x' has at least one column
 #'
