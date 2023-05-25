@@ -29,6 +29,7 @@ Imports:
     utils,
     vctrs
 Suggests:
+    covr,
     dplyr,
     ggdist,
     knitr,

@@ -71,6 +71,7 @@ NULL
 
 ## 'norm' ---------------------------------------------------------------------
 
+## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
 dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
@@ -88,6 +89,7 @@ dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
                 log = log)
 }
 
+## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
 pnorm_rvec <- function(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {

@@ -8,10 +8,12 @@
 [![R-CMD-check](https://github.com/bayesiandemography/rvec/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bayesiandemography/rvec/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Codecov test
+coverage](https://codecov.io/gh/bayesiandemography/rvec/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bayesiandemography/rvec?branch=main)
 <!-- badges: end -->
 
 Tools for working posterior distributions, prior distributions, or
-simulation output. An rvec holds multiple draws from distribution, but
+simulation output. An rvec holds multiple draws from a distribution, but
 behaves as much as possible like a standard R vector.
 
 ## Installation
@@ -27,16 +29,8 @@ devtools::install_github("bayesiandemography/rvec")
 ## Example
 
 ``` r
-library(rvec)
-library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
+library(rvec, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
 
 x <- rvec(rbind(c(10, 11),
                 c(100, 101),
