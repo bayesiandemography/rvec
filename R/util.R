@@ -369,6 +369,32 @@ n_draw_df <- function(df) {
 }
 
 
+## HAS_TESTS
+#' Make 'n' to use in random variate functions
+#'
+#' The elements of 'args' should all of the same
+#' length. None, some, or could be rvecs.
+#' If any are rvecs, then 'n' is multiplied
+#' by 'n_draw'.
+#' 
+#' @param n The value of 'n' supplied by the user
+#' @param args A list of arguments.
+#'
+#' @returns An integer.
+#'
+#' @noRd
+n_rdist <- function(n, args) {
+    ans <- n
+    for (arg in args) {
+        if (is_rvec(arg)) {
+            ans <- n_draw(arg) * ans
+            break
+        }
+    }
+    ans
+}    
+
+
 #' Paste together the columns from a data frame,
 #' separated by a dot
 #'
@@ -380,6 +406,61 @@ n_draw_df <- function(df) {
 #' @noRd
 paste_dot <- function(df)
     do.call(function(...) paste(..., sep = "."), args = df)
+
+
+## HAS_TESTS
+#' Recycle two arguments to same length, using base R rules
+#'
+#' @param arg1,arg2 Vectors
+#'
+#' @return List with recycled versions of
+#' arg1, arg2
+#'
+#' @noRd
+recycle_common_2 <- function(arg1, arg2) {
+    nm1 <- rlang::as_name(rlang::enquo(arg1))
+    nm2 <- rlang::as_name(rlang::enquo(arg2))
+    n1 <- length(arg1)
+    n2 <- length(arg2)
+    if (n1 == 0L)
+        cli::cli_abort("{.arg {nm1}} has length 0")
+    if (n2 == 0L)
+        cli::cli_abort("{.arg {nm2}} has length 0")
+    n <- max(n1, n2)
+    arg1 <- rep_len(arg1, length.out = n)
+    arg2 <- rep_len(arg2, length.out = n)
+    list(arg1, arg2)
+}
+
+
+## HAS_TESTS
+#' Recycle three arguments to same length, using base R rules
+#'
+#' @param arg1,arg2,arg3 Vectors
+#'
+#' @return List with recycled versions of
+#' arg1, arg2, arg3
+#'
+#' @noRd
+recycle_common_3 <- function(arg1, arg2, arg3) {
+    nm1 <- rlang::as_name(rlang::enquo(arg1))
+    nm2 <- rlang::as_name(rlang::enquo(arg2))
+    nm3 <- rlang::as_name(rlang::enquo(arg3))
+    n1 <- length(arg1)
+    n2 <- length(arg2)
+    n3 <- length(arg3)
+    if (n1 == 0L)
+        cli::cli_abort("{.arg {nm1}} has length 0")
+    if (n2 == 0L)
+        cli::cli_abort("{.arg {nm2}} has length 0")
+    if (n3 == 0L)
+        cli::cli_abort("{.arg {nm3}} has length 0")
+    n <- max(n1, n2, n3)
+    arg1 <- rep_len(arg1, length.out = n)
+    arg2 <- rep_len(arg2, length.out = n)
+    arg3 <- rep_len(arg3, length.out = n)
+    list(arg1, arg2, arg3)
+}
 
 
 ## HAS_TESTS

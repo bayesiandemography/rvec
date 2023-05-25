@@ -29,6 +29,37 @@ test_that("'check_colnum_draw' throws expected error when length 0", {
 })
 
 
+## 'check_flag' ---------------------------------------------------------------
+
+test_that("'check_flag' returns TRUE with valid inputs", {
+    x <- TRUE
+    expect_true(check_flag(x))
+    x <- FALSE
+    expect_true(check_flag(x))
+})
+
+test_that("'check_flag' throws expected error non-length-1", {
+    y <- logical()
+    expect_error(check_flag(y),
+                 "`y` does not have length 1")
+    z <- c(TRUE, TRUE)
+    expect_error(check_flag(z),
+                 "`z` does not have length 1")
+})
+
+test_that("'check_flag' throws expected error non-logical", {
+    x <- "hello"
+    expect_error(check_flag(x),
+                 "`x` has class <character>")
+})
+
+test_that("'check_flag' throws expected error NA", {
+    x <- NA
+    expect_error(check_flag(x),
+                 "`x` is NA")
+})
+
+
 ## 'check_idx_dup' ------------------------------------------------------------
 
 test_that("'check_idx_dup' returns TRUE with valid inputs", {
@@ -172,31 +203,6 @@ test_that("'check_n_draw_equal' throws expected error with non-compatible length
                                     x_arg = "x",
                                     y_arg = "to"),
                  "Number of draws of rvec `x` must equal number of draws of rvec `to`.")
-})
-
-
-## 'check_na_rm' --------------------------------------------------------------
-
-test_that("'check_na_rm' returns TRUE with valid inputs", {
-    expect_true(check_na_rm(TRUE))
-    expect_true(check_na_rm(FALSE))
-})
-
-test_that("'check_na_rm' throws expected error non-length-1", {
-    expect_error(check_na_rm(logical()),
-                 "`na_rm` does not have length 1")
-    expect_error(check_na_rm(c(TRUE, TRUE)),
-                 "`na_rm` does not have length 1")
-})
-
-test_that("'check_na_rm' throws expected error non-logical", {
-    expect_error(check_na_rm("T"),
-                 "`na_rm` has class <character>")
-})
-
-test_that("'check_na_rm' throws expected error NA", {
-    expect_error(check_na_rm(NA),
-                 "`na_rm` is NA")
 })
 
 

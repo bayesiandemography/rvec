@@ -23,32 +23,61 @@ test_that("'format' method for rvec works - three columns", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'format' method for rvec works - four columns", {
-    x <- rvec(matrix(pi, nr = 2, nc = 4))
+test_that("'format' method for rvec works - four columns, chr", {
+    m <- matrix(c("b", "b", "c", "c", "d", "d", "b", "c"),
+                nr = 2, nc = 4)
+    x <- rvec(m)                
     ans_obtained <- format(x)
-    ans_expected <- c("3.142,..,3.142", "3.142,..,3.142")
+    ans_expected <- c("..b..", "..c..")
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'format' method for rvec works - four columns, dbl", {
+    m <- matrix(rnorm(8), nr = 2, nc = 4)
+    x <- rvec(m)
+    ans_obtained <- format(x)
+    ans_expected <- paste0(formatC(rowMeans(m), format = "fg"),
+                           " ± ",
+                           formatC(apply(m, 1, sd), format = "fg"))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'format' method for rvec works - four columns, int", {
+    m <- matrix(1:8, nr = 2, nc = 4)
+    x <- rvec(m)
+    ans_obtained <- format(x)
+    ans_expected <- paste0(formatC(rowMeans(m), format = "fg"),
+                           " ± ",
+                           formatC(apply(m, 1, sd), format = "fg"))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'format' method for rvec works - four columns, lgl", {
+    x <- rvec(matrix(c(T,F,F,T), nr = 2, nc = 4))
+    ans_obtained <- format(x)
+    ans_expected <- c("p = 0.5", "p = 0.5")
     expect_identical(ans_obtained, ans_expected)
 })
 
 
 ## Helpers --------------------------------------------------------------------
 
-test_that("format_elements_rvec works with character", {
-    expect_identical(format_elements_rvec(matrix(c("a", NA), nr = 1)),
+test_that("format_rvec_elements works with character", {
+    expect_identical(format_rvec_elements(matrix(c("a", NA), nr = 1)),
                      matrix(c('"a"', NA), nr = 1))
 })
 
-test_that("format_elements_rvec works with double", {
-    expect_identical(format_elements_rvec(matrix(c(1.2345, -3, 1000000, NA), nr = 1)),
+test_that("format_rvec_elements works with double", {
+    expect_identical(format_rvec_elements(matrix(c(1.2345, -3, 1000000, NA), nr = 1)),
                      matrix(c("1.234", "-3", "1000000", "NA"), nr = 1))
 })
 
-test_that("format_elements_rvec works with integer", {
-    expect_identical(format_elements_rvec(matrix(c(1L, -3L, 1000000L, NA), nr = 1)),
+test_that("format_rvec_elements works with integer", {
+    expect_identical(format_rvec_elements(matrix(c(1L, -3L, 1000000L, NA), nr = 1)),
                      matrix(c("1", "-3", "1000000", "NA"), nr = 1))
 })
 
-test_that("format_elements_rvec works with logical", {
-    expect_identical(format_elements_rvec(matrix(c(TRUE, FALSE, NA), nr = 1)),
+test_that("format_rvec_elements works with logical", {
+    expect_identical(format_rvec_elements(matrix(c(TRUE, FALSE, NA), nr = 1)),
                      matrix(c("T", "F", NA), nr = 1))
 })                     

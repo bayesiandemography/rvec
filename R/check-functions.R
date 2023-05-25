@@ -32,6 +32,27 @@ check_colnums_values <- function(colnums_values) {
 
 
 ## HAS_TESTS
+#' Check a logical flag
+#'
+#' @param x TRUE or FALSE
+#'
+#' @returns TRUE, invisibly
+#' @noRd
+check_flag <- function(x) {
+    nm <- deparse1(substitute(x))
+    if (!identical(length(x), 1L))
+        cli::cli_abort("{.arg {nm}} does not have length 1")
+    if (!is.logical(x))
+        cli::cli_abort("{.arg {nm}} has class {.cls {class(x)}}")
+    if (is.na(x))
+        cli::cli_abort("{.arg {nm}} is {.val {NA}}")
+    invisible(TRUE)
+}
+
+
+
+
+## HAS_TESTS
 #' Check that indices for position in data
 #' part of rvec have no duplicates
 #'
@@ -253,24 +274,6 @@ check_n_draw_equal <- function(x, y, x_arg, y_arg) {
 
 
 ## HAS_TESTS
-#' Check that 'na_rm' is a logial flag
-#'
-#' @param na_rm TRUE or FALSE
-#'
-#' @returns TRUE, invisibly
-#' @noRd
-check_na_rm <- function(na_rm) {
-    if (!identical(length(na_rm), 1L))
-        cli::cli_abort("{.arg na_rm} does not have length 1")
-    if (!is.logical(na_rm))
-        cli::cli_abort("{.arg na_rm} has class {.cls {class(na_rm)}}")
-    if (is.na(na_rm))
-        cli::cli_abort("{.arg na_rm} is {.val {NA}}")
-    invisible(TRUE)
-}
-
-
-## HAS_TESTS
 #' Check that 'nm_draw' is a valid string
 #'
 #' @param nm_draw Name of the 'draw' variable.
@@ -458,8 +461,6 @@ check_values_type_consistent <- function(colnums_values, type) {
 }
 
 
-
-    
 ## HAS TESTS
 #' Check that 'x' has at least one column
 #'

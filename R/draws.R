@@ -60,7 +60,7 @@ draws_median.rvec_chr <- function(x, na_rm = FALSE) {
 #' @rdname draws_median
 #' @export
 draws_median.rvec <- function(x, na_rm = FALSE) {
-    check_na_rm(na_rm)
+    check_flag(na_rm)
     m <- field(x, "data")
     if (nrow(m) == 0L)
         NA_real_ ## base::median returns NA with zero-length 'x'
@@ -82,7 +82,7 @@ draws_mean <- function(x, na_rm = FALSE) {
 #' @rdname draws_median
 #' @export
 draws_mean.rvec <- function(x, na_rm = FALSE) {
-    check_na_rm(na_rm)
+    check_flag(na_rm)
     m <- field(x, "data")
     if (nrow(m) == 0L)
         NaN ## base::mean returns NaN with zero-length 'x'
@@ -111,7 +111,7 @@ draws_mode <- function(x, na_rm = FALSE) {
 #' @rdname draws_median
 #' @export
 draws_mode.rvec <- function(x, na_rm = FALSE) {
-    check_na_rm(na_rm)
+    check_flag(na_rm)
     m <- field(x, "data")
     storage_mode <- storage.mode(m)
     if (nrow(m) == 0L) {
@@ -199,7 +199,7 @@ draws_quantile.rvec <- function(x,
     ## x_expr <- rlang::expr(x)
     ## x_str <- rlang::expr_deparse(x_expr)
     check_probs(probs)
-    check_na_rm(na_rm)
+    check_flag(na_rm)
     m <- field(x, "data")
     if (nrow(m) == 0L)
         ans <- stats::quantile(double(), probs = probs)

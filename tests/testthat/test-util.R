@@ -272,6 +272,21 @@ test_that("'n_draw_df' throws expected error when n_draw varies", {
 })
 
 
+## 'n_rdist' ------------------------------------------------------------------
+
+test_that("'n_rdist' works with an rvec arg", {
+    ans_obtained <- n_rdist(n = 2L, args = list(2, rvec(matrix(1:4, 2))))
+    ans_expected <- 4L
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'n_rdist' works with no rvec arg", {
+    ans_obtained <- n_rdist(n = 2L, args = list(2, 2))
+    ans_expected <- 2L
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
 ## 'paste_dot' ----------------------------------------------------------------
 
 test_that("'paste_dot' works with valid inputs", {
@@ -279,6 +294,74 @@ test_that("'paste_dot' works with valid inputs", {
     ans_obtained <- paste_dot(df)
     ans_expected <- c("1.3.5", "2.4.6")
     expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'recycle_common_2' ---------------------------------------------------------
+
+test_that("'recycle_common_2' works with valid inputs", {
+    x <- 1:3
+    y <- 1:6
+    expect_identical(recycle_common_2(arg1 = x, arg2 = y),
+                     list(c(1:3, 1:3), 1:6))
+    x <- 1:3
+    y <- 1:5
+    expect_identical(recycle_common_2(x, y),
+                     list(c(1:3, 1:2), 1:5))
+    x <- 1:3
+    y <- "a"
+    expect_identical(recycle_common_2(x, y),
+                     list(1:3, c("a", "a", "a")))
+})
+
+test_that("'recycle_common_2' throws correct error with length 0", {
+    x <- integer()
+    y <- 1:6
+    expect_error(recycle_common_2(arg1 = x, arg2 = y),
+                 "`x` has length 0")
+    x <- 1
+    y <- integer()
+    expect_error(recycle_common_2(x, y),
+                 "`y` has length 0")
+})
+
+
+## 'recycle_common_3' ---------------------------------------------------------
+
+test_that("'recycle_common_3' works with valid inputs", {
+    x <- 1:3
+    y <- 1:6
+    z <- 1:2
+    expect_identical(recycle_common_3(arg1 = x, arg2 = y, arg3 = z),
+                     list(c(1:3, 1:3), 1:6, c(1:2, 1:2, 1:2)))
+    x <- 1:3
+    y <- 1:5
+    z <- NA
+    expect_identical(recycle_common_3(x, y, z),
+                     list(c(1:3, 1:2), 1:5, rep(NA, 5)))
+    x <- 1:3
+    y <- "a"
+    z <- TRUE
+    expect_identical(recycle_common_3(x, y, z),
+                     list(1:3, c("a", "a", "a"), c(TRUE, TRUE, TRUE)))
+})
+
+test_that("'recycle_common_3' throws correct error with length 0", {
+    x <- integer()
+    y <- 1:6
+    z <- 1
+    expect_error(recycle_common_3(arg1 = x, arg2 = y, arg3 = z),
+                 "`x` has length 0")
+    x <- 1
+    y <- integer()
+    z <- 1
+    expect_error(recycle_common_3(x, y, z),
+                 "`y` has length 0")
+    x <- 1
+    y <- 1:10
+    z <- NULL
+    expect_error(recycle_common_3(x, y, z),
+                 "`z` has length 0")
 })
 
 

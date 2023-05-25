@@ -14,12 +14,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(rvec)
-```
 
-
-## Stats background
+# The problem
 
 - Simulation based inference (Bayesian or other) gives samples from target distribution 
 - Example
@@ -33,47 +29,102 @@ library(rvec)
     - Store output
     - Parallel
     - Reduce
+
+
+# Examples
+
+```{r}
+library(rvec)
+library(dplyr, warn.conflicts = FALSE)
+library(tidyr)
+library(ggplot2)
+```
+
+
+
+## Toy example
+
+
+
+
+
+## Divorces
+
+```{r}
+divorce
+```
+
+```{r}
+divorce_rv <- divorce %>%
+  collapse_to_rvec(draw = "sim", value = rate)
+divorce_rv
+```
+
+
+```{r}
+divorce_rv %>%
+  group_by(time, sex) %>%
+  summarise(tdr = 5 * sum(rate))
+```
+
+
+```{r}
+divorce_rv %>%
+  group_by(time, sex) %>%
+  summarise(tdr = 5 * sum(rate)) %>%
+  mutate(draws_quantile(tdr))
+```
+
+```{r}
+divorce_rv %>%
+  pivot_wider(names_from = sex, values_from = rate) %>%
+  mutate(ratio = Female / Male)
+```
+
+
+```{r, fig.width = 5, fig.height = 5}
+divorce_rv %>%
+  pivot_wider(names_from = sex, values_from = rate) %>%
+  mutate(ratio = Female / Male) %>%
+  mutate(draws_quantile(ratio)) %>%
+  ggplot(aes(x = age, 
+             ymin = `ratio_2.5%`, 
+             y = `ratio_50%`,
+             ymax = `ratio_97.5%`)) +
+  facet_wrap(vars(time), ncol = 1) +
+  geom_pointrange(fatten = 1)
+```
+
+
+
+# Main functions
+
+## creation
+
+## manipulation
+
+## summarising
+   
     
+# Design
 
-## Existing solutions
+## vctrs
 
-- 'database' format: easy but large
-- list columns, matrix columns: small but awkward to work with
-- rvar: doesn't play well with data frames
+- departures from vctrs
+
+## matrixStats
+
+- timings
+
+# Other packages
+
+## coda, posterior
+
+## ggdist
+
+?other
 
 
-## Example: rvec
-
-- holding info
-- parallel
-- reduce
-
-
-## Creating
-
-- individual vector (within functions)
-- database
-
-## Structure
-
-- builds on vctrs
-- part matrix, part vector
-- double, integer, logical, character
-
-## Map operations
-
-- indefinitly large number of possibilities
-- try to have it happen automatically, invisibly (thanks to vctrs, classes)
-- 
-
-- Note that follows vctrs rules
-    - is.na
-    - coercion
-    
-## Reducing
-
-- much smaller number of operations
-- specific functions
 
 
 

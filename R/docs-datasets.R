@@ -1,28 +1,5 @@
 
 
-#' Weights of birds
-#'
-#' A simulated posterior sample from a model
-#' of bird weights (in kilograms)
-#'
-#' @format A matrix with 3 rows and 10 columns.
-#' - Each row records estimates for a type of bird
-#' (chicken, duck goose)
-#' - Each column represents one random draw
-#' from the joint distribution of weights.
-"birdweight"
-
-
-#' Dice rolls
-#'
-#' Data on outcomes from 10 rolls of a dice
-#'
-#' @format A matrix with 6 rows and 10 columns.
-#' - Each row records outcomes for a particular value.
-#' - Each column records outcomes for a particular draw.
-"dicerolls"
-
-
 #' Divorce rates in New Zealand
 #'
 #' Posterior sample from a model of divorce rates
@@ -44,3 +21,29 @@
 #' Divorce data downloaded on 22 March 2023, and
 #' population data downloaded on 26 March 2023.
 "divorce"
+
+
+#' Regression coefficients
+#'
+#' Posterior sample for coefficients from a linear
+#' regression model.
+#'
+#' @format A tibble with 200 rows and
+#' the following variables:
+#' - `draw`: Index identifying random draw.
+#' - `alpha`: Intercept parameter
+#' - `beta`: Slope parameter
+#' - `sigma`: Standard deviation of error term
+#'
+#' @source `regr_coef` contains values from the second
+#' half of the `line` dataset
+#' in package [coda](https://CRAN.R-project.org/package=coda).
+#' The line dataset draws on the BUGS manual:
+#' Spiegelhalter, D.J., Thomas, A., Best, N.G. and
+#' Gilks, W.R. (1995) BUGS: Bayesian inference using
+#' Gibbs Sampling, Version 0.5, MRC Biostatistics Unit,
+#' Cambridge.
+"regr_coef"
+
+
+
