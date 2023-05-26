@@ -25,10 +25,18 @@
 #' that it has length 4.
 #' 
 #' @param n Number of draws.
+#' @param x,q Vector of quantiles.
+#' @param p Vector of probabilities.
 #' @param mean,lambda Vector of means.
 #' A standard R vector, or an [rvec][rvec()].
 #' @param sd Vector of standard deviations.
 #' A standard R vector, or an [rvec][rvec()].
+#' @param log,log.p Whether to return
+#' `log(p)` rather than `p`. Default is
+#' `FALSE`.
+#' @param lower.tail Whether to return
+#' \eqn{P[X \le x]}, as opposed to
+#' \eqn{P[X > x]}. Default is `TRUE`.
 #'
 #' @returns If any of the inputs is an
 #' [rvec][rvec()], then the return value is
@@ -53,16 +61,16 @@
 #' dnorm_rvec(x = x_rv, mean = mean_rv, sd = sd_rv)
 #'
 #' ## densities: 'x' is ordinary vector
-#' dnorm_rvec(x = c(1, 10), mean = mean_rv, sd = sd_rv)
+#' dnorm_rvec(x = c(0, 2), mean = mean_rv, sd = sd_rv)
 #'
 #' ## ...which is equivalent to
-#' c(dnorm_rvec(1, mean = mean_rv[1], sd = sd_rv),
-#'   dnorm_rvec(10, mean = mean_rv[2], sd = sd_rv))
+#' c(dnorm_rvec(0, mean = mean_rv[1], sd = sd_rv),
+#'   dnorm_rvec(2, mean = mean_rv[2], sd = sd_rv))
 #'       
-#' ## random variates: arguments rvecs
-#' rnorm_rvec(n = 2, mean = mean_rv, sd = sd_v)
+#' ## random variates: mean is rvec, sd is rvec 
+#' rnorm_rvec(n = 2, mean = mean_rv, sd = sd_rv)
 #'
-#' ## random variates: rvec mean, scalar sd
+#' ## random variates: mean is rvec, sd is scalar
 #' rnorm_rvec(n = 6, mean = mean_rv, sd = 0.5)
 #' @name rvec-distributions
 NULL
@@ -75,13 +83,14 @@ NULL
 #' @rdname rvec-distributions
 #' @export
 dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
+    check_flag(log)
     args <- recycle_common_3(arg1 = x,
                              arg2 = mean,
                              arg3 = sd)
+    dnorm <- stats::dnorm
     x <- args[[1]]
     mean <- args[[2]]
     sd <- args[[3]]
-    check_flag(log)
     dist_rvec_3(fun = dnorm,
                 arg1 = x,
                 arg2 = mean,
@@ -93,15 +102,19 @@ dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
 #' @rdname rvec-distributions
 #' @export
 pnorm_rvec <- function(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
-    args <- recycle_common(arg1 = q,
-                           arg2 = mean,
-                           arg3 = sd)
     check_flag(lower.tail)
     check_flag(log.p)
+    args <- recycle_common_3(arg1 = q,
+                             arg2 = mean,
+                             arg3 = sd)
+    pnorm <- stats::pnorm
+    q <- args[[1]]
+    mean <- args[[2]]
+    sd <- args[[3]]
     dist_rvec_3(fun = pnorm,
-                arg1 = args[[1L]],
-                arg2 = args[[2L]],
-                arg3 = args[[3L]],
+                arg1 = q,
+                arg2 = mean,
+                arg3 = sd,
                 lower.tail = lower.tail,
                 log.p = log.p)
 }
@@ -109,15 +122,19 @@ pnorm_rvec <- function(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
 #' @rdname rvec-distributions
 #' @export
 qnorm_rvec <- function(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
-    args <- recycle_common(arg1 = p,
-                           arg2 = mean,
-                           arg3 = sd)
     check_flag(lower.tail)
     check_flag(log.p)
-    dist_rvec_3(fun = ppois,
-                arg1 = args[[1L]],
-                arg2 = args[[2L]],
-                arg3 = args[[3L]],
+    args <- recycle_common_3(arg1 = p,
+                             arg2 = mean,
+                             arg3 = sd)
+    qnorm <- stats::qnorm
+    p <- args[[1L]]
+    mean <- args[[2L]]
+    sd <- args[[3L]]
+    dist_rvec_3(fun = qnorm,
+                arg1 = p,
+                arg2 = mean,
+                arg3 = sd,
                 lower.tail = lower.tail,
                 log.p = log.p)
 }
@@ -126,9 +143,10 @@ qnorm_rvec <- function(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
 #' @rdname rvec-distributions
 #' @export
 rnorm_rvec <- function(n, mean = 0, sd = 1) {
-    mean <- rep_len(mean, n = n)
-    sd <- rep_len(sd, n = n)
+    mean <- rep_len(mean, length.out = n)
+    sd <- rep_len(sd, length.out = n)
     n <- n_rdist(n = n, args = list(mean, sd))
+    rnorm <- stats::rnorm
     dist_rvec_2(fun = rnorm,
                 arg1 = mean,
                 arg2 = sd,
@@ -146,25 +164,31 @@ rnorm_rvec <- function(n, mean = 0, sd = 1) {
 #' @rdname rvec-distributions
 #' @export
 dpois_rvec <- function(x, lambda, log = FALSE) {
-    args <- recycle_common(arg1 = x,
-                           arg2 = lambda)
     check_flag(log)
+    args <- recycle_common_2(arg1 = x,
+                             arg2 = lambda)
+    dpois <- stats::dpois
+    x <- args[[1L]]
+    lambda <- args[[2L]]
     dist_rvec_2(fun = dpois,
-                arg1 = args[[1L]],
-                arg2 = args[[2L]],
+                arg1 = x,
+                arg2 = lambda,
                 log = log)
 }
 
 #' @rdname rvec-distributions
 #' @export
 ppois_rvec <- function(q, lambda, lower.tail = TRUE, log.p = FALSE) {
-    args <- recycle_common(arg1 = q,
-                           arg2 = lambda)
     check_flag(lower.tail)
     check_flag(log.p)
+    args <- recycle_common_2(arg1 = q,
+                             arg2 = lambda)
+    ppois <- stats::ppois
+    q <- args[[1L]]
+    lambda <- args[[2L]]
     dist_rvec_2(fun = ppois,
-                arg1 = args[[1L]],
-                arg2 = args[[2L]],
+                arg1 = q,
+                arg2 = lambda,
                 lower.tail = lower.tail,
                 log.p = log.p)
 }
@@ -173,13 +197,16 @@ ppois_rvec <- function(q, lambda, lower.tail = TRUE, log.p = FALSE) {
 #' @rdname rvec-distributions
 #' @export
 qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
-    args <- recycle_common(arg1 = p,
-                           arg2 = lambda)
     check_flag(lower.tail)
     check_flag(log.p)
+    args <- recycle_common_2(arg1 = p,
+                             arg2 = lambda)
+    qpois <- stats::qpois
+    p <- args[[1L]]
+    lambda <- args[[2L]]
     dist_rvec_2(fun = qpois,
-                arg1 = args[[1L]],
-                arg2 = args[[2L]],
+                arg1 = p,
+                arg2 = lambda,
                 lower.tail = lower.tail,
                 log.p = log.p)
 }
@@ -187,7 +214,9 @@ qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
 #' @rdname rvec-distributions
 #' @export
 rpois_rvec <- function(n, lambda) {
-    l <- recycle_len(arg = lambda, n = n)
+    lambda <- rep_len(lambda, length.out = n)
+    n <- n_rdist(n = n, args = list(lambda))
+    rpois <- stats::rpois
     dist_rvec_1(fun = rpois,
                 arg = lambda,
                 n = n)
@@ -252,7 +281,7 @@ dist_rvec_1 <- function(fun, arg, ...) {
 #' already been recycled,
 #' if necessary, to have the required lengths.
 #'
-#' Note that in practie random variate
+#' Note that in practice random variate
 #' functions are the
 #' only distribution functions to
 #' have one parameter.

@@ -1,5 +1,6 @@
 
 ## HAS_TESTS
+#' @method rep rvec
 #' @export
 rep.rvec <- function(x, ...) {
     m_old <- field(x, "data")
@@ -11,6 +12,7 @@ rep.rvec <- function(x, ...) {
 }
 
 ## HAS_TESTS
+#' @method rep_len rvec
 #' @export
 rep_len.rvec <- function(x, length.out) {
     m_old <- field(x, "data")
@@ -22,8 +24,9 @@ rep_len.rvec <- function(x, length.out) {
 }
 
 ## HAS_TESTS
+#' @method rep.int rvec
 #' @export
-rep.int.rvec <- function(x, times) {
+rep.int.rvec <- function(x, times, ...) { ## Need to include dots to avoid warning in R CMD check
     m_old <- field(x, "data")
     nrow_old <- nrow(m_old)
     rownum_old <- seq_len(nrow_old)

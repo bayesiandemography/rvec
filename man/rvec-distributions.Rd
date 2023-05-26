@@ -29,11 +29,23 @@ qpois_rvec(p, lambda, lower.tail = TRUE, log.p = FALSE)
 rpois_rvec(n, lambda)
 }
 \arguments{
+\item{x, q}{Vector of quantiles.}
+
 \item{mean, lambda}{Vector of means.
 A standard R vector, or an \link[=rvec]{rvec}.}
 
 \item{sd}{Vector of standard deviations.
 A standard R vector, or an \link[=rvec]{rvec}.}
+
+\item{log, log.p}{Whether to return
+\code{log(p)} rather than \code{p}. Default is
+\code{FALSE}.}
+
+\item{lower.tail}{Whether to return
+\eqn{P[X \le x]}, as opposed to
+\eqn{P[X > x]}. Default is \code{TRUE}.}
+
+\item{p}{Vector of probabilities.}
 
 \item{n}{Number of draws.}
 }
@@ -84,16 +96,16 @@ sd_rv
 dnorm_rvec(x = x_rv, mean = mean_rv, sd = sd_rv)
 
 ## densities: 'x' is ordinary vector
-dnorm_rvec(x = c(1, 10), mean = mean_rv, sd = sd_rv)
+dnorm_rvec(x = c(0, 2), mean = mean_rv, sd = sd_rv)
 
 ## ...which is equivalent to
-c(dnorm_rvec(1, mean = mean_rv[1], sd = sd_rv),
-  dnorm_rvec(10, mean = mean_rv[2], sd = sd_rv))
+c(dnorm_rvec(0, mean = mean_rv[1], sd = sd_rv),
+  dnorm_rvec(2, mean = mean_rv[2], sd = sd_rv))
       
-## random variates: arguments rvecs
-rnorm_rvec(n = 2, mean = mean_rv, sd = sd_v)
+## random variates: mean is rvec, sd is rvec 
+rnorm_rvec(n = 2, mean = mean_rv, sd = sd_rv)
 
-## random variates: rvec mean, scalar sd
+## random variates: mean is rvec, sd is scalar
 rnorm_rvec(n = 6, mean = mean_rv, sd = 0.5)
 }
 \seealso{

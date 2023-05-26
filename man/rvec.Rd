@@ -61,10 +61,19 @@ However, \code{x} can also be a list of vectors,
 all of the same length.
 }
 \examples{
-birdweight
-rvec_dbl(birdweight)
-rvec(birdweight)
+m <- rbind(c(-1.5, 2, 0.2),
+           c(-2.3, 3, 1.2))
+rvec_dbl(m)
 
-dicerolls
-rvec(dicerolls)
+l <- list(rpois(100, lambda = 10.2),
+          rpois(100, lambda = 5.5))
+rvec(l)
+
+m <- rbind(low = letters,
+           up = LETTERS)
+rvec(m)
+
+l <- list(a = c(TRUE, FALSE),
+          b = c(FALSE, TRUE))
+rvec(l)
 }

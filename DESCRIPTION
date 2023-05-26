@@ -32,9 +32,11 @@ Suggests:
     covr,
     dplyr,
     ggdist,
+    ggplot2,
     knitr,
     posterior,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyr
 Config/testthat/edition: 3
 VignetteBuilder: knitr

@@ -78,7 +78,7 @@ format_rvec_summaries <- function(x) {
         sds <- matrixStats::rowSds(x, na.rm = TRUE)
         means <- formatC(means, format = "fg")
         sds <- formatC(sds, format = "fg")
-        ans <- paste(means, sds, sep = " ± ")
+        ans <- paste(means, intToUtf8(177), sds)
     }
     else {
         ans <- matrixStats::rowMeans2(1 * x, na.rm = TRUE)

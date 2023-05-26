@@ -10,6 +10,16 @@ test_that("'dnorm_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'pnorm_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    mean <- rvec(m)
+    sd <- rvec(2 * m)
+    ans_obtained <- pnorm_rvec(q, mean, sd, log.p = TRUE)
+    ans_expected <- rvec(matrix(pnorm(q = q, mean = m, sd = 2 * m, log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
 
 ## 'dist_rvec_1' --------------------------------------------------------------
 
