@@ -18,7 +18,7 @@ behaves as much as possible like a standard R vector.
 
 ## Installation
 
-You can install the development version of rvec from
+Install the development version of rvec from
 [GitHub](https://github.com/) with:
 
 ``` r

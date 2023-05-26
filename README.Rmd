@@ -26,7 +26,7 @@ Tools for working posterior distributions, prior distributions, or simulation ou
 
 ## Installation
 
-You can install the development version of rvec from [GitHub](https://github.com/) with:
+Install the development version of rvec from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
