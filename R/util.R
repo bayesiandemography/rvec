@@ -409,61 +409,6 @@ paste_dot <- function(df)
 
 
 ## HAS_TESTS
-#' Recycle two arguments to same length, using base R rules
-#'
-#' @param arg1,arg2 Vectors
-#'
-#' @return List with recycled versions of
-#' arg1, arg2
-#'
-#' @noRd
-recycle_common_2 <- function(arg1, arg2) {
-    nm1 <- rlang::as_name(rlang::enquo(arg1))
-    nm2 <- rlang::as_name(rlang::enquo(arg2))
-    n1 <- length(arg1)
-    n2 <- length(arg2)
-    if (n1 == 0L)
-        cli::cli_abort("{.arg {nm1}} has length 0")
-    if (n2 == 0L)
-        cli::cli_abort("{.arg {nm2}} has length 0")
-    n <- max(n1, n2)
-    arg1 <- rep_len(arg1, length.out = n)
-    arg2 <- rep_len(arg2, length.out = n)
-    list(arg1, arg2)
-}
-
-
-## HAS_TESTS
-#' Recycle three arguments to same length, using base R rules
-#'
-#' @param arg1,arg2,arg3 Vectors
-#'
-#' @return List with recycled versions of
-#' arg1, arg2, arg3
-#'
-#' @noRd
-recycle_common_3 <- function(arg1, arg2, arg3) {
-    nm1 <- rlang::as_name(rlang::enquo(arg1))
-    nm2 <- rlang::as_name(rlang::enquo(arg2))
-    nm3 <- rlang::as_name(rlang::enquo(arg3))
-    n1 <- length(arg1)
-    n2 <- length(arg2)
-    n3 <- length(arg3)
-    if (n1 == 0L)
-        cli::cli_abort("{.arg {nm1}} has length 0")
-    if (n2 == 0L)
-        cli::cli_abort("{.arg {nm2}} has length 0")
-    if (n3 == 0L)
-        cli::cli_abort("{.arg {nm3}} has length 0")
-    n <- max(n1, n2, n3)
-    arg1 <- rep_len(arg1, length.out = n)
-    arg2 <- rep_len(arg2, length.out = n)
-    arg3 <- rep_len(arg3, length.out = n)
-    list(arg1, arg2, arg3)
-}
-
-
-## HAS_TESTS
 #' Set cols of a data frame to list columns of NULLs
 #'
 #' @param df A data frame

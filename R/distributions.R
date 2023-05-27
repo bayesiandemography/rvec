@@ -5,25 +5,19 @@
 #' functions that take one or more rvecs
 #' as arguments, and return rvecs.
 #'
-#' Standard base R rules
-#' about recycling of arguments apply.
-#' For instance,
-#' ```
-#' rnorm_rvec(n = 4,
-#'            mean = rvec(rbind(c(0.3, 0.7),
-#'                              c(0.2, 0.5))))
-#' ```
-#' is equivalent to
-#' ```
-#' rnorm_rvec(n = 4,
-#'            mean = rvec(rbind(c(0.3, 0.7),
-#'                              c(0.2, 0.5),
-#'                              c(0.3, 0.7),
-#'                              c(0.2, 0.5))))
-#' ```
-#' with the `mean` argument being repeated so
-#' that it has length 4.
-#' 
+#' The `*_rvec` probability distribution functions
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' These rules are more restrictive than base R rules,
+#' but are also more predictable. Base R style
+#' recycling can be done through explicit
+#' calls to [base::rep()],
+#' [base::rep_len()], and [base::rep_int()],
+#' all of which have methods for [rvecs][rvec()].
+#'
 #' @param n Number of draws.
 #' @param x,q Vector of quantiles.
 #' @param p Vector of probabilities.
@@ -66,8 +60,8 @@
 #' ## ...which is equivalent to
 #' c(dnorm_rvec(0, mean = mean_rv[1], sd = sd_rv),
 #'   dnorm_rvec(2, mean = mean_rv[2], sd = sd_rv))
-#'       
-#' ## random variates: mean is rvec, sd is rvec 
+#'
+#' ## random variates: mean is rvec, sd is rvec
 #' rnorm_rvec(n = 2, mean = mean_rv, sd = sd_rv)
 #'
 #' ## random variates: mean is rvec, sd is scalar
@@ -84,10 +78,8 @@ NULL
 #' @export
 dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
     check_flag(log)
-    args <- recycle_common_3(arg1 = x,
-                             arg2 = mean,
-                             arg3 = sd)
     dnorm <- stats::dnorm
+    args <- vec_recycle_common(x, mean, sd)
     x <- args[[1]]
     mean <- args[[2]]
     sd <- args[[3]]
@@ -104,10 +96,8 @@ dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
 pnorm_rvec <- function(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
     check_flag(log.p)
-    args <- recycle_common_3(arg1 = q,
-                             arg2 = mean,
-                             arg3 = sd)
     pnorm <- stats::pnorm
+    args <- vec_recycle_common(q, mean, sd)
     q <- args[[1]]
     mean <- args[[2]]
     sd <- args[[3]]
@@ -119,15 +109,14 @@ pnorm_rvec <- function(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
                 log.p = log.p)
 }
 
+## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
 qnorm_rvec <- function(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
     check_flag(log.p)
-    args <- recycle_common_3(arg1 = p,
-                             arg2 = mean,
-                             arg3 = sd)
     qnorm <- stats::qnorm
+    args <- vec_recycle_common(p, mean, sd)
     p <- args[[1L]]
     mean <- args[[2L]]
     sd <- args[[3L]]
@@ -139,14 +128,14 @@ qnorm_rvec <- function(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
                 log.p = log.p)
 }
 
-    
+## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
 rnorm_rvec <- function(n, mean = 0, sd = 1) {
-    mean <- rep_len(mean, length.out = n)
-    sd <- rep_len(sd, length.out = n)
-    n <- n_rdist(n = n, args = list(mean, sd))
     rnorm <- stats::rnorm
+    mean <- vec_recycle(mean, size = n)
+    sd <- vec_recycle(sd, size = n)
+    n <- n_rdist(n = n, args = list(mean, sd))
     dist_rvec_2(fun = rnorm,
                 arg1 = mean,
                 arg2 = sd,
@@ -161,13 +150,13 @@ rnorm_rvec <- function(n, mean = 0, sd = 1) {
 ## errors that are thrown via 'fun(arg, ...)'
 ## are likely to be hard to interpret.
 
+## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
 dpois_rvec <- function(x, lambda, log = FALSE) {
     check_flag(log)
-    args <- recycle_common_2(arg1 = x,
-                             arg2 = lambda)
     dpois <- stats::dpois
+    args <- vec_recycle_common(x, lambda)
     x <- args[[1L]]
     lambda <- args[[2L]]
     dist_rvec_2(fun = dpois,
@@ -176,14 +165,14 @@ dpois_rvec <- function(x, lambda, log = FALSE) {
                 log = log)
 }
 
+## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
 ppois_rvec <- function(q, lambda, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
     check_flag(log.p)
-    args <- recycle_common_2(arg1 = q,
-                             arg2 = lambda)
     ppois <- stats::ppois
+    args <- vec_recycle_common(q, lambda)
     q <- args[[1L]]
     lambda <- args[[2L]]
     dist_rvec_2(fun = ppois,
@@ -193,15 +182,14 @@ ppois_rvec <- function(q, lambda, lower.tail = TRUE, log.p = FALSE) {
                 log.p = log.p)
 }
 
-
+## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
 qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
     check_flag(log.p)
-    args <- recycle_common_2(arg1 = p,
-                             arg2 = lambda)
     qpois <- stats::qpois
+    args <- vec_recycle_common(p, lambda)
     p <- args[[1L]]
     lambda <- args[[2L]]
     dist_rvec_2(fun = qpois,
@@ -211,18 +199,17 @@ qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
                 log.p = log.p)
 }
 
+## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
 rpois_rvec <- function(n, lambda) {
-    lambda <- rep_len(lambda, length.out = n)
-    n <- n_rdist(n = n, args = list(lambda))
     rpois <- stats::rpois
+    lambda <- vec_recycle(lambda, size = n)
+    n <- n_rdist(n = n, args = list(lambda))
     dist_rvec_1(fun = rpois,
                 arg = lambda,
                 n = n)
 }
-
-
 
 
 ## Helper functions -----------------------------------------------------------
@@ -320,11 +307,11 @@ dist_rvec_2 <- function(fun, arg1, arg2, ...) {
             n_draw <- n_draw(arg2)
         if (is_rv_1)
             arg1 <- as.vector(as.matrix(arg1))
-        else 
+        else
             arg1 <- rep.int(arg1, times = n_draw)
         if (is_rv_2)
             arg2 <- as.vector(as.matrix(arg2))
-        else 
+        else
             arg2 <- rep.int(arg2, times = n_draw)
     }
     ans <- tryCatch(fun(arg1, arg2, ...),
@@ -401,15 +388,15 @@ dist_rvec_3 <- function(fun, arg1, arg2, arg3, ...) {
             n_draw <- n_draw(arg3)
         if (is_rv_1)
             arg1 <- as.vector(as.matrix(arg1))
-        else 
+        else
             arg1 <- rep.int(arg1, times = n_draw)
         if (is_rv_2)
             arg2 <- as.vector(as.matrix(arg2))
-        else 
+        else
             arg2 <- rep.int(arg2, times = n_draw)
         if (is_rv_3)
             arg3 <- as.vector(as.matrix(arg3))
-        else 
+        else
             arg3 <- rep.int(arg3, times = n_draw)
     }
     ans <- tryCatch(fun(arg1, arg2, arg3, ...),
@@ -426,4 +413,4 @@ dist_rvec_3 <- function(fun, arg1, arg2, arg3, ...) {
 
 
 
-        
+

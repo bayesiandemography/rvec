@@ -15,16 +15,31 @@ knitr::opts_chunk$set(
 ```
 
 
-# The problem
+# The problem that package `rvecs` tries to solve
 
-- Simulation based inference (Bayesian or other) gives samples from target distribution 
-- Example
-   - Note includes correlations
-- Power from fact that can approximate distribution of $f(\theta)$ by distribution of $f(\theta_d)$.
-- Algorithm
-    1. calculate in parallel
-    2. combine
-- Examples
+Many modern statistical methods produce output result in a set of random draws
+$$
+  \theta_1, \theta_2, \dots, \theta_S
+$$
+from a distribution $p(\theta)$. Distribution $p(\theta)$ could, for instance, be outcomes from a simulation study, or a posterior distribution from a Bayesian analysis. Quantity $\theta$ could be a scalar, but it could also be a vector with thousands of elements. 
+
+Statistics calculated over the random draws can be used to to characterise the unknown quantity $\theta$. The median value $q_{0.5}^{(\theta)}$ obtained from draws $\theta_1, \theta_2, \dots, \theta_S$, for instance, can be used as a point estimate of $\theta$, and the quantiles $q_{0.025}^{(\theta)}$ and $q_{0.975}^{(\theta)}$ can be used to construct a 95\% credible interval.
+
+An enormously useful feature of random draws is that the same approach can be used to make inferences about functions of the unknown quantity. If $f$ is some function, then to make inferences about $f(\theta)$, we
+
+1. apply $f$ to each draw of $\theta$, obtaining, $f(\theta_1 ), f(\theta_2), \dots, f(\theta_S)$, and then
+2. summarise the $f(\theta_1 ), f(\theta_2), \dots, f(\theta_S)$ using statistics such as quantiles.
+
+Say, for instance, that $\theta = (\theta^{\text{F}}, \theta^{\text{M}})$ was a vector describing divorce rates for females and males, and that we were interested in the ratio between female and male rates. Function $f$ would then be $f(x,y) = x/y$. To obtain a point estimate and 95\% credible interval for the ratio, we would 
+
+1. calculate ratios, $\theta_1^{\text{F}}/\theta_1^{\text{M}}, \theta_2^{\text{F}}/\theta_2^{\text{M}}, \dots, \theta_S^{\text{F}}/\theta_S^{\text{M}}$,
+2. calculate  median $q_{0.5}^{(\theta^\text{F}/\theta^{\text{M}})}$, and quantiles $q_{0.025}^{(\theta^\text{F}/\theta^{\text{M}})}$ and $q_{0.975}^{(\theta^\text{F}/\theta^{\text{M}})}$.
+
+In computing terms, this procedure is a simple type of map-reduce style calculation. In step 1, transformations are applied, in parallel, to multiple quantities. In step 2, the outcomes are combined into an overall result.
+
+
+
+
 - Want to make that easy
     - Store output
     - Parallel
@@ -44,11 +59,44 @@ library(ggplot2)
 
 ## Toy example
 
+```{r}
+m <- matrix(1:6, nrow = 3)
+x <- rvec(m)
+x
+```
+
+```{r}
+x - 1
+```
 
 
 
+```{r}
+x > 3
+```
 
-## Divorces
+```{r}
+x[c(1, 3)]
+```
+
+
+
+```{r}
+y <- rvec(matrix(c(0.5, 2), nrow = 1))
+y
+```
+
+```{r}
+x * y^2
+```
+
+```{r}
+draws_mean(x)
+```
+
+
+
+## Divorce rates
 
 ```{r}
 divorce
@@ -97,26 +145,27 @@ divorce_rv %>%
 
 
 
-# Main functions
+# Working with rvecs
 
-## creation
+## Creation
 
-## manipulation
+## Manipulation
 
-## summarising
+## Mathematics
+
+## Summarising
    
-    
+  
 # Design
 
-## vctrs
+- vctrs
+- matrixStats
 
-- departures from vctrs
 
-## matrixStats
-
-- timings
 
 # Other packages
+
+## rv
 
 ## coda, posterior
 

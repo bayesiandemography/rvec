@@ -12,9 +12,9 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 coverage](https://codecov.io/gh/bayesiandemography/rvec/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bayesiandemography/rvec?branch=main)
 <!-- badges: end -->
 
-Tools for working posterior distributions, prior distributions, or
-simulation output. An rvec holds multiple draws from a distribution, but
-behaves as much as possible like a standard R vector.
+Tools for working with posterior distributions and simulation output. An
+`rvec` behaves much like a standard R vector, but holds multiple random
+draws.
 
 ## Installation
 

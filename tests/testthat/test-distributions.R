@@ -20,6 +20,68 @@ test_that("'pnorm_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'qnorm_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- rvec(m)
+    mean <- rvec(m)
+    sd <- 3
+    ans_obtained <- pnorm_rvec(q, mean, sd)
+    ans_expected <- rvec(matrix(pnorm(q = m, mean = m, sd = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rnorm_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    mean <- rvec(m)
+    sd <- 3
+    set.seed(0)
+    ans_obtained <- rnorm_rvec(n = 2, mean, sd)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rnorm(n = 6, mean = m, sd = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+## 'pois' ---------------------------------------------------------------------
+
+test_that("'dpois_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    lambda <- rvec(m)
+    x <- 2:1
+    lambda <- rvec(m)
+    ans_obtained <- dpois_rvec(x, lambda)
+    ans_expected <- rvec(matrix(dpois(x = x, lambda = m, log = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'ppois_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    lambda <- rvec(m)
+    q <- 2:1
+    lambda <- rvec(m)
+    ans_obtained <- ppois_rvec(q, lambda, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(ppois(q, lambda = m, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qpois_rvec' works with valid input", {
+    m <- matrix(seq(0.1, 0.6, 0.1), nr = 2)
+    p <- rvec(m)
+    lambda <- c(2.1, 0.8)
+    ans_obtained <- qpois_rvec(p, lambda, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(qpois(m, lambda = lambda, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rpois_rvec' works with valid input", {
+    m <- matrix(seq(2.1, 2.6, 0.1), nr = 2)
+    lambda <- rvec(m)
+    set.seed(0)
+    ans_obtained <- rpois_rvec(2, lambda)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rpois(6, lambda = m), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
 
 ## 'dist_rvec_1' --------------------------------------------------------------
 
