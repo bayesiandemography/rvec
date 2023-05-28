@@ -17,31 +17,35 @@ knitr::opts_chunk$set(
 
 # The problem that package `rvecs` tries to solve
 
-Many modern statistical methods produce output result in a set of random draws
+Instead of yielding a single estimate of unknown quantity $\theta$, many modern statistical methods yield a set of random draws
 $$
-  \theta_1, \theta_2, \dots, \theta_S
+  \theta_1, \theta_2, \dots, \theta_S.
 $$
-from a distribution $p(\theta)$. Distribution $p(\theta)$ could, for instance, be outcomes from a simulation study, or a posterior distribution from a Bayesian analysis. Quantity $\theta$ could be a scalar, but it could also be a vector with thousands of elements. 
+These draws might, for instance, be outcomes from a stochastic simulation, or draws from a Bayesian posterior distribution. Quantity $\theta$ could be a scalar, but it could also be a vector with thousands of elements. 
 
-Statistics calculated over the random draws can be used to to characterise the unknown quantity $\theta$. The median value $q_{0.5}^{(\theta)}$ obtained from draws $\theta_1, \theta_2, \dots, \theta_S$, for instance, can be used as a point estimate of $\theta$, and the quantiles $q_{0.025}^{(\theta)}$ and $q_{0.975}^{(\theta)}$ can be used to construct a 95\% credible interval.
+Statistics calculated for the random draws can be used to characterise quantity $\theta$. For instance, the median $q_{0.5}^{(\theta)}$ obtained from $\theta_1, \theta_2, \dots, \theta_S$ can be used as a point estimate of $\theta$, and the quantiles $q_{0.025}^{(\theta)}$ and $q_{0.975}^{(\theta)}$ can be used as endpoints for a 95\% credible interval.
 
-An enormously useful feature of random draws is that the same approach can be used to make inferences about functions of the unknown quantity. If $f$ is some function, then to make inferences about $f(\theta)$, we
+One advantage of having a set of random draws instead of a single estimate is that the draws can be used to inferences about quantities dervied from $\theta$. If $f$ is some function, then to make inferences about $f(\theta)$, we
 
 1. apply $f$ to each draw of $\theta$, obtaining, $f(\theta_1 ), f(\theta_2), \dots, f(\theta_S)$, and then
 2. summarise the $f(\theta_1 ), f(\theta_2), \dots, f(\theta_S)$ using statistics such as quantiles.
 
-Say, for instance, that $\theta = (\theta^{\text{F}}, \theta^{\text{M}})$ was a vector describing divorce rates for females and males, and that we were interested in the ratio between female and male rates. Function $f$ would then be $f(x,y) = x/y$. To obtain a point estimate and 95\% credible interval for the ratio, we would 
+Say, for instance, that $\theta = (\theta^{\text{F}}, \theta^{\text{M}})$ was a vector describing divorce rates for females and males, and that we were interested in the ratio between female and male rates, implying that $f \equiv f(x,y) = x/y$. To obtain a point estimate and 95\% credible interval, we would 
 
 1. calculate ratios, $\theta_1^{\text{F}}/\theta_1^{\text{M}}, \theta_2^{\text{F}}/\theta_2^{\text{M}}, \dots, \theta_S^{\text{F}}/\theta_S^{\text{M}}$,
 2. calculate  median $q_{0.5}^{(\theta^\text{F}/\theta^{\text{M}})}$, and quantiles $q_{0.025}^{(\theta^\text{F}/\theta^{\text{M}})}$ and $q_{0.975}^{(\theta^\text{F}/\theta^{\text{M}})}$.
 
-In computing terms, this procedure is a simple type of map-reduce style calculation. In step 1, transformations are applied, in parallel, to multiple quantities. In step 2, the outcomes are combined into an overall result.
+In computing terms, to make inferences about $f(\theta)$, we follow a map-reduce strategy. In Step 1, we apply transformations, independently, to each of the draws. In Step 2, we assemble the results from these transformations, to produce an overall summary.
+
+Package **rvec** aims to help with the implementation of these steps. It contains a data structure, called an `rvec`, which holds multiple draws, but which tries to behave as much as possible like an ordinary R vector. Base R or tidyverse code written for ordinary vectors should run, with minimal changes, on rvecs. Computations using rvecs are typically faster, and require less memory, than computations that represent random draws using ordinary vectors. Wherever possible, **rvec** uses functions from package **matrixStats** for internal calculations. The `rvec` class extends the `vctrs` class from package **vctrs**, and, with some minor exceptions, discussed in Section XXX, adopt standard `vctrs` behaviors.
 
 
 
 
-- Want to make that easy
-    - Store output
+
+
+
+
     - Parallel
     - Reduce
 

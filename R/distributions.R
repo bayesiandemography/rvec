@@ -70,6 +70,114 @@
 NULL
 
 
+## 'beta' ---------------------------------------------------------------------
+
+## The help for the base *beta functions notes that
+## calling *beta with ncp = 0 can give a different
+## results from calling *beta with ncp missing.
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dbeta_rvec <- function(x, shape1, shape2, ncp = 0, log = FALSE) {
+    check_flag(log)
+    dbeta <- stats::dbeta
+    args <- vec_recycle_common(x, shape1, shape2)
+    x <- args[[1]]
+    shape1 <- args[[2]]
+    shape2 <- args[[3]]
+    if (missing(ncp))
+        dist_rvec_3(fun = dbeta,
+                    arg1 = x,
+                    arg2 = shape1,
+                    arg3 = shape2,
+                    log = log)
+    else
+        dist_rvec_3(fun = dbeta,
+                    arg1 = x,
+                    arg2 = shape1,
+                    arg3 = shape2,
+                    ncp = ncp,
+                    log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+pbeta_rvec <- function(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    pbeta <- stats::pbeta
+    args <- vec_recycle_common(q, shape1, shape2)
+    q <- args[[1]]
+    shape1 <- args[[2]]
+    shape2 <- args[[3]]
+    if (missing(ncp))
+        dist_rvec_3(fun = pbeta,
+                    arg1 = q,
+                    arg2 = shape1,
+                    arg3 = shape2,
+                    lower.tail = lower.tail,
+                    log.p = log.p)
+    else
+        dist_rvec_3(fun = pbeta,
+                    arg1 = q,
+                    arg2 = shape1,
+                    arg3 = shape2,
+                    ncp = ncp,
+                    lower.tail = lower.tail,
+                    log.p = log.p)        
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qbeta_rvec <- function(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qbeta <- stats::qbeta
+    args <- vec_recycle_common(p, shape1, shape2)
+    p <- args[[1L]]
+    shape1 <- args[[2L]]
+    shape2 <- args[[3L]]
+    if (missing(ncp))
+        dist_rvec_3(fun = qbeta,
+                    arg1 = p,
+                    arg2 = shape1,
+                    arg3 = shape2,
+                    lower.tail = lower.tail,
+                    log.p = log.p)
+    else
+        dist_rvec_3(fun = qbeta,
+                    arg1 = p,
+                    arg2 = shape1,
+                    arg3 = shape2,
+                    ncp = ncp,
+                    lower.tail = lower.tail,
+                    log.p = log.p)        
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rbeta_rvec <- function(n, shape1, shape2, ncp = 0) {
+    rbeta <- stats::rbeta
+    shape1 <- vec_recycle(shape1, size = n)
+    shape2 <- vec_recycle(shape2, size = n)
+    n <- n_rdist(n = n, args = list(shape1, shape2))
+    if (missing(ncp))
+        dist_rvec_2(fun = rbeta,
+                    arg1 = shape1,
+                    arg2 = shape2,
+                    n = n)
+    else
+        dist_rvec_2(fun = rbeta,
+                    arg1 = shape1,
+                    arg2 = shape2,
+                    n = n,
+                    ncp = ncp)
+}
+
 
 ## 'norm' ---------------------------------------------------------------------
 

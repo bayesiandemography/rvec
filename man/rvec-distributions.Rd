@@ -2,6 +2,10 @@
 % Please edit documentation in R/distributions.R
 \name{rvec-distributions}
 \alias{rvec-distributions}
+\alias{dbeta_rvec}
+\alias{pbeta_rvec}
+\alias{qbeta_rvec}
+\alias{rbeta_rvec}
 \alias{dnorm_rvec}
 \alias{pnorm_rvec}
 \alias{qnorm_rvec}
@@ -12,6 +16,14 @@
 \alias{rpois_rvec}
 \title{Probability distributions}
 \usage{
+dbeta_rvec(x, shape1, shape2, ncp = 0, log = FALSE)
+
+pbeta_rvec(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+qbeta_rvec(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+rbeta_rvec(n, shape1, shape2, ncp = 0)
+
 dnorm_rvec(x, mean = 0, sd = 1, log = FALSE)
 
 pnorm_rvec(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
@@ -31,12 +43,6 @@ rpois_rvec(n, lambda)
 \arguments{
 \item{x, q}{Vector of quantiles.}
 
-\item{mean, lambda}{Vector of means.
-A standard R vector, or an \link[=rvec]{rvec}.}
-
-\item{sd}{Vector of standard deviations.
-A standard R vector, or an \link[=rvec]{rvec}.}
-
 \item{log, log.p}{Whether to return
 \code{log(p)} rather than \code{p}. Default is
 \code{FALSE}.}
@@ -48,6 +54,12 @@ A standard R vector, or an \link[=rvec]{rvec}.}
 \item{p}{Vector of probabilities.}
 
 \item{n}{Number of draws.}
+
+\item{mean, lambda}{Vector of means.
+A standard R vector, or an \link[=rvec]{rvec}.}
+
+\item{sd}{Vector of standard deviations.
+A standard R vector, or an \link[=rvec]{rvec}.}
 }
 \value{
 If any of the inputs is an

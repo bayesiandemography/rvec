@@ -1,3 +1,48 @@
+
+## 'beta' ---------------------------------------------------------------------
+
+test_that("'dbeta_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    shape1 <- rvec(m)
+    shape2 <- rvec(2 * m)
+    ans_obtained <- dbeta_rvec(x = x, shape1 = shape1, shape2 = shape2, log = TRUE)
+    ans_expected <- rvec(matrix(dbeta(x = x, shape1 = m, shape2 = 2 * m, log = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pbeta_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    shape1 <- rvec(m)
+    shape2 <- rvec(2 * m)
+    ans_obtained <- pbeta_rvec(q, shape1, shape2, log.p = TRUE)
+    ans_expected <- rvec(matrix(pbeta(q = q, shape1 = m, shape2 = 2 * m, log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qbeta_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- rvec(m)
+    shape1 <- rvec(m)
+    shape2 <- 3
+    ans_obtained <- pbeta_rvec(q, shape1, shape2)
+    ans_expected <- rvec(matrix(pbeta(q = m, shape1 = m, shape2 = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rbeta_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    shape1 <- rvec(m)
+    shape2 <- 3
+    set.seed(0)
+    ans_obtained <- rbeta_rvec(n = 2, shape1, shape2, ncp = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rbeta(n = 6, shape1 = m, shape2 = 3, ncp = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
 ## 'norm' ---------------------------------------------------------------------
 
 test_that("'dnorm_rvec' works with valid input", {
