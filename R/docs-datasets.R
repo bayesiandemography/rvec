@@ -23,19 +23,18 @@
 "divorce"
 
 
-#' Regression coefficients
+#' Posterior sample from linear regression
 #'
-#' Posterior sample for coefficients from a linear
+#' Posterior sample for parameters from a linear
 #' regression model.
 #'
-#' @format A tibble with 200 rows and
-#' the following variables:
-#' - `draw`: Index identifying random draw.
+#' @format A matrix with 200 columns and
+#' the following rows:
 #' - `alpha`: Intercept parameter
 #' - `beta`: Slope parameter
 #' - `sigma`: Standard deviation of error term
 #'
-#' @source `regr_coef` contains values from the second
+#' @source `reg_post` contains values from the second
 #' half of the `line` dataset
 #' in package [coda](https://CRAN.R-project.org/package=coda).
 #' The line dataset draws on the BUGS manual:
@@ -43,7 +42,7 @@
 #' Gilks, W.R. (1995) BUGS: Bayesian inference using
 #' Gibbs Sampling, Version 0.5, MRC Biostatistics Unit,
 #' Cambridge.
-"regr_coef"
+"reg_post"
 
 
 

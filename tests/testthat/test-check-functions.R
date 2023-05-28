@@ -29,6 +29,36 @@ test_that("'check_colnum_draw' throws expected error when length 0", {
 })
 
 
+## 'check_draw' ---------------------------------------------------------------
+
+test_that("'check_draw' returns TRUE with valid inputs", {
+    expect_true(check_draw("draw"))
+    expect_true(check_draw("sim"))
+})
+
+test_that("'check_draw' throws expected error non-length-1", {
+    expect_error(check_draw(character()),
+                 "`draw` does not have length 1")
+    expect_error(check_draw(c("a", "b")),
+                 "`draw` does not have length 1")
+})
+
+test_that("'check_draw' throws expected error non-character", {
+    expect_error(check_draw(TRUE),
+                 "`draw` has class <logical>")
+})
+
+test_that("'check_draw' throws expected error NA", {
+    expect_error(check_draw(NA_character_),
+                 "`draw` is NA")
+})
+
+test_that("'check_draw' throws expected error blank", {
+    expect_error(check_draw(""),
+                 "`draw` is blank")
+})
+
+
 ## 'check_flag' ---------------------------------------------------------------
 
 test_that("'check_flag' returns TRUE with valid inputs", {
@@ -203,36 +233,6 @@ test_that("'check_n_draw_equal' throws expected error with non-compatible length
                                     x_arg = "x",
                                     y_arg = "to"),
                  "Number of draws of rvec `x` must equal number of draws of rvec `to`.")
-})
-
-
-## 'check_draw' ---------------------------------------------------------------
-
-test_that("'check_draw' returns TRUE with valid inputs", {
-    expect_true(check_draw("draw"))
-    expect_true(check_draw("sim"))
-})
-
-test_that("'check_draw' throws expected error non-length-1", {
-    expect_error(check_draw(character()),
-                 "`nm_draw` does not have length 1")
-    expect_error(check_draw(c("a", "b")),
-                 "`nm_draw` does not have length 1")
-})
-
-test_that("'check_draw' throws expected error non-character", {
-    expect_error(check_draw(TRUE),
-                 "`nm_draw` has class <logical>")
-})
-
-test_that("'check_draw' throws expected error NA", {
-    expect_error(check_draw(NA_character_),
-                 "`nm_draw` is NA")
-})
-
-test_that("'check_draw' throws expected error blank", {
-    expect_error(check_draw(""),
-                 "`nm_draw` is blank")
 })
 
 

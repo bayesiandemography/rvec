@@ -95,6 +95,34 @@ draws_mean(x)
 ```
 
 
+## Regression
+
+```{r}
+reg_post[ , 1:5]
+```
+```{r}
+coef <- rvec(reg_post[c("alpha", "beta"), ])
+sd <- rvec(reg_post["sigma", , drop = FALSE])
+```
+
+```{r}
+X <- cbind(1, 0:10)
+yhat <- X %*% coef
+yhat
+```
+
+```{r}
+error <- rnorm_rvec(n = 11, mean = 0, sd = sd)
+error
+```
+```{r}
+yrep <- yhat + error
+yrep
+```
+
+
+
+
 
 ## Divorce rates
 

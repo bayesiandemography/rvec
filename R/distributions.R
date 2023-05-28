@@ -15,7 +15,7 @@
 #' but are also more predictable. Base R style
 #' recycling can be done through explicit
 #' calls to [base::rep()],
-#' [base::rep_len()], and [base::rep_int()],
+#' [base::rep_len()], and [base::rep.int()],
 #' all of which have methods for [rvecs][rvec()].
 #'
 #' @param n Number of draws.
@@ -42,11 +42,11 @@
 #' - [stats::dpois()] Poisson distribution.
 #'
 #' @examples
-#' x_rv <- rvec(rbind(c(-0.8, 1.3),
-#'                    c(-9.1, 8.7)))
-#' mean_rv <- rvec(rbind(c(-1, 1),
-#'                       c(-10, 10)))
-#' sd_rv <- rvec(rbind(c(0.2, 20)))
+#' x_rv <- rvec(list(c(-0.8, 1.3),
+#'                   c(-9.1, 8.7)))
+#' mean_rv <- rvec(list(c(-1, 1),
+#'                      c(-10, 10)))
+#' sd_rv <- rvec(list(c(0.2, 20)))
 #' x_rv
 #' mean_rv
 #' sd_rv
@@ -65,7 +65,7 @@
 #' rnorm_rvec(n = 2, mean = mean_rv, sd = sd_rv)
 #'
 #' ## random variates: mean is rvec, sd is scalar
-#' rnorm_rvec(n = 6, mean = mean_rv, sd = 0.5)
+#' rnorm_rvec(n = 2, mean = mean_rv, sd = 0.5)
 #' @name rvec-distributions
 NULL
 

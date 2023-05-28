@@ -5,11 +5,9 @@ Version: 0.0.0.9000
 Authors@R: 
     person("John", "Bryant", ,
            "john@bayesiandemography.com", role = c("aut", "cre"))
-Description: An object of class "rvec" holds represents a random
-    vector, but tries to behave as much as possible like a regular
-    vector, including working well in data frames.
-    Among other things, an "rvec" object can be used
-    to hold results from a Bayesian model.
+Description: An object of class "rvec" holds holds multiple draws
+    from a distribution, but tries to behave as much as possible
+    like a standard R vector, including working well in data frames.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -20,9 +18,11 @@ Depends:
 Imports:
     cli,
     glue,
-    rlang,
+    graphics,
+    grDevices,
     matrixStats,
     methods,
+    rlang,
     stats,
     tibble,
     tidyselect,

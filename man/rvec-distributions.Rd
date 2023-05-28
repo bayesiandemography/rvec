@@ -61,33 +61,27 @@ functions that take one or more rvecs
 as arguments, and return rvecs.
 }
 \details{
-Standard base R rules
-about recycling of arguments apply.
-For instance,
+The \verb{*_rvec} probability distribution functions
+use \link[vctrs:vector_recycling_rules]{tidyverse}
+vector recycling rules:
+\itemize{
+\item Vectors of length 1 are recycled
+\item All other vectors must have the same size
+}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{rnorm_rvec(n = 4,
-           mean = rvec(rbind(c(0.3, 0.7),
-                             c(0.2, 0.5))))
-}\if{html}{\out{</div>}}
-
-is equivalent to
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{rnorm_rvec(n = 4,
-           mean = rvec(rbind(c(0.3, 0.7),
-                             c(0.2, 0.5),
-                             c(0.3, 0.7),
-                             c(0.2, 0.5))))
-}\if{html}{\out{</div>}}
-
-with the \code{mean} argument being repeated so
-that it has length 4.
+These rules are more restrictive than base R rules,
+but are also more predictable. Base R style
+recycling can be done through explicit
+calls to \code{\link[base:rep]{base::rep()}},
+\code{\link[base:rep]{base::rep_len()}}, and \code{\link[base:rep]{base::rep.int()}},
+all of which have methods for \link[=rvec]{rvecs}.
 }
 \examples{
-x_rv <- rvec(rbind(c(-0.8, 1.3),
-                   c(-9.1, 8.7)))
-mean_rv <- rvec(rbind(c(-1, 1),
-                      c(-10, 10)))
-sd_rv <- rvec(rbind(c(0.2, 20)))
+x_rv <- rvec(list(c(-0.8, 1.3),
+                  c(-9.1, 8.7)))
+mean_rv <- rvec(list(c(-1, 1),
+                     c(-10, 10)))
+sd_rv <- rvec(list(c(0.2, 20)))
 x_rv
 mean_rv
 sd_rv
@@ -101,12 +95,12 @@ dnorm_rvec(x = c(0, 2), mean = mean_rv, sd = sd_rv)
 ## ...which is equivalent to
 c(dnorm_rvec(0, mean = mean_rv[1], sd = sd_rv),
   dnorm_rvec(2, mean = mean_rv[2], sd = sd_rv))
-      
-## random variates: mean is rvec, sd is rvec 
+
+## random variates: mean is rvec, sd is rvec
 rnorm_rvec(n = 2, mean = mean_rv, sd = sd_rv)
 
 ## random variates: mean is rvec, sd is scalar
-rnorm_rvec(n = 6, mean = mean_rv, sd = 0.5)
+rnorm_rvec(n = 2, mean = mean_rv, sd = 0.5)
 }
 \seealso{
 Base R functions

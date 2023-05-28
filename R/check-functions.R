@@ -32,6 +32,28 @@ check_colnums_values <- function(colnums_values) {
 
 
 ## HAS_TESTS
+#' Check that 'draw' is a valid string
+#'
+#' @param draw Name of the 'draw' variable.
+#' A string.
+#'
+#' @returns TRUE, invisibly.
+#'
+#' @noRd
+check_draw <- function(draw) {
+    if (!identical(length(draw), 1L))
+        cli::cli_abort("{.arg draw} does not have length 1.")
+    if (is.na(draw))
+        cli::cli_abort("{.arg draw} is {.val {NA}}.")
+    if (!is.character(draw))
+        cli::cli_abort("{.arg draw} has class {.cls {class(draw)}}.")
+    if (nchar(draw) == 0L)
+        cli::cli_abort("{.arg draw} is blank")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
 #' Check a logical flag
 #'
 #' @param x TRUE or FALSE
@@ -48,8 +70,6 @@ check_flag <- function(x) {
         cli::cli_abort("{.arg {nm}} is {.val {NA}}")
     invisible(TRUE)
 }
-
-
 
 
 ## HAS_TESTS
@@ -269,28 +289,6 @@ check_n_draw_equal <- function(x, y, x_arg, y_arg) {
                                y_arg = y_arg,
                                message = message)
     }
-    invisible(TRUE)
-}
-
-
-## HAS_TESTS
-#' Check that 'nm_draw' is a valid string
-#'
-#' @param nm_draw Name of the 'draw' variable.
-#' A string.
-#'
-#' @returns TRUE, invisibly.
-#'
-#' @noRd
-check_draw <- function(nm_draw) {
-    if (!identical(length(nm_draw), 1L))
-        cli::cli_abort("{.arg nm_draw} does not have length 1.")
-    if (is.na(nm_draw))
-        cli::cli_abort("{.arg nm_draw} is {.val {NA}}.")
-    if (!is.character(nm_draw))
-        cli::cli_abort("{.arg nm_draw} has class {.cls {class(nm_draw)}}.")
-    if (nchar(nm_draw) == 0L)
-        cli::cli_abort("{.arg nm_draw} is blank")
     invisible(TRUE)
 }
 
