@@ -5,13 +5,12 @@
 \alias{divorce}
 \title{Divorce rates in New Zealand}
 \format{
-A tibble with the following variables:
+A tibble with 30,000 rows and the following variables:
 \itemize{
 \item \code{age}: Age, in 5-year age groups, 15-19 to 65+.
 \item \code{sex}: \code{"Female"} or \code{"Male"}.
-\item \code{time}: Calendar year.
-\item \code{sim}: Index for draw.
-\item \code{rate}: Divorce rate.
+\item \code{draw}: Index for random draw.
+\item \code{rate}: Divorce rate, per 1000.
 }
 }
 \source{
@@ -20,9 +19,8 @@ sex (marriages and civil unions) (Annual-Dec)" and
 "Estimated Resident Population by Age and Sex (1991+)
 (Annual-Dec)" in the online
 database Infoshare
-on the Statistics New Zealand website.
-Divorce data downloaded on 22 March 2023, and
-population data downloaded on 26 March 2023.
+on the Statistics New Zealand website,
+downloaded on 22 March 2023.
 }
 \usage{
 divorce

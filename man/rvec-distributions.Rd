@@ -6,6 +6,14 @@
 \alias{pbeta_rvec}
 \alias{qbeta_rvec}
 \alias{rbeta_rvec}
+\alias{dbinom_rvec}
+\alias{pbinom_rvec}
+\alias{qbinom_rvec}
+\alias{rbinom_rvec}
+\alias{dcauchy_rvec}
+\alias{pcauchy_rvec}
+\alias{qcauchy_rvec}
+\alias{rcauchy_rvec}
 \alias{dnorm_rvec}
 \alias{pnorm_rvec}
 \alias{qnorm_rvec}
@@ -24,6 +32,22 @@ qbeta_rvec(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 
 rbeta_rvec(n, shape1, shape2, ncp = 0)
 
+dbinom_rvec(x, size, prob, log = FALSE)
+
+pbinom_rvec(q, size, prob, lower.tail = TRUE, log.p = FALSE)
+
+qbinom_rvec(p, size, prob, lower.tail = TRUE, log.p = FALSE)
+
+rbinom_rvec(n, size, prob)
+
+dcauchy_rvec(x, location = 0, scale = 1, log = FALSE)
+
+pcauchy_rvec(q, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE)
+
+qcauchy_rvec(p, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE)
+
+rcauchy_rvec(n, location = 0, scale = 1)
+
 dnorm_rvec(x, mean = 0, sd = 1, log = FALSE)
 
 pnorm_rvec(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
@@ -41,31 +65,36 @@ qpois_rvec(p, lambda, lower.tail = TRUE, log.p = FALSE)
 rpois_rvec(n, lambda)
 }
 \arguments{
-\item{x, q}{Vector of quantiles.}
+\item{x, q}{Vector of quantiles. Can be rvec.}
+
+\item{ncp}{Non-centrality parameter. Cannot be rvec.
+Default is 0.}
 
 \item{log, log.p}{Whether to return
-\code{log(p)} rather than \code{p}. Default is
+\code{log(p)} rather than \code{p}. Cannot be rvec. Default is
 \code{FALSE}.}
 
 \item{lower.tail}{Whether to return
 \eqn{P[X \le x]}, as opposed to
-\eqn{P[X > x]}. Default is \code{TRUE}.}
+\eqn{P[X > x]}. Cannot be rvec. Default is \code{TRUE}.}
 
-\item{p}{Vector of probabilities.}
+\item{p}{Vector of probabilities. Can be rvec.}
 
-\item{n}{Number of draws.}
+\item{n}{Number of draws. Cannot be rvec.}
 
-\item{mean, lambda}{Vector of means.
-A standard R vector, or an \link[=rvec]{rvec}.}
+\item{mean}{Vector of means. Can be rvec.
+Default is 0.}
 
-\item{sd}{Vector of standard deviations.
-A standard R vector, or an \link[=rvec]{rvec}.}
+\item{sd}{Vector of standard deviations. Can be rvec.
+Default is 1.}
+
+\item{lambda}{Vector of means. Can be rvec.}
 }
 \value{
 If any of the inputs is an
-\link[=rvec]{rvec}, then the return value is
-an \link[=rvec]{rvec}. Otherwise it is a
-standard R vector.
+\link[=rvec]{rvec}, then an
+an \link[=rvec]{rvec}; otherwise an
+ordinary R vector.
 }
 \description{
 Modified versions of standard probability
@@ -117,6 +146,10 @@ rnorm_rvec(n = 2, mean = mean_rv, sd = 0.5)
 \seealso{
 Base R functions
 \itemize{
+\item \code{\link[stats:Beta]{stats::dbeta()}} Beta distribution.
+\item \code{\link[stats:Binomial]{stats::dbinom()}} Binomial distribution.
+\item \code{\link[stats:Cauchy]{stats::dcauchy()}} Cauchy distribution.
+\item \code{\link[stats:Chisquare]{stats::dchisq()}} Chi-squared distribution.
 \item \code{\link[stats:Normal]{stats::dnorm()}} Normal distribution.
 \item \code{\link[stats:Poisson]{stats::dpois()}} Poisson distribution.
 }

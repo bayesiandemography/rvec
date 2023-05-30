@@ -236,6 +236,81 @@ test_that("'check_n_draw_equal' throws expected error with non-compatible length
 })
 
 
+## 'check_nonneg_num_scalar' --------------------------------------------------
+
+test_that("'check_nonneg_num_scalar' returns TRUE with valid inputs", {
+    x <- 3
+    expect_true(check_nonneg_num_scalar(x))
+    x <- 0
+    expect_true(check_nonneg_num_scalar(x))
+    x <- 0L
+    expect_true(check_nonneg_num_scalar(x))
+})
+
+test_that("'check_nonneg_num_scalar' throws expected error non-length-1", {
+    y <- double()
+    expect_error(check_nonneg_num_scalar(y),
+                 "`y` does not have length 1")
+    z <- 1:2
+    expect_error(check_nonneg_num_scalar(z),
+                 "`z` does not have length 1")
+})
+
+test_that("'check_nonneg_num_scalar' throws expected error if non-numeric", {
+    x <- "hello"
+    expect_error(check_nonneg_num_scalar(x),
+                 "`x` has class <character>")
+})
+
+test_that("'check_nonneg_num_scalar' throws expected error if NA", {
+    x <- NA_real_
+    expect_error(check_nonneg_num_scalar(x),
+                 "`x` is NA")
+})
+
+test_that("'check_nonneg_num_scalar' throws expected error if negative", {
+    ncp <- -0.0000001
+    expect_error(check_nonneg_num_scalar(ncp),
+                 "`ncp` is negative")
+})
+
+
+## 'check_nonneg_num_vector' --------------------------------------------------
+
+test_that("'check_nonneg_num_vector' returns TRUE with valid inputs", {
+    x <- c(3, 2)
+    expect_true(check_nonneg_num_vector(x))
+    x <- 0
+    expect_true(check_nonneg_num_vector(x))
+    x <- 0:10
+    expect_true(check_nonneg_num_vector(x))
+})
+
+test_that("'check_nonneg_num_vector' throws expected error if non-numeric", {
+    x <- c("hello", "goodbye")
+    expect_error(check_nonneg_num_vector(x),
+                 "`x` has class <character>")
+})
+
+test_that("'check_nonneg_num_vector' throws expected error if has NAs", {
+    x <- c(1, NA, 3)
+    expect_error(check_nonneg_num_vector(x),
+                 "`x` has 1 NA")
+    x <- c(1, NA, 3, NA)
+    expect_error(check_nonneg_num_vector(x),
+                 "`x` has 2 NAs")
+})
+
+test_that("'check_nonneg_num_vector' throws expected error if negative", {
+    ncp <- c(-0.0000001, 0, 1, 2)
+    expect_error(check_nonneg_num_vector(ncp),
+                 "`ncp` has 1 negative value")
+    ncp <- c(-0.0000001, 0, 1, -2)
+    expect_error(check_nonneg_num_vector(ncp),
+                 "`ncp` has 2 negative values")
+})
+
+
 ## 'check_overlap_draw_groups' ------------------------------------------------
 
 test_that("'check_overlap_draw_groups' returns TRUE with valid inputs", {

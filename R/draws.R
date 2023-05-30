@@ -196,8 +196,6 @@ draws_quantile.rvec <- function(x,
                                 probs = c(0.025, 0.5, 0.975),
                                 na_rm = FALSE) {
     x_str <- deparse1(substitute(x))
-    ## x_expr <- rlang::expr(x)
-    ## x_str <- rlang::expr_deparse(x_expr)
     check_probs(probs)
     check_flag(na_rm)
     m <- field(x, "data")
@@ -207,7 +205,10 @@ draws_quantile.rvec <- function(x,
         ans <- matrixStats::rowQuantiles(m, probs = probs, na.rm = na_rm)
         ans <- matrix_to_list_of_cols(ans)
     }
-    names(ans) <- paste(x_str, names(ans), sep = "_")
+    nms <- names(ans)
+    nms <- sub("%$", "", nms)
+    nms <- paste(x_str, nms, sep = "_")
+    names(ans) <- nms
     ans <- tibble::tibble(!!!ans)
     ans
 }

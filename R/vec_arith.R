@@ -74,6 +74,18 @@ vec_arith.rvec_dbl.logical <- function(op, x, y, ...) {
     rvec_dbl(data)
 }
 
+## HAS_TESTS
+#' @export
+#' @method vec_arith.rvec_dbl MISSING
+vec_arith.rvec_dbl.MISSING <- function(op, x, y, ...) {
+    m <- field(x, "data")
+    data <- switch(op,
+                   `-` = -1 * m,
+                   `+` = m,
+                   stop_incompatible_op(op, x, y))
+    rvec_dbl(data)
+}
+
 
 ## 'x' is rvec_int ------------------------------------------------------------
 
@@ -149,6 +161,18 @@ vec_arith.rvec_int.logical <- function(op, x, y, ...) {
     rvec(data)
 }
 
+## HAS_TESTS
+#' @export
+#' @method vec_arith.rvec_int MISSING
+vec_arith.rvec_int.MISSING <- function(op, x, y, ...) {
+    m <- field(x, "data")
+    data <- switch(op,
+                   `-` = -1 * m,
+                   `+` = m,
+                   stop_incompatible_op(op, x, y))
+    rvec_int(data)
+}
+
 
 ## 'x' is rvec_lgl ------------------------------------------------------------
 
@@ -222,6 +246,18 @@ vec_arith.rvec_lgl.logical <- function(op, x, y, ...) {
                            x = field(x, "data"),
                            y = y)
     rvec(data)
+}
+
+## HAS_TESTS
+#' @export
+#' @method vec_arith.rvec_lgl MISSING
+vec_arith.rvec_lgl.MISSING <- function(op, x, y, ...) {
+    m <- field(x, "data")
+    data <- switch(op,
+                   `-` = -1 * m,
+                   `+` = m,
+                   stop_incompatible_op(op, x, y))
+    rvec_int(data)
 }
 
 

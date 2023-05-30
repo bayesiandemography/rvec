@@ -31,6 +31,12 @@ test_that("'vec_arith' works with rvec_dbl", {
     expect_identical(c(TRUE, FALSE) - rvec_dbl(matrix(2:5, nr = 1)),
                      rvec_dbl(rbind(-(1:4),
                                     -(2:5))))
+    ## missing
+    m <- matrix(2:5, nr = 1)
+    x <- rvec_dbl(m)
+    y <- rvec_dbl(-m)
+    expect_identical(-x, y)
+    expect_identical(+x, x)
 })
 
 test_that("'vec_arith' works with rvec_int", {
@@ -67,9 +73,15 @@ test_that("'vec_arith' works with rvec_int", {
     expect_identical(c(TRUE, FALSE) - rvec_int(matrix(2:5, nr = 1)),
                      rvec_int(rbind(-(1:4),
                                     -(2:5))))
+    ## missing
+    m <- matrix(2:5, nr = 1)
+    x <- rvec_int(m)
+    y <- rvec_int(-m)
+    expect_identical(-x, y)
+    expect_identical(+x, x)
 })
 
-test_that("'vec_arith' works with rvec_lgo", {
+test_that("'vec_arith' works with rvec_lgl", {
     ## rvec_dbl
     expect_identical(rvec_lgl(matrix(c(TRUE, FALSE), nr = 1)) +
                      rvec_dbl(matrix(2:3, nr = 1)),
@@ -106,5 +118,12 @@ test_that("'vec_arith' works with rvec_lgo", {
                      rvec_lgl(matrix(c(TRUE, FALSE), nr = 1)),
                      rvec_int(rbind(c(0, 1L),
                                     c(-1, 0))))
+    ## missing
+    m <- matrix(c(TRUE, FALSE), nr = 1)
+    x <- rvec_lgl(m)
+    y <- rvec_int(-m)
+    z <- rvec_int(m)
+    expect_identical(-x, y)
+    expect_identical(+x, z)
 })                     
 

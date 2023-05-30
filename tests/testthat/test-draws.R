@@ -144,6 +144,7 @@ test_that("'draws_quantile' works with rvec_dbl when nrow > 0", {
     ans_obtained <- draws_quantile(y)
     ans_expected <- apply(m, 1, quantile, prob = c(0.025, 0.5, 0.975))
     ans_expected <- tibble::as_tibble(t(ans_expected))
+    names(ans_expected) <- sub("%", "", names(ans_expected))
     names(ans_expected) <- paste("y", names(ans_expected), sep = "_")
     expect_identical(ans_obtained, ans_expected)
 })
@@ -153,9 +154,9 @@ test_that("'draws_median' works with rvec_int when nrow == 0", {
     m <- matrix(integer(), nr = 0, ncol = 5)
     x <- rvec(m)
     ans_obtained <- draws_quantile(x)
-    ans_expected <- tibble::tibble("x_2.5%" = NA_real_,
-                                   "x_50%" = NA_real_,
-                                   "x_97.5%" = NA_real_) 
+    ans_expected <- tibble::tibble("x_2.5" = NA_real_,
+                                   "x_50" = NA_real_,
+                                   "x_97.5" = NA_real_) 
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -165,6 +166,7 @@ test_that("'draws_quantile' works with rvec_lgl", {
     ans_obtained <- draws_quantile(x = y)
     ans_expected <- apply(m, 1, quantile, prob = c(0.025, 0.5, 0.975))
     ans_expected <- tibble::as_tibble(t(ans_expected))
+    names(ans_expected) <- sub("%", "", names(ans_expected))
     names(ans_expected) <- paste0("y_", names(ans_expected))
     expect_identical(ans_obtained, ans_expected)
 })

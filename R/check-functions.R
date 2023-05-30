@@ -294,6 +294,48 @@ check_n_draw_equal <- function(x, y, x_arg, y_arg) {
 
 
 ## HAS_TESTS
+#' Check a non-negative numeric scalar
+#'
+#' @param x A non-negative numeric scalar
+#'
+#' @returns TRUE, invisibly
+#' @noRd
+check_nonneg_num_scalar <- function(x) {
+    nm <- deparse1(substitute(x))
+    if (!identical(length(x), 1L))
+        cli::cli_abort("{.arg {nm}} does not have length 1")
+    if (!is.numeric(x))
+        cli::cli_abort("{.arg {nm}} has class {.cls {class(x)}}")
+    if (is.na(x))
+        cli::cli_abort("{.arg {nm}} is {.val {NA}}")
+    if (x < 0)
+        cli::cli_abort("{.arg {nm}} is negative")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check a non-negative scalar
+#'
+#' @param x A non-negative numeric vector
+#'
+#' @returns TRUE, invisibly
+#' @noRd
+check_nonneg_num_vector <- function(x) {
+    nm <- deparse1(substitute(x))
+    if (!is.numeric(x))
+        cli::cli_abort("{.arg {nm}} has class {.cls {class(x)}}")
+    n_na <- sum(is.na(x))
+    if (n_na > 0L)
+        cli::cli_abort("{.arg {nm}} has {n_na} NA{?s}")
+    n_neg <- sum(x < 0)
+    if (n_neg > 0)
+        cli::cli_abort("{.arg {nm}} has {n_neg} negative value{?s}")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
 #' Check that draw variable not used as grouping variable
 #'
 #' Assume that the colnum_draw and colnums_groups

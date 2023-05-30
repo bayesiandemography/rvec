@@ -15,145 +15,144 @@ knitr::opts_chunk$set(
 ```
 
 
-# The problem that package `rvecs` tries to solve
+# What does **rvecs** do?
 
-Instead of yielding a single estimate of unknown quantity $\theta$, many modern statistical methods yield a set of random draws
+Many modern statistical methods yield a set of random draws from a distribution,
 $$
   \theta_1, \theta_2, \dots, \theta_S.
 $$
-These draws might, for instance, be outcomes from a stochastic simulation, or draws from a Bayesian posterior distribution. Quantity $\theta$ could be a scalar, but it could also be a vector with thousands of elements. 
+These draws might, for instance, be outcomes from a stochastic simulation, or, in a Bayesian analysis, draws from a posterior distribution. Quantity $\theta$ could be a scalar, or it could be a vector with thousands of elements. 
 
-Statistics calculated for the random draws can be used to characterise quantity $\theta$. For instance, the median $q_{0.5}^{(\theta)}$ obtained from $\theta_1, \theta_2, \dots, \theta_S$ can be used as a point estimate of $\theta$, and the quantiles $q_{0.025}^{(\theta)}$ and $q_{0.975}^{(\theta)}$ can be used as endpoints for a 95\% credible interval.
+Statistics calculated from the random draws can be used to characterise $\theta$. For instance, median $q_{0.5}^{(\theta)}$ of $\theta_1, \theta_2, \dots, \theta_S$ can be used as a point estimate for $\theta$, and quantiles $q_{0.025}^{(\theta)}$ and $q_{0.975}^{(\theta)}$ can be used as endpoints for a 95\% credible interval.
 
-One advantage of having a set of random draws instead of a single estimate is that the draws can be used to inferences about quantities dervied from $\theta$. If $f$ is some function, then to make inferences about $f(\theta)$, we
+Crucially, random draws can also be used to make inferences about quantities derived from $\theta$. If $f$ is some function, then to make inferences about $f(\theta)$, we
 
-1. apply $f$ to each draw of $\theta$, obtaining, $f(\theta_1 ), f(\theta_2), \dots, f(\theta_S)$, and then
+1. apply $f$ to $\theta_1, \theta_2, \dots, \theta_S$, obtaining, $f(\theta_1), f(\theta_2), \dots, f(\theta_S)$, and then
 2. summarise the $f(\theta_1 ), f(\theta_2), \dots, f(\theta_S)$ using statistics such as quantiles.
 
-Say, for instance, that $\theta = (\theta^{\text{F}}, \theta^{\text{M}})$ was a vector describing divorce rates for females and males, and that we were interested in the ratio between female and male rates, implying that $f \equiv f(x,y) = x/y$. To obtain a point estimate and 95\% credible interval, we would 
+Say, for instance, that $\theta = (\theta^{\text{F}}, \theta^{\text{M}})$ was a vector describing divorce rates for females and males, and that we were interested in the ratio between female and male divorce rates. To obtain a point estimate and 95\% credible interval, we would 
 
 1. calculate ratios, $\theta_1^{\text{F}}/\theta_1^{\text{M}}, \theta_2^{\text{F}}/\theta_2^{\text{M}}, \dots, \theta_S^{\text{F}}/\theta_S^{\text{M}}$,
 2. calculate  median $q_{0.5}^{(\theta^\text{F}/\theta^{\text{M}})}$, and quantiles $q_{0.025}^{(\theta^\text{F}/\theta^{\text{M}})}$ and $q_{0.975}^{(\theta^\text{F}/\theta^{\text{M}})}$.
 
-In computing terms, to make inferences about $f(\theta)$, we follow a map-reduce strategy. In Step 1, we apply transformations, independently, to each of the draws. In Step 2, we assemble the results from these transformations, to produce an overall summary.
+In computing terms, to make inferences about $f(\theta)$, we follow an apply-combine strategy. In Step 1, we apply transformations, independently, to each of the draws. In Step 2, we combine the individual results to produce our answer.
 
-Package **rvec** aims to help with the implementation of these steps. It contains a data structure, called an `rvec`, which holds multiple draws, but which tries to behave as much as possible like an ordinary R vector. Base R or tidyverse code written for ordinary vectors should run, with minimal changes, on rvecs. Computations using rvecs are typically faster, and require less memory, than computations that represent random draws using ordinary vectors. Wherever possible, **rvec** uses functions from package **matrixStats** for internal calculations. The `rvec` class extends the `vctrs` class from package **vctrs**, and, with some minor exceptions, discussed in Section XXX, adopt standard `vctrs` behaviors.
-
-
-
-
-
-
-
-
-    - Parallel
-    - Reduce
-
+Package **rvec** aims to make help with both steps, but particularly Step 1. **rvec** implements a new data structure, called an `rvec`, that holds multiple random draws. The `rvec` class extends the `vctrs` class from package [vctrs](https://vctrs.r-lib.org), and inherits standard vector behaviors. In general, base R or tidyverse code for standard operations on ordinary R vectors can be applied to rvecs with minimal changes. 
 
 # Examples
 
+## Toy example
+
+We begin with a toy example, to illustrate basic functionality.
+We have 3 draws for a scalar unknown quantity, theta.
+
 ```{r}
 library(rvec)
+l <- list(c(3, 1, 0))
+theta <- rvec(l)
+theta
+```
+
+The header `<rvec_dbl<3>[1]>` tells us rvec `theta` holds
+three random draws, each of which is a double
+(see `base::double()`) and has length 1.
+
+We can perform standard mathematical operations:
+```{r}
+exp(theta^2) + 1
+```
+
+`theta` recycles to match the length of
+other vectors,
+
+```{r}
+theta + c(1, -1)
+```
+
+including other rvecs,
+
+
+```{r}
+beta <- rvec(list(c(-0.2, 0.4, 0.1),
+                  c(-0.1, 0.1, 0.3)))
+beta		  
+```
+
+```{r}
+theta + beta
+```
+
+To summarise across random draws, we use
+the `draws_*` functions, e.g.
+
+
+```{r}
+draws_mean(theta)
+```
+
+
+## Divorce rates in New Zealand
+
+Our next example is more realistic. 
+We will use some standard tidyverse packages
+
+```{r}
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr)
 library(ggplot2)
 ```
-
-
-
-## Toy example
-
-```{r}
-m <- matrix(1:6, nrow = 3)
-x <- rvec(m)
-x
-```
-
-```{r}
-x - 1
-```
-
-
-
-```{r}
-x > 3
-```
-
-```{r}
-x[c(1, 3)]
-```
-
-
-
-```{r}
-y <- rvec(matrix(c(0.5, 2), nrow = 1))
-y
-```
-
-```{r}
-x * y^2
-```
-
-```{r}
-draws_mean(x)
-```
-
-
-## Regression
-
-```{r}
-reg_post[ , 1:5]
-```
-```{r}
-coef <- rvec(reg_post[c("alpha", "beta"), ])
-sd <- rvec(reg_post["sigma", , drop = FALSE])
-```
-
-```{r}
-X <- cbind(1, 0:10)
-yhat <- X %*% coef
-yhat
-```
-
-```{r}
-error <- rnorm_rvec(n = 11, mean = 0, sd = sd)
-error
-```
-```{r}
-yrep <- yhat + error
-yrep
-```
-
-
-
-
-
-## Divorce rates
+and work with a posterior sample
+from a Bayesian model of divorce rates (per thousand)
+in New Zealand, in 2020,
 
 ```{r}
 divorce
 ```
 
+First we convert the data from a 'data base' format,
+where each row describes of a single draw, 
+to an rvec format,
+where multiple draws are folded into an rvec.
+
 ```{r}
 divorce_rv <- divorce %>%
-  collapse_to_rvec(draw = "sim", value = rate)
+  collapse_to_rvec(value = rate)
 divorce_rv
 ```
 
+Now that the number of draws is large, means
+and standard deviations across draws are displayed,
+rather than the individual draws. (This
+format is copied from `rvar`s in package [posterior](https://cran.r-project.org/web/packages/posterior/index.html).
+`rvar`s are discussed in Section XXX.)
+
+Define the 'total divorce rate' to be the
+number of divorces a person could expect to
+experience over their lifetime, given prevailing
+divorces. The total divorce rate can be calculated
+as
 
 ```{r}
 divorce_rv %>%
-  group_by(time, sex) %>%
-  summarise(tdr = 5 * sum(rate))
+  group_by(sex) %>%
+  summarise(TDR = sum(rate) * 5 / 1000)
 ```
 
+We can summarise across draws using function
+`draws_quantile`. (`draws_quantile` returns a
+tibble rather than a vector, so, following standard
+`mutate` rules, we do not explicitly
+create new columns.)
 
 ```{r}
 divorce_rv %>%
-  group_by(time, sex) %>%
-  summarise(tdr = 5 * sum(rate)) %>%
+  group_by(sex) %>%
+  summarise(tdr = sum(rate) * 5 / 1000) %>%
   mutate(draws_quantile(tdr))
 ```
+
+Next we look at the ratio between female and male divorce
+rates
 
 ```{r}
 divorce_rv %>%
@@ -162,17 +161,17 @@ divorce_rv %>%
 ```
 
 
-```{r, fig.width = 5, fig.height = 5}
-divorce_rv %>%
+```{r, fig.width = 7, fig.height = 4}
+data <- divorce_rv %>%
   pivot_wider(names_from = sex, values_from = rate) %>%
   mutate(ratio = Female / Male) %>%
-  mutate(draws_quantile(ratio)) %>%
-  ggplot(aes(x = age, 
-             ymin = `ratio_2.5%`, 
-             y = `ratio_50%`,
-             ymax = `ratio_97.5%`)) +
-  facet_wrap(vars(time), ncol = 1) +
-  geom_pointrange(fatten = 1)
+  mutate(draws_quantile(ratio))
+ggplot(data,
+       aes(x = age, 
+           ymin = ratio_2.5, 
+           y = ratio_50,
+           ymax = ratio_97.5)) +
+  geom_pointrange()
 ```
 
 

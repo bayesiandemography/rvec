@@ -43,6 +43,97 @@ test_that("'rbeta_rvec' works with valid input", {
 })
 
 
+## 'binom' ---------------------------------------------------------------------
+
+test_that("'dbinom_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    size <- rvec(m)
+    prob <- rvec(m/7)
+    ans_obtained <- dbinom_rvec(x = x, size = size, prob = prob, log = TRUE)
+    ans_expected <- rvec(matrix(dbinom(x = x, size = m, prob = m/7, log = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pbinom_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    size <- rvec(m)
+    prob <- 0.5
+    ans_obtained <- pbinom_rvec(q, size, prob, log.p = TRUE)
+    ans_expected <- rvec(matrix(pbinom(q = q, size = m, prob = 0.5, log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qbinom_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- 0.5 * rvec(m)
+    size <- rvec(m)
+    prob <- rvec(0.1 * m)
+    ans_obtained <- pbinom_rvec(q, size, prob)
+    ans_expected <- rvec(matrix(pbinom(q = 0.5 * m, size = m, prob = 0.1 * m), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rbinom_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    size <- rvec(m)
+    prob <- 0.23
+    set.seed(0)
+    ans_obtained <- rbinom_rvec(n = 2, size, prob)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rbinom(n = 6, size = m, prob = 0.23), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'binom' ---------------------------------------------------------------------
+
+test_that("'dcauchy_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2) - 3
+    x <- 2:1
+    location <- rvec(m)
+    scale <- rvec(m) + 3
+    ans_obtained <- dcauchy_rvec(x = x, location = location, scale = scale, log = TRUE)
+    ans_expected <- rvec(matrix(dcauchy(x = x, location = m,
+                                        scale = m + 3, log = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pcauchy_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2) / 10
+    q <- 2:1
+    location <- rvec(m)
+    scale <- 5
+    ans_obtained <- pcauchy_rvec(q, location, scale, log.p = TRUE)
+    ans_expected <- rvec(matrix(pcauchy(q = q,
+                                        location = m, scale = 5, log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qcauchy_rvec' works with valid input", {
+    m <- -1 * matrix(1:6, nr = 2)
+    q <- 0.5 * rvec(m)
+    location <- rvec(m)
+    scale <- rvec(abs(0.1 * m))
+    ans_obtained <- pcauchy_rvec(q, location, scale)
+    ans_expected <- rvec(matrix(pcauchy(q = 0.5 * m, location = m,
+                                        scale = abs(0.1 * m)), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rcauchy_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    location <- rvec(m)
+    scale <- 10
+    set.seed(0)
+    ans_obtained <- rcauchy_rvec(n = 2, location, scale)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rcauchy(n = 6, location = m, scale = 10), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
 ## 'norm' ---------------------------------------------------------------------
 
 test_that("'dnorm_rvec' works with valid input", {

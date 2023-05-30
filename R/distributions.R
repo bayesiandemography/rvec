@@ -18,26 +18,34 @@
 #' [base::rep_len()], and [base::rep.int()],
 #' all of which have methods for [rvecs][rvec()].
 #'
-#' @param n Number of draws.
-#' @param x,q Vector of quantiles.
-#' @param p Vector of probabilities.
-#' @param mean,lambda Vector of means.
-#' A standard R vector, or an [rvec][rvec()].
-#' @param sd Vector of standard deviations.
-#' A standard R vector, or an [rvec][rvec()].
+#' @param n Number of draws. Cannot be rvec.
+#' @param x,q Vector of quantiles. Can be rvec.
+#' @param p Vector of probabilities. Can be rvec.
+#' @param mean Vector of means. Can be rvec.
+#' Default is 0.
+#' @param lambda Vector of means. Can be rvec.
+#' @param sd Vector of standard deviations. Can be rvec.
+#' Default is 1.
+#' @param ncp Non-centrality parameter. Cannot be rvec.
+#' Default is 0.
 #' @param log,log.p Whether to return
-#' `log(p)` rather than `p`. Default is
+#' `log(p)` rather than `p`. Cannot be rvec. Default is
 #' `FALSE`.
 #' @param lower.tail Whether to return
 #' \eqn{P[X \le x]}, as opposed to
-#' \eqn{P[X > x]}. Default is `TRUE`.
+#' \eqn{P[X > x]}. Cannot be rvec. Default is `TRUE`.
+#' 
 #'
 #' @returns If any of the inputs is an
-#' [rvec][rvec()], then the return value is
-#' an [rvec][rvec()]. Otherwise it is a
-#' standard R vector.
+#' [rvec][rvec()], then an
+#' an [rvec][rvec()]; otherwise an
+#' ordinary R vector.
 #'
 #' @seealso Base R functions
+#' - [stats::dbeta()] Beta distribution.
+#' - [stats::dbinom()] Binomial distribution.
+#' - [stats::dcauchy()] Cauchy distribution.
+#' - [stats::dchisq()] Chi-squared distribution.
 #' - [stats::dnorm()] Normal distribution.
 #' - [stats::dpois()] Poisson distribution.
 #'
@@ -80,9 +88,10 @@ NULL
 #' @rdname rvec-distributions
 #' @export
 dbeta_rvec <- function(x, shape1, shape2, ncp = 0, log = FALSE) {
+    check_nonneg_num_vector(ncp)
     check_flag(log)
     dbeta <- stats::dbeta
-    args <- vec_recycle_common(x, shape1, shape2)
+    args <- vec_recycle_common(x, shape1, shape2, ncp)
     x <- args[[1]]
     shape1 <- args[[2]]
     shape2 <- args[[3]]
@@ -105,10 +114,11 @@ dbeta_rvec <- function(x, shape1, shape2, ncp = 0, log = FALSE) {
 #' @rdname rvec-distributions
 #' @export
 pbeta_rvec <- function(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
+    check_nonneg_num_vector(ncp)
     check_flag(lower.tail)
     check_flag(log.p)
     pbeta <- stats::pbeta
-    args <- vec_recycle_common(q, shape1, shape2)
+    args <- vec_recycle_common(q, shape1, shape2, ncp)
     q <- args[[1]]
     shape1 <- args[[2]]
     shape2 <- args[[3]]
@@ -133,10 +143,11 @@ pbeta_rvec <- function(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FA
 #' @rdname rvec-distributions
 #' @export
 qbeta_rvec <- function(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
+    check_nonneg_num_vector(ncp)
     check_flag(lower.tail)
     check_flag(log.p)
     qbeta <- stats::qbeta
-    args <- vec_recycle_common(p, shape1, shape2)
+    args <- vec_recycle_common(p, shape1, shape2, ncp)
     p <- args[[1L]]
     shape1 <- args[[2L]]
     shape2 <- args[[3L]]
@@ -161,9 +172,11 @@ qbeta_rvec <- function(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FA
 #' @rdname rvec-distributions
 #' @export
 rbeta_rvec <- function(n, shape1, shape2, ncp = 0) {
+    check_nonneg_num_vector(ncp)
     rbeta <- stats::rbeta
     shape1 <- vec_recycle(shape1, size = n)
     shape2 <- vec_recycle(shape2, size = n)
+    ncp <- vec_recycle(ncp, size = n)
     n <- n_rdist(n = n, args = list(shape1, shape2))
     if (missing(ncp))
         dist_rvec_2(fun = rbeta,
@@ -176,6 +189,150 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0) {
                     arg2 = shape2,
                     n = n,
                     ncp = ncp)
+}
+
+
+## 'binom' ---------------------------------------------------------------------
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dbinom_rvec <- function(x, size, prob, log = FALSE) {
+    check_flag(log)
+    dbinom <- stats::dbinom
+    args <- vec_recycle_common(x, size, prob)
+    x <- args[[1]]
+    size <- args[[2]]
+    prob <- args[[3]]
+    dist_rvec_3(fun = dbinom,
+                arg1 = x,
+                arg2 = size,
+                arg3 = prob,
+                log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+pbinom_rvec <- function(q, size, prob, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    pbinom <- stats::pbinom
+    args <- vec_recycle_common(q, size, prob)
+    q <- args[[1]]
+    size <- args[[2]]
+    prob <- args[[3]]
+    dist_rvec_3(fun = pbinom,
+                arg1 = q,
+                arg2 = size,
+                arg3 = prob,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qbinom_rvec <- function(p, size, prob, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qbinom <- stats::qbinom
+    args <- vec_recycle_common(p, size, prob)
+    p <- args[[1L]]
+    size <- args[[2L]]
+    prob <- args[[3L]]
+    dist_rvec_3(fun = qbinom,
+                arg1 = p,
+                arg2 = size,
+                arg3 = prob,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rbinom_rvec <- function(n, size, prob) {
+    rbinom <- stats::rbinom
+    size <- vec_recycle(size, size = n)
+    prob <- vec_recycle(prob, size = n)
+    n <- n_rdist(n = n, args = list(size, prob))
+    dist_rvec_2(fun = rbinom,
+                arg1 = size,
+                arg2 = prob,
+                n = n)
+}
+
+
+## 'cauchy' ---------------------------------------------------------------------
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dcauchy_rvec <- function(x, location = 0, scale = 1, log = FALSE) {
+    check_flag(log)
+    dcauchy <- stats::dcauchy
+    args <- vec_recycle_common(x, location, scale)
+    x <- args[[1]]
+    location <- args[[2]]
+    scale <- args[[3]]
+    dist_rvec_3(fun = dcauchy,
+                arg1 = x,
+                arg2 = location,
+                arg3 = scale,
+                log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+pcauchy_rvec <- function(q, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    pcauchy <- stats::pcauchy
+    args <- vec_recycle_common(q, location, scale)
+    q <- args[[1]]
+    location <- args[[2]]
+    scale <- args[[3]]
+    dist_rvec_3(fun = pcauchy,
+                arg1 = q,
+                arg2 = location,
+                arg3 = scale,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qcauchy_rvec <- function(p, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qcauchy <- stats::qcauchy
+    args <- vec_recycle_common(p, location, scale)
+    p <- args[[1L]]
+    location <- args[[2L]]
+    scale <- args[[3L]]
+    dist_rvec_3(fun = qcauchy,
+                arg1 = p,
+                arg2 = location,
+                arg3 = scale,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rcauchy_rvec <- function(n, location = 0, scale = 1) {
+    rcauchy <- stats::rcauchy
+    location <- vec_recycle(location, size = n)
+    scale <- vec_recycle(scale, size = n)
+    n <- n_rdist(n = n, args = list(location, scale))
+    dist_rvec_2(fun = rcauchy,
+                arg1 = location,
+                arg2 = scale,
+                n = n)
 }
 
 
@@ -252,11 +409,6 @@ rnorm_rvec <- function(n, mean = 0, sd = 1) {
 
 
 ## 'pois' ---------------------------------------------------------------------
-
-
-## Check as many inputs as possible, because
-## errors that are thrown via 'fun(arg, ...)'
-## are likely to be hard to interpret.
 
 ## HAS_TESTS
 #' @rdname rvec-distributions
