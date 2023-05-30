@@ -134,6 +134,48 @@ test_that("'rcauchy_rvec' works with valid input", {
 })
 
 
+## 'chisq' ---------------------------------------------------------------------
+
+test_that("'dchisq_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    df <- rvec(m)
+    x <- 2:1
+    df <- rvec(m)
+    ans_obtained <- dchisq_rvec(x, df, ncp = 0.001)
+    ans_expected <- rvec(matrix(dchisq(x = x, df = m, ncp = 0.001, log = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pchisq_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    df <- rvec(m)
+    q <- 2:1
+    df <- rvec(m)
+    ans_obtained <- pchisq_rvec(q, df, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(pchisq(q, df = m, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qchisq_rvec' works with valid input", {
+    m <- matrix(seq(0.1, 0.6, 0.1), nr = 2)
+    p <- rvec(m)
+    df <- c(2.1, 0.8)
+    ans_obtained <- qchisq_rvec(p, df, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(qchisq(m, df = df, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rchisq_rvec' works with valid input", {
+    m <- matrix(seq(2.1, 2.6, 0.1), nr = 2)
+    df <- rvec(m)
+    set.seed(0)
+    ans_obtained <- rchisq_rvec(2, df)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rchisq(6, df = m), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
 ## 'norm' ---------------------------------------------------------------------
 
 test_that("'dnorm_rvec' works with valid input", {

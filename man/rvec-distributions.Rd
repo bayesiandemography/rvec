@@ -14,6 +14,10 @@
 \alias{pcauchy_rvec}
 \alias{qcauchy_rvec}
 \alias{rcauchy_rvec}
+\alias{dchisq_rvec}
+\alias{pchisq_rvec}
+\alias{qchisq_rvec}
+\alias{rchisq_rvec}
 \alias{dnorm_rvec}
 \alias{pnorm_rvec}
 \alias{qnorm_rvec}
@@ -48,6 +52,14 @@ qcauchy_rvec(p, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE)
 
 rcauchy_rvec(n, location = 0, scale = 1)
 
+dchisq_rvec(x, df, ncp = 0, log = FALSE)
+
+pchisq_rvec(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+qchisq_rvec(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+rchisq_rvec(n, df, ncp = 0)
+
 dnorm_rvec(x, mean = 0, sd = 1, log = FALSE)
 
 pnorm_rvec(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
@@ -65,14 +77,19 @@ qpois_rvec(p, lambda, lower.tail = TRUE, log.p = FALSE)
 rpois_rvec(n, lambda)
 }
 \arguments{
-\item{x, q}{Vector of quantiles. Can be rvec.}
+\item{x}{Vector of quantiles. Can be rvec.}
+
+\item{shape1, shape2}{Parameters for beta distribution.
+Non-negative. Can be rvecs.}
 
 \item{ncp}{Non-centrality parameter. Cannot be rvec.
-Default is 0.}
+Default is \code{0}.}
 
 \item{log, log.p}{Whether to return
 \code{log(p)} rather than \code{p}. Cannot be rvec. Default is
 \code{FALSE}.}
+
+\item{q}{Vector of quantiles. Can be rvec.}
 
 \item{lower.tail}{Whether to return
 \eqn{P[X \le x]}, as opposed to
@@ -82,11 +99,24 @@ Default is 0.}
 
 \item{n}{Number of draws. Cannot be rvec.}
 
+\item{size}{Number of trials. Can be rvec.}
+
+\item{prob}{Probability of success in each trial.
+Can be rvec.}
+
+\item{location}{Parameter for Cauchy distribution.
+Can be rvec. Default is \code{0}.}
+
+\item{scale}{Parameter for Cauchy distribution.
+Can be rvec. Default is \code{1}.}
+
+\item{df}{Degrees of freedom. Can be rvec.}
+
 \item{mean}{Vector of means. Can be rvec.
-Default is 0.}
+Default is \code{0}.}
 
 \item{sd}{Vector of standard deviations. Can be rvec.
-Default is 1.}
+Default is \code{1}.}
 
 \item{lambda}{Vector of means. Can be rvec.}
 }

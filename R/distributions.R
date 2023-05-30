@@ -18,16 +18,27 @@
 #' [base::rep_len()], and [base::rep.int()],
 #' all of which have methods for [rvecs][rvec()].
 #'
-#' @param n Number of draws. Cannot be rvec.
-#' @param x,q Vector of quantiles. Can be rvec.
-#' @param p Vector of probabilities. Can be rvec.
-#' @param mean Vector of means. Can be rvec.
-#' Default is 0.
+#' @param df Degrees of freedom. Can be rvec.
 #' @param lambda Vector of means. Can be rvec.
+#' @param location Parameter for Cauchy distribution.
+#' Can be rvec. Default is `0`.
+#' @param mean Vector of means. Can be rvec.
+#' Default is `0`.
+#' @param p Vector of probabilities. Can be rvec.
+#' @param prob Probability of success in each trial.
+#' Can be rvec.
+#' @param q Vector of quantiles. Can be rvec.
+#' @param scale Parameter for Cauchy distribution.
+#' Can be rvec. Default is `1`.
 #' @param sd Vector of standard deviations. Can be rvec.
-#' Default is 1.
+#' Default is `1`.
+#' @param shape1,shape2 Parameters for beta distribution.
+#' Non-negative. Can be rvecs.
+#' @param size Number of trials. Can be rvec.
+#' @param x Vector of quantiles. Can be rvec.
+#' @param n Number of draws. Cannot be rvec.
 #' @param ncp Non-centrality parameter. Cannot be rvec.
-#' Default is 0.
+#' Default is `0`.
 #' @param log,log.p Whether to return
 #' `log(p)` rather than `p`. Cannot be rvec. Default is
 #' `FALSE`.
@@ -334,6 +345,110 @@ rcauchy_rvec <- function(n, location = 0, scale = 1) {
                 arg2 = scale,
                 n = n)
 }
+
+
+
+
+
+## 'chisq' ---------------------------------------------------------------------
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dchisq_rvec <- function(x, df, ncp = 0, log = FALSE) {
+    check_nonneg_num_vector(ncp)
+    check_flag(log)
+    dchisq <- stats::dchisq
+    args <- vec_recycle_common(x, df, ncp)
+    x <- args[[1L]]
+    df <- args[[2L]]
+    if (missing(ncp))
+        dist_rvec_2(fun = dchisq,
+                    arg1 = x,
+                    arg2 = df,
+                    log = log)
+    else
+        dist_rvec_2(fun = dchisq,
+                    arg1 = x,
+                    arg2 = df,
+                    ncp = ncp,
+                    log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+pchisq_rvec <- function(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
+    check_nonneg_num_vector(ncp)
+    check_flag(lower.tail)
+    check_flag(log.p)
+    pchisq <- stats::pchisq
+    args <- vec_recycle_common(q, df, ncp)
+    q <- args[[1L]]
+    df <- args[[2L]]
+    if (missing(ncp))
+        dist_rvec_2(fun = pchisq,
+                    arg1 = q,
+                    arg2 = df,
+                    lower.tail = lower.tail,
+                    log.p = log.p)
+    else
+        dist_rvec_2(fun = pchisq,
+                    arg1 = q,
+                    arg2 = df,
+                    ncp = ncp,
+                    lower.tail = lower.tail,
+                    log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qchisq_rvec <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
+    check_nonneg_num_vector(ncp)
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qchisq <- stats::qchisq
+    args <- vec_recycle_common(p, df, ncp)
+    p <- args[[1L]]
+    df <- args[[2L]]
+    if (missing(ncp))
+        dist_rvec_2(fun = qchisq,
+                    arg1 = p,
+                    arg2 = df,
+                    lower.tail = lower.tail,
+                    log.p = log.p)
+    else
+        dist_rvec_2(fun = qchisq,
+                    arg1 = p,
+                    arg2 = df,
+                    ncp = ncp,
+                    lower.tail = lower.tail,
+                    log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rchisq_rvec <- function(n, df, ncp = 0) {
+    check_nonneg_num_vector(ncp)
+    rchisq <- stats::rchisq
+    df <- vec_recycle(df, size = n)
+    ncp <- vec_recycle(ncp, size = n)
+    n <- n_rdist(n = n, args = list(df, ncp))
+    if (missing(ncp))
+        dist_rvec_1(fun = rchisq,
+                    arg = df,
+                    n = n)
+    else
+        dist_rvec_1(fun = rchisq,
+                    arg = df,
+                    ncp = ncp,
+                    n = n)
+}
+
+
+
 
 
 ## 'norm' ---------------------------------------------------------------------

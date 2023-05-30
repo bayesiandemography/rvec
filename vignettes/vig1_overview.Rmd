@@ -15,29 +15,24 @@ knitr::opts_chunk$set(
 ```
 
 
-# What does **rvecs** do?
+# Aims of **rvecs**
 
-Many modern statistical methods yield a set of random draws from a distribution,
-$$
-  \theta_1, \theta_2, \dots, \theta_S.
-$$
-These draws might, for instance, be outcomes from a stochastic simulation, or, in a Bayesian analysis, draws from a posterior distribution. Quantity $\theta$ could be a scalar, or it could be a vector with thousands of elements. 
+Bayesian analyses, stochastic simulations, and many other modern statistical methods produce random draws from distributions. Statistics calculated from these draws can be used to make inferences about the unknown quantities being modeled. For instance, medians across draws of can be used as point estimates for the unknown quantities. 
 
-Statistics calculated from the random draws can be used to characterise $\theta$. For instance, median $q_{0.5}^{(\theta)}$ of $\theta_1, \theta_2, \dots, \theta_S$ can be used as a point estimate for $\theta$, and quantiles $q_{0.025}^{(\theta)}$ and $q_{0.975}^{(\theta)}$ can be used as endpoints for a 95\% credible interval.
+An enormously useful feature of random draws is that these draws can also be used to make inferences about *derived* quantities. The procedure is:
 
-Crucially, random draws can also be used to make inferences about quantities derived from $\theta$. If $f$ is some function, then to make inferences about $f(\theta)$, we
+- Step 1. Calculate the derived quantity for each of the random draws.
+- Step 2. Summarise the distribution of these derived quantities.
 
-1. apply $f$ to $\theta_1, \theta_2, \dots, \theta_S$, obtaining, $f(\theta_1), f(\theta_2), \dots, f(\theta_S)$, and then
-2. summarise the $f(\theta_1 ), f(\theta_2), \dots, f(\theta_S)$ using statistics such as quantiles.
+Say, for instance, that we had a set of draws for age-specific mortality rates, and we wanted to make inferences about life expectancy (a deterministic function of mortality rates). We would proceed as follows:
 
-Say, for instance, that $\theta = (\theta^{\text{F}}, \theta^{\text{M}})$ was a vector describing divorce rates for females and males, and that we were interested in the ratio between female and male divorce rates. To obtain a point estimate and 95\% credible interval, we would 
+- Step 1. Derive life expectancy for each set of age-specific mortality rates
+- Step 2. Calculate means, medians, or other statistics across these life expectancies.
 
-1. calculate ratios, $\theta_1^{\text{F}}/\theta_1^{\text{M}}, \theta_2^{\text{F}}/\theta_2^{\text{M}}, \dots, \theta_S^{\text{F}}/\theta_S^{\text{M}}$,
-2. calculate  median $q_{0.5}^{(\theta^\text{F}/\theta^{\text{M}})}$, and quantiles $q_{0.025}^{(\theta^\text{F}/\theta^{\text{M}})}$ and $q_{0.975}^{(\theta^\text{F}/\theta^{\text{M}})}$.
+Package **rvec** aims to make working with random draws fast and easy. **rvec** implements a data structure called an `rvec` that holds multiple random draws. An rvec can be transformed, coerced, or rearranged using essentially the same code that is used for ordinary vectors, which helps with Step 1 above. **rvec** contains functions for summarizing across random draws, for Step 2, that are sufficient for most purposes. For specialized summaries, and for visualising results derived distibutions, see packages such as [tidybayes](https://mjskay.github.io/tidybayes/),
+[ggdist](https://mjskay.github.io/ggdist/), and [bayesplot](https://mc-stan.org/bayesplot/).
 
-In computing terms, to make inferences about $f(\theta)$, we follow an apply-combine strategy. In Step 1, we apply transformations, independently, to each of the draws. In Step 2, we combine the individual results to produce our answer.
-
-Package **rvec** aims to make help with both steps, but particularly Step 1. **rvec** implements a new data structure, called an `rvec`, that holds multiple random draws. The `rvec` class extends the `vctrs` class from package [vctrs](https://vctrs.r-lib.org), and inherits standard vector behaviors. In general, base R or tidyverse code for standard operations on ordinary R vectors can be applied to rvecs with minimal changes. 
+rvecs extend the `vctrs` class from package [vctrs](https://vctrs.r-lib.org), and inherits standard vector behaviors.  Many of the calculations are done internally using functions from [matrixStats](https://CRAN.R-project.org/package=matrixStats). Package [posterior](https://CRAN.R-project.org/package=posterior) provides alternative to rvecs for storing random draws.
 
 # Examples
 
