@@ -19,7 +19,8 @@ rvec_int(x = NULL)
 rvec_lgl(x = NULL)
 }
 \arguments{
-\item{x}{A matrix or a list of vectors.}
+\item{x}{A matrix, a list of vectors,
+or an atomic vector.}
 }
 \value{
 An rvec with the following class:
@@ -55,10 +56,14 @@ Function \code{rvec()} chooses the subclass, based on
 \code{rvec_lgl()}, and \code{rvec_chr()} each create
 objects of a particular subclass.
 
-\code{x} is typically a matrix, where each row is
-a set of draws for a particular unknown quantity.
-However, \code{x} can also be a list of vectors,
-all of the same length.
+\code{x} can be
+\itemize{
+\item A matrix, where each row is a set of draws
+for an unknown quantity.
+\item A list, where each element is a set of draws.
+\item An atomic vector, which is treated as a
+single-column matrix.
+}
 }
 \examples{
 m <- rbind(c(-1.5, 2, 0.2),
@@ -69,9 +74,7 @@ l <- list(rpois(100, lambda = 10.2),
           rpois(100, lambda = 5.5))
 rvec(l)
 
-m <- rbind(low = letters,
-           up = LETTERS)
-rvec(m)
+rvec(letters[1:5])
 
 l <- list(a = c(TRUE, FALSE),
           b = c(FALSE, TRUE))

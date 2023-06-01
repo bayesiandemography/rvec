@@ -22,12 +22,15 @@
 #' `rvec_lgl()`, and `rvec_chr()` each create
 #' objects of a particular subclass.
 #' 
-#' `x` is typically a matrix, where each row is
-#' a set of draws for a particular unknown quantity.
-#' However, `x` can also be a list of vectors,
-#' all of the same length.
+#' `x` can be
+#' - A matrix, where each row is a set of draws
+#'   for an unknown quantity.
+#' - A list, where each element is a set of draws.
+#' - An atomic vector, which is treated as a
+#'   single-column matrix.
 #'
-#' @param x A matrix or a list of vectors.
+#' @param x A matrix, a list of vectors,
+#' or an atomic vector.
 #'
 #' @returns
 #' An rvec with the following class:
@@ -48,9 +51,7 @@
 #'           rpois(100, lambda = 5.5))
 #' rvec(l)
 #'
-#' m <- rbind(low = letters,
-#'            up = LETTERS)
-#' rvec(m)
+#' rvec(letters[1:5])
 #'
 #' l <- list(a = c(TRUE, FALSE),
 #'           b = c(FALSE, TRUE))
@@ -65,9 +66,14 @@ rvec <- function(x) {
         check_lengths_nonzero(x)
         check_lengths_equal(x)
         x <- do.call(rbind, args = x)
-    }        
+    }
+    else if (is.atomic(x) && is.vector(x)) {
+        nms <- names(x)
+        x <- matrix(x, ncol = 1L)
+        rownames(x) <- nms
+    }
     else
-        cli::cli_abort(c("{.arg x} must be a matrix or a list",
+        cli::cli_abort(c("{.arg x} must be a matrix, a list, or an atomic vector.",
                          i = "{.arg x} has class {.cls {class(x)}}"))
     colnames(x) <- NULL
     if (is.character(x))
@@ -112,9 +118,13 @@ rvec_chr <- function(x = NULL) {
         else
             data <- matrix(character(), nrow = 0, ncol = 1L)
     }
-    
+    else if (is.atomic(x) && is.vector(x)) {
+        data <- as.character(x) ## vec_cast is too strict
+        data <- matrix(data, ncol = 1L)
+        rownames(data) <- names(x)
+    }
     else
-        cli::cli_abort(c("{.arg x} must be a matrix, a list, or NULL}",
+        cli::cli_abort(c("{.arg x} must be a matrix, a list, an atomic vector, or NULL.",
                          i = "{.arg x} has class {.cls {class(x)}}"))
     new_rvec_chr(data)
 }
@@ -148,8 +158,13 @@ rvec_dbl <- function(x = NULL) {
         else
             data <- matrix(double(), nrow = 0, ncol = 1L)
     }
+    else if (is.atomic(x) && is.vector(x)) {
+        data <- vec_cast(x, double())
+        data <- matrix(data, ncol = 1L)
+        rownames(data) <- names(x)
+    }
     else
-        cli::cli_abort(c("{.arg x} must be a matrix, a list, or NULL}",
+        cli::cli_abort(c("{.arg x} must be a matrix, a list, an atomic vector, or NULL.",
                          i = "{.arg x} has class {.cls {class(x)}}"))
     new_rvec_dbl(data)
 }
@@ -183,8 +198,13 @@ rvec_int <- function(x = NULL) {
         else
             data <- matrix(integer(), nrow = 0, ncol = 1L)
     }
+    else if (is.atomic(x) && is.vector(x)) {
+        data <- vec_cast(x, integer())
+        data <- matrix(data, ncol = 1L)
+        rownames(data) <- names(x)
+    }
     else
-        cli::cli_abort(c("{.arg x} must be a matrix, a list, or NULL}",
+        cli::cli_abort(c("{.arg x} must be a matrix, a list, an atomic vector, or NULL.",
                          i = "{.arg x} has class {.cls {class(x)}}"))
     new_rvec_int(data)
 }
@@ -218,8 +238,13 @@ rvec_lgl <- function(x = NULL) {
         else
             data <- matrix(logical(), nrow = 0, ncol = 1L)
     }
+    else if (is.atomic(x) && is.vector(x)) {
+        data <- vec_cast(x, logical())
+        data <- matrix(data, ncol = 1L)
+        rownames(data) <- names(x)
+    }
     else
-        cli::cli_abort(c("{.arg x} must be a matrix, a list, or NULL}",
+        cli::cli_abort(c("{.arg x} must be a matrix, a list, an atomic vector, or NULL.",
                          i = "{.arg x} has class {.cls {class(x)}}"))
     new_rvec_lgl(data)
 }
