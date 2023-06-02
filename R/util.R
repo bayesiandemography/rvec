@@ -29,60 +29,6 @@ append_col <- function(df, value, after, nm) {
     perm <- order(c(seq_len(n), after), c(rep(0L, n), 1))
     df[perm]
 }
-        
-
-## HAS_TESTS
-#' Create a rvec_chr prototype
-#'
-#' @param x An rvec with the desired
-#' number of draws.
-#'
-#' @returns An rvec_chr
-#'
-#' @noRd
-as_ptype_rvec_chr <- function(x) {
-    n_draw <- n_draw(x)
-    m <- matrix(character(),
-                nrow = 0L,
-                ncol = n_draw)
-    new_rvec_chr(m)
-}
-
-
-## HAS_TESTS
-#' Create a rvec_dbl prototype
-#'
-#' @param x An rvec with the desired
-#' number of draws.
-#'
-#' @returns An rvec_dbl
-#'
-#' @noRd
-as_ptype_rvec_dbl <- function(x) {
-    n_draw <- n_draw(x)
-    m <- matrix(double(),
-                nrow = 0L,
-                ncol = n_draw)
-    new_rvec_dbl(m)
-}
-
-
-## HAS_TESTS
-#' Create a rvec_int prototype
-#'
-#' @param x An rvec with the desired
-#' number of draws.
-#'
-#' @returns An rvec_int
-#'
-#' @noRd
-as_ptype_rvec_int <- function(x) {
-    n_draw <- n_draw(x)
-    m <- matrix(integer(),
-                nrow = 0L,
-                ncol = n_draw)
-    new_rvec_int(m)
-}
 
 
 ## HAS_TESTS
@@ -303,7 +249,7 @@ matrix_to_list_of_cols <- function(m) {
     if (ncol(m) > 0L) {
         ans <-  apply(m,
                       MARGIN = 2L,
-                      FUN = function(y) y,
+                      FUN = identity,
                       simplify = FALSE)
         names(ans) <- colnames(m)
     }
@@ -329,13 +275,44 @@ matrix_to_list_of_rows <- function(m) {
     if (nrow(m) > 0L) {
         ans <- apply(m,
                      MARGIN = 1L,
-                     FUN = function(y) y,
+                     FUN = identity,
                      simplify = FALSE)
         names(ans) <- rownames(m)
     }
     else
         ans <- list()
     ans
+}
+
+
+## HAS_TESTS
+#' Get the 'n_draw' to be used when combining
+#' two rvecs
+#'
+#' The two rvecs must have the same n_draw,
+#' or at least one must have n_draw of 1,
+#' otherwise an error is thrown.
+#'
+#' @param x, y Objects of class "rvec"
+#' @param x_arg, y_arg Names to appear in error messages
+#'
+#' @returns An integer.
+#'
+#' @noRd
+n_draw_common <- function(x, y, x_arg, y_arg) {
+    n_x <- n_draw(x)
+    n_y <- n_draw(y)
+    has_single <- (n_x == 1L) || (n_y == 1L)
+    is_equal <- n_x == n_y
+    if (!has_single && !is_equal) {
+        message <- glue::glue("Can't align rvec `{x_arg}` (n_draw = {n_x}) with rvec `{y_arg}` (n_draw = {n_y}).")
+        stop_incompatible_type(x = x,
+                               y = y,
+                               x_arg = x_arg,
+                               y_arg = y_arg,
+                               message = message)
+    }
+    max(n_x, n_y)
 }
 
 
@@ -406,6 +383,22 @@ n_rdist <- function(n, args) {
 #' @noRd
 paste_dot <- function(df)
     do.call(function(...) paste(..., sep = "."), args = df)
+
+
+## HAS_TESTS
+#' Create a prototype rvec with the indicated
+#' class and n_draw
+#'
+#' @param n_draw Integer
+#' @param ptype Zero-length vector
+#'
+#' @returns A zero-length rvec
+#'
+#' @noRd
+ptype_rvec <- function(n_draw, ptype) {
+    m <- matrix(ptype, nrow = 0L, ncol = n_draw)
+    rvec(m)
+}
 
 
 ## HAS_TESTS

@@ -18,6 +18,14 @@
 \alias{pchisq_rvec}
 \alias{qchisq_rvec}
 \alias{rchisq_rvec}
+\alias{dexp_rvec}
+\alias{pexp_rvec}
+\alias{qexp_rvec}
+\alias{rexp_rvec}
+\alias{df_rvec}
+\alias{pf_rvec}
+\alias{qf_rvec}
+\alias{rf_rvec}
 \alias{dnorm_rvec}
 \alias{pnorm_rvec}
 \alias{qnorm_rvec}
@@ -60,6 +68,22 @@ qchisq_rvec(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 
 rchisq_rvec(n, df, ncp = 0)
 
+dexp_rvec(x, rate = 1, log = FALSE)
+
+pexp_rvec(q, rate = 1, lower.tail = TRUE, log.p = FALSE)
+
+qexp_rvec(p, rate = 1, lower.tail = TRUE, log.p = FALSE)
+
+rexp_rvec(n, rate = 1)
+
+df_rvec(x, df1, df2, ncp = 0, log = FALSE)
+
+pf_rvec(q, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+qf_rvec(p, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+rf_rvec(n, df1, df2, ncp = 0)
+
 dnorm_rvec(x, mean = 0, sd = 1, log = FALSE)
 
 pnorm_rvec(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
@@ -77,9 +101,10 @@ qpois_rvec(p, lambda, lower.tail = TRUE, log.p = FALSE)
 rpois_rvec(n, lambda)
 }
 \arguments{
-\item{x}{Vector of quantiles. Can be rvec.}
+\item{x}{Quantiles. Can be rvec.}
 
-\item{shape1, shape2}{Parameters for beta distribution.
+\item{shape1, shape2}{Parameters
+for beta distribution.
 Non-negative. Can be rvecs.}
 
 \item{ncp}{Non-centrality parameter. Cannot be rvec.
@@ -89,33 +114,36 @@ Default is \code{0}.}
 \code{log(p)} rather than \code{p}. Cannot be rvec. Default is
 \code{FALSE}.}
 
-\item{q}{Vector of quantiles. Can be rvec.}
+\item{q}{Quantiles. Can be rvec.}
 
 \item{lower.tail}{Whether to return
 \eqn{P[X \le x]}, as opposed to
 \eqn{P[X > x]}. Cannot be rvec. Default is \code{TRUE}.}
 
-\item{p}{Vector of probabilities. Can be rvec.}
+\item{p}{Probabilities. Can be rvec.}
 
 \item{n}{Number of draws. Cannot be rvec.}
 
 \item{size}{Number of trials. Can be rvec.}
 
-\item{prob}{Probability of success in each trial.
-Can be rvec.}
+\item{prob}{Probability of
+success in each trial. Can be rvec.}
 
 \item{location}{Parameter for Cauchy distribution.
 Can be rvec. Default is \code{0}.}
 
-\item{scale}{Parameter for Cauchy distribution.
+\item{scale}{Parameters
+for Cauchy distribution.
 Can be rvec. Default is \code{1}.}
 
-\item{df}{Degrees of freedom. Can be rvec.}
+\item{df, df1, df2}{Degrees of freedom. Can be rvec.}
 
-\item{mean}{Vector of means. Can be rvec.
+\item{rate}{Rates. Can be rvec.}
+
+\item{mean}{Means of distribution. Can be rvec.
 Default is \code{0}.}
 
-\item{sd}{Vector of standard deviations. Can be rvec.
+\item{sd}{Standard deviations. Can be rvec.
 Default is \code{1}.}
 
 \item{lambda}{Vector of means. Can be rvec.}

@@ -18,6 +18,9 @@ vec_arith.rvec_dbl.default <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_dbl rvec_dbl
 vec_arith.rvec_dbl.rvec_dbl <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_dbl(x, n_draw = n_draw)
+    y <- rvec_to_rvec_dbl(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))
@@ -28,6 +31,9 @@ vec_arith.rvec_dbl.rvec_dbl <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_dbl rvec_int
 vec_arith.rvec_dbl.rvec_int <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_dbl(x, n_draw = n_draw)
+    y <- rvec_to_rvec_int(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))
@@ -38,6 +44,9 @@ vec_arith.rvec_dbl.rvec_int <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_dbl rvec_lgl
 vec_arith.rvec_dbl.rvec_lgl <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_dbl(x, n_draw = n_draw)
+    y <- rvec_to_rvec_lgl(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))
@@ -105,6 +114,9 @@ vec_arith.rvec_int.default <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_int rvec_dbl
 vec_arith.rvec_int.rvec_dbl <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_int(x, n_draw = n_draw)
+    y <- rvec_to_rvec_dbl(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))
@@ -115,6 +127,9 @@ vec_arith.rvec_int.rvec_dbl <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_int rvec_int
 vec_arith.rvec_int.rvec_int <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_int(x, n_draw = n_draw)
+    y <- rvec_to_rvec_int(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))
@@ -125,6 +140,9 @@ vec_arith.rvec_int.rvec_int <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_int rvec_lgl
 vec_arith.rvec_int.rvec_lgl <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_int(x, n_draw = n_draw)
+    y <- rvec_to_rvec_lgl(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))
@@ -192,6 +210,9 @@ vec_arith.rvec_lgl.default <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_lgl rvec_dbl
 vec_arith.rvec_lgl.rvec_dbl <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_lgl(x, n_draw = n_draw)
+    y <- rvec_to_rvec_dbl(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))
@@ -202,6 +223,9 @@ vec_arith.rvec_lgl.rvec_dbl <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_lgl rvec_int
 vec_arith.rvec_lgl.rvec_int <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_lgl(x, n_draw = n_draw)
+    y <- rvec_to_rvec_int(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))
@@ -212,6 +236,9 @@ vec_arith.rvec_lgl.rvec_int <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_lgl rvec_lgl
 vec_arith.rvec_lgl.rvec_lgl <- function(op, x, y, ...) {
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    x <- rvec_to_rvec_lgl(x, n_draw = n_draw)
+    y <- rvec_to_rvec_lgl(y, n_draw = n_draw)
     data <- vec_arith_base(op = op,
                            x = field(x, "data"),
                            y = field(y, "data"))

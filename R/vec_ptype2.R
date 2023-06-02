@@ -4,29 +4,29 @@
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_chr.rvec_chr <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = character())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_chr.rvec_dbl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = character())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_chr.rvec_int <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = character())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_chr.rvec_lgl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = character())
 }
 
 ## HAS_TESTS
@@ -51,34 +51,37 @@ vec_ptype2.rvec_chr.logical <- function(x, y, ...) x
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_dbl.rvec_chr <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    y
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = character())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_dbl.rvec_dbl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = double())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_dbl.rvec_int <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = double())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_dbl.rvec_lgl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = double())
 }
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.rvec_dbl.character <- function(x, y, ...) as_ptype_rvec_chr(x)
+vec_ptype2.rvec_dbl.character <- function(x, y, ...) {
+    n_draw <- n_draw(x)
+    ptype_rvec(n_draw = n_draw, ptype = character())
+}
 
 ## HAS_TESTS
 #' @export
@@ -98,38 +101,44 @@ vec_ptype2.rvec_dbl.logical <- function(x, y, ...) x
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_int.rvec_chr <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    y
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = character())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_int.rvec_dbl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    y
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = double())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_int.rvec_int <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = integer())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_int.rvec_lgl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = integer())
 }
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.rvec_int.character <- function(x, y, ...) as_ptype_rvec_chr(x)
+vec_ptype2.rvec_int.character <- function(x, y, ...) {
+    n_draw <- n_draw(x)
+    ptype_rvec(n_draw = n_draw, ptype = character())
+}
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.rvec_int.double <- function(x, y, ...) as_ptype_rvec_dbl(x)
+vec_ptype2.rvec_int.double <- function(x, y, ...) {
+    n_draw <- n_draw(x)
+    ptype_rvec(n_draw = n_draw, ptype = double())
+}
 
 ## HAS_TESTS
 #' @export
@@ -145,42 +154,52 @@ vec_ptype2.rvec_int.logical <- function(x, y, ...) x
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_lgl.rvec_chr <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    y
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = character())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_lgl.rvec_dbl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    y
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = double())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_lgl.rvec_int <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    y
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = integer())
 }
 
 ## HAS_TESTS
 #' @export
 vec_ptype2.rvec_lgl.rvec_lgl <- function(x, y, ...) {
-    check_n_draw_equal(x = x, y = y, x_arg = "x", y_arg = "y")
-    x
+    n_draw <- n_draw_common(x = x, y = y, x_arg = "x", y_arg = "y")
+    ptype_rvec(n_draw = n_draw, ptype = logical())
 }
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.rvec_lgl.character <- function(x, y, ...) as_ptype_rvec_chr(x)
+vec_ptype2.rvec_lgl.character <- function(x, y, ...) {
+    n_draw <- n_draw(x)
+    ptype_rvec(n_draw = n_draw, ptype = character())
+}
+
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.rvec_lgl.double <- function(x, y, ...) as_ptype_rvec_dbl(x)
+vec_ptype2.rvec_lgl.double <- function(x, y, ...) {
+    n_draw <- n_draw(x)
+    ptype_rvec(n_draw = n_draw, ptype = double())
+}
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.rvec_lgl.integer <- function(x, y, ...) as_ptype_rvec_int(x)
+vec_ptype2.rvec_lgl.integer <- function(x, y, ...) {
+    n_draw <- n_draw(x)
+    ptype_rvec(n_draw = n_draw, ptype = integer())
+}
 
 ## HAS_TESTS
 #' @export
@@ -195,15 +214,24 @@ vec_ptype2.character.rvec_chr <- function(x, y, ...) y
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.character.rvec_dbl <- function(x, y, ...) as_ptype_rvec_chr(y)
+vec_ptype2.character.rvec_dbl <- function(x, y, ...) {
+    n_draw <- n_draw(y)
+    ptype_rvec(n_draw = n_draw, ptype = character())
+}
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.character.rvec_int <- function(x, y, ...) as_ptype_rvec_chr(y)
+vec_ptype2.character.rvec_int <- function(x, y, ...) {
+    n_draw <- n_draw(y)
+    ptype_rvec(n_draw = n_draw, ptype = character())
+}
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.character.rvec_lgl <- function(x, y, ...) as_ptype_rvec_chr(y)
+vec_ptype2.character.rvec_lgl <- function(x, y, ...) {
+    n_draw <- n_draw(y)
+    ptype_rvec(n_draw = n_draw, ptype = character())
+}
 
 
 ## double ---------------------------------------------------------------------
@@ -218,11 +246,17 @@ vec_ptype2.double.rvec_dbl <- function(x, y, ...) y
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.double.rvec_int <- function(x, y, ...) as_ptype_rvec_dbl(y)
+vec_ptype2.double.rvec_int <- function(x, y, ...) {
+    n_draw <- n_draw(y)
+    ptype_rvec(n_draw = n_draw, ptype = double())
+}
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.double.rvec_lgl <- function(x, y, ...) as_ptype_rvec_dbl(y)
+vec_ptype2.double.rvec_lgl <- function(x, y, ...) {
+    n_draw <- n_draw(y)
+    ptype_rvec(n_draw = n_draw, ptype = double())
+}
 
 
 ## integer --------------------------------------------------------------------
@@ -241,7 +275,10 @@ vec_ptype2.integer.rvec_int <- function(x, y, ...) y
 
 ## HAS_TESTS
 #' @export
-vec_ptype2.integer.rvec_lgl <- function(x, y, ...) as_ptype_rvec_int(y)
+vec_ptype2.integer.rvec_lgl <- function(x, y, ...) {
+    n_draw <- n_draw(y)
+    ptype_rvec(n_draw = n_draw, ptype = integer())
+}
 
 
 ## logical --------------------------------------------------------------------

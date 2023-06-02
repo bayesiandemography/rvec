@@ -41,36 +41,6 @@ test_that("'append_col' throws correct error with zero-length df", {
 })
 
 
-## 'as_ptype_rvec_chr' --------------------------------------------------------
-
-test_that("'as_ptype_rvec_chr' works with valid inputs", {
-    x <- rvec(matrix(1:6, nr = 2))
-    ans_obtained <- as_ptype_rvec_chr(x)
-    ans_expected <- new_rvec(matrix(character(), nrow = 0, ncol = 3))
-    expect_identical(ans_obtained, ans_expected)
-})
-
-
-## 'as_ptype_rvec_dbl' --------------------------------------------------------
-
-test_that("'as_ptype_rvec_dbl' works with valid inputs", {
-    x <- rvec(matrix(1:6, nr = 2))
-    ans_obtained <- as_ptype_rvec_dbl(x)
-    ans_expected <- new_rvec(matrix(double(), nrow = 0, ncol = 3))
-    expect_identical(ans_obtained, ans_expected)
-})
-
-
-## 'as_ptype_rvec_int' --------------------------------------------------------
-
-test_that("'as_ptype_rvec_int' works with valid inputs", {
-    x <- rvec(matrix(1:6, nr = 2))
-    ans_obtained <- as_ptype_rvec_int(x)
-    ans_expected <- new_rvec(matrix(integer(), nrow = 0, ncol = 3))
-    expect_identical(ans_obtained, ans_expected)
-})
-
-
 ## 'get_colnum_draw' ----------------------------------------------------------
 
 test_that("'get_colnum_draw' works with valid inputs", {
@@ -249,6 +219,34 @@ test_that("'matrix_to_list_of_rows' works with nrow = 0, ncol = 0", {
 })
 
 
+
+## 'n_draw_common' -------------------------------------------------------
+
+test_that("'n_draw_common' works with same length", {
+    expect_identical(n_draw_common(x = rvec(matrix(1:4, ncol = 2)),
+                                   y = rvec(matrix(1:6, ncol = 2)),
+                                   x_arg = "x",
+                                   y_arg = "to"),
+                     2L)
+})
+
+test_that("'n_draw_common' works with one has length 1", {
+    expect_identical(n_draw_common(x = rvec(matrix(1:2, ncol = 1)),
+                                   y = rvec(matrix(1:6, ncol = 2)),
+                                   x_arg = "x",
+                                   y_arg = "to"),
+                     2L)
+})
+
+test_that("'n_draw_common' throws expected error with non-compatible n_draws", {
+    expect_error(n_draw_common(x = rvec(matrix(1:2, 1)),
+                               y = rvec(matrix(1:3, 1)),
+                               x_arg = "x",
+                               y_arg = "to"),
+                 "Can't align rvec `x` \\(n_draw = 2\\) with rvec `to` \\(n_draw = 3\\).")
+})
+
+
 ## 'n_draw_df' ----------------------------------------------------------------
 
 test_that("'n_draw_df' works with valid inputs", {
@@ -293,6 +291,15 @@ test_that("'paste_dot' works with valid inputs", {
     df <- data.frame(a = 1:2, b = 3:4, c = 5:6)
     ans_obtained <- paste_dot(df)
     ans_expected <- c("1.3.5", "2.4.6")
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'ptype_rvec' ---------------------------------------------------------------
+
+test_that("'ptype_rvec' works with valid inputs", {
+    ans_obtained <- ptype_rvec(n_draw = 3L, ptype = character())
+    ans_expected <- rvec(matrix(character(), nrow = 0L, ncol = 3L))
     expect_identical(ans_obtained, ans_expected)
 })
 

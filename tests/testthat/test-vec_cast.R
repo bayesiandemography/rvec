@@ -1,5 +1,4 @@
 
-
 test_that("'vec_cast' works with valid casts to rvec_chr", {
     expect_identical(vec_cast(rvec_chr(matrix("a")), to = rvec_chr()),
                      rvec_chr(matrix("a")))

@@ -2,6 +2,9 @@
 test_that("vec_ptype2 works when x is rvec_chr", {
     expect_identical(vec_ptype2(rvec_chr(matrix("a")), rvec_chr(matrix("b"))),
                      rvec_chr())
+    expect_identical(vec_ptype2(rvec_chr(matrix(c("a", "b"), nr = 1)),
+                                rvec_chr(matrix("b"))),
+                     rvec_chr(matrix(character(), nr = 0, ncol = 2)))
     expect_identical(vec_ptype2(rvec_chr(matrix("a")), rvec_dbl(matrix(1))),
                      rvec_chr())
     expect_identical(vec_ptype2(rvec_chr(matrix("a")), rvec_int(matrix(1L))),

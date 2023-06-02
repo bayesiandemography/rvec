@@ -176,6 +176,92 @@ test_that("'rchisq_rvec' works with valid input", {
 })
 
 
+## 'exp' ----------------------------------------------------------------------
+
+test_that("'dexp_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    rate <- rvec(m)
+    x <- 2:1
+    rate <- rvec(m)
+    ans_obtained <- dexp_rvec(x, rate)
+    ans_expected <- rvec(matrix(dexp(x = x, rate = m, log = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pexp_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    rate <- rvec(m)
+    q <- 2:1
+    rate <- rvec(m)
+    ans_obtained <- pexp_rvec(q, rate, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(pexp(q, rate = m, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qexp_rvec' works with valid input", {
+    m <- matrix(seq(0.1, 0.6, 0.1), nr = 2)
+    p <- rvec(m)
+    rate <- c(2.1, 0.8)
+    ans_obtained <- qexp_rvec(p, rate, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(qexp(m, rate = rate, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rexp_rvec' works with valid input", {
+    m <- matrix(seq(2.1, 2.6, 0.1), nr = 2)
+    rate <- rvec(m)
+    set.seed(0)
+    ans_obtained <- rexp_rvec(2, rate)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rexp(6, rate = m), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'f' ---------------------------------------------------------------------
+
+test_that("'df_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    df1 <- rvec(m)
+    df2 <- rvec(2 * m)
+    ans_obtained <- df_rvec(x = x, df1 = df1, df2 = df2, log = TRUE)
+    ans_expected <- rvec(matrix(df(x = x, df1 = m, df2 = 2 * m, log = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pf_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    df1 <- rvec(m)
+    df2 <- rvec(2 * m)
+    ans_obtained <- pf_rvec(q, df1, df2, log.p = TRUE)
+    ans_expected <- rvec(matrix(pf(q = q, df1 = m, df2 = 2 * m, log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qf_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- rvec(m)
+    df1 <- rvec(m)
+    df2 <- 3
+    ans_obtained <- pf_rvec(q, df1, df2)
+    ans_expected <- rvec(matrix(pf(q = m, df1 = m, df2 = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rf_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    df1 <- rvec(m)
+    df2 <- 3
+    set.seed(0)
+    ans_obtained <- rf_rvec(n = 2, df1, df2, ncp = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rf(n = 6, df1 = m, df2 = 3, ncp = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
 ## 'norm' ---------------------------------------------------------------------
 
 test_that("'dnorm_rvec' works with valid input", {
@@ -218,6 +304,7 @@ test_that("'rnorm_rvec' works with valid input", {
     ans_expected <- rvec(matrix(rnorm(n = 6, mean = m, sd = 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
+
 
 ## 'pois' ---------------------------------------------------------------------
 
