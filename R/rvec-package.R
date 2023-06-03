@@ -7,6 +7,19 @@
 #' quantities. Posterior distributions for death rates, for instance,
 #' can be turned into posterior distributions for life expectancies.
 #'
+#'  #' An `rvec`
+#'
+#' |              | Draw 1        | Draw 2        | \eqn{\dots}  | Draw \eqn{n}  |
+#' |:-------------|:-------------:|:-------------:|:------------:|:-------------:|
+#' | Obs 1        | \eqn{x_{1,1}} | \eqn{x_{1,2}} | \eqn{\dots}  | \eqn{x_{1,n}} |
+#' | Obs 2        | \eqn{x_{2,1}} | \eqn{x_{2,2}} | \eqn{\dots}  | \eqn{x_{2,n}} |
+#' | \eqn{\vdots} | \eqn{\vdots}  | \eqn{\vdots}  | \eqn{\ddots} | \eqn{\vdots}  |
+#' | Obs \eqn{m}  | \eqn{x_{m,1}} | \eqn{x_{m,2}} | \eqn{\dots}  | \eqn{x_{m,n}} |
+#'
+
+#'
+#'
+#'
 #' Starting with a sample
 #'
 #' \deqn{x_1, x_2, \dots, x_n}

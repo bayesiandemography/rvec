@@ -13,6 +13,15 @@ quantities. Posterior distributions for death rates, for instance,
 can be turned into posterior distributions for life expectancies.
 }
 \details{
+#' An \code{rvec}\tabular{lcccc}{
+    \tab Draw 1 \tab Draw 2 \tab \eqn{\dots} \tab Draw \eqn{n} \cr
+   Obs 1 \tab \eqn{x_{1,1}} \tab \eqn{x_{1,2}} \tab \eqn{\dots} \tab \eqn{x_{1,n}} \cr
+   Obs 2 \tab \eqn{x_{2,1}} \tab \eqn{x_{2,2}} \tab \eqn{\dots} \tab \eqn{x_{2,n}} \cr
+   \eqn{\vdots} \tab \eqn{\vdots} \tab \eqn{\vdots} \tab \eqn{\ddots} \tab \eqn{\vdots} \cr
+   Obs \eqn{m} \tab \eqn{x_{m,1}} \tab \eqn{x_{m,2}} \tab \eqn{\dots} \tab \eqn{x_{m,n}} \cr
+}
+
+
 Starting with a sample
 
 \deqn{x_1, x_2, \dots, x_n}

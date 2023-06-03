@@ -1,17 +1,103 @@
 
-#' Medians, means, and modes for random draws
+#' Logical operations across random draws
+#'
+#' Apply `all` or `any` logical summaries
+#' across random draws.
+#'
+#' @param x An object of class [rvec][rvec()].
+#' @param na_rm Whether to remove NAs before
+#' calculating summaries. Default is `FALSE`.
+#'
+#' @returns A vector.
+#'
+#' @seealso
+#' Apply pre-specified functions across draws:
+#' - [draws_median()]
+#' - [draws_mean]
+#' - [draws_mode()]
+#' - [draws_quantile()]
+#' 
+#' Apply arbitrary function across draws:
+#' - [draws_fun()] to apply abritrary functions
+#'
+#' For additional functions for summarising random draws, see
+#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
+#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
+#' Function [as_list_col()] converts rvecs into a
+#' format that `tidybayes` and `ggdist` can work with.
+#' 
+#' @examples
+#' m <- rbind(a = c(TRUE,  FALSE,  TRUE),
+#'            b = c(TRUE,  TRUE,   TRUE),
+#'            c = c(FALSE, FALSE,  FALSE))
+#' x <- rvec(m)
+#' x
+#' draws_all(x)
+#' draws_any(x)
+#' @export
+draws_all <- function(x, na_rm = FALSE) {
+    UseMethod("draws_all")
+}
+
+## HAS_TESTS
+#' @rdname draws_all
+#' @export
+draws_all.rvec_chr <- function(x, na_rm = FALSE) {
+    cli::cli_abort("{.fun all} not defined for character.")
+}
+
+## HAS_TESTS
+#' @rdname draws_all
+#' @export
+draws_all.rvec <- function(x, na_rm = FALSE) {
+    check_flag(na_rm)
+    m <- field(x, "data")
+    if (nrow(m) == 0L)
+        TRUE ## base::all returns TRUE with zero-length 'x'
+    else {
+        if (!is.logical(m))
+            cli::cli_warn("Coercing from type {.val {typeof(m)}} to type {.val logical}.")
+        ans <- matrixStats::rowAlls(m, na.rm = na_rm)
+        names(ans) <- rownames(m)
+        ans
+    }
+}
+
+#' @rdname draws_all
+#' @export
+draws_any <- function(x, na_rm = FALSE) {
+    UseMethod("draws_any")
+}
+
+## HAS_TESTS
+#' @rdname draws_all
+#' @export
+draws_any.rvec_chr <- function(x, na_rm = FALSE) {
+    cli::cli_abort("{.fun any} not defined for character.")
+}
+
+## HAS_TESTS
+#' @rdname draws_all
+#' @export
+draws_any.rvec <- function(x, na_rm = FALSE) {
+    check_flag(na_rm)
+    m <- field(x, "data")
+    if (nrow(m) == 0L)
+        FALSE ## base::any returns FALSE with zero-length 'x'
+    else {
+        if (!is.logical(m))
+            cli::cli_warn("Coercing from type {.val {typeof(m)}} to type {.val logical}.")
+        ans <- matrixStats::rowAnys(m, na.rm = na_rm)
+        names(ans) <- rownames(m)
+        ans
+    }
+}
+
+
+#' Medians, means, and modes across random draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using means, medians, or modes.
-#'
-#' An `rvec`
-#'
-#' |              | Draw 1        | Draw 2        | \eqn{\dots}  | Draw \eqn{n}  |
-#' |:-------------|:-------------:|:-------------:|:------------:|:-------------:|
-#' | Obs 1        | \eqn{x_{1,1}} | \eqn{x_{1,2}} | \eqn{\dots}  | \eqn{x_{1,n}} |
-#' | Obs 2        | \eqn{x_{2,1}} | \eqn{x_{2,2}} | \eqn{\dots}  | \eqn{x_{2,n}} |
-#' | \eqn{\vdots} | \eqn{\vdots}  | \eqn{\vdots}  | \eqn{\ddots} | \eqn{\vdots}  |
-#' | Obs \eqn{m}  | \eqn{x_{m,1}} | \eqn{x_{m,2}} | \eqn{\dots}  | \eqn{x_{m,n}} |
 #'
 #'
 #' When `method` is `"mode"`, `reduce_rvec()`
@@ -26,13 +112,18 @@
 #' @returns A vector.
 #'
 #' @seealso
-#' - [draws_quantile()] to calculate quantiles
+#' Apply pre-specified functions across draws:
+#' - [draws_all()]
+#' - [draws_any]
+#' - [draws_quantile()]
+#'
+#' Apply arbitrary function across draws:
 #' - [draws_fun()] to apply abritrary functions
 #'
-#' For a wide range of tools for summarising random draws, see
+#' For additional functions for summarising random draws, see
 #' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
 #' and [ggdist](https://CRAN.R-project.org/package=ggdist).
-#' Function [as_list_col()] converts `rvec`s into a
+#' Function [as_list_col()] converts rvecs into a
 #' format that `tidybayes` and `ggdist` can work with.
 #' 
 #' @examples
@@ -139,7 +230,7 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 
 
 
-#' Quantiles for random draws
+#' Quantiles acros random draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using quantiles.
@@ -163,9 +254,20 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' @returns A [tibble][tibble::tibble()].
 #'
 #' @seealso
-#' - [draws_median()], [draws_mean], [draws_mode()]
-#' describe the location of a distribution.
-#' - [draws_fun()] applies a function to draws.
+#' Apply pre-specified functions across draws:
+#' - [draws_median()]
+#' - [draws_mean]
+#' - [draws_mode()]
+#' - [draws_quantile()]
+#' 
+#' Apply arbitrary function across draws:
+#' - [draws_fun()] to apply abritrary functions
+#'
+#' For additional functions for summarising random draws, see
+#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
+#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
+#' Function [as_list_col()] converts rvecs into a
+#' format that `tidybayes` and `ggdist` can work with.
 #'
 #' @examples
 #' set.seed(0)
@@ -223,7 +325,7 @@ draws_quantile.rvec_chr <- function(x,
 }
 
 
-#' Apply summary function to random draws
+#' Apply summary function across random draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using a function.
@@ -236,7 +338,9 @@ draws_quantile.rvec_chr <- function(x,
 #' combined using [vctrs::vec_c()].
 #'
 #' @seealso
-#' Summaries of draws based on pre-specified functions:
+#' Apply pre-specified functions across draws:
+#' - [draws_all()]
+#' - [draws_any()]
 #' - [draws_median()]
 #' - [draws_mean]
 #' - [draws_mode()]

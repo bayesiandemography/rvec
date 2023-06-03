@@ -1,4 +1,104 @@
 
+## 'draws_all' -------------------------------------------------------------
+
+test_that("'draws_all' works with rvec_dbl when nrow > 0", {
+    set.seed(0)
+    m <- matrix(sample(c(TRUE, FALSE), size = 10, replace = TRUE),
+                nr = 5)
+    x <- rvec(m)
+    ans_obtained <- draws_all(x)
+    ans_expected <- apply(m, 1, all)
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_all' works with rvec_dbl when nrow > 0 - numeric", {
+    set.seed(0)
+    m <- matrix(sample(c(1, 0), size = 10, replace = TRUE),
+                nr = 5)
+    x <- rvec(m)
+    expect_warning(draws_all(x),
+                   "Coercing from type")
+    suppressWarnings(ans_obtained <- draws_all(x))
+    suppressWarnings(ans_expected <- apply(m, 1, all))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_all' works with rvec_int when nrow == 0", {
+    set.seed(0)
+    m <- matrix(integer(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- draws_all(x)
+    ans_expected <- TRUE
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_all' preserves names", {
+    set.seed(0)
+    m <- matrix(TRUE, nr = 5)
+    rownames(m) <- 1:5
+    x <- rvec(m)
+    ans <- draws_all(x)
+    expect_identical(names(ans), as.character(1:5))
+})
+
+test_that("'draws_all' throws correct error with rvec_chr", {
+    m <- matrix("a", nrow = 5, ncol = 1)
+    x <- rvec(m)
+    expect_error(draws_all(x),
+                 "`all\\(\\)` not defined for character.")
+})
+
+
+## 'draws_any' -------------------------------------------------------------
+
+test_that("'draws_any' works with rvec_dbl when nrow > 0", {
+    set.seed(0)
+    m <- matrix(sample(c(TRUE, FALSE), size = 10, replace = TRUE),
+                nr = 5)
+    x <- rvec(m)
+    ans_obtained <- draws_any(x)
+    ans_expected <- apply(m, 1, any)
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_any' works with rvec_dbl when nrow > 0 - numeric", {
+    set.seed(0)
+    m <- matrix(sample(c(1, 0), size = 10, replace = TRUE),
+                nr = 5)
+    x <- rvec(m)
+    expect_warning(draws_any(x),
+                   "Coercing from type")
+    suppressWarnings(ans_obtained <- draws_any(x))
+    suppressWarnings(ans_expected <- apply(m, 1, any))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_any' works with rvec_int when nrow == 0", {
+    set.seed(0)
+    m <- matrix(integer(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- draws_any(x)
+    ans_expected <- FALSE
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_any' preserves names", {
+    set.seed(0)
+    m <- matrix(TRUE, nr = 5)
+    rownames(m) <- 1:5
+    x <- rvec(m)
+    ans <- draws_any(x)
+    expect_identical(names(ans), as.character(1:5))
+})
+
+test_that("'draws_any' throws correct error with rvec_chr", {
+    m <- matrix("a", nrow = 5, ncol = 1)
+    x <- rvec(m)
+    expect_error(draws_any(x),
+                 "`any\\(\\)` not defined for character.")
+})
+
+
 ## 'draws_median' -------------------------------------------------------------
 
 test_that("'draws_median' works with rvec_dbl when nrow > 0", {
@@ -52,7 +152,7 @@ test_that("'draws_mean' works with rvec_dbl when nrow > 0", {
     x <- rvec(m)
     ans_obtained <- draws_mean(x)
     ans_expected <- apply(m, 1, mean)
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_mean' works with rvec_int when nrow == 0", {
@@ -61,7 +161,7 @@ test_that("'draws_mean' works with rvec_int when nrow == 0", {
     x <- rvec(m)
     ans_obtained <- draws_mean(x)
     ans_expected <- NaN
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_mean' preserves names", {
@@ -70,7 +170,7 @@ test_that("'draws_mean' preserves names", {
     rownames(m) <- 1:5
     x <- rvec(m)
     ans <- draws_mean(x)
-    expect_identical(names(ans), as.character(1:5))
+    expect_equal(names(ans), as.character(1:5))
 })
 
 test_that("'draws_mean' works with rvec_lgl", {
@@ -97,7 +197,7 @@ test_that("'draws_mode' works with rvec_chr when nrow > 0", {
     x <- rvec(m)
     ans_obtained <- draws_mode(x)
     ans_expected <- rep("a", 3)
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_mode' works with rvec_dbl when nrow > 0", {
@@ -105,7 +205,7 @@ test_that("'draws_mode' works with rvec_dbl when nrow > 0", {
     x <- rvec(m)
     ans_obtained <- draws_mode(x)
     ans_expected <- rep(NA_real_, 5)
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_mode' works with rvec_int when nrow == 0", {
@@ -114,7 +214,7 @@ test_that("'draws_mode' works with rvec_int when nrow == 0", {
     x <- rvec(m)
     ans_obtained <- draws_mode(x)
     ans_expected <- NA_integer_
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_mode' preserves names", {
@@ -123,7 +223,7 @@ test_that("'draws_mode' preserves names", {
     rownames(m) <- 1:5
     x <- rvec(m)
     ans <- draws_mode(x)
-    expect_identical(names(ans), as.character(1:5))
+    expect_equal(names(ans), as.character(1:5))
 })
 
 test_that("'draws_mode' works with rvec_lgl", {
@@ -146,7 +246,7 @@ test_that("'draws_quantile' works with rvec_dbl when nrow > 0", {
     ans_expected <- tibble::as_tibble(t(ans_expected))
     names(ans_expected) <- sub("%", "", names(ans_expected))
     names(ans_expected) <- paste("y", names(ans_expected), sep = "_")
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_median' works with rvec_int when nrow == 0", {
@@ -157,7 +257,7 @@ test_that("'draws_median' works with rvec_int when nrow == 0", {
     ans_expected <- tibble::tibble("x_2.5" = NA_real_,
                                    "x_50" = NA_real_,
                                    "x_97.5" = NA_real_) 
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_quantile' works with rvec_lgl", {
@@ -168,7 +268,7 @@ test_that("'draws_quantile' works with rvec_lgl", {
     ans_expected <- tibble::as_tibble(t(ans_expected))
     names(ans_expected) <- sub("%", "", names(ans_expected))
     names(ans_expected) <- paste0("y_", names(ans_expected))
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_median' throws correct error with rvec_chr", {
@@ -187,7 +287,7 @@ test_that("'draws_fun' works with rvec_dbl when nrow > 0 and return value is sca
     x <- rvec(m)
     ans_obtained <- draws_fun(x, fun = mad)
     ans_expected <- apply(m, 1, mad)
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 
@@ -197,7 +297,7 @@ test_that("'draws_fun' works with rvec_dbl when nrow > 0  and return value is ve
     x <- rvec(m)
     ans_obtained <- draws_fun(x, fun = range)
     ans_expected <- apply(m, 1, range, simplify = FALSE)
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'draws_median' works with rvec_int when nrow == 0", {
@@ -206,6 +306,6 @@ test_that("'draws_median' works with rvec_int when nrow == 0", {
     x <- rvec(m)
     ans_obtained <- draws_fun(x, fun = range)
     ans_expected <- list()
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 

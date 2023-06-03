@@ -3,7 +3,7 @@
 \name{draws_fun}
 \alias{draws_fun}
 \alias{draws_fun.rvec}
-\title{Apply summary function to random draws}
+\title{Apply summary function across random draws}
 \usage{
 draws_fun(x, fun, ...)
 
@@ -37,8 +37,10 @@ draws_fun(x, weighted.mean, wt = runif(100))
 draws_fun(x, function(x) sd(x) / mean(x))
 }
 \seealso{
-Summaries of draws based on pre-specified functions:
+Apply pre-specified functions across draws:
 \itemize{
+\item \code{\link[=draws_all]{draws_all()}}
+\item \code{\link[=draws_any]{draws_any()}}
 \item \code{\link[=draws_median]{draws_median()}}
 \item \link{draws_mean}
 \item \code{\link[=draws_mode]{draws_mode()}}

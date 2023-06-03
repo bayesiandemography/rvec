@@ -4,7 +4,7 @@
 \alias{draws_quantile}
 \alias{draws_quantile.rvec}
 \alias{draws_quantile.rvec_chr}
-\title{Quantiles for random draws}
+\title{Quantiles acros random draws}
 \usage{
 draws_quantile(x, probs = c(0.025, 0.5, 0.975), na_rm = FALSE)
 
@@ -58,9 +58,22 @@ df \%>\%
   mutate(draws_quantile(x))
 }
 \seealso{
+Apply pre-specified functions across draws:
 \itemize{
-\item \code{\link[=draws_median]{draws_median()}}, \link{draws_mean}, \code{\link[=draws_mode]{draws_mode()}}
-describe the location of a distribution.
-\item \code{\link[=draws_fun]{draws_fun()}} applies a function to draws.
+\item \code{\link[=draws_median]{draws_median()}}
+\item \link{draws_mean}
+\item \code{\link[=draws_mode]{draws_mode()}}
+\item \code{\link[=draws_quantile]{draws_quantile()}}
 }
+
+Apply arbitrary function across draws:
+\itemize{
+\item \code{\link[=draws_fun]{draws_fun()}} to apply abritrary functions
+}
+
+For additional functions for summarising random draws, see
+\href{https://CRAN.R-project.org/package=tidybayes}{tidybayes}
+and \href{https://CRAN.R-project.org/package=ggdist}{ggdist}.
+Function \code{\link[=as_list_col]{as_list_col()}} converts rvecs into a
+format that \code{tidybayes} and \code{ggdist} can work with.
 }

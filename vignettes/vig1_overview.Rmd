@@ -17,29 +17,30 @@ knitr::opts_chunk$set(
 
 # Aims of **rvecs**
 
-Bayesian analyses, stochastic simulations, and many other modern statistical methods produce random draws from distributions. Statistics calculated from these draws can be used to make inferences about the unknown quantities being modeled. For instance, medians across draws of can be used as point estimates for the unknown quantities. 
+Bayesian analyses, stochastic simulations, and other statistical methods produce random draws from distributions. Statistics calculated from these draws can be used to make inferences about the quantities being modeled. Medians calculated from draws can, for instance, be used as point estimates.
 
-An enormously useful feature of random draws is that these draws can also be used to make inferences about *derived* quantities. The procedure is:
+An enormously useful feature of random draws is that they can be used to make inferences about derived quantities. The procedure is:
 
 - Step 1. Calculate the derived quantity for each of the random draws.
 - Step 2. Summarise the distribution of these derived quantities.
 
-Say, for instance, that we had a set of draws for age-specific mortality rates, and we wanted to make inferences about life expectancy (a deterministic function of mortality rates). We would proceed as follows:
+If, for instance, we had a set of draws of age-specific mortality rates, and we wanted to make inferences about life expectancy (a deterministic function of mortality rates), then we could proceed as follows:
 
-- Step 1. Derive life expectancy for each set of age-specific mortality rates
-- Step 2. Calculate means, medians, or other statistics across these life expectancies.
+- Step 1. Derive life expectancy for each set of age-specific mortality rates.
+- Step 2. Calculate means, medians, or other statistics for these life expectancies.
 
-Package **rvec** aims to make working with random draws fast and easy. **rvec** implements a data structure called an `rvec` that holds multiple random draws. An rvec can be transformed, coerced, or rearranged using essentially the same code that is used for ordinary vectors, which helps with Step 1 above. **rvec** contains functions for summarizing across random draws, for Step 2, that are sufficient for most purposes. For specialized summaries, and for visualising results derived distibutions, see packages such as [tidybayes](https://mjskay.github.io/tidybayes/),
-[ggdist](https://mjskay.github.io/ggdist/), and [bayesplot](https://mc-stan.org/bayesplot/).
+Package **rvec** aims to make working with random draws fast and easy. **rvec** provides a data structure called an rvec that holds multiple random draws. An rvec can be manipulated using essentially the same code that is used for ordinary vectors. **rvec** also contains functions for summarizing across random draws.
 
-rvecs extend the `vctrs` class from package [vctrs](https://vctrs.r-lib.org), and inherits standard vector behaviors.  Many of the calculations are done internally using functions from [matrixStats](https://CRAN.R-project.org/package=matrixStats). Package [posterior](https://CRAN.R-project.org/package=posterior) provides alternative to rvecs for storing random draws.
+rvecs extend the `vctrs` class from package [vctrs](https://vctrs.r-lib.org), and inherits standard vector behaviors.  Many of the calculations are done internally using functions from [matrixStats](https://CRAN.R-project.org/package=matrixStats), for speed.
+
+Package [posterior](https://CRAN.R-project.org/package=posterior) provides alternative data structures for holding random draws that preserve more information about the way the draws were generated, but that are less convenient to manipulate. Packages [tidybayes](https://mjskay.github.io/tidybayes/),
+[ggdist](https://mjskay.github.io/ggdist/), and [bayesplot](https://mc-stan.org/bayesplot/) provide specialised ways of summarising draws, and tools for visualising distribtutions. Converting rvecs into and out of formats used by these packages is easy.
 
 # Examples
 
 ## Toy example
 
 We begin with a toy example, to illustrate basic functionality.
-We have 3 draws for a scalar unknown quantity, theta.
 
 ```{r}
 library(rvec)
@@ -48,17 +49,14 @@ theta <- rvec(l)
 theta
 ```
 
-The header `<rvec_dbl<3>[1]>` tells us rvec `theta` holds
-three random draws, each of which is a double
-(see `base::double()`) and has length 1.
+The header `<rvec_dbl<3>[1]>` tells us rvec `theta` holds three random draws, each of which is a double (see `base::double()`), and that, viewed as a vector, `theta` has length 1.
 
 We can perform standard mathematical operations:
 ```{r}
 exp(theta^2) + 1
 ```
 
-`theta` recycles to match the length of
-other vectors,
+`theta` recycles to match the length of other vectors,
 
 ```{r}
 theta + c(1, -1)
@@ -77,9 +75,7 @@ beta
 theta + beta
 ```
 
-To summarise across random draws, we use
-the `draws_*` functions, e.g.
-
+To summarise across random draws, we use `draws_*` functions, e.g.
 
 ```{r}
 draws_mean(theta)
@@ -88,26 +84,22 @@ draws_mean(theta)
 
 ## Divorce rates in New Zealand
 
-Our next example is more realistic. 
-We will use some standard tidyverse packages
+Our next example is more involved, and includes the use of some standard tidyverse packages.
 
 ```{r}
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr)
 library(ggplot2)
 ```
-and work with a posterior sample
-from a Bayesian model of divorce rates (per thousand)
-in New Zealand, in 2020,
+
+We analyse a posterior sample rom a Bayesian model of divorce rates
+in New Zealand, by age and sex. The rates are divorces per thousand people (not necessarily married) per year.
 
 ```{r}
 divorce
 ```
 
-First we convert the data from a 'data base' format,
-where each row describes of a single draw, 
-to an rvec format,
-where multiple draws are folded into an rvec.
+First we convert the data from a 'data base' format, where each row describes of a single draw, to an rvec format, where multiple draws are folded into an rvec.
 
 ```{r}
 divorce_rv <- divorce %>%
@@ -115,17 +107,10 @@ divorce_rv <- divorce %>%
 divorce_rv
 ```
 
-Now that the number of draws is large, means
-and standard deviations across draws are displayed,
-rather than the individual draws. (This
-format is copied from `rvar`s in package [posterior](https://cran.r-project.org/web/packages/posterior/index.html).
-`rvar`s are discussed in Section XXX.)
+Now that the number of draws is large, means and standard deviations across draws are displayed, rather than the individual draws. This display format is copied from the `rvar` data structure in package [posterior](https://cran.r-project.org/web/packages/posterior/index.html). rvars are discussed in Section XXX.
 
-Define the 'total divorce rate' to be the
-number of divorces a person could expect to
-experience over their lifetime, given prevailing
-divorces. The total divorce rate can be calculated
-as
+We define the 'total divorce rate' to be the number of divorces that a person could expect to experience over their lifetime, given prevailing
+divorces. The total divorce rate can be calculated as
 
 ```{r}
 divorce_rv %>%
@@ -133,11 +118,7 @@ divorce_rv %>%
   summarise(TDR = sum(rate) * 5 / 1000)
 ```
 
-We can summarise across draws using function
-`draws_quantile`. (`draws_quantile` returns a
-tibble rather than a vector, so, following standard
-`mutate` rules, we do not explicitly
-create new columns.)
+We can summarise across draws using function `draws_quantile`. `draws_quantile` returns a tibble rather than a vector, so, following standard `mutate` rules, we do not explicitly create new columns.
 
 ```{r}
 divorce_rv %>%
@@ -146,22 +127,19 @@ divorce_rv %>%
   mutate(draws_quantile(tdr))
 ```
 
-Next we look at the ratio between female and male divorce
-rates
+Next we calculate the ratio between female and male divorce rates,
 
 ```{r}
-divorce_rv %>%
-  pivot_wider(names_from = sex, values_from = rate) %>%
-  mutate(ratio = Female / Male)
-```
-
-
-```{r, fig.width = 7, fig.height = 4}
-data <- divorce_rv %>%
+divorce_ratio <- divorce_rv %>%
   pivot_wider(names_from = sex, values_from = rate) %>%
   mutate(ratio = Female / Male) %>%
   mutate(draws_quantile(ratio))
-ggplot(data,
+```
+
+and graph the result
+
+```{r, fig.width = 7, fig.height = 4}
+ggplot(divorce_ratio,
        aes(x = age, 
            ymin = ratio_2.5, 
            y = ratio_50,
@@ -169,11 +147,28 @@ ggplot(data,
   geom_pointrange()
 ```
 
+# What are rvecs
+
+- matrix
+- functions applied in parallel
+   - except for draw_* functions
+- can be double, int, char, logical
+- combine two: must have same draws
 
 
 # Working with rvecs
 
-## Creation
+## Creating
+
+
+
+### Individual rvecs
+
+
+
+### Whole data frames
+
+
 
 ## Manipulation
 
@@ -192,6 +187,19 @@ ggplot(data,
 # Other packages
 
 ## rv
+
+- early implementation, but defunctx
+
+## rvar
+
+- not just one extra dimension, can be matrix, array
+- (with rvec, imagine it to be stretched out)
+- 
+
+## rv
+
+- works inside data frames
+
 
 ## coda, posterior
 

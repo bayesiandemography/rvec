@@ -9,7 +9,7 @@
 \alias{draws_mean.rvec_chr}
 \alias{draws_mode}
 \alias{draws_mode.rvec}
-\title{Medians, means, and modes for random draws}
+\title{Medians, means, and modes across random draws}
 \usage{
 draws_median(x, na_rm = FALSE)
 
@@ -41,15 +41,6 @@ Summarise the distribution of random draws
 in an \code{rvec}, using means, medians, or modes.
 }
 \details{
-An \code{rvec}\tabular{lcccc}{
-    \tab Draw 1 \tab Draw 2 \tab \eqn{\dots} \tab Draw \eqn{n} \cr
-   Obs 1 \tab \eqn{x_{1,1}} \tab \eqn{x_{1,2}} \tab \eqn{\dots} \tab \eqn{x_{1,n}} \cr
-   Obs 2 \tab \eqn{x_{2,1}} \tab \eqn{x_{2,2}} \tab \eqn{\dots} \tab \eqn{x_{2,n}} \cr
-   \eqn{\vdots} \tab \eqn{\vdots} \tab \eqn{\vdots} \tab \eqn{\ddots} \tab \eqn{\vdots} \cr
-   Obs \eqn{m} \tab \eqn{x_{m,1}} \tab \eqn{x_{m,2}} \tab \eqn{\dots} \tab \eqn{x_{m,n}} \cr
-}
-
-
 When \code{method} is \code{"mode"}, \code{reduce_rvec()}
 returns the most common value for each
 observation. When there is a tie, it returns
@@ -66,14 +57,21 @@ draws_mean(x)
 draws_mode(x)
 }
 \seealso{
+Apply pre-specified functions across draws:
 \itemize{
-\item \code{\link[=draws_quantile]{draws_quantile()}} to calculate quantiles
+\item \code{\link[=draws_all]{draws_all()}}
+\item \link{draws_any}
+\item \code{\link[=draws_quantile]{draws_quantile()}}
+}
+
+Apply arbitrary function across draws:
+\itemize{
 \item \code{\link[=draws_fun]{draws_fun()}} to apply abritrary functions
 }
 
-For a wide range of tools for summarising random draws, see
+For additional functions for summarising random draws, see
 \href{https://CRAN.R-project.org/package=tidybayes}{tidybayes}
 and \href{https://CRAN.R-project.org/package=ggdist}{ggdist}.
-Function \code{\link[=as_list_col]{as_list_col()}} converts \code{rvec}s into a
+Function \code{\link[=as_list_col]{as_list_col()}} converts rvecs into a
 format that \code{tidybayes} and \code{ggdist} can work with.
 }
