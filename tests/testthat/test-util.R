@@ -295,6 +295,33 @@ test_that("'paste_dot' works with valid inputs", {
 })
 
 
+## 'promote_args_to_rvec' -----------------------------------------------------
+
+test_that("'promote_args_to_rvec' works with valid inputs - single integer vector", {
+    args <- list(a = 1:3)
+    ans_obtained <- promote_args_to_rvec(args, n_draw = 3)
+    ans_expected <- list(a = rvec(matrix(1:3, 3, 3)))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'promote_args_to_rvec' works with valid inputs - single rvec", {
+    args <- list(a = rvec_dbl(matrix(1:6, nr = 2)))
+    ans_obtained <- promote_args_to_rvec(args, n_draw = 3)
+    ans_expected <- args
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'promote_args_to_rvec' works with valid inputs - mix of rvec, ordinary vectors", {
+    args <- list(a = rvec_dbl(matrix(1:6, nr = 2)), b = c(x = "a", y = "b"), c = rvec(list(1:3)))
+    ans_obtained <- promote_args_to_rvec(args, n_draw = 3)
+    ans_expected <- list(a = rvec_dbl(matrix(1:6, nr = 2)),
+                         b = rvec_chr(list(x = c("a", "a", "a"),
+                                           y = c("b", "b", "b"))),
+                         c = rvec_int(matrix(1:3, nr = 1)))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
 ## 'ptype_rvec' ---------------------------------------------------------------
 
 test_that("'ptype_rvec' works with valid inputs", {

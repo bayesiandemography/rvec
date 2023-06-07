@@ -2,11 +2,26 @@
 #' Probability distributions
 #'
 #' Modified versions of standard probability
-#' functions that take one or more rvecs
-#' as arguments, and return rvecs.
+#' functions that can accommodate rvecs.
+#' If any of arguments to the functions are
+#' rvecs, then the functions return rvecs;
+#' otherwise they return ordinary R vectors,
+#  (with one exception, described below.)
 #'
-#' The `*_rvec` probability distribution functions
-#' use [tidyverse][vctrs::vector_recycling_rules]
+#' @section Creating an rvec by supplying a value for n_draw:
+#'
+#' The `r*_rvec` functions for generating random variates
+#' include one argument that is not present in
+#' base R functions: `n_draw`. If a value for `n_draw`
+#' is supplied, then the return value is always an
+#' rvec, even if none of the inputs are rvecs.
+#' This is a convenient way to create
+#' an rvec to use in a simulation. See below for an example.
+#'
+#' @section Recycling:
+#' 
+#' Unlike the base R distribution functions,
+#' the rvec functions use [tidyverse][vctrs::vector_recycling_rules]
 #' vector recycling rules:
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
@@ -17,6 +32,7 @@
 #' calls to [base::rep()],
 #' [base::rep_len()], and [base::rep.int()],
 #' all of which have methods for [rvecs][rvec()].
+#'
 #'
 #' @param df,df1,df2 Degrees of freedom. Can be rvec.
 #' @param lambda Vector of means. Can be rvec.
@@ -39,7 +55,11 @@
 #' Non-negative. Can be rvecs.
 #' @param size Number of trials. Can be rvec.
 #' @param x Quantiles. Can be rvec.
-#' @param n Number of draws. Cannot be rvec.
+#' @param n Length of random vector being created.
+#' Cannot be rvec.
+#' @param n_draw Number of random draws, per observation,
+#' in random vector being created. Cannot be rvec.
+#' Optional.
 #' @param ncp Non-centrality parameter. Cannot be rvec.
 #' Default is `0`.
 #' @param log,log.p Whether to return
@@ -50,10 +70,10 @@
 #' \eqn{P[X > x]}. Cannot be rvec. Default is `TRUE`.
 #' 
 #'
-#' @returns If any of the inputs is an
-#' [rvec][rvec()], then an
-#' an [rvec][rvec()]; otherwise an
-#' ordinary R vector.
+#' @returns
+#' If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso Base R functions
 #' - [stats::dbeta()] Beta distribution.
@@ -88,6 +108,21 @@
 #'
 #' ## random variates: mean is rvec, sd is scalar
 #' rnorm_rvec(n = 2, mean = mean_rv, sd = 0.5)
+#'
+#' ## create rvecs via the 'n_draw' argument,
+#' ## and use to created a simulated 'y'
+#' mu <- rnorm_rvec(n = 3,
+#'                  mean = 2,
+#'                  sd = 0.5,
+#'                  n_draw = 1000)
+#' sigma <- rgamma_rvec(n = 3,
+#'                      shape = 1,
+#'                      scale = 0.5,
+#'                      n_draw = 1000)
+#' y <- rnorm_rvec(n = 3,
+#'                 mean = mu,
+#'                 sd = sigma)
+#' y
 #' @name rvec-distributions
 NULL
 
@@ -185,13 +220,19 @@ qbeta_rvec <- function(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FA
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
-rbeta_rvec <- function(n, shape1, shape2, ncp = 0) {
+rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
     check_nonneg_num_vector(ncp)
     rbeta <- stats::rbeta
     shape1 <- vec_recycle(shape1, size = n)
     shape2 <- vec_recycle(shape2, size = n)
     ncp <- vec_recycle(ncp, size = n)
-    n <- n_rdist(n = n, args = list(shape1, shape2))
+    args <- list(shape1 = shape1, shape2 = shape2)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    shape1 <- args[["shape1"]]
+    shape2 <- args[["shape2"]]
     if (missing(ncp))
         dist_rvec_2(fun = rbeta,
                     arg1 = shape1,
@@ -266,11 +307,17 @@ qbinom_rvec <- function(p, size, prob, lower.tail = TRUE, log.p = FALSE) {
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
-rbinom_rvec <- function(n, size, prob) {
+rbinom_rvec <- function(n, size, prob, n_draw = NULL) {
     rbinom <- stats::rbinom
     size <- vec_recycle(size, size = n)
     prob <- vec_recycle(prob, size = n)
-    n <- n_rdist(n = n, args = list(size, prob))
+    args <- list(size = size, prob = prob)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    size <- args[["size"]]
+    prob <- args[["prob"]]
     dist_rvec_2(fun = rbinom,
                 arg1 = size,
                 arg2 = prob,
@@ -338,11 +385,18 @@ qcauchy_rvec <- function(p, location = 0, scale = 1, lower.tail = TRUE, log.p = 
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
-rcauchy_rvec <- function(n, location = 0, scale = 1) {
+rcauchy_rvec <- function(n, location = 0, scale = 1, n_draw = NULL) {
     rcauchy <- stats::rcauchy
     location <- vec_recycle(location, size = n)
     scale <- vec_recycle(scale, size = n)
-    n <- n_rdist(n = n, args = list(location, scale))
+    args <- list(location = location,
+                 scale = scale)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    location <- args[["location"]]
+    scale <- args[["scale"]]
     dist_rvec_2(fun = rcauchy,
                 arg1 = location,
                 arg2 = scale,
@@ -430,12 +484,17 @@ qchisq_rvec <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
-rchisq_rvec <- function(n, df, ncp = 0) {
+rchisq_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
     check_nonneg_num_vector(ncp)
     rchisq <- stats::rchisq
     df <- vec_recycle(df, size = n)
     ncp <- vec_recycle(ncp, size = n)
-    n <- n_rdist(n = n, args = list(df, ncp))
+    args <- list(df = df)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    df <- args[["df"]]
     if (missing(ncp))
         dist_rvec_1(fun = rchisq,
                     arg = df,
@@ -502,10 +561,15 @@ qexp_rvec <- function(p, rate = 1, lower.tail = TRUE, log.p = FALSE) {
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
-rexp_rvec <- function(n, rate = 1) {
+rexp_rvec <- function(n, rate = 1, n_draw = NULL) {
     rexp <- stats::rexp
     rate <- vec_recycle(rate, size = n)
-    n <- n_rdist(n = n, args = list(rate))
+    args <- list(rate = rate)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    rate <- args[["rate"]]
     dist_rvec_1(fun = rexp,
                 arg = rate,
                 n = n)
@@ -605,13 +669,19 @@ qf_rvec <- function(p, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
-rf_rvec <- function(n, df1, df2, ncp = 0) {
+rf_rvec <- function(n, df1, df2, ncp = 0, n_draw = NULL) {
     check_nonneg_num_vector(ncp)
     rf <- stats::rf
     df1 <- vec_recycle(df1, size = n)
     df2 <- vec_recycle(df2, size = n)
     ncp <- vec_recycle(ncp, size = n)
-    n <- n_rdist(n = n, args = list(df1, df2))
+    args <- list(df1 = df1, df2 = df2)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    df1 <- args[["df1"]]
+    df2 <- args[["df2"]]
     if (missing(ncp))
         dist_rvec_2(fun = rf,
                     arg1 = df1,
@@ -619,14 +689,11 @@ rf_rvec <- function(n, df1, df2, ncp = 0) {
                     n = n)
     else
         dist_rvec_2(fun = rf,
-                    arg1 = df1,
+                    arg1 = df1, 
                     arg2 = df2,
                     n = n,
                     ncp = ncp)
 }
-
-
-
 
 
 ## 'norm' ---------------------------------------------------------------------
@@ -689,11 +756,17 @@ qnorm_rvec <- function(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
-rnorm_rvec <- function(n, mean = 0, sd = 1) {
+rnorm_rvec <- function(n, mean = 0, sd = 1, n_draw = NULL) {
     rnorm <- stats::rnorm
     mean <- vec_recycle(mean, size = n)
     sd <- vec_recycle(sd, size = n)
-    n <- n_rdist(n = n, args = list(mean, sd))
+    args <- list(mean = mean, sd = sd)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    mean <- args[["mean"]]
+    sd <- args[["sd"]]
     dist_rvec_2(fun = rnorm,
                 arg1 = mean,
                 arg2 = sd,
@@ -755,10 +828,15 @@ qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
-rpois_rvec <- function(n, lambda) {
+rpois_rvec <- function(n, lambda, n_draw = NULL) {
     rpois <- stats::rpois
     lambda <- vec_recycle(lambda, size = n)
-    n <- n_rdist(n = n, args = list(lambda))
+    args <- list(lambda = lambda)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    lambda <- args[["lambda"]]
     dist_rvec_1(fun = rpois,
                 arg = lambda,
                 n = n)
@@ -963,7 +1041,5 @@ dist_rvec_3 <- function(fun, arg1, arg2, arg3, ...) {
     }
     ans
 }
-
-
 
 

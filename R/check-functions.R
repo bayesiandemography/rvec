@@ -260,6 +260,24 @@ check_lengths_nonzero <- function(x) {
 
 
 ## HAS_TESTS
+#' Check that 'n_draw' is a positive integer
+#'
+#' @param n_draw
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_n_draw <- function(n_draw) {
+    check_nonneg_num_scalar(n_draw)
+    if (round(n_draw) != n_draw)
+        cli::cli_abort("{.arg n_draw} has non-integer value ({n_draw}).")
+    if (n_draw == 0L)
+        cli::cli_abort("{.arg n_draw} equals 0.")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
 #' Check that two rvec objects have the same number
 #' of draws
 #'
@@ -416,8 +434,8 @@ check_overlap_values_groups <- function(colnums_values, colnums_groups) {
                          i = "{.arg values}: {nms_val}"))
     }
     invisible(TRUE)
-}
-
+}    
+    
 
 ## HAS_TESTS
 #' Check probs argument

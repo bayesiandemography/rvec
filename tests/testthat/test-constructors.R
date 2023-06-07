@@ -67,9 +67,10 @@ test_that("'rvec_chr' works with valid matrices", {
 })
 
 test_that("'rvec_chr' works with valid lists", {
-    ans <- rvec_chr(list(x = c("a", "a"), y = c("a", "a")))
+    ans <- rvec_chr(list(x = c("a", "b"), y = c("a", "c")))
     expect_s3_class(ans, "rvec_chr")
     expect_identical(rownames(field(ans, "data")), c("x", "y"))
+    expect_identical(as.character(field(ans, "data")), c("a", "a", "b", "c"))
     expect_s3_class(rvec_chr(list("a")), "rvec_chr")
     expect_s3_class(rvec_chr(list()), "rvec_chr")
     expect_s3_class(rvec_chr(list(1)), "rvec_chr")
@@ -118,6 +119,7 @@ test_that("'rvec_dbl' works with valid lists", {
     expect_s3_class(rvec_dbl(list(1)), "rvec_dbl")
     expect_s3_class(rvec_dbl(list(1L)), "rvec_dbl")
     expect_s3_class(rvec_dbl(list(TRUE)), "rvec_dbl")
+    expect_identical(as.double(field(ans, "data")), c(1, NA, -Inf, Inf))
 })
 
 test_that("'rvec_dbl' works with valid vectors", {
@@ -160,6 +162,7 @@ test_that("'rvec_int' works with valid lists", {
     expect_s3_class(rvec_int(list(1)), "rvec_int")
     expect_s3_class(rvec_int(list(1L)), "rvec_int")
     expect_s3_class(rvec_int(list(TRUE)), "rvec_int")
+    expect_identical(as.integer(field(ans, "data")), c(1L, NA, 1L, 0L))
 })
 
 test_that("'rvec_int' works with valid vectors", {
@@ -200,6 +203,7 @@ test_that("'rvec_lgl' works with valid lists", {
     expect_s3_class(rvec_lgl(list()), "rvec_lgl")
     expect_s3_class(rvec_lgl(list(NA)), "rvec_lgl")
     expect_s3_class(rvec_lgl(list(TRUE)), "rvec_lgl")
+    expect_identical(as.logical(field(ans, "data")), c(NA, NA, TRUE, FALSE))
 })
 
 test_that("'rvec_lgl' works with valid vectors", {

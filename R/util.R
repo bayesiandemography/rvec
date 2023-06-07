@@ -349,8 +349,8 @@ n_draw_df <- function(df) {
 ## HAS_TESTS
 #' Make 'n' to use in random variate functions
 #'
-#' The elements of 'args' should all of the same
-#' length. None, some, or could be rvecs.
+#' The elements of 'args' should all have the same
+#' length. None, some, or all could be rvecs.
 #' If any are rvecs, then 'n' is multiplied
 #' by 'n_draw'.
 #' 
@@ -372,6 +372,7 @@ n_rdist <- function(n, args) {
 }    
 
 
+## HAS_TESTS
 #' Paste together the columns from a data frame,
 #' separated by a dot
 #'
@@ -383,6 +384,43 @@ n_rdist <- function(n, args) {
 #' @noRd
 paste_dot <- function(df)
     do.call(function(...) paste(..., sep = "."), args = df)
+
+
+
+#' Convert any atomic vectors in 'args' to rvecs
+#' with the specified number of draws
+#'
+#' @param args A named list
+#' @param n_draw An integer
+#'
+#' @return A named list
+#'
+#' @noRd
+promote_args_to_rvec <- function(args, n_draw) {
+    check_n_draw(n_draw)
+    nms <- names(args)
+    for (i in seq_along(args)) {
+        arg <- args[[i]]
+        nm <- nms[[i]]
+        if (is_rvec(arg)) {
+            n_draw_arg <- n_draw(arg)
+            if (n_draw_arg != n_draw) {
+                cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                     "has {n_draw} draws"))
+            }
+        }
+        else if (is.atomic(arg) && is.vector(arg)) {
+            m <- matrix(arg, nrow = length(arg), ncol = n_draw)
+            rownames(m) <- names(arg)
+            arg <- rvec(m)
+            args[[i]] <- arg
+        }
+        else
+            cli::cli_abort("{.arg {nm}} has class {.cls class(arg)}")
+    }
+    args
+}        
+
 
 
 ## HAS_TESTS

@@ -112,7 +112,8 @@ rvec_chr <- function(x = NULL) {
             data_vec <- as.character(data_vec)
             data <- matrix(data_vec,
                            nrow = length(x),
-                           ncol = length(x[[1L]]))
+                           ncol = length(x[[1L]]),
+                           byrow = TRUE)
             rownames(data) <- names(x)
         }
         else
@@ -152,7 +153,8 @@ rvec_dbl <- function(x = NULL) {
             data_vec <- vec_cast(data_vec, double())
             data <- matrix(data_vec,
                            nrow = length(x),
-                           ncol = length(x[[1L]]))
+                           ncol = length(x[[1L]]),
+                           byrow = TRUE)
             rownames(data) <- names(x)
         }
         else
@@ -192,7 +194,8 @@ rvec_int <- function(x = NULL) {
             data_vec <- vec_cast(data_vec, integer())
             data <- matrix(data_vec,
                            nrow = length(x),
-                           ncol = length(x[[1L]]))
+                           ncol = length(x[[1L]]),
+                           byrow = TRUE)
             rownames(data) <- names(x)
         }
         else
@@ -232,7 +235,8 @@ rvec_lgl <- function(x = NULL) {
             data_vec <- vec_cast(data_vec, logical())
             data <- matrix(data_vec,
                            nrow = length(x),
-                           ncol = length(x[[1L]]))
+                           ncol = length(x[[1L]]),
+                           byrow = TRUE)
             rownames(data) <- names(x)
         }
         else

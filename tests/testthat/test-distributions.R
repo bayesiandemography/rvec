@@ -337,13 +337,32 @@ test_that("'qpois_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'rpois_rvec' works with valid input", {
+test_that("'rpois_rvec' works with valid input - no n_draw", {
     m <- matrix(seq(2.1, 2.6, 0.1), nr = 2)
     lambda <- rvec(m)
     set.seed(0)
     ans_obtained <- rpois_rvec(2, lambda)
     set.seed(0)
     ans_expected <- rvec(matrix(rpois(6, lambda = m), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rpois_rvec' works with valid input - n_draw, non-rvec input", {
+    lambda <- 1:3
+    set.seed(0)
+    ans_obtained <- rpois_rvec(3, lambda, n_draw = 2)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rpois(6, lambda = rep(lambda, 2)), nr = 3))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rpois_rvec' works with valid input - n_draw, rvec input", {
+    m <- matrix(seq(2.1, 2.6, 0.1), nr = 3)
+    lambda <- rvec(m)
+    set.seed(0)
+    ans_obtained <- rpois_rvec(3, lambda, n_draw = 2)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rpois(6, lambda = m), nr = 3))
     expect_identical(ans_obtained, ans_expected)
 })
 
