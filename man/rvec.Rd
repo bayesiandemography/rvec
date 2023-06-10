@@ -80,3 +80,12 @@ l <- list(a = c(TRUE, FALSE),
           b = c(FALSE, TRUE))
 rvec(l)
 }
+\seealso{
+\itemize{
+\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} creates rvecs within
+a data frame.
+\item Random variate functions such as \code{\link[=rnorm_rvec]{rnorm_rvec()}} and
+\code{\link[=rbinom_rvec]{rbinom_rvec()}} can be used to create rvecs
+representing probability distributions.
+}
+}

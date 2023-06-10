@@ -42,6 +42,13 @@
 #' `"rvec_int"`, or `"rvec_lgl"`, depending on
 #' `typeof(x)`.
 #'
+#' @seealso
+#' - [collapse_to_rvec()] creates rvecs within
+#'   a data frame.
+#' - Random variate functions such as [rnorm_rvec()] and
+#'   [rbinom_rvec()] can be used to create rvecs
+#'   representing probability distributions. 
+#'   
 #' @examples
 #' m <- rbind(c(-1.5, 2, 0.2),
 #'            c(-2.3, 3, 1.2))

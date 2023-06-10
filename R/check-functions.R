@@ -354,6 +354,22 @@ check_nonneg_num_vector <- function(x) {
 
 
 ## HAS_TESTS
+#' Check that an rvec is not an rvec_chr
+#'
+#' @param arg An rvec.
+#' @param nm_arg Name to be used in error messages.
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_not_rvec_chr <- function(arg, nm_arg) {
+    if (inherits(arg, "rvec_chr"))
+        cli::cli_abort("{.arg {nm_arg}} has class {.cls {class(arg)}}")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
 #' Check that draw variable not used as grouping variable
 #'
 #' Assume that the colnum_draw and colnums_groups

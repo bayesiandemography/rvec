@@ -34,54 +34,64 @@
 #' all of which have methods for [rvecs][rvec()].
 #'
 #'
-#' @param df,df1,df2 Degrees of freedom. Can be rvec.
+#' @param df,df1,df2 Degrees of freedom. 
+#' See [dchisq()], [df()]. Can be rvec.
+#' @param k Number of balls drawn from urn.
+#' See [stats::dhyper()]. Can be rvec.
 #' @param lambda Vector of means. Can be rvec.
 #' @param location Parameter for Cauchy distribution.
-#' Can be rvec. Default is `0`.
-#' @param mean Means of distribution. Can be rvec.
-#' Default is `0`.
+#' Default is `0`. See [stats::dcauchy()]. Can be rvec.
+#' @param log,log.p Whether to return
+#' `log(p)` rather than `p`. Default is
+#' `FALSE`. Can be rvec.
+#' @param lower.tail Whether to return
+#' \eqn{P[X \le x]}, as opposed to
+#' \eqn{P[X > x]}. Default is `TRUE`.
+#' Cannot be rvec. 
+#' @param m The number of white balls in the urn.
+#' See [stats::dhyper()]. Can be rvec. 
+#' @param mean Means of distribution. 
+#' Default is `0`. Can be rvec.
+#' @param n
+#' - In functions other than `rhyper_rvec`, `n` is the
+#' length of random vector being created, and cannot be
+#' an rvec.
+#' - In `rhyper_rvec`, `n` is the number of black balls
+#' in the urn, and can be an rvec. See [stats::rhyper()].
+#' @param nn The length of the random vector being created,
+#' in a call to `rhyper_rvec`. The equivalent of `n` in
+#' other random variate functions. 
+#' See [stats::rhyper()]. Cannot be an rvec.
+#' @param n_draw Number of random draws, per observation,
+#' in random vector being created. 
+#' Optional. Cannot be rvec.
+#' @param ncp Non-centrality parameter. 
+#' Default is `0`. Cannot be rvec.
 #' @param p Probabilities. Can be rvec.
 #' @param prob Probability of
 #' success in each trial. Can be rvec.
 #' @param q Quantiles. Can be rvec.
 #' @param rate Rates. Can be rvec.
 #' @param scale Parameters
-#' for Cauchy distribution.
-#' Can be rvec. Default is `1`.
-#' @param sd Standard deviations. Can be rvec.
-#' Default is `1`.
+#' for Cauchy distribution. Default is `1`.
+#' See [stats::dcauchy()]. Can be rvec.
+#' @param sd Standard deviations. 
+#' Default is `1`. Can be rvec.
+#' @param shape Parameter for gamma distribution.
+#' See [stats::dgamma()]. Can be rvec.
 #' @param shape1,shape2 Parameters
-#' for beta distribution.
-#' Non-negative. Can be rvecs.
+#' for beta distribution. Non-negative. 
+#' See [stats::dbeta()]. Can be rvecs.
 #' @param size Number of trials. Can be rvec.
 #' @param x Quantiles. Can be rvec.
-#' @param n Length of random vector being created.
-#' Cannot be rvec.
-#' @param n_draw Number of random draws, per observation,
-#' in random vector being created. Cannot be rvec.
-#' Optional.
-#' @param ncp Non-centrality parameter. Cannot be rvec.
-#' Default is `0`.
-#' @param log,log.p Whether to return
-#' `log(p)` rather than `p`. Cannot be rvec. Default is
-#' `FALSE`.
-#' @param lower.tail Whether to return
-#' \eqn{P[X \le x]}, as opposed to
-#' \eqn{P[X > x]}. Cannot be rvec. Default is `TRUE`.
-#' 
 #'
 #' @returns
 #' If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
 #' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
-#' @seealso Base R functions
-#' - [stats::dbeta()] Beta distribution.
-#' - [stats::dbinom()] Binomial distribution.
-#' - [stats::dcauchy()] Cauchy distribution.
-#' - [stats::dchisq()] Chi-squared distribution.
-#' - [stats::dnorm()] Normal distribution.
-#' - [stats::dpois()] Poisson distribution.
+#' @seealso
+#' - Equivalent functions in base R: [stats::distributions].
 #'
 #' @examples
 #' x_rv <- rvec(list(c(-0.8, 1.3),
@@ -696,6 +706,268 @@ rf_rvec <- function(n, df1, df2, ncp = 0, n_draw = NULL) {
 }
 
 
+## 'gamma' --------------------------------------------------------------------
+
+## Use 'rate' rather than 'scale' in call to 'dist_rvec_3'
+## because 'rate' appears first in base R gamma functions
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dgamma_rvec <- function(x, shape, rate = 1, scale = 1/rate, log = FALSE) {
+    has_rate <- !missing(rate)
+    has_scale <- !missing(scale)
+    if (has_rate && has_scale)
+        cli::cli_abort("Value supplied for {.arg rate} ({rate}) and for {.arg scale} ({scale})")
+    if (!has_rate && has_scale)
+        rate <- 1 / scale
+    check_flag(log)
+    dgamma <- stats::dgamma
+    args <- vec_recycle_common(x, shape, rate)
+    x <- args[[1]]
+    shape <- args[[2]]
+    rate <- args[[3]]
+    dist_rvec_3(fun = dgamma,
+                arg1 = x,
+                arg2 = shape,
+                arg3 = rate,
+                log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+pgamma_rvec <- function(q, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, log.p = FALSE) {
+    has_rate <- !missing(rate)
+    has_scale <- !missing(scale)
+    if (has_rate && has_scale)
+        cli::cli_abort("Value supplied for {.arg rate} ({rate}) and for {.arg scale} ({scale})")
+    if (!has_rate && has_scale)
+        rate <- 1 / scale
+    check_flag(lower.tail)
+    check_flag(log.p)
+    pgamma <- stats::pgamma
+    args <- vec_recycle_common(q, shape, rate)
+    q <- args[[1]]
+    shape <- args[[2]]
+    rate <- args[[3]]
+    dist_rvec_3(fun = pgamma,
+                arg1 = q,
+                arg2 = shape,
+                arg3 = rate,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qgamma_rvec <- function(p, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, log.p = FALSE) {
+    has_rate <- !missing(rate)
+    has_scale <- !missing(scale)
+    if (has_rate && has_scale)
+        cli::cli_abort("Value supplied for {.arg rate} ({rate}) and for {.arg scale} ({scale})")
+    if (!has_rate && has_scale)
+        rate <- 1 / scale
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qgamma <- stats::qgamma
+    args <- vec_recycle_common(p, shape, rate)
+    p <- args[[1L]]
+    shape <- args[[2L]]
+    rate <- args[[3L]]
+    dist_rvec_3(fun = qgamma,
+                arg1 = p,
+                arg2 = shape,
+                arg3 = rate,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
+    has_rate <- !missing(rate)
+    has_scale <- !missing(scale)
+    if (has_rate && has_scale)
+        cli::cli_abort("Value supplied for {.arg rate} ({rate}) and for {.arg scale} ({scale})")
+    if (!has_rate && has_scale)
+        rate <- 1 / scale
+    rgamma <- stats::rgamma
+    shape <- vec_recycle(shape, size = n)
+    rate <- vec_recycle(rate, size = n)
+    args <- list(shape = shape, rate = rate)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    shape <- args[["shape"]]
+    rate <- args[["rate"]]
+    dist_rvec_2(fun = rgamma,
+                arg1 = shape,
+                arg2 = rate,
+                n = n)
+}
+
+
+## 'geom' ---------------------------------------------------------------------
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dgeom_rvec <- function(x, prob, log = FALSE) {
+    check_flag(log)
+    dgeom <- stats::dgeom
+    args <- vec_recycle_common(x, prob)
+    x <- args[[1L]]
+    prob <- args[[2L]]
+    dist_rvec_2(fun = dgeom,
+                arg1 = x,
+                arg2 = prob,
+                log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+pgeom_rvec <- function(q, prob, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    pgeom <- stats::pgeom
+    args <- vec_recycle_common(q, prob)
+    q <- args[[1L]]
+    prob <- args[[2L]]
+    dist_rvec_2(fun = pgeom,
+                arg1 = q,
+                arg2 = prob,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qgeom_rvec <- function(p, prob, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qgeom <- stats::qgeom
+    args <- vec_recycle_common(p, prob)
+    p <- args[[1L]]
+    prob <- args[[2L]]
+    dist_rvec_2(fun = qgeom,
+                arg1 = p,
+                arg2 = prob,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rgeom_rvec <- function(n, prob, n_draw = NULL) {
+    rgeom <- stats::rgeom
+    prob <- vec_recycle(prob, size = n)
+    args <- list(prob = prob)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    prob <- args[["prob"]]
+    dist_rvec_1(fun = rgeom,
+                arg = prob,
+                n = n)
+}
+
+
+## 'hyper' --------------------------------------------------------------------
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dhyper_rvec <- function(x, m, n, k, log = FALSE) {
+    check_flag(log)
+    dhyper <- stats::dhyper
+    args <- vec_recycle_common(x, m, n, k)
+    x <- args[[1]]
+    m <- args[[2]]
+    n <- args[[3]]
+    k <- args[[4]]
+    dist_rvec_4(fun = dhyper,
+                arg1 = x,
+                arg2 = m,
+                arg3 = n,
+                arg4 = k,
+                log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+phyper_rvec <- function(q, m, n, k, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    phyper <- stats::phyper
+    args <- vec_recycle_common(q, m, n, k)
+    q <- args[[1]]
+    m <- args[[2]]
+    n <- args[[3]]
+    k <- args[[4]]
+    dist_rvec_4(fun = phyper,
+                arg1 = q,
+                arg2 = m,
+                arg3 = n,
+                arg4 = k,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qhyper_rvec <- function(p, m, n, k, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qhyper <- stats::qhyper
+    args <- vec_recycle_common(p, m, n, k)
+    p <- args[[1L]]
+    m <- args[[2L]]
+    n <- args[[3L]]
+    k <- args[[4L]]
+    dist_rvec_4(fun = qhyper,
+                arg1 = p,
+                arg2 = m,
+                arg3 = n,
+                arg4 = k,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rhyper_rvec <- function(nn, m, n, k, n_draw = NULL) {
+    rhyper <- stats::rhyper
+    m <- vec_recycle(m, size = nn)
+    n <- vec_recycle(n, size = nn)
+    k <- vec_recycle(k, size = nn)
+    args <- list(m = m, n = n, k = k)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    nn <- n_rdist(n = nn, args = args)
+    m <- args[["m"]]
+    n <- args[["n"]]
+    k <- args[["k"]]
+    dist_rvec_3(fun = rhyper,
+                arg1 = m,
+                arg2 = n,
+                arg3 = k,
+                nn = nn)
+}
+
+
+
 ## 'norm' ---------------------------------------------------------------------
 
 ## HAS_TESTS
@@ -899,12 +1171,7 @@ dist_rvec_1 <- function(fun, arg, ...) {
 #' already been recycled,
 #' if necessary, to have the required lengths.
 #'
-#' Note that in practice random variate
-#' functions are the
-#' only distribution functions to
-#' have one parameter.
-#'
-#' If the functin is a random variate
+#' If the function is a random variate
 #' function, then the 'n' argument
 #' is  passed in via ....
 #' The calling function
@@ -928,20 +1195,26 @@ dist_rvec_2 <- function(fun, arg1, arg2, ...) {
     is_rv <- is_rv_1 || is_rv_2
     if (is_rv) {
         if (is_rv_1 && is_rv_2)
-            check_n_draw_equal(x = arg1,
-                               y = arg2,
-                               x_arg = nm_arg1,
-                               y_arg = nm_arg2)
-        if (is_rv_1)
+            n_draw <- n_draw_common(x = arg1,
+                                    y = arg2,
+                                    x_arg = nm_arg1,
+                                    y_arg = nm_arg2)
+        else if (is_rv_1 && !is_rv_2)
             n_draw <- n_draw(arg1)
         else
             n_draw <- n_draw(arg2)
-        if (is_rv_1)
+        if (is_rv_1) {
+            check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+            arg1 <- rvec_to_rvec_dbl(x = arg1, n_draw = n_draw)
             arg1 <- as.vector(as.matrix(arg1))
+        }
         else
             arg1 <- rep.int(arg1, times = n_draw)
-        if (is_rv_2)
+        if (is_rv_2) {
+            check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+            arg2 <- rvec_to_rvec_dbl(x = arg2, n_draw = n_draw)
             arg2 <- as.vector(as.matrix(arg2))
+        }
         else
             arg2 <- rep.int(arg2, times = n_draw)
     }
@@ -965,11 +1238,6 @@ dist_rvec_2 <- function(fun, arg1, arg2, ...) {
 #' Assume that 'arg1', 'arg2', 'arg3' have
 #' already been recycled, if necessary,
 #' to have the required lengths.
-#'
-#' Note that in practie random variate
-#' functions are the
-#' only distribution functions to
-#' have one parameter.
 #'
 #' If the functin is a random variate
 #' function, then the 'n' argument
@@ -997,40 +1265,205 @@ dist_rvec_3 <- function(fun, arg1, arg2, arg3, ...) {
     is_rv <- is_rv_1 || is_rv_2 || is_rv_3
     if (is_rv) {
         if (is_rv_1 && is_rv_2)
-            check_n_draw_equal(x = arg1,
-                               y = arg2,
-                               x_arg = nm_arg1,
-                               y_arg = nm_arg2)
+            n_draw_12 <- n_draw_common(x = arg1,
+                                       y = arg2,
+                                       x_arg = nm_arg1,
+                                       y_arg = nm_arg2)
         if (is_rv_1 && is_rv_3)
-            check_n_draw_equal(x = arg1,
-                               y = arg3,
-                               x_arg = nm_arg1,
-                               y_arg = nm_arg3)
+            n_draw_13 <- n_draw_common(x = arg1,
+                                       y = arg3,
+                                       x_arg = nm_arg1,
+                                       y_arg = nm_arg3)
         if (is_rv_2 && is_rv_3)
-            check_n_draw_equal(x = arg2,
-                               y = arg3,
-                               x_arg = nm_arg2,
-                               y_arg = nm_arg3)
-        if (is_rv_1)
-            n_draw <- n_draw(arg1)
-        else if (is_rv_2)
-            n_draw <- n_draw(arg2)
-        else
+            n_draw_23 <- n_draw_common(x = arg2,
+                                       y = arg3,
+                                       x_arg = nm_arg2,
+                                       y_arg = nm_arg3)
+        case <- c(is_rv_1, is_rv_2, is_rv_3)
+        if (identical(case, c(TRUE, TRUE, TRUE)))
+            n_draw <- max(n_draw_12, n_draw_13, n_draw_23)
+        else if (identical(case, c(FALSE, TRUE, TRUE)))
+            n_draw <- n_draw_23
+        else if (identical(case, c(TRUE, FALSE, TRUE)))
+            n_draw <- n_draw_13
+        else if (identical(case, c(FALSE, FALSE, TRUE)))
             n_draw <- n_draw(arg3)
-        if (is_rv_1)
+        else if (identical(case, c(TRUE, TRUE, FALSE)))
+            n_draw <- n_draw_12
+        else if (identical(case, c(FALSE, TRUE, FALSE)))
+            n_draw <- n_draw(arg2)
+        else if (identical(case, c(TRUE, FALSE, FALSE)))
+            n_draw <- n_draw(arg1)
+        if (is_rv_1) {
+            check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+            arg1 <- rvec_to_rvec_dbl(arg1, n_draw = n_draw)
             arg1 <- as.vector(as.matrix(arg1))
+        }
         else
             arg1 <- rep.int(arg1, times = n_draw)
-        if (is_rv_2)
+        if (is_rv_2) {
+            check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+            arg2 <- rvec_to_rvec_dbl(arg2, n_draw = n_draw)
             arg2 <- as.vector(as.matrix(arg2))
+        }
         else
             arg2 <- rep.int(arg2, times = n_draw)
-        if (is_rv_3)
+        if (is_rv_3) {
+            check_not_rvec_chr(arg3, nm_arg = nm_arg3)
+            arg3 <- rvec_to_rvec_dbl(arg3, n_draw = n_draw)
             arg3 <- as.vector(as.matrix(arg3))
+        }
         else
             arg3 <- rep.int(arg3, times = n_draw)
     }
     ans <- tryCatch(fun(arg1, arg2, arg3, ...),
+                    error = function(e) e)
+    if (inherits(ans, "error"))
+        cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                         i = ans$message))
+    if (is_rv) {
+        ans <- matrix(ans, ncol = n_draw)
+        ans <- rvec(ans)
+    }
+    ans
+}
+
+
+## HAS_TESTS
+#' Apply random-distribution function to an rvec:
+#' function has four parameters
+#'
+#' Assume that 'arg1', 'arg2', 'arg3', 'arg4' have
+#' already been recycled, if necessary,
+#' to have the required lengths.
+#'
+#' If the functin is a random variate
+#' function, then the 'n' argument
+#' is  passed in via ....
+#' The calling function
+#' is responsible for setting 'n'
+#' to 'length(as.matrix(arg))'.
+#'
+#' The logic of how to handle combinations of
+#' ordinary vectors and rvecs is tricky,
+#' so the function uses brute force,
+#' going through case by case.
+#'
+#' @param fun The function to be applied
+#' @param arg1,arg2,arg3,arg4 Parameter arguments for the function
+#' @param ... Other arguments passed to fun
+#'
+#' @returns If arg1, arg2, arg3, or arg4 is an rvec,
+#' then an rvec. Otherwise a numeric vector.
+#'
+#' @noRd
+dist_rvec_4 <- function(fun, arg1, arg2, arg3, arg4, ...) {
+    nm_fun <- rlang::as_name(rlang::enquo(fun))
+    nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+    nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+    nm_arg3 <- rlang::as_name(rlang::enquo(arg3))
+    nm_arg4 <- rlang::as_name(rlang::enquo(arg4))
+    is_rv_1 <- is_rvec(arg1)
+    is_rv_2 <- is_rvec(arg2)
+    is_rv_3 <- is_rvec(arg3)
+    is_rv_4 <- is_rvec(arg4)
+    is_rv <- is_rv_1 || is_rv_2 || is_rv_3 || is_rv_4
+    if (is_rv) {
+        if (is_rv_1 && is_rv_2)
+            n_draw_12 <- n_draw_common(x = arg1,
+                                       y = arg2,
+                                       x_arg = nm_arg1,
+                                       y_arg = nm_arg2)
+        if (is_rv_1 && is_rv_3)
+            n_draw_13 <- n_draw_common(x = arg1,
+                                       y = arg3,
+                                       x_arg = nm_arg1,
+                                       y_arg = nm_arg3)
+        if (is_rv_1 && is_rv_4)
+            n_draw_14 <- n_draw_common(x = arg1,
+                                       y = arg4,
+                                       x_arg = nm_arg1,
+                                       y_arg = nm_arg4)
+        if (is_rv_2 && is_rv_3)
+            n_draw_23 <- n_draw_common(x = arg2,
+                                       y = arg3,
+                                       x_arg = nm_arg2,
+                                       y_arg = nm_arg3)
+        if (is_rv_2 && is_rv_4)
+            n_draw_24 <- n_draw_common(x = arg2,
+                                       y = arg4,
+                                       x_arg = nm_arg2,
+                                       y_arg = nm_arg4)
+        if (is_rv_3 && is_rv_4)
+            n_draw_34 <- n_draw_common(x = arg3,
+                                       y = arg4,
+                                       x_arg = nm_arg4,
+                                       y_arg = nm_arg4)
+        case <- c(is_rv_1, is_rv_2, is_rv_3, is_rv_4)
+        if (identical(case, c(TRUE, TRUE, TRUE, TRUE)))
+            n_draw <- max(n_draw_12, n_draw_13, n_draw_14,
+                          n_draw_23, n_draw_24,
+                          n_draw_34)
+        else if (identical(case, c(FALSE, TRUE, TRUE, TRUE)))
+            n_draw <- max(n_draw_23, n_draw_24, n_draw_34)
+        else if (identical(case, c(TRUE, FALSE, TRUE, TRUE)))
+            n_draw <- max(n_draw_13, n_draw_14, n_draw_34)
+        else if (identical(case, c(FALSE, FALSE, TRUE, TRUE)))
+            n_draw <- n_draw_34
+        else if (identical(case, c(TRUE, TRUE, FALSE, TRUE)))
+            n_draw <- max(n_draw_12, n_draw_14, n_draw_24)
+        else if (identical(case, c(FALSE, TRUE, FALSE, TRUE)))
+            n_draw <- n_draw_24
+        else if (identical(case, c(TRUE, FALSE, FALSE, TRUE)))
+            n_draw <- n_draw_14
+        else if (identical(case, c(FALSE, FALSE, FALSE, TRUE)))
+            n_draw <- n_draw(arg4)
+        else if (identical(case, c(TRUE, TRUE, TRUE, FALSE)))
+            n_draw <- max(n_draw_12, n_draw_13, n_draw_23)
+        else if (identical(case, c(FALSE, TRUE, TRUE, FALSE)))
+            n_draw <- n_draw_23
+        else if (identical(case, c(TRUE, FALSE, TRUE, FALSE)))
+            n_draw <- n_draw_13
+        else if (identical(case, c(FALSE, FALSE, TRUE, FALSE)))
+            n_draw <- n_draw(arg3)
+        else if (identical(case, c(TRUE, TRUE, FALSE, FALSE)))
+            n_draw <- n_draw_12
+        else if (identical(case, c(FALSE, TRUE, FALSE, FALSE)))
+            n_draw <- n_draw(arg2)
+        else if (identical(case, c(TRUE, FALSE, FALSE, FALSE)))
+            n_draw <- n_draw(arg1)
+        else
+            cli::cli_abort("Internal error: invalid combinations of rvecs")
+        if (is_rv_1) {
+            check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+            arg1 <- rvec_to_rvec_dbl(arg1, n_draw = n_draw)
+            arg1 <- as.vector(as.matrix(arg1))
+        }
+        else
+            arg1 <- rep.int(arg1, times = n_draw)
+        if (is_rv_2) {
+            check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+            arg2 <- rvec_to_rvec_dbl(arg2, n_draw = n_draw)
+            arg2 <- as.vector(as.matrix(arg2))
+        }
+        else
+            arg2 <- rep.int(arg2, times = n_draw)
+        if (is_rv_3) {
+            check_not_rvec_chr(arg3, nm_arg = nm_arg3)
+            arg3 <- rvec_to_rvec_dbl(arg3, n_draw = n_draw)
+            arg3 <- as.vector(as.matrix(arg3))
+        }
+        else
+            arg3 <- rep.int(arg3, times = n_draw)
+        if (is_rv_4) {
+            check_not_rvec_chr(arg4, nm_arg = nm_arg4)
+            arg4 <- rvec_to_rvec_dbl(arg4, n_draw = n_draw)
+            arg4 <- as.vector(as.matrix(arg4))
+        }
+        else
+            arg4 <- rep.int(arg4, times = n_draw)
+    }
+    ans <- tryCatch(fun(arg1, arg2, arg3, arg4, ...),
                     error = function(e) e)
     if (inherits(ans, "error"))
         cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",

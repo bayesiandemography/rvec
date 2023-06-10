@@ -333,6 +333,20 @@ test_that("'check_nonneg_num_vector' throws expected error if negative", {
 })
 
 
+## 'check_not_rvec_chr' -------------------------------------------------------
+
+test_that("'check_not_rvec_chr' returns TRUE with valid rvec", {
+    expect_true(check_not_rvec_chr(arg = rvec(matrix(1:3, 1)),
+                                   nm_arg = "x"))
+})
+
+test_that("'check_not_rvec_chr' throws correct error with rvec_chr", {
+    expect_error(check_not_rvec_chr(arg = rvec(matrix("a")),
+                                    nm_arg = "x"),
+                 "`x` has class <")    
+})
+
+
 ## 'check_overlap_draw_groups' ------------------------------------------------
 
 test_that("'check_overlap_draw_groups' returns TRUE with valid inputs", {

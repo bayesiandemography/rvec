@@ -26,6 +26,18 @@
 \alias{pf_rvec}
 \alias{qf_rvec}
 \alias{rf_rvec}
+\alias{dgamma_rvec}
+\alias{pgamma_rvec}
+\alias{qgamma_rvec}
+\alias{rgamma_rvec}
+\alias{dgeom_rvec}
+\alias{pgeom_rvec}
+\alias{qgeom_rvec}
+\alias{rgeom_rvec}
+\alias{dhyper_rvec}
+\alias{phyper_rvec}
+\alias{qhyper_rvec}
+\alias{rhyper_rvec}
 \alias{dnorm_rvec}
 \alias{pnorm_rvec}
 \alias{qnorm_rvec}
@@ -42,7 +54,7 @@ pbeta_rvec(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 
 qbeta_rvec(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 
-rbeta_rvec(n, shape1, shape2, ncp = 0)
+rbeta_rvec(n, shape1, shape2, ncp = 0, n_draw = NULL)
 
 dbinom_rvec(x, size, prob, log = FALSE)
 
@@ -50,7 +62,7 @@ pbinom_rvec(q, size, prob, lower.tail = TRUE, log.p = FALSE)
 
 qbinom_rvec(p, size, prob, lower.tail = TRUE, log.p = FALSE)
 
-rbinom_rvec(n, size, prob)
+rbinom_rvec(n, size, prob, n_draw = NULL)
 
 dcauchy_rvec(x, location = 0, scale = 1, log = FALSE)
 
@@ -58,7 +70,7 @@ pcauchy_rvec(q, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE)
 
 qcauchy_rvec(p, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE)
 
-rcauchy_rvec(n, location = 0, scale = 1)
+rcauchy_rvec(n, location = 0, scale = 1, n_draw = NULL)
 
 dchisq_rvec(x, df, ncp = 0, log = FALSE)
 
@@ -66,7 +78,7 @@ pchisq_rvec(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 
 qchisq_rvec(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 
-rchisq_rvec(n, df, ncp = 0)
+rchisq_rvec(n, df, ncp = 0, n_draw = NULL)
 
 dexp_rvec(x, rate = 1, log = FALSE)
 
@@ -74,7 +86,7 @@ pexp_rvec(q, rate = 1, lower.tail = TRUE, log.p = FALSE)
 
 qexp_rvec(p, rate = 1, lower.tail = TRUE, log.p = FALSE)
 
-rexp_rvec(n, rate = 1)
+rexp_rvec(n, rate = 1, n_draw = NULL)
 
 df_rvec(x, df1, df2, ncp = 0, log = FALSE)
 
@@ -82,7 +94,45 @@ pf_rvec(q, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 
 qf_rvec(p, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 
-rf_rvec(n, df1, df2, ncp = 0)
+rf_rvec(n, df1, df2, ncp = 0, n_draw = NULL)
+
+dgamma_rvec(x, shape, rate = 1, scale = 1/rate, log = FALSE)
+
+pgamma_rvec(
+  q,
+  shape,
+  rate = 1,
+  scale = 1/rate,
+  lower.tail = TRUE,
+  log.p = FALSE
+)
+
+qgamma_rvec(
+  p,
+  shape,
+  rate = 1,
+  scale = 1/rate,
+  lower.tail = TRUE,
+  log.p = FALSE
+)
+
+rgamma_rvec(n, shape, rate = 1, scale = 1/rate, n_draw = NULL)
+
+dgeom_rvec(x, prob, log = FALSE)
+
+pgeom_rvec(q, prob, lower.tail = TRUE, log.p = FALSE)
+
+qgeom_rvec(p, prob, lower.tail = TRUE, log.p = FALSE)
+
+rgeom_rvec(n, prob, n_draw = NULL)
+
+dhyper_rvec(x, m, n, k, log = FALSE)
+
+phyper_rvec(q, m, n, k, lower.tail = TRUE, log.p = FALSE)
+
+qhyper_rvec(p, m, n, k, lower.tail = TRUE, log.p = FALSE)
+
+rhyper_rvec(nn, m, n, k, n_draw = NULL)
 
 dnorm_rvec(x, mean = 0, sd = 1, log = FALSE)
 
@@ -90,7 +140,7 @@ pnorm_rvec(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
 
 qnorm_rvec(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
 
-rnorm_rvec(n, mean = 0, sd = 1)
+rnorm_rvec(n, mean = 0, sd = 1, n_draw = NULL)
 
 dpois_rvec(x, lambda, log = FALSE)
 
@@ -98,31 +148,42 @@ ppois_rvec(q, lambda, lower.tail = TRUE, log.p = FALSE)
 
 qpois_rvec(p, lambda, lower.tail = TRUE, log.p = FALSE)
 
-rpois_rvec(n, lambda)
+rpois_rvec(n, lambda, n_draw = NULL)
 }
 \arguments{
 \item{x}{Quantiles. Can be rvec.}
 
 \item{shape1, shape2}{Parameters
-for beta distribution.
-Non-negative. Can be rvecs.}
+for beta distribution. Non-negative.
+See \code{\link[stats:Beta]{stats::dbeta()}}. Can be rvecs.}
 
-\item{ncp}{Non-centrality parameter. Cannot be rvec.
-Default is \code{0}.}
+\item{ncp}{Non-centrality parameter.
+Default is \code{0}. Cannot be rvec.}
 
 \item{log, log.p}{Whether to return
-\code{log(p)} rather than \code{p}. Cannot be rvec. Default is
-\code{FALSE}.}
+\code{log(p)} rather than \code{p}. Default is
+\code{FALSE}. Can be rvec.}
 
 \item{q}{Quantiles. Can be rvec.}
 
 \item{lower.tail}{Whether to return
 \eqn{P[X \le x]}, as opposed to
-\eqn{P[X > x]}. Cannot be rvec. Default is \code{TRUE}.}
+\eqn{P[X > x]}. Default is \code{TRUE}.
+Cannot be rvec.}
 
 \item{p}{Probabilities. Can be rvec.}
 
-\item{n}{Number of draws. Cannot be rvec.}
+\item{n}{\itemize{
+\item In functions other than \code{rhyper_rvec}, \code{n} is the
+length of random vector being created, and cannot be
+an rvec.
+\item In \code{rhyper_rvec}, \code{n} is the number of black balls
+in the urn, and can be an rvec. See \code{\link[stats:Hypergeometric]{stats::rhyper()}}.
+}}
+
+\item{n_draw}{Number of random draws, per observation,
+in random vector being created.
+Optional. Cannot be rvec.}
 
 \item{size}{Number of trials. Can be rvec.}
 
@@ -130,38 +191,68 @@ Default is \code{0}.}
 success in each trial. Can be rvec.}
 
 \item{location}{Parameter for Cauchy distribution.
-Can be rvec. Default is \code{0}.}
+Default is \code{0}. See \code{\link[stats:Cauchy]{stats::dcauchy()}}. Can be rvec.}
 
 \item{scale}{Parameters
-for Cauchy distribution.
-Can be rvec. Default is \code{1}.}
+for Cauchy distribution. Default is \code{1}.
+See \code{\link[stats:Cauchy]{stats::dcauchy()}}. Can be rvec.}
 
-\item{df, df1, df2}{Degrees of freedom. Can be rvec.}
+\item{df, df1, df2}{Degrees of freedom.
+See \code{\link[=dchisq]{dchisq()}}, \code{\link[=df]{df()}}. Can be rvec.}
 
 \item{rate}{Rates. Can be rvec.}
 
-\item{mean}{Means of distribution. Can be rvec.
-Default is \code{0}.}
+\item{shape}{Parameter for gamma distribution.
+See \code{\link[stats:GammaDist]{stats::dgamma()}}. Can be rvec.}
 
-\item{sd}{Standard deviations. Can be rvec.
-Default is \code{1}.}
+\item{m}{The number of white balls in the urn.
+See \code{\link[stats:Hypergeometric]{stats::dhyper()}}. Can be rvec.}
+
+\item{k}{Number of balls drawn from urn.
+See \code{\link[stats:Hypergeometric]{stats::dhyper()}}. Can be rvec.}
+
+\item{nn}{The length of the random vector being created,
+in a call to \code{rhyper_rvec}. The equivalent of \code{n} in
+other random variate functions.
+See \code{\link[stats:Hypergeometric]{stats::rhyper()}}. Cannot be an rvec.}
+
+\item{mean}{Means of distribution.
+Default is \code{0}. Can be rvec.}
+
+\item{sd}{Standard deviations.
+Default is \code{1}. Can be rvec.}
 
 \item{lambda}{Vector of means. Can be rvec.}
 }
 \value{
-If any of the inputs is an
-\link[=rvec]{rvec}, then an
-an \link[=rvec]{rvec}; otherwise an
-ordinary R vector.
+If any of the arguments are rvecs,
+or if a value for \code{n_draw} is supplied,
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 \description{
 Modified versions of standard probability
-functions that take one or more rvecs
-as arguments, and return rvecs.
+functions that can accommodate rvecs.
+If any of arguments to the functions are
+rvecs, then the functions return rvecs;
+otherwise they return ordinary R vectors,
 }
-\details{
-The \verb{*_rvec} probability distribution functions
-use \link[vctrs:vector_recycling_rules]{tidyverse}
+\section{Creating an rvec by supplying a value for n_draw}{
+
+
+The \verb{r*_rvec} functions for generating random variates
+include one argument that is not present in
+base R functions: \code{n_draw}. If a value for \code{n_draw}
+is supplied, then the return value is always an
+rvec, even if none of the inputs are rvecs.
+This is a convenient way to create
+an rvec to use in a simulation. See below for an example.
+}
+
+\section{Recycling}{
+
+
+Unlike the base R distribution functions,
+the rvec functions use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -175,6 +266,7 @@ calls to \code{\link[base:rep]{base::rep()}},
 \code{\link[base:rep]{base::rep_len()}}, and \code{\link[base:rep]{base::rep.int()}},
 all of which have methods for \link[=rvec]{rvecs}.
 }
+
 \examples{
 x_rv <- rvec(list(c(-0.8, 1.3),
                   c(-9.1, 8.7)))
@@ -200,15 +292,24 @@ rnorm_rvec(n = 2, mean = mean_rv, sd = sd_rv)
 
 ## random variates: mean is rvec, sd is scalar
 rnorm_rvec(n = 2, mean = mean_rv, sd = 0.5)
+
+## create rvecs via the 'n_draw' argument,
+## and use to created a simulated 'y'
+mu <- rnorm_rvec(n = 3,
+                 mean = 2,
+                 sd = 0.5,
+                 n_draw = 1000)
+sigma <- rgamma_rvec(n = 3,
+                     shape = 1,
+                     scale = 0.5,
+                     n_draw = 1000)
+y <- rnorm_rvec(n = 3,
+                mean = mu,
+                sd = sigma)
+y
 }
 \seealso{
-Base R functions
 \itemize{
-\item \code{\link[stats:Beta]{stats::dbeta()}} Beta distribution.
-\item \code{\link[stats:Binomial]{stats::dbinom()}} Binomial distribution.
-\item \code{\link[stats:Cauchy]{stats::dcauchy()}} Cauchy distribution.
-\item \code{\link[stats:Chisquare]{stats::dchisq()}} Chi-squared distribution.
-\item \code{\link[stats:Normal]{stats::dnorm()}} Normal distribution.
-\item \code{\link[stats:Poisson]{stats::dpois()}} Poisson distribution.
+\item Equivalent functions in base R: \link[stats:Distributions]{stats::distributions}.
 }
 }
