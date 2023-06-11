@@ -260,6 +260,24 @@ check_lengths_nonzero <- function(x) {
 
 
 ## HAS_TESTS
+#' Check that 'n' is a positive integer
+#'
+#' @param n
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_n <- function(n) {
+    check_nonneg_num_scalar(n)
+    if (round(n) != n)
+        cli::cli_abort("{.arg n} has non-integer value ({n}).")
+    if (n == 0L)
+        cli::cli_abort("{.arg n} equals 0.")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
 #' Check that 'n_draw' is a positive integer
 #'
 #' @param n_draw

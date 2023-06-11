@@ -38,6 +38,12 @@
 \alias{phyper_rvec}
 \alias{qhyper_rvec}
 \alias{rhyper_rvec}
+\alias{dlnorm_rvec}
+\alias{plnorm_rvec}
+\alias{qlnorm_rvec}
+\alias{rlnorm_rvec}
+\alias{dmultinom_rvec}
+\alias{rmultinom_rvec}
 \alias{dnorm_rvec}
 \alias{pnorm_rvec}
 \alias{qnorm_rvec}
@@ -134,6 +140,18 @@ qhyper_rvec(p, m, n, k, lower.tail = TRUE, log.p = FALSE)
 
 rhyper_rvec(nn, m, n, k, n_draw = NULL)
 
+dlnorm_rvec(x, meanlog = 0, sdlog = 1, log = FALSE)
+
+plnorm_rvec(q, meanlog = 0, sdlog = 1, lower.tail = TRUE, log.p = FALSE)
+
+qlnorm_rvec(p, meanlog = 0, sdlog = 1, lower.tail = TRUE, log.p = FALSE)
+
+rlnorm_rvec(n, meanlog = 0, sdlog = 1, n_draw = NULL)
+
+dmultinom_rvec(x, size = NULL, prob, log = FALSE)
+
+rmultinom_rvec(n, size, prob, n_draw = NULL)
+
 dnorm_rvec(x, mean = 0, sd = 1, log = FALSE)
 
 pnorm_rvec(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
@@ -216,7 +234,15 @@ in a call to \code{rhyper_rvec}. The equivalent of \code{n} in
 other random variate functions.
 See \code{\link[stats:Hypergeometric]{stats::rhyper()}}. Cannot be an rvec.}
 
-\item{mean}{Means of distribution.
+\item{meanlog}{Mean of distribution, on log scale.
+Default is \code{0}. See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
+Can be rvec.}
+
+\item{sdlog}{Standard deviation of distribution, on log scale.
+Default is \code{1}. See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
+Can be rvec.}
+
+\item{mean}{Mean of distribution.
 Default is \code{0}. Can be rvec.}
 
 \item{sd}{Standard deviations.
@@ -267,6 +293,22 @@ calls to \code{\link[base:rep]{base::rep()}},
 all of which have methods for \link[=rvec]{rvecs}.
 }
 
+\section{Multinomial}{
+
+
+The multinomial distribution is the only
+distribution described here that  has a
+multivariate outcome. Base R and rvec
+multinomial distribution functions both
+behave differently from other distribution
+functions:\tabular{ll}{
+   Base R \tab rvec \cr
+   No \verb{pmultinom() or }qmultinom()` \tab No \verb{pmultinom_rvec() or }qmultinom_rvec()` \cr
+   No recycling of arguments \tab No recycling of arguments \cr
+   \code{rmultinom()} returns matrix \tab \code{rmultinom_rvec()} returns list if \code{n > 1} \cr
+}
+}
+
 \examples{
 x_rv <- rvec(list(c(-0.8, 1.3),
                   c(-9.1, 8.7)))
@@ -307,6 +349,13 @@ y <- rnorm_rvec(n = 3,
                 mean = mu,
                 sd = sigma)
 y
+
+## multinomial distribution
+size <- rvec(list(10:12))
+prob <- c(0.1, 0.4, 0.2, 0.3)
+x <- rmultinom_rvec(n = 1, size = size, prob = prob)
+x
+sum(x)
 }
 \seealso{
 \itemize{

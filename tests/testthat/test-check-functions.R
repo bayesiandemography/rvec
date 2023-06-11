@@ -218,6 +218,28 @@ test_that("'check_lengths_nonzero' throws expected error unequal lengths", {
 })
 
 
+## 'check_n' ------------------------------------------------------------------
+
+test_that("'check_n' returns TRUE with valid inputs", {
+    expect_true(check_n(15))
+})
+
+test_that("'check_n' throws expected error with NA", {
+    expect_error(check_n(NA_real_),
+                 "`n` is NA")
+})
+
+test_that("'check_n' throws expected error with non-integer", {
+    expect_error(check_n(1.3),
+                 "`n` has non-integer value \\(1.3\\).")
+})
+
+test_that("'check_n' throws expected error with 0", {
+    expect_error(check_n(0),
+                 "`n` equals 0.")
+})
+
+
 ## 'check_n_draw' -------------------------------------------------------------
 
 test_that("'check_n_draw' returns TRUE with valid inputs", {

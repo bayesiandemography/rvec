@@ -33,6 +33,20 @@
 #' [base::rep_len()], and [base::rep.int()],
 #' all of which have methods for [rvecs][rvec()].
 #'
+#' @section Multinomial:
+#'
+#' The multinomial distribution is the only
+#' distribution described here that  has a
+#' multivariate outcome. Base R and rvec
+#' multinomial distribution functions both
+#' behave differently from other distribution
+#' functions:
+#'
+#' | Base R                           | rvec                                       |
+#' |:---------------------------------|:-------------------------------------------|
+#' | No `pmultinom() or `qmultinom()` | No `pmultinom_rvec() or `qmultinom_rvec()` |
+#' | No recycling of arguments        | No recycling of arguments                  |
+#' | `rmultinom()` returns matrix     | `rmultinom_rvec()` returns list if `n > 1` |
 #'
 #' @param df,df1,df2 Degrees of freedom. 
 #' See [dchisq()], [df()]. Can be rvec.
@@ -50,8 +64,11 @@
 #' Cannot be rvec. 
 #' @param m The number of white balls in the urn.
 #' See [stats::dhyper()]. Can be rvec. 
-#' @param mean Means of distribution. 
+#' @param mean Mean of distribution. 
 #' Default is `0`. Can be rvec.
+#' @param meanlog Mean of distribution, on log scale.
+#' Default is `0`. See [stats::dlnorm()].
+#' Can be rvec.
 #' @param n
 #' - In functions other than `rhyper_rvec`, `n` is the
 #' length of random vector being created, and cannot be
@@ -77,6 +94,9 @@
 #' See [stats::dcauchy()]. Can be rvec.
 #' @param sd Standard deviations. 
 #' Default is `1`. Can be rvec.
+#' @param sdlog Standard deviation of distribution, on log scale.
+#' Default is `1`. See [stats::dlnorm()].
+#' Can be rvec.
 #' @param shape Parameter for gamma distribution.
 #' See [stats::dgamma()]. Can be rvec.
 #' @param shape1,shape2 Parameters
@@ -133,6 +153,13 @@
 #'                 mean = mu,
 #'                 sd = sigma)
 #' y
+#'
+#' ## multinomial distribution
+#' size <- rvec(list(10:12))
+#' prob <- c(0.1, 0.4, 0.2, 0.3)
+#' x <- rmultinom_rvec(n = 1, size = size, prob = prob)
+#' x
+#' sum(x)
 #' @name rvec-distributions
 NULL
 
@@ -966,6 +993,259 @@ rhyper_rvec <- function(nn, m, n, k, n_draw = NULL) {
                 nn = nn)
 }
 
+
+## 'lnorm' ---------------------------------------------------------------------
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dlnorm_rvec <- function(x, meanlog = 0, sdlog = 1, log = FALSE) {
+    check_flag(log)
+    dlnorm <- stats::dlnorm
+    args <- vec_recycle_common(x, meanlog, sdlog)
+    x <- args[[1]]
+    meanlog <- args[[2]]
+    sdlog <- args[[3]]
+    dist_rvec_3(fun = dlnorm,
+                arg1 = x,
+                arg2 = meanlog,
+                arg3 = sdlog,
+                log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+plnorm_rvec <- function(q, meanlog = 0, sdlog = 1, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    plnorm <- stats::plnorm
+    args <- vec_recycle_common(q, meanlog, sdlog)
+    q <- args[[1]]
+    meanlog <- args[[2]]
+    sdlog <- args[[3]]
+    dist_rvec_3(fun = plnorm,
+                arg1 = q,
+                arg2 = meanlog,
+                arg3 = sdlog,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qlnorm_rvec <- function(p, meanlog = 0, sdlog = 1, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qlnorm <- stats::qlnorm
+    args <- vec_recycle_common(p, meanlog, sdlog)
+    p <- args[[1L]]
+    meanlog <- args[[2L]]
+    sdlog <- args[[3L]]
+    dist_rvec_3(fun = qlnorm,
+                arg1 = p,
+                arg2 = meanlog,
+                arg3 = sdlog,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
+    rlnorm <- stats::rlnorm
+    meanlog <- vec_recycle(meanlog, size = n)
+    sdlog <- vec_recycle(sdlog, size = n)
+    args <- list(meanlog = meanlog, sdlog = sdlog)
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    meanlog <- args[["meanlog"]]
+    sdlog <- args[["sdlog"]]
+    dist_rvec_2(fun = rlnorm,
+                arg1 = meanlog,
+                arg2 = sdlog,
+                n = n)
+}
+
+
+
+
+
+
+## 'multinom' -----------------------------------------------------------------
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dmultinom_rvec <- function(x, size = NULL, prob, log = FALSE) {
+    check_flag(log)
+    dmultinom <- stats::dmultinom
+    if (is.null(size))
+        size <- sum(x)
+    n_x <- length(x)
+    n_p <- length(prob)
+    if (n_x == 0L)
+        cli::cli_abort("{.arg x} has length 0.")
+    if (n_x != n_p)
+        cli::cli_abort(c("{.arg x} and {.arg p} have different lengths.",
+                         i = "{.arg x} has length {n_x}.",
+                         i = "{.arg p} has length {n_p}."))
+    if (length(size) != 1L)
+        cli::cli_abort(c("{.arg size} does not have length 1.",
+                         i = "{.arg size} has length {length(size)}."))
+    is_rv_x <- is_rvec(x)
+    is_rv_s <- is_rvec(size)
+    is_rv_p <- is_rvec(prob)
+    is_rv <- is_rv_x || is_rv_s || is_rv_p
+    if (is_rv) {
+        if (is_rv_x && !is_rv_s)
+            cli::cli_abort(c("{.arg x} is an rvec, but {.arg size} is not.",
+                             "{.arg size} has class {.cls {class(size)}}."))
+        if (!is_rv_x && is_rv_s)
+            cli::cli_abort(c("{.arg size} is an rvec, but {.arg x} is not.",
+                             "{.arg x} has class {.cls {class(x)}}."))
+        if (is_rv_x) {
+            n_draw_xs <- n_draw_common(x = x,
+                                       y = size,
+                                       x_arg = "x",
+                                       y_arg = "size")
+            if (is_rv_p) {
+                n_draw_xp <- n_draw_common(x = x,
+                                           y = prob,
+                                           x_arg = "x",
+                                           y_arg = "prob")
+                n_draw_sp <- n_draw_common(x = size,
+                                           y = prob,
+                                           x_arg = "size",
+                                           y_arg = "prob")
+                n_draw <- max(n_draw_xs, n_draw_xp, n_draw_sp)
+            }
+            else
+                n_draw <- n_draw_xs
+        }
+        else
+            n_draw <- n_draw(prob)
+        if (is_rv_x) {
+            check_not_rvec_chr(x, nm_arg = "x")
+            x <- rvec_to_rvec_dbl(x, n_draw = n_draw)
+            x <- as.matrix(x)
+        }
+        else
+            x <- matrix(x, nrow = n_x, ncol = n_draw)
+        if (is_rv_s) {
+            check_not_rvec_chr(size, nm_arg = "size")
+            size <- rvec_to_rvec_dbl(size, n_draw = n_draw)
+            size <- as.vector(as.matrix(size))
+        }
+        else
+            size <- rep.int(size, times = n_draw)
+        if (is_rv_p) {
+            check_not_rvec_chr(prob, nm_arg = "prob")
+            prob <- rvec_to_rvec_dbl(prob, n_draw = n_draw)
+            prob <- as.matrix(prob)
+        }
+        else
+            prob <- matrix(prob, nrow = n_p, ncol = n_draw)
+    }
+    else {
+        n_draw <- 1L
+        x <- matrix(x, ncol = 1L)
+        prob <- matrix(prob, ncol = 1L)
+    }
+    ans <- double(length = n_draw)
+    for (i_draw in seq_len(n_draw)) {
+        val <- tryCatch(dmultinom(x = x[, i_draw],
+                                  size = size[[i_draw]],
+                                  prob = prob[, i_draw],
+                                  log = log),
+                        error = function(e) e)
+        if (inherits(val, "error"))
+            cli::cli_abort(c("Problem with call to function {.fun dmultinom}:",
+                             i = val$message))
+        ans[[i_draw]] <- val
+    }
+    if (is_rv) {
+        ans <- matrix(ans, nrow = 1L)
+        ans <- rvec(ans)
+    }
+    ans
+}
+
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
+    check_n(n)
+    if (length(size) != 1L)
+        cli::cli_abort("{.arg size} does not have length 1.")
+    n_p <- length(prob)
+    if (n_p == 0L)
+        cli::cli_abort("{.arg prob} has length 0.")
+    rmultinom <- stats::rmultinom
+    if (is.null(n_draw)) {
+        is_rv_s <- is_rvec(size)
+        is_rv_p <- is_rvec(prob)
+        if (is_rv_s && is_rv_p)
+            n_draw <- n_draw_common(x = size,
+                                    y = prob,
+                                    x_arg = "size",
+                                    y_arg = "prob")
+        else if (!is_rv_s && is_rv_p)
+            n_draw <- n_draw(prob)
+        else if (is_rv_s && !is_rv_p)
+            n_draw <- n_draw(size)
+        else
+            n_draw <- 1L
+    }
+    else {
+        args <- list(size = size, prob = prob)
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+        size <- args[["size"]]
+        prob <- args[["prob"]]
+        is_rv_s <- TRUE
+        is_rv_p <- TRUE
+    }
+    if (is_rv_s) {
+        check_not_rvec_chr(size, nm_arg = "size")
+        size <- rvec_to_rvec_dbl(size, n_draw = n_draw)
+        size <- as.vector(as.matrix(size))
+    }
+    else
+        size <- rep.int(size, times = n_draw)
+    if (is_rv_p) {
+        check_not_rvec_chr(prob, nm_arg = "prob")
+        prob <- rvec_to_rvec_dbl(prob, n_draw = n_draw)
+        prob <- as.matrix(prob)
+    }
+    else
+        prob <- matrix(prob, nrow = n_p, ncol = n_draw)
+    ans <- vector(mode = "list", length = n)
+    for (i_ans in seq_along(ans)) {
+        m <- matrix(nrow = n_p, ncol = n_draw)
+        for (i_draw in seq_len(n_draw)) {
+            val <- tryCatch(rmultinom(n = 1L,
+                                      size = size[[i_draw]],
+                                      prob = prob[, i_draw]),
+                            error = function(e) e)
+            if (inherits(val, "error"))
+                cli::cli_abort(c("Problem with call to function {.fun rmultinom}:",
+                                 i = val$message))
+            m[, i_draw] <- val
+        }
+        ans[[i_ans]] <- m
+    }
+    if (is_rv_s || is_rv_p)
+        ans <- lapply(ans, rvec)
+    if (n == 1L)
+        ans <- ans[[1L]]
+    ans
+}
 
 
 ## 'norm' ---------------------------------------------------------------------
