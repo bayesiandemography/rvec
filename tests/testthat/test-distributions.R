@@ -563,9 +563,6 @@ test_that("'rlnorm_rvec' works with valid input - n_draw is supplied", {
 })
 
 
-
-
-
 ## 'multinom' -----------------------------------------------------------------
 
 test_that("'dmultinom_rvec' works with valid input - x, size rvec", {
@@ -757,6 +754,116 @@ test_that("'rmultinom' throws expected error when 'prob' negative", {
                  "Problem with call to function `rmultinom\\(\\)`:")
 })
 
+
+
+
+
+## 'nbinom' -------------------------------------------------------------------
+
+test_that("'dnbinom_rvec' works with valid input - prob supplied", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    size <- rvec(m)
+    prob <- rvec(m/7)
+    ans_obtained <- dnbinom_rvec(x = x, size = size, prob = prob, log = TRUE)
+    ans_expected <- rvec(matrix(dnbinom(x = x, size = m, prob = m/7, log = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dnbinom_rvec' works with valid input - mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    size <- rvec(m)
+    mu <- 0.5 * rvec(m)
+    ans_obtained <- dnbinom_rvec(x = x, size = size, mu = mu, log = TRUE)
+    ans_expected <- rvec(matrix(dnbinom(x = x, size = m,
+                                        mu = 0.5 * m, log = TRUE), nr = 2))
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'pnbinom_rvec' works with valid input - prob supplied", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    size <- rvec(m)
+    prob <- 0.5
+    ans_obtained <- pnbinom_rvec(q, size, prob, log.p = TRUE)
+    ans_expected <- rvec(matrix(pnbinom(q = q, size = m, prob = 0.5, log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pnbinom_rvec' works with valid input - mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    size <- rvec(m)
+    mu <- 2
+    ans_obtained <- pnbinom_rvec(q, size, mu = mu, log.p = TRUE)
+    ans_expected <- rvec(matrix(pnbinom(q = q, size = m, mu  = mu, log.p = TRUE), nr = 2))
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'qnbinom_rvec' works with valid input - prob supplied", {
+    m <- matrix(1:6, nr = 2)
+    q <- 0.5 * rvec(m)
+    size <- rvec(m)
+    prob <- rvec(0.1 * m)
+    ans_obtained <- pnbinom_rvec(q, size, prob)
+    ans_expected <- rvec(matrix(pnbinom(q = 0.5 * m, size = m, prob = 0.1 * m), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qnbinom_rvec' works with valid input - mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    q <- 0.5 * rvec(m)
+    size <- rvec(m)
+    mu <- rvec(1.3 * m)
+    ans_obtained <- pnbinom_rvec(q, size, mu = mu)
+    ans_expected <- rvec(matrix(pnbinom(q = 0.5 * m, size = m, mu = 1.3 * m), nr = 2))
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'rnbinom_rvec' works with valid input - n_draw is NULL, prob supplied", {
+    m <- matrix(1:6, nr = 2)
+    size <- rvec(m)
+    prob <- 0.23
+    set.seed(0)
+    ans_obtained <- rnbinom_rvec(n = 2, size, prob)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rnbinom(n = 6, size = m, prob = 0.23), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rnbinom_rvec' works with valid input - n_draw is NULL, mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    size <- rvec(m)
+    mu <- 2.23
+    set.seed(0)
+    ans_obtained <- rnbinom_rvec(n = 2, size, mu = mu)
+    set.seed(0)
+    ans_expected <- rvec_int(matrix(rnbinom(n = 6, size = m, mu = mu), nr = 2))
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'rnbinom_rvec' works with valid input - n_draw is 3, prob supplied", {
+    m <- matrix(1:6, nr = 2)
+    size <- rvec(m)
+    prob <- 0.23
+    set.seed(0)
+    ans_obtained <- rnbinom_rvec(n = 2, size, prob, n_draw = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rnbinom(n = 6, size = m, prob = 0.23), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rnbinom_rvec' works with valid input - n_draw is 3, mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    size <- rvec(m)
+    mu <- 0.5
+    set.seed(0)
+    ans_obtained <- rnbinom_rvec(n = 2, size, mu = mu, n_draw = 3)
+    set.seed(0)
+    ans_expected <- rvec_int(matrix(rnbinom(n = 6, size = m, mu = mu), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
 
 
 ## 'norm' ---------------------------------------------------------------------

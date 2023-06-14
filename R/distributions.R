@@ -69,6 +69,8 @@
 #' @param meanlog Mean of distribution, on log scale.
 #' Default is `0`. See [stats::dlnorm()].
 #' Can be rvec.
+#' @param mu Mean for negative binomial distribution.
+#' See [stats::dnbinom()]. Can be rvec.
 #' @param n
 #' - In functions other than `rhyper_rvec`, `n` is the
 #' length of random vector being created, and cannot be
@@ -1072,10 +1074,6 @@ rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
 }
 
 
-
-
-
-
 ## 'multinom' -----------------------------------------------------------------
 
 ## HAS_TESTS
@@ -1175,7 +1173,6 @@ dmultinom_rvec <- function(x, size = NULL, prob, log = FALSE) {
     ans
 }
 
-
 ## HAS_TESTS
 #' @rdname rvec-distributions
 #' @export
@@ -1245,6 +1242,146 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
     if (n == 1L)
         ans <- ans[[1L]]
     ans
+}
+
+
+## 'nbinom' -------------------------------------------------------------------
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+dnbinom_rvec <- function(x, size, prob, mu, log = FALSE) {
+    check_flag(log)
+    dnbinom <- stats::dnbinom
+    has_prob <- !missing(prob)
+    has_mu <- !missing(mu)
+    if (has_prob && has_mu)
+        cli::cli_abort("Values supplied for {.arg prob} and for {.arg mu}")
+    if (!has_prob && !has_mu)
+        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}")
+    if (has_prob) {
+        args <- vec_recycle_common(x, size, prob)
+        x <- args[[1]]
+        size <- args[[2]]
+        prob <- args[[3]]
+    }
+    else {
+        args <- vec_recycle_common(x, size, mu)
+        x <- args[[1]]
+        size <- args[[2]]
+        mu <- args[[3]]
+        prob <- size / (size + mu)
+    }
+    dist_rvec_3(fun = dnbinom,
+                arg1 = x,
+                arg2 = size,
+                arg3 = prob,
+                log = log)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+pnbinom_rvec <- function(q, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    pnbinom <- stats::pnbinom
+    has_prob <- !missing(prob)
+    has_mu <- !missing(mu)
+    if (has_prob && has_mu)
+        cli::cli_abort("Values supplied for {.arg prob} and for {.arg mu}")
+    if (!has_prob && !has_mu)
+        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}")
+    if (has_prob) {
+        args <- vec_recycle_common(q, size, prob)
+        q <- args[[1]]
+        size <- args[[2]]
+        prob <- args[[3]]
+    }
+    else {
+        args <- vec_recycle_common(q, size, mu)
+        q <- args[[1]]
+        size <- args[[2]]
+        mu <- args[[3]]
+        prob <- size / (size + mu)
+    }
+    dist_rvec_3(fun = pnbinom,
+                arg1 = q,
+                arg2 = size,
+                arg3 = prob,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+qnbinom_rvec <- function(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
+    check_flag(lower.tail)
+    check_flag(log.p)
+    qnbinom <- stats::qnbinom
+    has_prob <- !missing(prob)
+    has_mu <- !missing(mu)
+    if (has_prob && has_mu)
+        cli::cli_abort("Values supplied for {.arg prob} and for {.arg mu}")
+    if (!has_prob && !has_mu)
+        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}")
+    if (has_prob) {
+        args <- vec_recycle_common(p, size, prob)
+        p <- args[[1]]
+        size <- args[[2]]
+        prob <- args[[3]]
+    }
+    else {
+        args <- vec_recycle_common(p, size, mu)
+        p <- args[[1]]
+        size <- args[[2]]
+        mu <- args[[3]]
+        prob <- size / (size + mu)
+    }
+    dist_rvec_3(fun = qnbinom,
+                arg1 = p,
+                arg2 = size,
+                arg3 = prob,
+                lower.tail = lower.tail,
+                log.p = log.p)
+}
+
+## HAS_TESTS
+#' @rdname rvec-distributions
+#' @export
+rnbinom_rvec <- function(n, size, prob, mu, n_draw = NULL) {
+    rnbinom <- stats::rnbinom
+    has_prob <- !missing(prob)
+    has_mu <- !missing(mu)
+    if (has_prob && has_mu)
+        cli::cli_abort("Values supplied for {.arg prob} and for {.arg mu}")
+    if (!has_prob && !has_mu)
+        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}")
+    size <- vec_recycle(size, size = n)
+    if (has_prob) {
+        prob <- vec_recycle(prob, size = n)
+        args <- list(size = size, prob = prob)
+    }
+    else {
+        mu <- vec_recycle(mu, size = n)
+        args <- list(size = size, mu = mu)
+    }
+    if (!is.null(n_draw))
+        args <- promote_args_to_rvec(args = args,
+                                     n_draw = n_draw)
+    n <- n_rdist(n = n, args = args)
+    size <- args[["size"]]
+    if (has_prob)
+        prob <- args[["prob"]]
+    else {
+        mu <- args[["mu"]]
+        prob <- size / (size + mu)
+    }
+    dist_rvec_2(fun = rnbinom,
+                arg1 = size,
+                arg2 = prob,
+                n = n)
 }
 
 

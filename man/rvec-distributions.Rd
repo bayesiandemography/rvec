@@ -44,6 +44,10 @@
 \alias{rlnorm_rvec}
 \alias{dmultinom_rvec}
 \alias{rmultinom_rvec}
+\alias{dnbinom_rvec}
+\alias{pnbinom_rvec}
+\alias{qnbinom_rvec}
+\alias{rnbinom_rvec}
 \alias{dnorm_rvec}
 \alias{pnorm_rvec}
 \alias{qnorm_rvec}
@@ -152,6 +156,14 @@ dmultinom_rvec(x, size = NULL, prob, log = FALSE)
 
 rmultinom_rvec(n, size, prob, n_draw = NULL)
 
+dnbinom_rvec(x, size, prob, mu, log = FALSE)
+
+pnbinom_rvec(q, size, prob, mu, lower.tail = TRUE, log.p = FALSE)
+
+qnbinom_rvec(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE)
+
+rnbinom_rvec(n, size, prob, mu, n_draw = NULL)
+
 dnorm_rvec(x, mean = 0, sd = 1, log = FALSE)
 
 pnorm_rvec(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
@@ -241,6 +253,9 @@ Can be rvec.}
 \item{sdlog}{Standard deviation of distribution, on log scale.
 Default is \code{1}. See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
 Can be rvec.}
+
+\item{mu}{Mean for negative binomial distribution.
+See \code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be rvec.}
 
 \item{mean}{Mean of distribution.
 Default is \code{0}. Can be rvec.}
