@@ -29,6 +29,7 @@ Imports:
     utils,
     vctrs
 Suggests:
+    bookdown,
     covr,
     dplyr,
     ggdist,
