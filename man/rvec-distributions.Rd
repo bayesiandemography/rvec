@@ -56,6 +56,18 @@
 \alias{ppois_rvec}
 \alias{qpois_rvec}
 \alias{rpois_rvec}
+\alias{dt_rvec}
+\alias{pt_rvec}
+\alias{qt_rvec}
+\alias{rt_rvec}
+\alias{dunif_rvec}
+\alias{punif_rvec}
+\alias{qunif_rvec}
+\alias{runif_rvec}
+\alias{dweibull_rvec}
+\alias{pweibull_rvec}
+\alias{qweibull_rvec}
+\alias{rweibull_rvec}
 \title{Probability distributions}
 \usage{
 dbeta_rvec(x, shape1, shape2, ncp = 0, log = FALSE)
@@ -179,6 +191,30 @@ ppois_rvec(q, lambda, lower.tail = TRUE, log.p = FALSE)
 qpois_rvec(p, lambda, lower.tail = TRUE, log.p = FALSE)
 
 rpois_rvec(n, lambda, n_draw = NULL)
+
+dt_rvec(x, df, ncp = 0, log = FALSE)
+
+pt_rvec(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+qt_rvec(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+rt_rvec(n, df, ncp = 0, n_draw = NULL)
+
+dunif_rvec(x, min = 0, max = 1, log = FALSE)
+
+punif_rvec(q, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
+
+qunif_rvec(p, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
+
+runif_rvec(n, min = 0, max = 1, n_draw = NULL)
+
+dweibull_rvec(x, shape, scale = 1, log = FALSE)
+
+pweibull_rvec(q, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
+
+qweibull_rvec(p, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
+
+rweibull_rvec(n, shape, scale = 1, n_draw = NULL)
 }
 \arguments{
 \item{x}{Quantiles. Can be rvec.}
@@ -188,7 +224,9 @@ for beta distribution. Non-negative.
 See \code{\link[stats:Beta]{stats::dbeta()}}. Can be rvecs.}
 
 \item{ncp}{Non-centrality parameter.
-Default is \code{0}. Cannot be rvec.}
+Default is \code{0}. See \code{\link[stats:Beta]{stats::dbeta()}},
+\code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}},
+\code{\link[stats:TDist]{stats::dt()}}. Cannot be rvec.}
 
 \item{log, log.p}{Whether to return
 \code{log(p)} rather than \code{p}. Default is
@@ -204,10 +242,10 @@ Cannot be rvec.}
 \item{p}{Probabilities. Can be rvec.}
 
 \item{n}{\itemize{
-\item In functions other than \code{rhyper_rvec}, \code{n} is the
+\item In functions other than \code{rhyper_rvec()}, \code{n} is the
 length of random vector being created, and cannot be
 an rvec.
-\item In \code{rhyper_rvec}, \code{n} is the number of black balls
+\item In \code{rhyper_rvec()}, \code{n} is the number of black balls
 in the urn, and can be an rvec. See \code{\link[stats:Hypergeometric]{stats::rhyper()}}.
 }}
 
@@ -215,25 +253,32 @@ in the urn, and can be an rvec. See \code{\link[stats:Hypergeometric]{stats::rhy
 in random vector being created.
 Optional. Cannot be rvec.}
 
-\item{size}{Number of trials. Can be rvec.}
+\item{size}{Number of trials.
+See \code{\link[stats:Binomial]{stats::dbinom()}}, \code{\link[stats:Multinom]{stats::dmultinom()}},
+\code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be rvec.}
 
 \item{prob}{Probability of
-success in each trial. Can be rvec.}
+success in each trial.
+See \code{\link[stats:Geometric]{stats::dgeom()}}, \code{\link[stats:NegBinomial]{stats::dnbinom()}}.
+Can be rvec.}
 
 \item{location}{Parameter for Cauchy distribution.
 Default is \code{0}. See \code{\link[stats:Cauchy]{stats::dcauchy()}}. Can be rvec.}
 
-\item{scale}{Parameters
+\item{scale}{Parameter
 for Cauchy distribution. Default is \code{1}.
 See \code{\link[stats:Cauchy]{stats::dcauchy()}}. Can be rvec.}
 
 \item{df, df1, df2}{Degrees of freedom.
-See \code{\link[=dchisq]{dchisq()}}, \code{\link[=df]{df()}}. Can be rvec.}
+See \code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}}, \code{\link[stats:TDist]{stats::dt()}}.
+Can be rvec.}
 
-\item{rate}{Rates. Can be rvec.}
+\item{rate}{Rates. See \code{\link[stats:Exponential]{stats::dexp()}},
+\code{\link[stats:GammaDist]{stats::dgamma()}}. Can be rvec.}
 
 \item{shape}{Parameter for gamma distribution.
-See \code{\link[stats:GammaDist]{stats::dgamma()}}. Can be rvec.}
+See \code{\link[stats:GammaDist]{stats::dgamma()}}, \code{\link[stats:Weibull]{stats::dweibull()}}.
+Can be rvec.}
 
 \item{m}{The number of white balls in the urn.
 See \code{\link[stats:Hypergeometric]{stats::dhyper()}}. Can be rvec.}
@@ -242,7 +287,7 @@ See \code{\link[stats:Hypergeometric]{stats::dhyper()}}. Can be rvec.}
 See \code{\link[stats:Hypergeometric]{stats::dhyper()}}. Can be rvec.}
 
 \item{nn}{The length of the random vector being created,
-in a call to \code{rhyper_rvec}. The equivalent of \code{n} in
+in a call to \code{rhyper_rvec()}. The equivalent of \code{n} in
 other random variate functions.
 See \code{\link[stats:Hypergeometric]{stats::rhyper()}}. Cannot be an rvec.}
 
@@ -250,7 +295,8 @@ See \code{\link[stats:Hypergeometric]{stats::rhyper()}}. Cannot be an rvec.}
 Default is \code{0}. See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
 Can be rvec.}
 
-\item{sdlog}{Standard deviation of distribution, on log scale.
+\item{sdlog}{Standard deviation of distribution,
+on log scale.
 Default is \code{1}. See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
 Can be rvec.}
 
@@ -258,12 +304,20 @@ Can be rvec.}
 See \code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be rvec.}
 
 \item{mean}{Mean of distribution.
-Default is \code{0}. Can be rvec.}
+Default is \code{0}.  See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
+Can be rvec.}
 
-\item{sd}{Standard deviations.
-Default is \code{1}. Can be rvec.}
+\item{sd}{Standard deviation.
+Default is \code{1}. See \code{\link[stats:Normal]{stats::dnorm()}}.
+Can be rvec.}
 
-\item{lambda}{Vector of means. Can be rvec.}
+\item{lambda}{Vector of means.
+See \code{\link[stats:Poisson]{stats::rpois()}} Can be rvec.}
+
+\item{min, max}{Lower and upper limits of
+the uniform distribution. Defaults are
+\code{0} and \code{1}.  See \code{\link[stats:Uniform]{stats::dunif()}}.
+Can be rvec.}
 }
 \value{
 If any of the arguments are rvecs,

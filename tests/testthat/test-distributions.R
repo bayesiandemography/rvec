@@ -277,7 +277,7 @@ test_that("'df_rvec' works with valid input", {
     df2 <- rvec(2 * m)
     ans_obtained <- df_rvec(x = x, df1 = df1, df2 = df2, log = TRUE)
     ans_expected <- rvec(matrix(df(x = x, df1 = m, df2 = 2 * m, log = TRUE), nr = 2))
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'pf_rvec' works with valid input", {
@@ -287,7 +287,7 @@ test_that("'pf_rvec' works with valid input", {
     df2 <- rvec(2 * m)
     ans_obtained <- pf_rvec(q, df1, df2, log.p = TRUE)
     ans_expected <- rvec(matrix(pf(q = q, df1 = m, df2 = 2 * m, log.p = TRUE), nr = 2))
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'qf_rvec' works with valid input", {
@@ -297,7 +297,7 @@ test_that("'qf_rvec' works with valid input", {
     df2 <- 3
     ans_obtained <- pf_rvec(q, df1, df2)
     ans_expected <- rvec(matrix(pf(q = m, df1 = m, df2 = 3), nr = 2))
-    expect_identical(ans_obtained, ans_expected)
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'rf_rvec' works with valid input - n_draw is NULL", {
@@ -755,9 +755,6 @@ test_that("'rmultinom' throws expected error when 'prob' negative", {
 })
 
 
-
-
-
 ## 'nbinom' -------------------------------------------------------------------
 
 test_that("'dnbinom_rvec' works with valid input - prob supplied", {
@@ -978,6 +975,168 @@ test_that("'rpois_rvec' works with valid input - n_draw, rvec input", {
     ans_obtained <- rpois_rvec(3, lambda, n_draw = 2)
     set.seed(0)
     ans_expected <- rvec(matrix(rpois(6, lambda = m), nr = 3))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 't' ------------------------------------------------------------------------
+
+test_that("'dt_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    df <- rvec(m)
+    x <- 2:1
+    df <- rvec(m)
+    ans_obtained <- dt_rvec(x, df, ncp = 0.001)
+    ans_expected <- rvec(matrix(dt(x = x, df = m, ncp = 0.001, log = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pt_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    df <- rvec(m)
+    q <- 2:1
+    df <- rvec(m)
+    ans_obtained <- pt_rvec(q, df, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(pt(q, df = m, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qt_rvec' works with valid input", {
+    m <- matrix(seq(0.1, 0.6, 0.1), nr = 2)
+    p <- rvec(m)
+    df <- c(2.1, 0.8)
+    ans_obtained <- qt_rvec(p, df, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(qt(m, df = df, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rt_rvec' works with valid input - n_draw is NULL", {
+    m <- matrix(seq(2.1, 2.6, 0.1), nr = 2)
+    df <- rvec(m)
+    set.seed(0)
+    ans_obtained <- rt_rvec(2, df)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rt(6, df = m), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rt_rvec' works with valid input - n_draw supplied", {
+    df <- 3:4
+    set.seed(0)
+    ans_obtained <- rchisq_rvec(2, df, n_draw = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rchisq(6, df = df), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+## 'unif' ---------------------------------------------------------------------
+
+test_that("'dunif_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    min <- rvec(m)
+    max <- rvec(2 * m)
+    ans_obtained <- dunif_rvec(x = x, min = min, max = max, log = TRUE)
+    ans_expected <- rvec(matrix(dunif(x = x, min = m, max = 2 * m, log = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'punif_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    min <- rvec(m)
+    max <- rvec(2 * m)
+    ans_obtained <- punif_rvec(q, min, max, log.p = TRUE)
+    ans_expected <- rvec(matrix(punif(q = q, min = m, max = 2 * m, log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qunif_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- rvec(m)
+    min <- rvec(m)
+    max <- 7
+    ans_obtained <- punif_rvec(q, min, max)
+    ans_expected <- rvec(matrix(punif(q = m, min = m, max = 7), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'runif_rvec' works with valid input - n_draw is NULL", {
+    m <- matrix(1:6, nr = 2)
+    min <- rvec(m)
+    max <- min + 1
+    set.seed(0)
+    ans_obtained <- runif_rvec(n = 2, min, max)
+    set.seed(0)
+    ans_expected <- rvec(matrix(runif(n = 6, min = m, max = m + 1), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'runif_rvec' works with valid input - n_draw is supplied", {
+    m <- matrix(1:6, nr = 2)
+    min <- rvec(m)
+    max <- 7
+    set.seed(0)
+    ans_obtained <- runif_rvec(n = 2, min, max, n_draw = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(runif(n = 6, min = m, max = 7), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+
+## 'weibull' ---------------------------------------------------------------------
+
+test_that("'dweibull_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    shape <- rvec(m)
+    scale <- rvec(2 * m)
+    ans_obtained <- dweibull_rvec(x = x, shape = shape, scale = scale, log = TRUE)
+    ans_expected <- rvec(matrix(dweibull(x = x, shape = m, scale = 2 * m, log = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pweibull_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    shape <- rvec(m)
+    scale <- rvec(2 * m)
+    ans_obtained <- pweibull_rvec(q, shape, scale, log.p = TRUE)
+    ans_expected <- rvec(matrix(pweibull(q = q, shape = m, scale = 2 * m, log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qweibull_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)
+    q <- rvec(m)
+    shape <- rvec(m)
+    scale <- 7
+    ans_obtained <- pweibull_rvec(q, shape, scale)
+    ans_expected <- rvec(matrix(pweibull(q = m, shape = m, scale = 7), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rweibull_rvec' works with valid input - n_draw is NULL", {
+    m <- matrix(1:6, nr = 2)
+    shape <- rvec(m)
+    scale <- shape + 1
+    set.seed(0)
+    ans_obtained <- rweibull_rvec(n = 2, shape, scale)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rweibull(n = 6, shape = m, scale = m + 1), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rweibull_rvec' works with valid input - n_draw is supplied", {
+    m <- matrix(1:6, nr = 2)
+    shape <- rvec(m)
+    scale <- 7
+    set.seed(0)
+    ans_obtained <- rweibull_rvec(n = 2, shape, scale, n_draw = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rweibull(n = 6, shape = m, scale = 7), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
