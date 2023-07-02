@@ -124,6 +124,11 @@ test_that("'vec_arith' works with rvec_lgl", {
     y <- rvec_int(-m)
     z <- rvec_int(m)
     expect_identical(-x, y)
-    expect_identical(+x, z)
+    expect_identical(+x, x)
+    expect_identical(!x, rvec(matrix(c(FALSE, TRUE), nr = 1)))
+    expect_identical(!(!x), x)
+    expect_identical(-y, z)
+    expect_identical(!z, !x)
+    expect_identical(!(!z), x)
 })                     
 

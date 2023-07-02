@@ -13,7 +13,7 @@
 #' @seealso
 #' Apply pre-specified functions across draws:
 #' - [draws_median()]
-#' - [draws_mean]
+#' - [draws_mean()]
 #' - [draws_mode()]
 #' - [draws_quantile()]
 #' 
@@ -256,7 +256,7 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' @seealso
 #' Apply pre-specified functions across draws:
 #' - [draws_median()]
-#' - [draws_mean]
+#' - [draws_mean()]
 #' - [draws_mode()]
 #' - [draws_quantile()]
 #' 
@@ -342,7 +342,7 @@ draws_quantile.rvec_chr <- function(x,
 #' - [draws_all()]
 #' - [draws_any()]
 #' - [draws_median()]
-#' - [draws_mean]
+#' - [draws_mean()]
 #' - [draws_mode()]
 #' - [draws_quantile()]
 #' 

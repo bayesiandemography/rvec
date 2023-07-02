@@ -91,8 +91,9 @@ vec_arith.rvec_dbl.MISSING <- function(op, x, y, ...) {
     data <- switch(op,
                    `-` = -1 * m,
                    `+` = m,
+                   `!` = !m,
                    stop_incompatible_op(op, x, y))
-    rvec_dbl(data)
+    rvec(data)
 }
 
 
@@ -185,10 +186,11 @@ vec_arith.rvec_int.logical <- function(op, x, y, ...) {
 vec_arith.rvec_int.MISSING <- function(op, x, y, ...) {
     m <- field(x, "data")
     data <- switch(op,
-                   `-` = -1 * m,
+                   `-` = -1L * m,
                    `+` = m,
+                   `!` = !m,
                    stop_incompatible_op(op, x, y))
-    rvec_int(data)
+    rvec(data)
 }
 
 
@@ -281,10 +283,11 @@ vec_arith.rvec_lgl.logical <- function(op, x, y, ...) {
 vec_arith.rvec_lgl.MISSING <- function(op, x, y, ...) {
     m <- field(x, "data")
     data <- switch(op,
-                   `-` = -1 * m,
+                   `-` = -1L * m,
                    `+` = m,
+                   `!` = !m,
                    stop_incompatible_op(op, x, y))
-    rvec_int(data)
+    rvec(data)
 }
 
 

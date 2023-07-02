@@ -411,6 +411,18 @@ test_that("'check_overlap_values_groups' throws expected error with overlap", {
 })
 
 
+## 'check_same_length' --------------------------------------------------------
+
+test_that("'check_same_length' returns TRUE with valid inputs", {
+    expect_true(check_same_length(x = 1:3, y = 3:1, x_arg = "x", y_arg = "y"))
+})
+
+test_that("'check_same_length' returns correct error message with invalid inputs", {
+    expect_error(check_same_length(x = 1:3, y = 3:0, x_arg = "x", y_arg = "y"),
+                 "`x` and `y` have different lengths.")
+})
+
+
 ## 'check_probs' --------------------------------------------------------------
 
 test_that("'check_probs' works with valid inputs", {

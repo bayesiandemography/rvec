@@ -42,7 +42,7 @@ Apply pre-specified functions across draws:
 \item \code{\link[=draws_all]{draws_all()}}
 \item \code{\link[=draws_any]{draws_any()}}
 \item \code{\link[=draws_median]{draws_median()}}
-\item \link{draws_mean}
+\item \code{\link[=draws_mean]{draws_mean()}}
 \item \code{\link[=draws_mode]{draws_mode()}}
 \item \code{\link[=draws_quantile]{draws_quantile()}}
 }

@@ -25,24 +25,20 @@ knitr::opts_chunk$set(
 
 # Aims of **rvecs** package
 
-An enormously useful feature of random draws, such as those produced by Bayesian analyses and stochastic simulations, is that they can be used to make inferences about quantities derived from the draws. The procedure is:
+An exceptionally useful feature of random draws such as those produced by Bayesian analyses is that they can be used to make inferences about derived quantities. The procedure is:
 
 - Step 1. Calculate the derived quantity for each of the random draws.
 - Step 2. Summarise the distribution of these derived quantities.
 
-If we have a set of draws of age-specific mortality rates, for instance, and we want to make inferences about life expectancy (a deterministic function of mortality rates), then we proceed as follows:
+If, for instance, we have randoms draws of age-specific mortality rates, and we want make inferences about life expectancy (which is a function of mortality rates), then we proceed as follows:
 
 - Step 1. Derive life expectancy for each set of age-specific mortality rates.
 - Step 2. Calculate means, medians, or other statistics for these life expectancies.
 
-Package **rvec** provides tools for working with random draws. The draws are held in a structure called an rvec, which can be manipulated using (mostly) standard base R and tidyverse code. **rvec** also contains functions for summarizing across random draws.
+Package **rvec** provides tools for working with random draws. The draws are held in a structure called an rvec, which can, for many purposes, be treated like an ordinary R vector, and manipulated using ordinary base R and [tidyverse](https://www.tidyverse.org) code. **rvec** also contains functions for summarizing across random draws.
 
-rvecs extend the `vctrs` class from package [vctrs](https://vctrs.r-lib.org), and inherits standard vector behaviors.  Many of the calculations are done internally using functions from [matrixStats](https://CRAN.R-project.org/package=matrixStats), for speed.
 
-Packages [rv](https://CRAN.R-project.org/package=rv ) and [posterior](https://CRAN.R-project.org/package=posterior) contain similar data structures to rvecs, and package **rvec** borrows ideas from both of them. The advantages of rvecs is that they behave more like standard R vectors, which makes Step 1, the manipulation of draws, easier. 
 
-Packages [tidybayes](https://mjskay.github.io/tidybayes/),
-[ggdist](https://mjskay.github.io/ggdist/), and [bayesplot](https://mc-stan.org/bayesplot/) provide advanced tools for summarising draws, and for visualising distributions. Package **posterior** contains tools for evaluating the procedures that produced the random draws. **rvec** includes functions for converting into and out of the formats used by these packages, so that the packages can be used in combination.
 
 # Examples
 
@@ -225,12 +221,21 @@ Each rvec holds a fixed number of draws. Two rvecs can only be used together in 
   
 # Design choices
 
+rvecs extend the `vctrs` class from package [vctrs](https://vctrs.r-lib.org), and inherits standard vector behaviors.  Many of the calculations are done internally using fast functions from [matrixStats](https://CRAN.R-project.org/package=matrixStats).
+
 - vctrs
 - matrixStats
 
 
 
 # Other packages
+
+Packages [rv](https://CRAN.R-project.org/package=rv ) and [posterior](https://CRAN.R-project.org/package=posterior) contain similar data structures to rvecs, and package **rvec** borrows ideas from both. The advantages of rvecs is that they behave more like standard R vectors, which makes Step 1, the manipulation of draws, easier. 
+
+Packages [tidybayes](https://mjskay.github.io/tidybayes/),
+[ggdist](https://mjskay.github.io/ggdist/), and [bayesplot](https://mc-stan.org/bayesplot/) provide advanced tools for summarising draws, and for visualising distributions. Package **posterior** contains tools for evaluating the procedures that produced the random draws. **rvec** includes functions for converting into and out of the formats used by these packages, so that the packages can be used in combination.
+
+
 
 ## Functionality similar to **rvec**
 

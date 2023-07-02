@@ -497,6 +497,28 @@ check_probs <- function(probs) {
 
 
 ## HAS_TESTS
+#' Check that 'x' and 'y' are the same length
+#'
+#' @param x,y Vectors (including rvecs)
+#' @param x_arg,x_y Names for 'x' and 'y'
+#' to be used in error messages.
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_same_length <- function(x, y, x_arg, y_arg) {
+    n_x <- length(x)
+    n_y <- length(y)
+    if (n_x != n_y)
+        cli::cli_abort(c("{.arg {x_arg}} and {.arg {y_arg}} have different lengths.",
+                         i = "{.arg {x_arg}} has length {n_x}.",
+                         i = "{.arg {y_arg}} has length {n_y}."))
+    invisible(TRUE)
+}
+
+
+
+## HAS_TESTS
 #' Check that type codes are valid
 #'
 #' Check that a string with one-letter codes
