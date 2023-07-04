@@ -99,6 +99,42 @@ test_that("'draws_any' throws correct error with rvec_chr", {
 })
 
 
+## 'draws_ci' -----------------------------------------------------------
+
+test_that("'draws_ci' works with rvec_dbl when nrow > 0 - no width, prefix supplied", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_ci(y)
+    ans_expected <- apply(m, 1, quantile, prob = c(0.025, 0.5, 0.975))
+    ans_expected <- tibble::as_tibble(t(ans_expected))
+    names(ans_expected) <- c("y.lower", "y.mid", "y.upper")
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_ci' works with rvec_dbl when nrow > 0 - prefix, width supplied", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_ci(y, width = 0.8, prefix = "var")
+    ans_expected <- apply(m, 1, quantile, prob = c(0.1, 0.5, 0.9))
+    ans_expected <- tibble::as_tibble(t(ans_expected))
+    names(ans_expected) <- c("var.lower", "var.mid", "var.upper")
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_ci' works with rvec_int when nrow == 0", {
+    set.seed(0)
+    m <- matrix(integer(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- draws_ci(x)
+    ans_expected <- tibble::tibble("x.lower" = NA_real_,
+                                   "x.mid" = NA_real_,
+                                   "x.upper" = NA_real_) 
+    expect_equal(ans_obtained, ans_expected)
+})
+
+
 ## 'draws_median' -------------------------------------------------------------
 
 test_that("'draws_median' works with rvec_dbl when nrow > 0", {
@@ -241,7 +277,7 @@ test_that("'draws_quantile' works with rvec_dbl when nrow > 0", {
     set.seed(0)
     m <- matrix(rnorm(20), nr = 5)
     y <- rvec(m)
-    ans_obtained <- draws_quantile(y)
+    ans_obtained <- draws_quantile(y, probs = c(0.025, 0.5, 0.975))
     ans_expected <- apply(m, 1, quantile, prob = c(0.025, 0.5, 0.975))
     ans_expected <- tibble::as_tibble(t(ans_expected))
     names(ans_expected) <- sub("%", "", names(ans_expected))
@@ -255,7 +291,9 @@ test_that("'draws_median' works with rvec_int when nrow == 0", {
     x <- rvec(m)
     ans_obtained <- draws_quantile(x)
     ans_expected <- tibble::tibble("x_2.5" = NA_real_,
+                                   "x_25" = NA_real_,
                                    "x_50" = NA_real_,
+                                   "x_75" = NA_real_,
                                    "x_97.5" = NA_real_) 
     expect_equal(ans_obtained, ans_expected)
 })
@@ -264,7 +302,7 @@ test_that("'draws_quantile' works with rvec_lgl", {
     m <- matrix(TRUE, nrow = 5, ncol = 1)
     y <- rvec(m)
     ans_obtained <- draws_quantile(x = y)
-    ans_expected <- apply(m, 1, quantile, prob = c(0.025, 0.5, 0.975))
+    ans_expected <- apply(m, 1, quantile, prob = c(0.025, 0.25, 0.5, 0.75, 0.975))
     ans_expected <- tibble::as_tibble(t(ans_expected))
     names(ans_expected) <- sub("%", "", names(ans_expected))
     names(ans_expected) <- paste0("y_", names(ans_expected))

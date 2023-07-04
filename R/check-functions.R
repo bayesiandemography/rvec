@@ -32,28 +32,6 @@ check_colnums_values <- function(colnums_values) {
 
 
 ## HAS_TESTS
-#' Check that 'draw' is a valid string
-#'
-#' @param draw Name of the 'draw' variable.
-#' A string.
-#'
-#' @returns TRUE, invisibly.
-#'
-#' @noRd
-check_draw <- function(draw) {
-    if (!identical(length(draw), 1L))
-        cli::cli_abort("{.arg draw} does not have length 1.")
-    if (is.na(draw))
-        cli::cli_abort("{.arg draw} is {.val {NA}}.")
-    if (!is.character(draw))
-        cli::cli_abort("{.arg draw} has class {.cls {class(draw)}}.")
-    if (nchar(draw) == 0L)
-        cli::cli_abort("{.arg draw} is blank")
-    invisible(TRUE)
-}
-
-
-## HAS_TESTS
 #' Check a logical flag
 #'
 #' @param x TRUE or FALSE
@@ -517,6 +495,30 @@ check_same_length <- function(x, y, x_arg, y_arg) {
 }
 
 
+## HAS_TESTS
+#' Check that 'x' is a valid string
+#'
+#' @param x A string.
+#' @param x_arg Name for 'x' to be used in
+#' error messages.
+#'
+#' @returns TRUE, invisibly.
+#'
+#' @noRd
+check_str <- function(x, x_arg) {
+    if (!identical(length(x), 1L))
+        cli::cli_abort(c("{.arg {x_arg}} does not have length 1.",
+                         i = "{.arg {x_arg}} has length {length(x)}."))
+    if (is.na(x))
+        cli::cli_abort("{.arg {x_arg}} is {.val {NA}}.")
+    if (!is.character(x))
+        cli::cli_abort(c("{.arg {x_arg}} not a string",
+                         i = "{.arg {x_arg}} has class {.cls {class(x)}}."))
+    if (nchar(x) == 0L)
+        cli::cli_abort("{.arg {x_arg}} is blank")
+    invisible(TRUE)
+}
+
 
 ## HAS_TESTS
 #' Check that type codes are valid
@@ -571,6 +573,30 @@ check_values_type_consistent <- function(colnums_values, type) {
                              i = "{.arg type} has {n_type} character{?s}.",
                              i = "{.arg values} has length {n_values}."))
     }
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check that 'width' is a number between 0 and 1
+#'
+#' @param width 
+#'
+#' @returns TRUE, invisibly.
+#'
+#' @noRd
+check_width <- function(width) {
+    if (!identical(length(width), 1L))
+        cli::cli_abort(c("{.arg width} does not have length 1.",
+                         i = "{.arg width} has length {length(width)}."))
+    if (is.na(width))
+        cli::cli_abort("{.arg width} is NA.")
+    if (!is.numeric(width))
+        cli::cli_abort(c("{.arg width} is non-numeric",
+                         i = "{.arg width} has class {.cls {class(width)}}."))
+    if (width <= 0 || width > 1)
+        cli::cli_abort(c("{.arg width} not in interval (0, 1]",
+                         i = "{.arg width} equals {width}"))
     invisible(TRUE)
 }
 

@@ -29,36 +29,6 @@ test_that("'check_colnum_draw' throws expected error when length 0", {
 })
 
 
-## 'check_draw' ---------------------------------------------------------------
-
-test_that("'check_draw' returns TRUE with valid inputs", {
-    expect_true(check_draw("draw"))
-    expect_true(check_draw("sim"))
-})
-
-test_that("'check_draw' throws expected error non-length-1", {
-    expect_error(check_draw(character()),
-                 "`draw` does not have length 1")
-    expect_error(check_draw(c("a", "b")),
-                 "`draw` does not have length 1")
-})
-
-test_that("'check_draw' throws expected error non-character", {
-    expect_error(check_draw(TRUE),
-                 "`draw` has class <logical>")
-})
-
-test_that("'check_draw' throws expected error NA", {
-    expect_error(check_draw(NA_character_),
-                 "`draw` is NA")
-})
-
-test_that("'check_draw' throws expected error blank", {
-    expect_error(check_draw(""),
-                 "`draw` is blank")
-})
-
-
 ## 'check_flag' ---------------------------------------------------------------
 
 test_that("'check_flag' returns TRUE with valid inputs", {
@@ -411,18 +381,6 @@ test_that("'check_overlap_values_groups' throws expected error with overlap", {
 })
 
 
-## 'check_same_length' --------------------------------------------------------
-
-test_that("'check_same_length' returns TRUE with valid inputs", {
-    expect_true(check_same_length(x = 1:3, y = 3:1, x_arg = "x", y_arg = "y"))
-})
-
-test_that("'check_same_length' returns correct error message with invalid inputs", {
-    expect_error(check_same_length(x = 1:3, y = 3:0, x_arg = "x", y_arg = "y"),
-                 "`x` and `y` have different lengths.")
-})
-
-
 ## 'check_probs' --------------------------------------------------------------
 
 test_that("'check_probs' works with valid inputs", {
@@ -454,6 +412,48 @@ test_that("'check_probs' throws expected error with negative values", {
 test_that("'check_probs' throws expected error with values greater than 1", {
     expect_error(check_probs(c(0.5, 1.00001)),
                  "`probs` has values greater than 1")
+})
+
+
+## 'check_same_length' --------------------------------------------------------
+
+test_that("'check_same_length' returns TRUE with valid inputs", {
+    expect_true(check_same_length(x = 1:3, y = 3:1, x_arg = "x", y_arg = "y"))
+})
+
+test_that("'check_same_length' returns correct error message with invalid inputs", {
+    expect_error(check_same_length(x = 1:3, y = 3:0, x_arg = "x", y_arg = "y"),
+                 "`x` and `y` have different lengths.")
+})
+
+
+## 'check_str' ----------------------------------------------------------------
+
+test_that("'check_str' returns TRUE with valid inputs", {
+    expect_true(check_str("draw", x_arg = "x"))
+    expect_true(check_str("sim", x_arg = "x"))
+})
+
+test_that("'check_str' throws expected error non-length-1", {
+    expect_error(check_str(character(), x_arg = "x"),
+                 "`x` does not have length 1")
+    expect_error(check_str(c("a", "b"), x_arg = "draw"),
+                 "`draw` does not have length 1")
+})
+
+test_that("'check_str' throws expected error non-character", {
+    expect_error(check_str(TRUE, x_arg = "draw"),
+                 "`draw` not a string")
+})
+
+test_that("'check_str' throws expected error NA", {
+    expect_error(check_str(NA_character_, x_arg = "draw"),
+                 "`draw` is NA")
+})
+
+test_that("'check_str' throws expected error blank", {
+    expect_error(check_str("", x_arg = "draw"),
+                 "`draw` is blank")
 })
 
 
@@ -500,6 +500,37 @@ test_that("'check_values_type_consistent' throws expected error with diff length
     expect_error(check_values_type_consistent(colnums_values = c(a = 1L, b = 2L),
                                               type = "i"),
                  "Number of characters in `type` must equal number of values variables")
+})
+
+
+## 'check_width' ----------------------------------------------------------------
+
+test_that("'check_width' returns TRUE with valid inputs", {
+    expect_true(check_width(0.96))
+    expect_true(check_width(0.2))
+    expect_true(check_width(1))
+})
+
+test_that("'check_width' throws expected error non-length-1", {
+    expect_error(check_width(c(0.3, 0.4)),
+                 "`width` does not have length 1.")
+    expect_error(check_width(numeric()),
+                 "`width` does not have length 1.")
+})
+
+test_that("'check_width' throws expected error non-numeric", {
+    expect_error(check_width(TRUE),
+                 "`width` has class <logical>.")
+})
+
+test_that("'check_width' throws expected error NA", {
+    expect_error(check_width(NA_real_),
+                 "`width` is NA.")
+})
+
+test_that("'check_width' throws expected error too low", {
+    expect_error(check_width(0),
+                 "`width` not in interval \\(0, 1\\].")
 })
 
 

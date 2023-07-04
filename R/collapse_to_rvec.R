@@ -253,7 +253,7 @@ collapse_to_rvec_inner <- function(data,
                                    colnums_groups,
                                    type) {
     ## check and process inputs
-    check_draw(draw)
+    check_str(draw, x_arg = "draw")
     colnum_draw <- get_colnum_draw(draw = draw, data = data)
     check_colnums_values(colnums_values)
     check_overlap_draw_values(colnum_draw = colnum_draw,
@@ -345,7 +345,7 @@ collapse_to_rvec_inner <- function(data,
 expand_from_rvec_inner <- function(data,
                                    draw,
                                    colnums_values) {
-    check_draw(draw)
+    check_str(draw, x_arg = "draw")
     if (draw %in% names(data))
         cli::cli_abort(c("Name clash with {.arg draw}.",
                          i = "{.arg data} already has a column called {.val {draw}}."))

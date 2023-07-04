@@ -150,8 +150,8 @@ test_that("'is_rvec' works", {
 ## 'make_probs' ---------------------------------------------------------------
 
 test_that("'make_probs' works", {
-    expect_equal(make_probs(0.5), c(0.25, 0.75))
-    expect_equal(make_probs(c(1, 0.9, 0.8)), c(0, 0.05, 0.1, 0.9, 0.95, 1))
+    expect_equal(make_probs(0.5), c(0.25, 0.5, 0.75))
+    expect_equal(make_probs(1), c(0, 0.5, 1))
 })    
 
 

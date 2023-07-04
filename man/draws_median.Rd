@@ -60,7 +60,8 @@ draws_mode(x)
 Apply pre-specified functions across draws:
 \itemize{
 \item \code{\link[=draws_all]{draws_all()}}
-\item \link{draws_any}
+\item \code{\link[=draws_any]{draws_any()}}
+\item \code{\link[=draws_ci]{draws_ci()}}
 \item \code{\link[=draws_quantile]{draws_quantile()}}
 }
 

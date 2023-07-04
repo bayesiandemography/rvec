@@ -1,4 +1,6 @@
 
+## 'draws_all', 'draws_any' ---------------------------------------------------
+
 #' Logical operations across random draws
 #'
 #' Apply `all` or `any` logical summaries
@@ -94,6 +96,130 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 }
 
 
+## 'draws_ci' -----------------------------------------------------------------
+
+#' Credible intervals from random draws
+#'
+#' Summarise the distribution of random draws
+#' in an `rvec`, using a simple credible interval.
+#'
+#' @section Warning:
+#' 
+#' It is tempting to assign the results
+#' of a call to `draws_ci()` to a
+#' column in a base R data frame or a tibble,
+#' as in
+#'
+#' `my_df$ci <- draws_ci(my_rvec)`
+#'
+#' However, creating columns in
+#' this way currently corrupts data
+#' frames and tibbles. For safer options,
+#' see the examples below.
+#'
+#' @inheritParams draws_all
+#' @param width A number, where `0 < width <= 1`.
+#' Default is `0.975`.
+#' @param prefix String to be added to the
+#' names of columns in the result.
+#' Defaults to name of `x`.
+#'
+#' @returns A [tibble][tibble::tibble()]
+#' with three columns.
+#'
+#' @seealso
+#' [draws_quantile()] gives more options
+#' for forming quantiles.
+#' 
+#' Other ways of applying pre-specified functions
+#' across draws are:
+#' - [draws_all()]
+#' - [draws_any]
+#' - [draws_median()]
+#' - [draws_mean()]
+#' - [draws_mode()]
+#' 
+#' Apply arbitrary function across draws:
+#' - [draws_fun()] to apply abritrary functions
+#'
+#' For additional functions for summarising random draws, see
+#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
+#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
+#' Function [as_list_col()] converts rvecs into a
+#' format that `tidybayes` and `ggdist` can work with.
+#'
+#' @examples
+#' set.seed(0)
+#' m <- rbind(a = rnorm(100, mean = 5, sd = 2),
+#'            b = rnorm(100, mean = -3, sd = 3),
+#'            c = rnorm(100, mean = 0, sd = 20))
+#' x <- rvec(m)
+#' x
+#' draws_ci(x)
+#'
+#' ## results from 'draws_ci'
+#' ## assigned to a data frame
+#' library(dplyr)
+#' df <- data.frame(x)
+#'
+#' ## base R approach
+#' cbind(df, draws_ci(x))
+#'
+#' ## a tidyverse alternative:
+#' ## mutate with no '='
+#' df %>% mutate(draws_ci(x))
+#' @export
+draws_ci <- function(x,
+                     width = 0.95,
+                     prefix = NULL,
+                     na_rm = FALSE) {
+    UseMethod("draws_ci")
+}
+
+## HAS_TESTS
+#' @rdname draws_ci
+#' @export
+draws_ci.rvec <- function(x,
+                          width = 0.95,
+                          prefix = NULL,
+                          na_rm = FALSE) {
+    x_str <- deparse1(substitute(x))
+    check_width(width)
+    has_prefix <- !is.null(prefix)
+    if (has_prefix)
+        check_str(prefix, x_arg = "prefix")
+    check_flag(na_rm)
+    probs <- make_probs(width)
+    m <- field(x, "data")
+    if (nrow(m) == 0L)
+        ans <- stats::quantile(double(), probs = probs)
+    else {
+        ans <- matrixStats::rowQuantiles(m, probs = probs, na.rm = na_rm)
+        ans <- matrix_to_list_of_cols(ans)
+    }
+    nms <- c(".lower", ".mid", ".upper")
+    if (has_prefix)
+        nms <- paste0(prefix, nms)
+    else
+        nms <- paste0(x_str, nms)
+    names(ans) <- nms
+    ans <- tibble::tibble(!!!ans)
+    ans
+}
+
+## HAS_TESTS
+#' @rdname draws_ci
+#' @export
+draws_ci.rvec_chr <- function(x,
+                              width = 0.95,
+                              prefix = NULL,
+                              na_rm = FALSE) {
+    cli::cli_abort("Credible intervals not defined for character.")
+}
+
+
+## 'draws_median', 'draws_mean', 'draws_mode' ---------------------------------
+
 #' Medians, means, and modes across random draws
 #'
 #' Summarise the distribution of random draws
@@ -105,16 +231,15 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' observation. When there is a tie, it returns
 #' `NA`.
 #'
-#' @param x An object of class [rvec][rvec()].
-#' @param na_rm Whether to remove NAs before
-#' calculating summaries. Default is `FALSE`.
+#' @inheritParams draws_all
 #'
 #' @returns A vector.
 #'
 #' @seealso
 #' Apply pre-specified functions across draws:
 #' - [draws_all()]
-#' - [draws_any]
+#' - [draws_any()]
+#' - [draws_ci()]
 #' - [draws_quantile()]
 #'
 #' Apply arbitrary function across draws:
@@ -228,37 +353,48 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 }
 
 
+## 'draws_quantile ------------------------------------------------------------
 
-
-#' Quantiles acros random draws
+#' Quantiles across random draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using quantiles.
 #'
 #' The `probs` argument defaults to
-#' `c(0.025, 0.5, 0.975)`, the values needed
-#' for a median and 95% credible interval.
+#' `c(0.025, 0.25, 0.5, 0.75, 0.975)`,
+#' the values needed for a median,
+#' a 50% credible intervals, and a
+#' 95% credible interval.
 #'
-#' Regular [data frames][base::data.frame()]
-#' and [tibbles][tibble::tibble()] both allow
-#' data frame columns, so the results from
-#' `draws_quantile()` can be inserted into a
-#' data frame. See below for an example.
+#' @section Warning:
+#' 
+#' It is tempting to assign the results
+#' of a call to `draws_quantile()` to a
+#' column in a base R data frame or a tibble,
+#' as in
 #'
-#' To expand a data frame column, use
-#' [tidyr::unnest_wider()](https://tidyr.tidyverse.org/reference/hoist.html)
+#' `my_df$quantile <- draws_quantile(my_rvec)`
 #'
-#' @inheritParams draws_median
+#' However, creating data frame columns in
+#' this way currently seems to corrupt both data
+#' frames and tibbles. For safer options,
+#' see the examples below.
+#'
+#' @inheritParams draws_all
 #' @param probs Vector of probabilities.
 #'
 #' @returns A [tibble][tibble::tibble()].
 #'
 #' @seealso
-#' Apply pre-specified functions across draws:
+#' [draws_ci()] creates simple credible intervals.
+#'
+#' Other functions for applying pre-specified
+#' functions across draws are:
+#' - [draws_all()]
+#' - [draws_any()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
-#' - [draws_quantile()]
 #' 
 #' Apply arbitrary function across draws:
 #' - [draws_fun()] to apply abritrary functions
@@ -278,15 +414,21 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' x
 #' draws_quantile(x)
 #'
-#' ## results from 'draw_quantile'
+#' ## results from 'draws_quantile'
 #' ## assigned to a data frame
 #' library(dplyr)
-#' df <- tibble(x)
+#' df <- data.frame(x)
+#'
+#' ## base R approach
+#' cbind(df, draws_quantile(x))
+#'
+#' ## a tidyverse alternative:
+#' ## mutate with no '='
 #' df %>%
 #'   mutate(draws_quantile(x))
 #' @export
 draws_quantile <- function(x,
-                           probs = c(0.025, 0.5, 0.975),
+                           probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
                            na_rm = FALSE) {
     UseMethod("draws_quantile")
 }
@@ -295,7 +437,7 @@ draws_quantile <- function(x,
 #' @rdname draws_quantile
 #' @export
 draws_quantile.rvec <- function(x,
-                                probs = c(0.025, 0.5, 0.975),
+                                probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
                                 na_rm = FALSE) {
     x_str <- deparse1(substitute(x))
     check_probs(probs)
@@ -319,18 +461,20 @@ draws_quantile.rvec <- function(x,
 #' @rdname draws_quantile
 #' @export
 draws_quantile.rvec_chr <- function(x,
-                                     probs = c(0.025, 0.5, 0.975),
-                                     na_rm = FALSE) {
+                                    probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
+                                    na_rm = FALSE) {
     cli::cli_abort("Quantiles not defined for character.")
 }
 
+
+## 'draws_fun' ----------------------------------------------------------------
 
 #' Apply summary function across random draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using a function.
 #'
-#' @inheritParams draws_median
+#' @inheritParams draws_all
 #' @param fun A function.
 #' @param ... Additional arguments passed to `fun`.
 #'
@@ -341,6 +485,7 @@ draws_quantile.rvec_chr <- function(x,
 #' Apply pre-specified functions across draws:
 #' - [draws_all()]
 #' - [draws_any()]
+#' - [draws_ci()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]

@@ -214,22 +214,18 @@ is_rvec <- function(x) {
 
 
 ## HAS_TESTS
-#' Given one or more interval widths, construct
+#' Given and interval width, construct
 #' the 'probs' argument to use for calculating
 #' quantiles.
 #'
-#' @param width A numeric vector, where all
-#' entries between 0 and 1, inclusive.
-#' The elements of widths are unique and
-#' decreasing.
+#' @param width A number in interval (0, 1].
 #'
-#' @return A numeric vector with length
-#' 2 * length(width).
+#' @return A numeric vector with 3
 #'
 #' @noRd
 make_probs <- function(width) {
     half_alpha <- 0.5 * (1 - width)
-    c(half_alpha, rev(1 - half_alpha))
+    c(half_alpha, 0.5, rev(1 - half_alpha))
 }
 
 
