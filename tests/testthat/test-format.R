@@ -36,19 +36,27 @@ test_that("'format' method for rvec works - four columns, dbl", {
     m <- matrix(rnorm(8), nr = 2, nc = 4)
     x <- rvec(m)
     ans_obtained <- format(x)
-    ans_expected <- paste0(formatC(rowMeans(m), format = "fg"),
-                           " ± ",
-                           formatC(apply(m, 1, sd), format = "fg"))
+    ans_expected <- draws_ci(x)
+    ans_expected <- paste0(prettyNum(ans_expected[[2L]], digits = 2),
+                           " (",
+                           prettyNum(ans_expected[[1L]], digits = 2),
+                           ", ",
+                           prettyNum(ans_expected[[3L]], digits = 2),
+                           ")")
     expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'format' method for rvec works - four columns, int", {
-    m <- matrix(1:8, nr = 2, nc = 4)
+    m <- matrix(11:18, nr = 2, nc = 4)
     x <- rvec(m)
     ans_obtained <- format(x)
-    ans_expected <- paste0(formatC(rowMeans(m), format = "fg"),
-                           " ± ",
-                           formatC(apply(m, 1, sd), format = "fg"))
+    ans_expected <- draws_ci(x)
+    ans_expected <- paste0(prettyNum(ans_expected[[2L]], digits = 2),
+                           " (",
+                           prettyNum(ans_expected[[1L]], digits = 2),
+                           ", ",
+                           prettyNum(ans_expected[[3L]], digits = 2),
+                           ")")
     expect_identical(ans_obtained, ans_expected)
 })
 

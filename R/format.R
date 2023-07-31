@@ -59,7 +59,7 @@ format_rvec_elements <- function(x) {
 #' Calculate values to use in 'format.rvec'
 #' when showing row summaries
 #'
-#' @param x An rvec
+#' @param x A matrix
 #'
 #' @returns A character vector with length(x)
 #'
@@ -74,11 +74,11 @@ format_rvec_summaries <- function(x) {
         ans <- paste0("..", ans, "..")
     }
     else if (is.numeric(x)) {
-        means <- matrixStats::rowMeans2(x, na.rm = TRUE)
-        sds <- matrixStats::rowSds(x, na.rm = TRUE)
-        means <- formatC(means, format = "fg")
-        sds <- formatC(sds, format = "fg")
-        ans <- paste(means, intToUtf8(177), sds)
+        ans <- matrixStats::rowQuantiles(x, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)
+        ans <- sprintf("%s (%s, %s)",
+                       prettyNum(ans[, 2L], digits = 2L),
+                       prettyNum(ans[, 1L], digits = 2L),
+                       prettyNum(ans[, 3L], digits = 2L))
     }
     else {
         ans <- matrixStats::rowMeans2(1 * x, na.rm = TRUE)
