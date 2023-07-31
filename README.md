@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rvec
+# rvec <a href="https://github.com/bayesiandemography/rvec"><img src="data-raw/sticker.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
 
