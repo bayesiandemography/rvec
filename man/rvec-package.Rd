@@ -12,93 +12,80 @@ that they can used to generate distributions for new
 quantities. Posterior distributions for death rates, for instance,
 can be turned into posterior distributions for life expectancies.
 }
-\details{
-#' An \code{rvec}\tabular{lcccc}{
-    \tab Draw 1 \tab Draw 2 \tab \eqn{\dots} \tab Draw \eqn{n} \cr
-   Obs 1 \tab \eqn{x_{1,1}} \tab \eqn{x_{1,2}} \tab \eqn{\dots} \tab \eqn{x_{1,n}} \cr
-   Obs 2 \tab \eqn{x_{2,1}} \tab \eqn{x_{2,2}} \tab \eqn{\dots} \tab \eqn{x_{2,n}} \cr
-   \eqn{\vdots} \tab \eqn{\vdots} \tab \eqn{\vdots} \tab \eqn{\ddots} \tab \eqn{\vdots} \cr
-   Obs \eqn{m} \tab \eqn{x_{m,1}} \tab \eqn{x_{m,2}} \tab \eqn{\dots} \tab \eqn{x_{m,n}} \cr
-}
+\section{Functions}{
 
 
-Starting with a sample
-
-\deqn{x_1, x_2, \dots, x_n}
-
-we apply one or more functions to each draw,
-to obtain a sample
-
-\deqn{f(g(x_1)), f(g(x_2)), \dots, f(g(x_n))},
-
-from the distribution of the  quantity \eqn{f(g(x))}.
-This derived distribution can, like any distribution,
-be summarised through indicators such as means and
-quantiles.
-
-Package \code{rvec} makes  recipe easy to follow.
-}
-\section{Standard workflow}{
-
-
-\strong{Step 1: Create an \code{rvec}}
-
-Create an \code{rvec} object holding draws from a posterior sample.
+\strong{Creating rvecs}
 \itemize{
 \item \code{\link[=rvec]{rvec()}} - class depends on input
 \item \code{\link[=rvec_dbl]{rvec_dbl()}} - doubles
 \item \code{\link[=rvec_int]{rvec_int()}} - integers
 \item \code{\link[=rvec_lgl]{rvec_lgl()}} - logical
 \item \code{\link[=rvec_chr]{rvec_chr()}} - character
+\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} - data in data frame
 }
 
-\strong{Step 2: Manipulate the \code{rvec}}
-
-Perform calculations on the \code{rvec}, treating it like an ordinary vector.
-Internally, the calculations the manipulations are applied independenly
-to each draw.
+\strong{Manipulating rvecs}
 \itemize{
-\item Standard mathematical and statistical operations
-\item Special rvec operations
+\item \code{\link[=if_else_rvec]{if_else_rvec()}}
+\item \code{\link[=map_rvec]{map_rvec()}}
 }
 
-\strong{Step 3: Summarise the \code{rvec}}
+\strong{Probability distributions}
 \itemize{
+\item \code{\link[=dbeta_rvec]{dbeta_rvec()}}
+\item \code{\link[=dbinom_rvec]{dbinom_rvec()}}
+\item \code{\link[=dcauchy_rvec]{dcauchy_rvec()}}
+\item \code{\link[=dchisq_rvec]{dchisq_rvec()}}
+\item \code{\link[=dexp_rvec]{dexp_rvec()}}
+\item \code{\link[=df_rvec]{df_rvec()}}
+\item \code{\link[=dgamma_rvec]{dgamma_rvec()}}
+\item \code{\link[=dgeom_rvec]{dgeom_rvec()}}
+\item \code{\link[=dhyper_rvec]{dhyper_rvec()}}
+\item \code{\link[=dlnorm_rvec]{dlnorm_rvec()}}
+\item \code{\link[=dmultinom]{dmultinom()}}
+\item \code{\link[=dnbinom_rvec]{dnbinom_rvec()}}
+\item \code{\link[=dnorm_rvec]{dnorm_rvec()}}
+\item \code{\link[=dpois_rvec]{dpois_rvec()}}
+\item \code{\link[=dt_rvec]{dt_rvec()}}
+\item \code{\link[=dunif_rvec]{dunif_rvec()}}
+\item \code{\link[=dweibull_rvec]{dweibull_rvec()}}
+}
+
+\strong{Summarizing across draws}
+\itemize{
+\item \code{\link[=draws_all]{draws_all()}}
+\item \code{\link[=draws_any]{draws_any()}}
 \item \code{\link[=draws_median]{draws_median()}}
 \item \code{\link[=draws_mean]{draws_mean()}}
 \item \code{\link[=draws_mode]{draws_mode()}}
+\item \code{\link[=draws_ci]{draws_ci()}}
 \item \code{\link[=draws_quantile]{draws_quantile()}}
 \item \code{\link[=draws_fun]{draws_fun()}}
-}
+\item \code{\link[=n_draw]{n_draw()}}
 }
 
-\section{Other functions}{
-
+\strong{Coercion, classes}
 \itemize{
-\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}}
-\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}}
-}
-}
-
-\section{Design}{
-
-
-\code{rvec} are built from \link[vctrs:vctrs-package]{vctrs} package, which
-look after many of the tricky details, and give it a sound
-conceptual basis. Internally, many of the calculations are
-done using the \link[matrixStats:matrixStats-package]{matrixStats}
-package, is fast.
+\item \code{\link[=as_list_col]{as_list_col()}}
+\item \code{\link[=expand_from_rvec]{expand_from_rvec()}}
+\item \code{\link[=is_rvec]{is_rvec()}}
 }
 
-\section{Other packages}{
+\strong{Weighted summaries}
+\itemize{
+\item \code{\link[=weighted_mad]{weighted_mad()}}
+\item \code{\link[=weighted_mean]{weighted_mean()}}
+\item \code{\link[=weighted_median]{weighted_median()}}
+\item \code{\link[=weighted_sd]{weighted_sd()}}
+\item \code{\link[=weighted_var]{weighted_var()}}
+}
 
-
-posterior: different type of data structure,
-but also lots of diagnostics
-
-ggdist
-
-distributional
+\strong{Datasets}
+\itemize{
+\item \code{\link[=divorce]{divorce()}}
+\item \code{\link[=reg_post]{reg_post()}}
+}
 }
 
 \author{

@@ -312,14 +312,18 @@ n_draw_common <- function(x, y, x_arg, y_arg) {
 }
 
 
+## HAS_TESTS
 #' Given a data frame containing rvecs,
 #' calculate 'n_draw'
 #'
 #' If 'n_draw' is the same across all rvecs,
 #' return it. Otherwise raise an error.
 #'
-#' @param df A data 
-#' the
+#' @param df A data frame
+#'
+#' @returns An integer
+#'
+#' @noRd
 n_draw_df <- function(df) {
     is_rvec <- vapply(df, is_rvec, TRUE)
     if (!any(is_rvec))

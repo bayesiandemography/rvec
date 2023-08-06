@@ -7,89 +7,73 @@
 #' quantities. Posterior distributions for death rates, for instance,
 #' can be turned into posterior distributions for life expectancies.
 #'
-#'  #' An `rvec`
+#' @section  Functions:
 #'
-#' |              | Draw 1        | Draw 2        | \eqn{\dots}  | Draw \eqn{n}  |
-#' |:-------------|:-------------:|:-------------:|:------------:|:-------------:|
-#' | Obs 1        | \eqn{x_{1,1}} | \eqn{x_{1,2}} | \eqn{\dots}  | \eqn{x_{1,n}} |
-#' | Obs 2        | \eqn{x_{2,1}} | \eqn{x_{2,2}} | \eqn{\dots}  | \eqn{x_{2,n}} |
-#' | \eqn{\vdots} | \eqn{\vdots}  | \eqn{\vdots}  | \eqn{\ddots} | \eqn{\vdots}  |
-#' | Obs \eqn{m}  | \eqn{x_{m,1}} | \eqn{x_{m,2}} | \eqn{\dots}  | \eqn{x_{m,n}} |
+#' **Creating rvecs**
 #'
-
-#'
-#'
-#'
-#' Starting with a sample
-#'
-#' \deqn{x_1, x_2, \dots, x_n}
-#'
-#' we apply one or more functions to each draw,
-#' to obtain a sample
-#'
-#' \deqn{f(g(x_1)), f(g(x_2)), \dots, f(g(x_n))},
-#'
-#' from the distribution of the  quantity \eqn{f(g(x))}.
-#' This derived distribution can, like any distribution,
-#' be summarised through indicators such as means and
-#' quantiles.
-#'
-#' Package `rvec` makes  recipe easy to follow.
-#'
-#' @section Standard workflow:
-#'
-#' **Step 1: Create an `rvec`**
-#'
-#' Create an `rvec` object holding draws from a posterior sample.
-#' 
 #' - [rvec()] - class depends on input
 #' - [rvec_dbl()] - doubles
 #' - [rvec_int()] - integers
 #' - [rvec_lgl()] - logical
 #' - [rvec_chr()] - character
+#' - [collapse_to_rvec()] - data in data frame
 #'
+#' **Manipulating rvecs**
 #'
-#' **Step 2: Manipulate the `rvec`**
+#' - [if_else_rvec()]
+#' - [map_rvec()]
 #'
-#' Perform calculations on the `rvec`, treating it like an ordinary vector.
-#' Internally, the calculations the manipulations are applied independenly
-#' to each draw.
+#' **Probability distributions**
 #'
-#' - Standard mathematical and statistical operations
-#' - Special rvec operations
+#' - [dbeta_rvec()]
+#' - [dbinom_rvec()]
+#' - [dcauchy_rvec()]
+#' - [dchisq_rvec()]
+#' - [dexp_rvec()]
+#' - [df_rvec()]
+#' - [dgamma_rvec()]
+#' - [dgeom_rvec()]
+#' - [dhyper_rvec()]
+#' - [dlnorm_rvec()]
+#' - [dmultinom()]
+#' - [dnbinom_rvec()]
+#' - [dnorm_rvec()]
+#' - [dpois_rvec()]
+#' - [dt_rvec()]
+#' - [dunif_rvec()]
+#' - [dweibull_rvec()]
 #'
+#' **Summarizing across draws**
 #'
-#' **Step 3: Summarise the `rvec`**
-#'
+#' - [draws_all()]
+#' - [draws_any()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
+#' - [draws_ci()]
 #' - [draws_quantile()]
 #' - [draws_fun()]
-#' 
+#' - [n_draw()]
 #'
-#' @section Other functions:
+#' **Coercion, classes**
 #'
-#' - [collapse_to_rvec()]
-#' - [collapse_to_rvec()]
+#' - [as_list_col()]
+#' - [expand_from_rvec()]
+#' - [is_rvec()]
 #'
-#' @section Design:
+#' **Weighted summaries**
 #'
-#' `rvec` are built from [vctrs][vctrs::vctrs] package, which
-#' look after many of the tricky details, and give it a sound
-#' conceptual basis. Internally, many of the calculations are
-#' done using the [matrixStats][matrixStats::matrixStats-package]
-#' package, is fast.
+#' - [weighted_mad()]
+#' - [weighted_mean()]
+#' - [weighted_median()]
+#' - [weighted_sd()]
+#' - [weighted_var()]
 #'
+#' **Datasets**
 #'
-#' @section Other packages:
+#' - [divorce()]
+#' - [reg_post()]
 #'
-#' posterior: different type of data structure,
-#' but also lots of diagnostics
-#'
-#' ggdist
-#'
-#' distributional
 #'
 #'
 #' @aliases rvec-package NULL

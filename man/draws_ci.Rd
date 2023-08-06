@@ -82,6 +82,7 @@ across draws are:
 \item \code{\link[=draws_median]{draws_median()}}
 \item \code{\link[=draws_mean]{draws_mean()}}
 \item \code{\link[=draws_mode]{draws_mode()}}
+\item \code{\link[=draws_quantile]{draws_quantile()}}
 }
 
 Apply arbitrary function across draws:

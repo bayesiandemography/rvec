@@ -219,7 +219,6 @@ test_that("'matrix_to_list_of_rows' works with nrow = 0, ncol = 0", {
 })
 
 
-
 ## 'n_draw_common' -------------------------------------------------------
 
 test_that("'n_draw_common' works with same length", {

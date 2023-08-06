@@ -80,6 +80,7 @@ functions across draws are:
 \itemize{
 \item \code{\link[=draws_all]{draws_all()}}
 \item \code{\link[=draws_any]{draws_any()}}
+\item \code{\link[=draws_ci]{draws_ci()}}
 \item \code{\link[=draws_median]{draws_median()}}
 \item \code{\link[=draws_mean]{draws_mean()}}
 \item \code{\link[=draws_mode]{draws_mode()}}
@@ -87,7 +88,7 @@ functions across draws are:
 
 Apply arbitrary function across draws:
 \itemize{
-\item \code{\link[=draws_fun]{draws_fun()}} to apply abritrary functions
+\item \code{\link[=draws_fun]{draws_fun()}} to apply arbitrary functions
 }
 
 For additional functions for summarising random draws, see

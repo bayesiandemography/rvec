@@ -17,8 +17,9 @@
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
+#' - [draws_ci()]
 #' - [draws_quantile()]
-#' 
+#'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()] to apply abritrary functions
 #'
@@ -27,7 +28,7 @@
 #' and [ggdist](https://CRAN.R-project.org/package=ggdist).
 #' Function [as_list_col()] converts rvecs into a
 #' format that `tidybayes` and `ggdist` can work with.
-#' 
+#'
 #' @examples
 #' m <- rbind(a = c(TRUE,  FALSE,  TRUE),
 #'            b = c(TRUE,  TRUE,   TRUE),
@@ -104,7 +105,7 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' in an `rvec`, using a simple credible interval.
 #'
 #' @section Warning:
-#' 
+#'
 #' It is tempting to assign the results
 #' of a call to `draws_ci()` to a
 #' column in a base R data frame or a tibble,
@@ -130,7 +131,7 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' @seealso
 #' [draws_quantile()] gives more options
 #' for forming quantiles.
-#' 
+#'
 #' Other ways of applying pre-specified functions
 #' across draws are:
 #' - [draws_all()]
@@ -138,7 +139,8 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
-#' 
+#' - [draws_quantile()]
+#'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()] to apply abritrary functions
 #'
@@ -250,7 +252,7 @@ draws_ci.rvec_chr <- function(x,
 #' and [ggdist](https://CRAN.R-project.org/package=ggdist).
 #' Function [as_list_col()] converts rvecs into a
 #' format that `tidybayes` and `ggdist` can work with.
-#' 
+#'
 #' @examples
 #' m <- rbind(a = c(1, 1, 1, 2, 3),
 #'            b = c(2, 4, 0, 2, 3),
@@ -333,7 +335,7 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
     if (nrow(m) == 0L) {
         ans <- NA
     }
-    else {   
+    else {
         useNA <- if (na_rm) "no" else "ifany"
         tabs <- apply(m, 1L, table, useNA = useNA, simplify = FALSE)
         nms_tabs <- lapply(tabs, names)
@@ -367,7 +369,7 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' 95% credible interval.
 #'
 #' @section Warning:
-#' 
+#'
 #' It is tempting to assign the results
 #' of a call to `draws_quantile()` to a
 #' column in a base R data frame or a tibble,
@@ -392,12 +394,13 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' functions across draws are:
 #' - [draws_all()]
 #' - [draws_any()]
+#' - [draws_ci()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
-#' 
+#'
 #' Apply arbitrary function across draws:
-#' - [draws_fun()] to apply abritrary functions
+#' - [draws_fun()] to apply arbitrary functions
 #'
 #' For additional functions for summarising random draws, see
 #' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
@@ -490,7 +493,7 @@ draws_quantile.rvec_chr <- function(x,
 #' - [draws_mean()]
 #' - [draws_mode()]
 #' - [draws_quantile()]
-#' 
+#'
 #' @examples
 #' set.seed(0)
 #' m <- rbind(a = rnorm(100, mean = 5, sd = 2),
@@ -526,8 +529,8 @@ draws_fun.rvec <- function(x, fun, ...) {
         l
 }
 
-    
-    
+
+
 
 
 

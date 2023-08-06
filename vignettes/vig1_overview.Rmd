@@ -386,6 +386,12 @@ l <- list(a = rvec(list(c(1, 4))),
 l
 map_rvec(l, sqrt)
 ```
+## Coercing
+
+`as.matrix()`
+`as_list_col()`
+`expand_from_rvec()`
+
 
 # Summarising rvecs
    
