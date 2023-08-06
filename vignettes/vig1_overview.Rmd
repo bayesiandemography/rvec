@@ -262,6 +262,17 @@ m %*% x
 ```
 
 
+**rvec** contains a suite of functions for summarising weighted data: 
+
+- `weighted_mad()`
+- `weighted_mean()`
+- `weighted_median()`
+- `weighted_sd()`
+- `weighted_var()`
+
+All of these are built on functions from package **matrixStats**.
+
+
 # Probability distributions and rvecs {#sec:prob}
 
 Standard R probability functions such as `dnorm()` or `rbinom()` do not allow rvec arguments. Package **rvec** provides modified functions that do. For instance,
@@ -367,9 +378,14 @@ library(vctrs, warn.conflicts = FALSE)
 vec_cbind(x1, x2)
 ```
 
-## Coercing
 
-
+Base R function `sapply()` does not work with rvecs (unless `simplify` is set to `FALSE`). However, **rvec** supplies a function called `map_rvec()` (based on functions in package [purrr](https://purrr.tidyverse.org)) that does the same job:
+```{r}
+l <- list(a = rvec(list(c(1, 4))),
+          b = rvec(list(c(9, 16))))
+l
+map_rvec(l, sqrt)
+```
 
 # Summarising rvecs
    
