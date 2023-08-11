@@ -388,9 +388,34 @@ map_rvec(l, sqrt)
 ```
 ## Coercing
 
-`as.matrix()`
-`as_list_col()`
-`expand_from_rvec()`
+Function `as.matrix()` returns the data underlying an rvec.
+```{r}
+m <- matrix(1:6, nr = 2)
+m
+x <- rvec(m)
+x
+as.matrix(x)
+```
+
+Function `as_list_col()` returns a list of vectors
+```{r}
+as_list_col(x)
+```
+Functions such as [point_interval](https://mjskay.github.io/ggdist/reference/point_interval.html) in package [ggdist](https://mjskay.github.io/ggdist/) accept lists of vector. A good way to access the plotting facilities in **ggdist** is to use `as_list_col()` to convert an rvec to a list column.
+
+Function `expand_from_rvec()` is the inverse of function `collapse_to_rvec()`, introduced in Section \@ref(sec:divorce).
+```{r}
+divorce %>%
+  head(2)
+divorce %>%
+  collapse_to_rvec(values = rate) %>%
+  head(2)
+divorce %>%
+  collapse_to_rvec(values = rate) %>%
+  expand_from_rvec() %>%
+  head(2)
+```
+
 
 
 # Summarising rvecs
