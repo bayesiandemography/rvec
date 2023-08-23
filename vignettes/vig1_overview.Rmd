@@ -2,8 +2,6 @@
 title: "Package rvecs"
 author:
   - name: John Bryant
-    affiliation: Bayesian Demography Limited
-    email: john@bayesiandemography.com
 output:
   bookdown::html_document2:
     base_format: rmarkdown::html_vignette
@@ -28,9 +26,9 @@ knitr::opts_chunk$set(
 ```
 
 
-# Aims of **rvecs** package
+# Aims of **rvecs** {#sec:aims}
 
-Many modern statistical methods, including most Bayesian methods, produce random draws from a distribution. A exceptionally useful feature of these draws is that they can be used to make inferences about derived quantities. The procedure is:
+Many modern statistical methods, particularly Bayesian methods, produce random draws from a distribution. A exceptionally useful feature of these draws is that they can be used to make inferences about derived quantities. The procedure is:
 
 - Step 1. Calculate the derived quantity for each of the random draws.
 - Step 2. Summaries the distribution of these derived quantities.
@@ -43,8 +41,6 @@ If, for instance, we have randoms draws of age-specific mortality rates, and we 
 For more on the theory behind manipulating random draws, and for an argument that R needs high-level tools to help with this manipulation, see @kerman2007manipulating.
 
 Package **rvec** provides tools for working with random draws. The draws are held in a structure called an rvec, which can, for many purposes, be treated like an ordinary R vector, and manipulated using ordinary base R and [tidyverse](https://www.tidyverse.org) code. **rvec** also contains functions for summarizing across random draws.
-
-
 
 
 # Examples
@@ -156,7 +152,7 @@ ggplot(divorce_ratio,
   geom_pointrange()
 ```
 
-# Structure of rvecs
+# Structure of rvecs {#sec:structure}
 
 The class `"rvec"` has four subclasses:
 
@@ -270,10 +266,10 @@ m %*% x
 - `weighted_sd()`
 - `weighted_var()`
 
-All of these are built on functions from package **matrixStats**.
+All of these are built on functions from package [matrixStats](https://CRAN.R-project.org/package=matrixStats).
 
 
-# Probability distributions and rvecs {#sec:prob}
+# Probability distributions {#sec:prob}
 
 Standard R probability functions such as `dnorm()` or `rbinom()` do not allow rvec arguments. Package **rvec** provides modified functions that do. For instance,
 ```{r}
@@ -321,9 +317,9 @@ or
 x[x <= 3] ## create 'y' on the fly
 ```
 
-To implement the idiom, a convention is needed to deal with varying values within the same element of `y`. For instance, in the sample above, we need a way of handling the second element of `y`, which consists of one `TRUE` and one `FALSE`. The convention used by **rvec** is that `y` picks out an element of `x` if all draws of `y` for that element are `TRUE`. 
+To implement the idiom, a convention is needed to deal with varying values within the same element of `y`. For instance, in the sample above, we need a way of handling the second element of `y`, which consists of one `TRUE` and one `FALSE`. The convention used by **rvec** is that `y` picks out an element of `x` if *all* draws of `y` for that element are `TRUE`. 
 
-Looking across multiple draws of `y` is unavoidable when implementing the R `x[y]` idiom. However, it is typically not the behavior we want when working with multiple draws, where we usually want to process each draw independently. In many cases, the function `if_else_rvec()`, introduced in Section \@ref(sec:ifelse), may be more appropriate.
+Looking across multiple draws of `y` is unavoidable when implementing `x[y]`.  However, it is typically not the behavior we want when working with multiple draws. Instead, we usually want to process each draw independently. This can be done using function `if_else_rvec()`, introduced in Section \@ref(sec:ifelse).
 
 ## If-Else {#sec:ifelse}
 
@@ -335,7 +331,7 @@ if_else(condition = c(TRUE, FALSE),
         true = x,
         false = -x)        
 ```
-However, `if_else()` does not allow rvecs to be used as `condition` arguments. For that we need the **rvec** function `if_else_rvec()`,
+It does not, however, work when the `condition` argument is an rvec. For that case we need the **rvec** function `if_else_rvec()`,
 ```{r}
 if_else_rvec(x <= 2, x, 2)
 ```
@@ -360,7 +356,7 @@ x2 <- rvec(list(c(0.5, 0.6),
 c(x1, x2)
 ```
 
-Unfortunately, `cbind()` and `rbind()` can't be made to work properly on raw rvecs,
+Unfortunately, `cbind()` and `rbind()` cannot be made to work properly on raw rvecs,
 ```{r}
 rbind(x1, x2)
 cbind(x1, x2)
@@ -372,14 +368,14 @@ df2 <- data.frame(x2)
 cbind(df1, df2)
 ```
 
-Tidyverse equivalents such as `dplyr::bind_rows()`, `dbplyr::bind_cols()`, `vctrs::vec_cbind()`, and `vctrs::vec_rbind()` do work with rvecs,
+Tidyverse equivalents such as `dplyr::bind_rows()`, `dbplyr::bind_cols()`, `vctrs::vec_cbind()`, and `vctrs::vec_rbind()` *do* work with rvecs,
 ```{r}
 library(vctrs, warn.conflicts = FALSE)
 vec_cbind(x1, x2)
 ```
 
 
-Base R function `sapply()` does not work with rvecs (unless `simplify` is set to `FALSE`). However, **rvec** supplies a function called `map_rvec()` (based on functions in package [purrr](https://purrr.tidyverse.org)) that does the same job:
+Base R function `sapply()` does not work with rvecs (unless `simplify` is set to `FALSE`). **rvec** therefore supplies a function called `map_rvec()` (based on functions in package [purrr](https://purrr.tidyverse.org)) that does the same job:
 ```{r}
 l <- list(a = rvec(list(c(1, 4))),
           b = rvec(list(c(9, 16))))
@@ -401,7 +397,7 @@ Function `as_list_col()` returns a list of vectors
 ```{r}
 as_list_col(x)
 ```
-Functions such as [point_interval](https://mjskay.github.io/ggdist/reference/point_interval.html) in package [ggdist](https://mjskay.github.io/ggdist/) accept lists of vector. A good way to access the plotting facilities in **ggdist** is to use `as_list_col()` to convert an rvec to a list column.
+Functions such as [point_interval](https://mjskay.github.io/ggdist/reference/point_interval.html) in package [ggdist](https://mjskay.github.io/ggdist/) accept lists of vector. A good way to access the sophisticated plotting facilities in **ggdist**, or in packages such as [tidybayes](https://mjskay.github.io/tidybayes/) and [bayesplot](https://mc-stan.org/bayesplot/)  is to use `as_list_col()` to convert an rvec to a list column.
 
 Function `expand_from_rvec()` is the inverse of function `collapse_to_rvec()`, introduced in Section \@ref(sec:divorce).
 ```{r}
@@ -416,53 +412,41 @@ divorce %>%
   head(2)
 ```
 
+# Summarising distributions
 
+Most functions in **rvec** are concerned with deriving random vectors from other random vectors: that is, with the column-wise calculations described in Section \@ref(sec:structure). But once we have derived the random vectors, we typically want to summarise them, using statistics such as means or quantiles: that is, we want to carry out row-wise calculations.
 
-# Summarising rvecs
-   
-   
-   
-  
-# Design choices
+The functions for carrying out row-wise calculations on rvecs are:
 
-rvecs extend the `vctrs` class from package [vctrs](https://vctrs.r-lib.org), and inherits standard vector behaviors.  Many of the calculations are done internally using fast functions from [matrixStats](https://CRAN.R-project.org/package=matrixStats).
+- [draws_all()]
+- [draws_any()]
+- [draws_median()]
+- [draws_mean()]
+- [draws_mode()]
+- [draws_ci()]
+- [draws_quantile()]
+- [draws_fun()]
 
-- vctrs
-- matrixStats
+Internally, most of these functions call functions from [matrixStats](https://CRAN.R-project.org/package=matrixStats), which makes them fast.
 
+For most purposes, [draws_ci()], which calculates credible intervals, is the most useful of the draws functions,
+
+```{r}
+divorce_rv <- divorce %>%
+  collapse_to_rvec(value = rate)
+divorce_rv
+divorce_rv %>%
+  mutate(draws_ci(rate))
+```
 
 
 # Other packages
 
-Packages [rv](https://CRAN.R-project.org/package=rv ) and [posterior](https://CRAN.R-project.org/package=posterior) contain similar data structures to rvecs, and package **rvec** borrows ideas from both. The advantages of rvecs is that they behave more like standard R vectors, which makes Step 1, the manipulation of draws, easier. 
+The first R package to provide a specialized object for handling multiple draws was [rv](https://CRAN.R-project.org/package=rv). The object, called an rv, can be manipulated and summarized much like an rvec. However, in software terms, an rv is  not strictly a vector (calling `is.vector()` on one returns `FALSE`) and an rv does not always behave as expected inside a data frame. It is therefore not well suited to tidyverse-style work flows.
 
-Packages [tidybayes](https://mjskay.github.io/tidybayes/),
-[ggdist](https://mjskay.github.io/ggdist/), and [bayesplot](https://mc-stan.org/bayesplot/) provide advanced tools for summarizing draws, and for visualizing distributions. Package **posterior** contains tools for evaluating the procedures that produced the random draws. **rvec** includes functions for converting into and out of the formats used by these packages, so that the packages can be used in combination.
+R package [posterior](https://CRAN.R-project.org/package=posterior) provides several data structures for handling multiple draws, including one, called a rvar, that is similar to an rvec. An rvar is, however, is not limited to a single dimension, and has special facilities for dealing with multiple chains (as produced by Markov chain Monte Carlo methods.) These features are essential for some analyses, but they can make rvars harder to master, and they are not needed for most tidyverse-style work flows. 
 
-
-
-## Functionality similar to **rvec**
-
-### rv
-
-- excellent paper on theory
-
-### posterior
-
-- not just one extra dimension, can be matrix, array
-- (with rvec, imagine it to be stretched out)
-
-
-## Working with draws
-
-## coda, posterior
-
-## ggdist
-
-## tidybayes
-
-?other
-
+Whereas rvecs interpret summary functions such as `mean()` and `sum()` as operations to be applied independently on each draw, rvars interpret them as operations to be applied across draws. The result is that code written for ordinary R vectors will often work on rvecs, but need modification to work on rvars. The tidyverse function `count()`, for instance, works with rvecs but not rvars.
 
 # References
 
