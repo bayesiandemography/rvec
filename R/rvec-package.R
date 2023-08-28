@@ -1,12 +1,17 @@
 #' Package 'rvec'
 #'
-#' Many modern statistical methods, including Bayesian methods,
-#' yield draws from a distribution for the quantities of interest.
-#' An enormously useful feature of draws from a distribution is
-#' that they can used to generate distributions for new
-#' quantities. Posterior distributions for death rates, for instance,
-#' can be turned into posterior distributions for life expectancies.
+#' Tools for working with random draws from a distribution, eg
+#' draws from a posterior distribution in a Bayesian analysis.
 #'
+#' An rvec holds multiple draws, but wherever possible
+#' behaves like an ordinary R vector. For instance, if `x`
+#' is an rvec holding 1000 draws from a distribution,
+#' then `2 * x` returns a new rvec where each draw has
+#' been multiplied by 2.
+#'
+#' To summarise across draws, use a function starting with `draws`.
+#' For instance, to calculate a credible interval, use [draws_ci()].
+#' 
 #' @section  Functions:
 #'
 #' **Creating rvecs**
@@ -74,7 +79,10 @@
 #' - [divorce()]
 #' - [reg_post()]
 #'
+#' @section Packages with similar functionality:
 #'
+#' - [rv](https://CRAN.R-project.org/package=rv)
+#' - [posterior](https://CRAN.R-project.org/package=posterior)
 #'
 #' @aliases rvec-package NULL
 #' @import vctrs
