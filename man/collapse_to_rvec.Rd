@@ -10,11 +10,11 @@
 \title{Convert a data frame between 'database'
 and 'rvec' formats}
 \usage{
-collapse_to_rvec(data, draw = "draw", values = value, type = NULL)
+collapse_to_rvec(data, draw = draw, values = value, type = NULL)
 
-\method{collapse_to_rvec}{data.frame}(data, draw = "draw", values = value, type = NULL)
+\method{collapse_to_rvec}{data.frame}(data, draw = draw, values = value, type = NULL)
 
-\method{collapse_to_rvec}{grouped_df}(data, draw = "draw", values = value, type = NULL)
+\method{collapse_to_rvec}{grouped_df}(data, draw = draw, values = value, type = NULL)
 
 expand_from_rvec(data, draw = "draw")
 
@@ -26,9 +26,11 @@ expand_from_rvec(data, draw = "draw")
 \item{data}{A data frame, possibly
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}.}
 
-\item{draw}{The variable that uniquely identifies
+\item{draw}{<\code{\link[tidyselect:language]{tidyselect}}>
+The variable that uniquely identifies
 random draws within each combination of
-values for the ID variables. A string.}
+values for the 'by' variables. Must be quoted
+for \code{expand_from_rvec()}.}
 
 \item{values}{<\code{\link[tidyselect:language]{tidyselect}}>
 One or more variables of \code{data} that hold measurements.}
@@ -62,9 +64,9 @@ In database format, each row represents
 one random draw. The data frame contains
 a 'draw' variable that distinguishes different
 draws within the same combination
-of ID variables. In rvec format,
+of 'by' variables. In rvec format,
 each row represents one
-combination of ID variables, and
+combination of 'by' variables, and
 multiple draws are stored in an \link[=rvec]{rvec}.
 See below for examples.
 }
@@ -74,7 +76,7 @@ See below for examples.
 \code{collapse_to_rvec()} and \code{expand_from_rvec()}
 operate with three kinds of variables:
 \itemize{
-\item Values variables, holding hold measurements
+\item 'values' variables, holding hold measurements
 of some random or uncertain quantity.
 In \code{collapse_to_rvec()},
 values variables are specified by the
@@ -82,19 +84,19 @@ values variables are specified by the
 treats all rvecs as value variables.
 \item The draw variable, used to uniquely identify
 each draw in a database format, within
-each combination of ID values. Specified
+each combination of 'by' values. Specified
 by the \code{draw} argument.
-\item ID variables, which hold covariates or
+\item 'by' variables, which hold covariates or
 classification variables.
 - If \code{data} is an ordinary data frame, then
 \code{collapse_to_rvec()} and \code{expand_from_rvec()}
 assume that all variables that are not
-values or draw variables are ID variables.
+values or draw variables are by variables.
 - If \code{data} is a
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}
 data frame, then \code{collapse_to_rvec()}
 and \code{expand_from_rvec()} assume that the
-grouping variables are ID variables.
+grouping variables are by variables.
 }
 }
 
@@ -137,7 +139,7 @@ data_db <- tribble(
 
 ## database format to rvec format
 data_rv <- data_db \%>\%
-  collapse_to_rvec(draw = "sim",
+  collapse_to_rvec(draw = sim,
                    values = pay)
 data_rv
 
@@ -152,25 +154,25 @@ data_rv \%>\%
 ## specify that rvec variable
 ## must be rvec_int
 data_rv <- data_db \%>\%
-  collapse_to_rvec(draw = "sim",
+  collapse_to_rvec(draw = sim,
                    values = pay,
                    type = "i")
 
 ## if we add add a redundant variable,
 ## then our earlier call no longer works
 data_db2 <- data_db \%>\%
-  mutate(newcol = "pointless")
+  mutate(newcol = 1:6)
 try(
   data_db2 \%>\%
-    collapse_to_rvec(draw = "sim",
+    collapse_to_rvec(draw = sim,
                      values = pay)
 )
 
 ## one solution: use 'group_by' to
-## specify the ID variables
+## specify the 'by' variables
 data_db2 \%>\%
   group_by(occupation) \%>\%
-  collapse_to_rvec(draw = "sim",
+  collapse_to_rvec(draw = sim,
                    values = pay)
 }
 \seealso{
@@ -184,7 +186,7 @@ in a grouped data frame.
 }
 
 \code{collapse_to_rvec()} and \code{expand_from_rvec()}
-are reminiscent of
+are analogous to
 \href{https://tidyr.tidyverse.org/reference/nest.html}{tidyr::nest()}
 and
 \href{https://tidyr.tidyverse.org/reference/unnest.html}{tidyr::unnest()}

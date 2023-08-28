@@ -79,7 +79,7 @@ check_idx_dup <- function(idx,
         msg_vals <- rlang::set_names(msg_vals, nm = " ")
         .envir <- data[i_dup, colnums, drop = FALSE]
         .envir <- as.environment(.envir)
-        cli::cli_abort(c("Multiple rows with the same values for ID variables:",
+        cli::cli_abort(c("Multiple rows with the same values for 'by' variables:",
                          msg_vals),
                        .envir = .envir)
     }
@@ -124,7 +124,7 @@ check_idx_gap <- function(idx,
         .envir <- vals_id
         .envir[[nm_draw]] <- val_draw
         .envir <- as.environment(.envir)
-        cli::cli_abort(c("Missing combination of values for ID and draw variables:",
+        cli::cli_abort(c("Missing combination of values for 'by' and 'draw' variables:",
                          msg),
                        .envir = .envir)
     }

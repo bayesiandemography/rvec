@@ -13,9 +13,9 @@
 #' one random draw. The data frame contains
 #' a 'draw' variable that distinguishes different
 #' draws within the same combination
-#' of ID variables. In rvec format,
+#' of 'by' variables. In rvec format,
 #' each row represents one
-#' combination of ID variables, and
+#' combination of 'by' variables, and
 #' multiple draws are stored in an [rvec][rvec()].
 #' See below for examples.
 #'
@@ -23,7 +23,7 @@
 #'
 #' `collapse_to_rvec()` and `expand_from_rvec()`
 #' operate with three kinds of variables:
-#' - Values variables, holding hold measurements
+#' - 'values' variables, holding hold measurements
 #'   of some random or uncertain quantity.
 #'   In `collapse_to_rvec()`,
 #'   values variables are specified by the
@@ -31,19 +31,19 @@
 #'   treats all rvecs as value variables.
 #' - The draw variable, used to uniquely identify
 #'   each draw in a database format, within
-#'   each combination of ID values. Specified
+#'   each combination of 'by' values. Specified
 #'   by the `draw` argument.
-#' - ID variables, which hold covariates or
+#' - 'by' variables, which hold covariates or
 #'   classification variables.
 #'       - If `data` is an ordinary data frame, then
 #'         `collapse_to_rvec()` and `expand_from_rvec()`
 #'         assume that all variables that are not
-#'         values or draw variables are ID variables.
+#'         values or draw variables are by variables.
 #'       - If `data` is a
 #'         [grouped](https://dplyr.tidyverse.org/reference/group_data.html)
 #'         data frame, then `collapse_to_rvec()`
 #'         and `expand_from_rvec()` assume that the
-#'         grouping variables are ID variables.
+#'         grouping variables are by variables.
 #'
 #' @section `type` argument:
 #'
@@ -69,9 +69,11 @@
 #'
 #' @param data A data frame, possibly
 #' [grouped](https://dplyr.tidyverse.org/reference/group_data.html).
-#' @param draw The variable that uniquely identifies
+#' @param draw <[`tidyselect`][tidyselect::language]>
+#' The variable that uniquely identifies
 #' random draws within each combination of
-#' values for the ID variables. A string.
+#' values for the 'by' variables. Must be quoted
+#' for `expand_from_rvec()`.
 #' @param values <[`tidyselect`][tidyselect::language]>
 #' One or more variables of `data` that hold measurements.
 #' @param type Code specifying the class of rvec
@@ -98,7 +100,7 @@
 #'   in a grouped data frame.
 #'
 #' `collapse_to_rvec()` and `expand_from_rvec()`
-#' are reminiscent of
+#' are analogous to
 #' [tidyr::nest()](https://tidyr.tidyverse.org/reference/nest.html)
 #' and
 #' [tidyr::unnest()](https://tidyr.tidyverse.org/reference/unnest.html)
@@ -124,7 +126,7 @@
 #'
 #' ## database format to rvec format
 #' data_rv <- data_db %>%
-#'   collapse_to_rvec(draw = "sim",
+#'   collapse_to_rvec(draw = sim,
 #'                    values = pay)
 #' data_rv
 #'
@@ -139,29 +141,29 @@
 #' ## specify that rvec variable
 #' ## must be rvec_int
 #' data_rv <- data_db %>%
-#'   collapse_to_rvec(draw = "sim",
+#'   collapse_to_rvec(draw = sim,
 #'                    values = pay,
 #'                    type = "i")
 #' 
 #' ## if we add add a redundant variable,
 #' ## then our earlier call no longer works
 #' data_db2 <- data_db %>%
-#'   mutate(newcol = "pointless")
+#'   mutate(newcol = 1:6)
 #' try(
 #'   data_db2 %>%
-#'     collapse_to_rvec(draw = "sim",
+#'     collapse_to_rvec(draw = sim,
 #'                      values = pay)
 #' )
 #'
 #' ## one solution: use 'group_by' to
-#' ## specify the ID variables
+#' ## specify the 'by' variables
 #' data_db2 %>%
 #'   group_by(occupation) %>%
-#'   collapse_to_rvec(draw = "sim",
+#'   collapse_to_rvec(draw = sim,
 #'                    values = pay)
 #' @export
 collapse_to_rvec <- function(data,
-                             draw = "draw",
+                             draw = draw,
                              values = value,
                              type = NULL) {
     UseMethod("collapse_to_rvec")
@@ -171,14 +173,16 @@ collapse_to_rvec <- function(data,
 #' @rdname collapse_to_rvec
 #' @export
 collapse_to_rvec.data.frame <- function(data,
-                                        draw = "draw",
+                                        draw = draw,
                                         values = value,
                                         type = NULL) {
+    draw_quo <- rlang::enquo(draw)
     values_quo <- rlang::enquo(values)
+    colnum_draw <- tidyselect::eval_select(draw_quo, data = data)
     colnums_values <- tidyselect::eval_select(values_quo, data = data)
     colnums_groups <- integer()
     collapse_to_rvec_inner(data = data,
-                           draw = draw,
+                           colnum_draw = colnum_draw,
                            colnums_values = colnums_values,
                            colnums_groups = colnums_groups,
                            type = type)
@@ -188,14 +192,16 @@ collapse_to_rvec.data.frame <- function(data,
 #' @rdname collapse_to_rvec
 #' @export
 collapse_to_rvec.grouped_df <- function(data,
-                                        draw = "draw",
+                                        draw = draw,
                                         values = value,
                                         type = NULL) {
+    draw_quo <- rlang::enquo(draw)
     values_quo <- rlang::enquo(values)
+    colnum_draw <- tidyselect::eval_select(draw_quo, data = data)
     colnums_values <- tidyselect::eval_select(values_quo, data = data)
     colnums_groups <- get_colnums_groups(data)
     collapse_to_rvec_inner(data = data,
-                           draw = draw,
+                           colnum_draw = colnum_draw,
                            colnums_values = colnums_values,
                            colnums_groups = colnums_groups,
                            type = type)
@@ -237,7 +243,8 @@ expand_from_rvec.grouped_df <- function(data, draw = "draw") {
 #' to minimise repetition.
 #'
 #' @param data A data frame
-#' @param draw String. The name of the draw column.
+#' @param colnum_draw String. A named integer vector
+#' giving the location of the draw column.
 #' @param colnums_values A named integer vector
 #' giving the locations of rvec columns.
 #' @param colnums_groups A named integer vector
@@ -248,13 +255,12 @@ expand_from_rvec.grouped_df <- function(data, draw = "draw") {
 #'
 #' @noRd
 collapse_to_rvec_inner <- function(data,
-                                   draw,
+                                   colnum_draw,
                                    colnums_values,
                                    colnums_groups,
                                    type) {
     ## check and process inputs
-    check_str(draw, x_arg = "draw")
-    colnum_draw <- get_colnum_draw(draw = draw, data = data)
+    check_colnum_draw(colnum_draw)
     check_colnums_values(colnums_values)
     check_overlap_draw_values(colnum_draw = colnum_draw,
                               colnums_values = colnums_values)

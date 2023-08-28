@@ -17,7 +17,7 @@ test_that("'collapse_to_rvec' works with ordinary data frame - no default", {
                      sim = c(1:2, 1:2),
                      value = 1:4)
     ans_obtained <- collapse_to_rvec(data = df,
-                                     draw = "sim",
+                                     draw = sim,
                                      type = "d")
     ans_expected <- data.frame(g = c("a", "b"),
                                value = rvec_dbl(rbind(1:2, 3:4)))
@@ -51,7 +51,6 @@ test_that("'collapse_to_rvec' works with type", {
 })
 
 
-
 ## 'collapse_to_rvec_inner' --------------------------------------------------
 
 test_that("'collapse_to_rvec_inner' works with ordinary data frame", {
@@ -59,7 +58,7 @@ test_that("'collapse_to_rvec_inner' works with ordinary data frame", {
                      draw = c(1:2, 1:2),
                      value = 1:4)
     ans_obtained <- collapse_to_rvec_inner(data = df,
-                                           draw = "draw",
+                                           colnum_draw = c(draw = 2L),
                                            colnums_values = c(value = 3L),
                                            colnums_groups = integer(),
                                            type = NULL)
@@ -75,7 +74,7 @@ test_that("'collapse_to_rvec_inner' works with grouped data frame", {
                      value = 1:4)
     df <- dplyr::group_by(df, g)
     ans_obtained <- collapse_to_rvec_inner(data = df,
-                                           draw = "sim",
+                                           colnum_draw = c(sim = 3L),
                                            colnums_values = c(value = 4L),
                                            colnums_groups = c(g = 1L),
                                            type = NULL)
@@ -85,14 +84,14 @@ test_that("'collapse_to_rvec_inner' works with grouped data frame", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'collapse_to_rvec_inner' works with two ID columns and two data columns", {
+test_that("'collapse_to_rvec_inner' works with two 'by' columns and two data columns", {
     df <- data.frame(g = c("a", "a", "b", "b", "a", "a", "b", "b"),
                      value1 = 1:8,
                      h = c("y", "y", "y", "y", "z", "z", "z", "z"),
                      draw = c(1:2, 1:2, 1:2, 1:2),
                      value2 = 8:1)
     ans_obtained <- collapse_to_rvec_inner(data = df,
-                                           draw = "draw",
+                                           colnum_draw = c(draw = 4L),
                                            colnums_values = c(value1 = 2L, value2 = 5L),
                                            colnums_groups = integer(),
                                            type = NULL)
@@ -110,7 +109,7 @@ test_that("'collapse_to_rvec_inner' works with nrow = 0", {
                      draw = integer(),
                      value2 = integer())
     ans_obtained <- collapse_to_rvec_inner(data = df,
-                                           draw = "draw",
+                                           colnum_draw = c(draw = 4L),
                                            colnums_values = c(value1 = 2L, value2 = 5L),
                                            colnums_groups = integer(),
                                            type = NULL)
@@ -121,14 +120,14 @@ test_that("'collapse_to_rvec_inner' works with nrow = 0", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'collapse_to_rvec_inner' works with two ID columns and two data columns", {
+test_that("'collapse_to_rvec_inner' works with two 'by' columns and two data columns", {
     df <- data.frame(g = c("a", "a", "b", "b", "a", "a", "b", "b"),
                      value1 = 1:8,
                      h = c("y", "y", "y", "y", "z", "z", "z", "z"),
                      draw = c(1:2, 1:2, 1:2, 1:2),
                      value2 = 8:1)
     ans_obtained <- collapse_to_rvec_inner(data = df,
-                                           draw = "draw",
+                                           colnum_draw = c(draw = 4L),
                                            colnums_values = c(value1 = 2L, value2 = 5L),
                                            colnums_groups = integer(),
                                            type = "di")
@@ -166,7 +165,7 @@ test_that("'expand_from_rvec' works with grouped data frame", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'expand_from_rvec' works with two ID columns and two data columns", {
+test_that("'expand_from_rvec' works with two 'by' columns and two data columns", {
     df <- data.frame(g = c("a", "b", "a", "b"),
                      value1 = rvec_int(rbind(1:2, 3:4, 5:6, 7:8)),
                      h = c("y", "y", "z", "z"),
@@ -223,7 +222,7 @@ test_that("'expand_from_rvec_inner' works with grouped data frame", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'expand_from_rvec_inner' works with two ID columns and two data columns", {
+test_that("'expand_from_rvec_inner' works with two 'by' columns and two data columns", {
     df <- data.frame(g = c("a", "b", "a", "b"),
                      value1 = rvec_int(rbind(1:2, 3:4, 5:6, 7:8)),
                      h = c("y", "y", "z", "z"),

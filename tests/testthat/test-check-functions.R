@@ -90,7 +90,7 @@ test_that("'check_idx_dup' throws expected error", {
                                data = data,
                                colnum_draw = c(dr = 3L),
                                colnums_id = c(id1 = 1L, id2 = 2L)),
-                 "Multiple rows with the same values for ID variables:")
+                 "Multiple rows with the same values for 'by' variables:")
 })
 
 
@@ -121,7 +121,7 @@ test_that("'check_idx_gap' throws expected error", {
                               idvars_ans = data[1, 1:2],
                               draw_ans = 1:3,
                               nm_draw = "DRAW"),
-                 "Missing combination of values for ID and draw variables:")
+                 "Missing combination of values for 'by' and 'draw' variables:")
 })
 
 
