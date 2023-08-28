@@ -5,12 +5,18 @@
 \alias{rvec-package}
 \title{Package 'rvec'}
 \description{
-Many modern statistical methods, including Bayesian methods,
-yield draws from a distribution for the quantities of interest.
-An enormously useful feature of draws from a distribution is
-that they can used to generate distributions for new
-quantities. Posterior distributions for death rates, for instance,
-can be turned into posterior distributions for life expectancies.
+Tools for working with random draws from a distribution, eg
+draws from a posterior distribution in a Bayesian analysis.
+}
+\details{
+An rvec holds multiple draws, but wherever possible
+behaves like an ordinary R vector. For instance, if \code{x}
+is an rvec holding 1000 draws from a distribution,
+then \code{2 * x} returns a new rvec where each draw has
+been multiplied by 2.
+
+To summarise across draws, use a function starting with \code{draws}.
+For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws_ci()}}.
 }
 \section{Functions}{
 
@@ -85,6 +91,14 @@ can be turned into posterior distributions for life expectancies.
 \itemize{
 \item \code{\link[=divorce]{divorce()}}
 \item \code{\link[=reg_post]{reg_post()}}
+}
+}
+
+\section{Packages with similar functionality}{
+
+\itemize{
+\item \href{https://CRAN.R-project.org/package=rv}{rv}
+\item \href{https://CRAN.R-project.org/package=posterior}{posterior}
 }
 }
 
