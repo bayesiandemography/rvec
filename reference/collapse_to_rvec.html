@@ -60,13 +60,13 @@ from an rvecs format to a database format.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">collapse_to_rvec</span><span class="op">(</span><span class="va">data</span>, draw <span class="op">=</span> <span class="st">"draw"</span>, values <span class="op">=</span> <span class="va">value</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">collapse_to_rvec</span><span class="op">(</span><span class="va">data</span>, draw <span class="op">=</span> <span class="va">draw</span>, values <span class="op">=</span> <span class="va">value</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data.frame</span></span>
-<span><span class="fu">collapse_to_rvec</span><span class="op">(</span><span class="va">data</span>, draw <span class="op">=</span> <span class="st">"draw"</span>, values <span class="op">=</span> <span class="va">value</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">collapse_to_rvec</span><span class="op">(</span><span class="va">data</span>, draw <span class="op">=</span> <span class="va">draw</span>, values <span class="op">=</span> <span class="va">value</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for grouped_df</span></span>
-<span><span class="fu">collapse_to_rvec</span><span class="op">(</span><span class="va">data</span>, draw <span class="op">=</span> <span class="st">"draw"</span>, values <span class="op">=</span> <span class="va">value</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">collapse_to_rvec</span><span class="op">(</span><span class="va">data</span>, draw <span class="op">=</span> <span class="va">draw</span>, values <span class="op">=</span> <span class="va">value</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">expand_from_rvec</span><span class="op">(</span><span class="va">data</span>, draw <span class="op">=</span> <span class="st">"draw"</span><span class="op">)</span></span>
 <span></span>
@@ -85,9 +85,11 @@ from an rvecs format to a database format.</p>
 
 
 <dt>draw</dt>
-<dd><p>The variable that uniquely identifies
+<dd><p>&lt;<code><a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">tidyselect</a></code>&gt;
+The variable that uniquely identifies
 random draws within each combination of
-values for the ID variables. A string.</p></dd>
+values for the 'by' variables. Must be quoted
+for <code>expand_from_rvec()</code>.</p></dd>
 
 
 <dt>values</dt>
@@ -121,9 +123,9 @@ data frame.</p></li>
 one random draw. The data frame contains
 a 'draw' variable that distinguishes different
 draws within the same combination
-of ID variables. In rvec format,
+of 'by' variables. In rvec format,
 each row represents one
-combination of ID variables, and
+combination of 'by' variables, and
 multiple draws are stored in an <a href="rvec.html">rvec</a>.
 See below for examples.</p>
     </div>
@@ -133,7 +135,7 @@ See below for examples.</p>
 
 
 <p><code>collapse_to_rvec()</code> and <code>expand_from_rvec()</code>
-operate with three kinds of variables:</p><ul><li><p>Values variables, holding hold measurements
+operate with three kinds of variables:</p><ul><li><p>'values' variables, holding hold measurements
 of some random or uncertain quantity.
 In <code>collapse_to_rvec()</code>,
 values variables are specified by the
@@ -141,19 +143,19 @@ values variables are specified by the
 treats all rvecs as value variables.</p></li>
 <li><p>The draw variable, used to uniquely identify
 each draw in a database format, within
-each combination of ID values. Specified
+each combination of 'by' values. Specified
 by the <code>draw</code> argument.</p></li>
-<li><p>ID variables, which hold covariates or
+<li><p>'by' variables, which hold covariates or
 classification variables.
 - If <code>data</code> is an ordinary data frame, then
 <code>collapse_to_rvec()</code> and <code>expand_from_rvec()</code>
 assume that all variables that are not
-values or draw variables are ID variables.
+values or draw variables are by variables.
 - If <code>data</code> is a
 <a href="https://dplyr.tidyverse.org/reference/group_data.html" class="external-link">grouped</a>
 data frame, then <code>collapse_to_rvec()</code>
 and <code>expand_from_rvec()</code> assume that the
-grouping variables are ID variables.</p></li>
+grouping variables are by variables.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="type-argument"><code>type</code> argument<a class="anchor" aria-label="anchor" href="#type-argument"></a></h2>
@@ -186,7 +188,7 @@ to a list variable.</p></li>
 gives the names of the grouping variables
 in a grouped data frame.</p></li>
 </ul><p><code>collapse_to_rvec()</code> and <code>expand_from_rvec()</code>
-are reminiscent of
+are analogous to
 <a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">tidyr::nest()</a>
 and
 <a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">tidyr::unnest()</a>
@@ -222,7 +224,7 @@ more flexible.)</p></div>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## database format to rvec format</span></span></span>
 <span class="r-in"><span><span class="va">data_rv</span> <span class="op">&lt;-</span> <span class="va">data_db</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">collapse_to_rvec</span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"sim"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">collapse_to_rvec</span><span class="op">(</span>draw <span class="op">=</span> <span class="va">sim</span>,</span></span>
 <span class="r-in"><span>                   values <span class="op">=</span> <span class="va">pay</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data_rv</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
@@ -260,30 +262,29 @@ more flexible.)</p></div>
 <span class="r-in"><span><span class="co">## specify that rvec variable</span></span></span>
 <span class="r-in"><span><span class="co">## must be rvec_int</span></span></span>
 <span class="r-in"><span><span class="va">data_rv</span> <span class="op">&lt;-</span> <span class="va">data_db</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">collapse_to_rvec</span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"sim"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">collapse_to_rvec</span><span class="op">(</span>draw <span class="op">=</span> <span class="va">sim</span>,</span></span>
 <span class="r-in"><span>                   values <span class="op">=</span> <span class="va">pay</span>,</span></span>
 <span class="r-in"><span>                   type <span class="op">=</span> <span class="st">"i"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## if we add add a redundant variable,</span></span></span>
 <span class="r-in"><span><span class="co">## then our earlier call no longer works</span></span></span>
 <span class="r-in"><span><span class="va">data_db2</span> <span class="op">&lt;-</span> <span class="va">data_db</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>newcol <span class="op">=</span> <span class="st">"pointless"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>newcol <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">data_db2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span>    <span class="fu">collapse_to_rvec</span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"sim"</span>,</span></span>
+<span class="r-in"><span>    <span class="fu">collapse_to_rvec</span><span class="op">(</span>draw <span class="op">=</span> <span class="va">sim</span>,</span></span>
 <span class="r-in"><span>                     values <span class="op">=</span> <span class="va">pay</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   occupation           pay newcol   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;3&gt;&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Statistician  100,80,105 pointless</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Banker       400,350,420 pointless</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Missing combination of values for 'by' and 'draw' variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `occupation`: <span style="color: #0000BB;">"Statistician"</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `newcol`: <span style="color: #0000BB;">2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `sim`: <span style="color: #0000BB;">1</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## one solution: use 'group_by' to</span></span></span>
-<span class="r-in"><span><span class="co">## specify the ID variables</span></span></span>
+<span class="r-in"><span><span class="co">## specify the 'by' variables</span></span></span>
 <span class="r-in"><span><span class="va">data_db2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">occupation</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">collapse_to_rvec</span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"sim"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">collapse_to_rvec</span><span class="op">(</span>draw <span class="op">=</span> <span class="va">sim</span>,</span></span>
 <span class="r-in"><span>                   values <span class="op">=</span> <span class="va">pay</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   occupation [2]</span></span>
