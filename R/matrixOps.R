@@ -12,7 +12,7 @@
 #' column vector. Instead it produces an
 #' ordinary rvec, with no dimensions.
 #'
-#' @param e1,e2 Vectors, matrices, or rvecs.
+#' @param x,y Vectors, matrices, or rvecs.
 #'
 #' @returns An rvec, if `x` or `y`
 #' is an rvec.
@@ -33,19 +33,19 @@
 #' A %*% y
 #' @method matrixOps rvec
 #' @export
-matrixOps.rvec <- function(e1, e2) {
-    is_rvec_e1 <- is_rvec(e1)
-    is_rvec_e2 <- is_rvec(e2)
-    if (is_rvec_e1 && is_rvec_e2) 
-        ans <- sum(e1 * e2)
-    else if (!is_rvec_e1 && is_rvec_e2) {
-        my <- field(e2, "data")
-        ans <- e1 %*% my
+matrixOps.rvec <- function(x, y) {
+    is_rvec_x <- is_rvec(x)
+    is_rvec_y <- is_rvec(y)
+    if (is_rvec_x && is_rvec_y) 
+        ans <- sum(x * y)
+    else if (!is_rvec_x && is_rvec_y) {
+        my <- field(y, "data")
+        ans <- x %*% my
         ans <- rvec(ans)
     }
     else {
-        mx <- field(e1, "data")
-        ans <- t(crossprod(mx, e2))
+        mx <- field(x, "data")
+        ans <- t(crossprod(mx, y))
         ans <- rvec(ans)
     }
     ans

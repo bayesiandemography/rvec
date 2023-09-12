@@ -4,10 +4,10 @@
 \alias{matrixOps.rvec}
 \title{Matrix multiplication with rvecs}
 \usage{
-\method{matrixOps}{rvec}(e1, e2)
+\method{matrixOps}{rvec}(x, y)
 }
 \arguments{
-\item{e1, e2}{Vectors, matrices, or rvecs.}
+\item{x, y}{Vectors, matrices, or rvecs.}
 }
 \value{
 An rvec, if \code{x} or \code{y}
