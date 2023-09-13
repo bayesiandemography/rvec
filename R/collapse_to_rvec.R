@@ -38,7 +38,7 @@
 #'       - If `data` is an ordinary data frame, then
 #'         `collapse_to_rvec()` and `expand_from_rvec()`
 #'         assume that all variables that are not
-#'         values or draw variables are by variables.
+#'         values or draw variables are 'by' variables.
 #'       - If `data` is a
 #'         [grouped](https://dplyr.tidyverse.org/reference/group_data.html)
 #'         data frame, then `collapse_to_rvec()`

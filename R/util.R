@@ -87,6 +87,10 @@ get_colnums_all <- function(data) {
 #' tidyselect::eval_select, but for the grouping
 #' variables in an object of class
 #' "grouped_df".
+#'
+#' A version of this function exists in 'poputils',
+#' but we don't use it, to avoid dependency on
+#' 'poputils'.
 #' 
 #' @param data An object of class
 #' "grouped_df" (eg created by dplyr::group_by.)
@@ -236,6 +240,10 @@ make_probs <- function(width) {
 #' each element of which contains a
 #' a column from 'm'.
 #'
+#' A version of this function exists in 'poputils',
+#' but we don't use it, to avoid dependency on
+#' 'poputils'.
+#'
 #' @param m A matrix
 #'
 #' @return A list of vectors.
@@ -261,6 +269,10 @@ matrix_to_list_of_cols <- function(m) {
 #' Given a matrix 'm', create a list,
 #' each element of which contains a
 #' a row from 'm'.
+#'
+#' A version of this function exists in 'poputils',
+#' but we don't use it, to avoid dependency on
+#' 'poputils'.
 #'
 #' @param m A matrix
 #'
