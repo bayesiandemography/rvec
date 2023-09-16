@@ -91,7 +91,7 @@ classification variables.
 - If \code{data} is an ordinary data frame, then
 \code{collapse_to_rvec()} and \code{expand_from_rvec()}
 assume that all variables that are not
-values or draw variables are by variables.
+values or draw variables are 'by' variables.
 - If \code{data} is a
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}
 data frame, then \code{collapse_to_rvec()}
