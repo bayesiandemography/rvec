@@ -196,7 +196,10 @@ draws_ci.rvec <- function(x,
     if (nrow(m) == 0L)
         ans <- stats::quantile(double(), probs = probs)
     else {
-        ans <- matrixStats::rowQuantiles(m, probs = probs, na.rm = na_rm)
+        ans <- matrixStats::rowQuantiles(m,
+                                         probs = probs,
+                                         na.rm = na_rm,
+                                         drop = FALSE)
         ans <- matrix_to_list_of_cols(ans)
     }
     nms <- c(".lower", ".mid", ".upper")
@@ -449,7 +452,10 @@ draws_quantile.rvec <- function(x,
     if (nrow(m) == 0L)
         ans <- stats::quantile(double(), probs = probs)
     else {
-        ans <- matrixStats::rowQuantiles(m, probs = probs, na.rm = na_rm)
+        ans <- matrixStats::rowQuantiles(m,
+                                         probs = probs,
+                                         na.rm = na_rm,
+                                         drop = FALSE)
         ans <- matrix_to_list_of_cols(ans)
     }
     nms <- names(ans)
