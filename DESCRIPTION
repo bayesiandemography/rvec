@@ -3,11 +3,17 @@ Type: Package
 Title: Vector Representing a Random Variable
 Version: 0.0.2
 Authors@R: 
-    person("John", "Bryant", ,
-           "john@bayesiandemography.com", role = c("aut", "cre"))
-Description: An object of class "rvec" holds holds multiple draws
-    from a distribution, but tries to behave as much as possible
-    like a standard R vector, including working well in data frames.
+    c(person(given = "John",
+             family = "Bryant",
+             role = c("aut", "cre"),
+             email = "john@bayesiandemography.com"),
+      person("Bayesian Demography Limited",
+             role = "cph"))
+Description: Random vectors, called "rvecs". An "rvec" holds
+    holds multiple draws, but tries to behave like a standard
+    R vector, including working well in data frames. Rvecs are
+    useful for working with output from a simulation or
+    a Bayesian analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -38,7 +44,8 @@ Suggests:
     posterior,
     rmarkdown,
     testthat (>= 3.0.0),
-    tidyr
+    tidyr,
+    vdiffr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://bayesiandemography.github.io/rvec/

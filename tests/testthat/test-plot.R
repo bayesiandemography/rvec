@@ -1,50 +1,45 @@
 
 ## 'plot' ---------------------------------------------------------------------
 
-## check these by eye when necessary
 
-if (FALSE) {
+test_that("plot.rvec_chr works", {
+    set.seed(0)
+    m <- matrix(sample(c(letters[1:10], NA),
+                       prob = 11:1,
+                       size = 1000,
+                       replace = TRUE),
+                nrow = 10)
+    x <- rvec(m)
+    p <- plot(x)
+    expect_true(TRUE)
+})
 
-    test_that("plot.rvec_chr works", {
-        set.seed(0)
-        m <- matrix(sample(c(letters[1:10], NA),
-                           prob = 11:1,
-                           size = 1000,
-                           replace = TRUE),
-                    nrow = 10)
-        x <- rvec(m)
-        p <- plot(x)
-        expect_true(TRUE)
-    })
+test_that("plot.rvec_dbl works", {
+    set.seed(0)
+    m <- matrix(rnorm(1000),
+                nrow = 10)
+    x <- rvec(m)
+    p <- plot(x)
+    expect_true(TRUE)
+})
 
-    test_that("plot.rvec_dbl works", {
-        set.seed(0)
-        m <- matrix(rnorm(1000),
-                    nrow = 10)
-        x <- rvec(m)
-        p <- plot(x)
-        expect_true(TRUE)
-    })
+test_that("plot.rvec_int works", {
+    set.seed(0)
+    m <- matrix(rpois(1000, lambda = 10),
+                nrow = 10)
+    x <- rvec(m)
+    p <- plot(x)
+    expect_true(TRUE)
+})
 
-    test_that("plot.rvec_int works", {
-        set.seed(0)
-        m <- matrix(rpois(1000, lambda = 10),
-                    nrow = 10)
-        x <- rvec(m)
-        p <- plot(x)
-        expect_true(TRUE)
-    })
-
-    test_that("plot.rvec_lgl works", {
-        set.seed(0)
-        m <- matrix(sample(c(TRUE, FALSE), size =1000, prob = c(5, 1), replace = TRUE),
-                    nrow = 10)
-        x <- rvec(m)
-        p <- plot(x)
-        expect_true(TRUE)
-    })
-
-}
+test_that("plot.rvec_lgl works", {
+    set.seed(0)
+    m <- matrix(sample(c(TRUE, FALSE), size =1000, prob = c(5, 1), replace = TRUE),
+                nrow = 10)
+    x <- rvec(m)
+    p <- plot(x)
+    expect_true(TRUE)
+})
 
 
 
