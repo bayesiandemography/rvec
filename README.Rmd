@@ -21,42 +21,51 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/bayesiandemography/rvec/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bayesiandemography/rvec?branch=main)
 <!-- badges: end -->
 
-Tools for working with posterior distributions and simulation output. An `rvec` behaves much like a standard R vector, but holds multiple random draws.
+Tools for working with multiple random draws, including output from a simulation or from a Bayesian analysis. The main data structure is an `rvec`, which holds multiple draws, but which behaves (mainly) like a standard R vector.
 
 
 ## Installation
 
-Install the development version of rvec from [GitHub](https://github.com/) with:
-
 ``` r
-# install.packages("devtools")
-devtools::install_github("bayesiandemography/rvec")
+install.packages("rvec")                            ## CRAN version
+devtools::install_github("bayesiandemography/rvec") ## development version
 ```
 
 ## Example
 
-```{r example}
+```{r}
 library(rvec, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
+```
 
+Create an `rvec`.
+```{r}
 x <- rvec(rbind(c(10, 11),
                 c(100, 101),
                 c(1000, 1001)))
 x
 ```
 
+Perform arithmetic on it.
 ```{r}
 x + 1
 ```
 
+Put it in a tibble.
 ```{r}
 df <- tibble(g = c(1, 2, 1), x)
 df
 ```
 
+Manipulate it in a tibble.
 ```{r}
 df %>%
   group_by(g) %>%
   count(wt = x)
+```
+
+Summarise it.
+```{r}
+draws_mean(x)
 ```
 
