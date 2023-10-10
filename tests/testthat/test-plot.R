@@ -1,7 +1,6 @@
 
 ## 'plot' ---------------------------------------------------------------------
 
-
 test_that("plot.rvec_chr works", {
     set.seed(0)
     m <- matrix(sample(c(letters[1:10], NA),
@@ -10,8 +9,8 @@ test_that("plot.rvec_chr works", {
                        replace = TRUE),
                 nrow = 10)
     x <- rvec(m)
-    p <- plot(x)
-    expect_true(TRUE)
+    p <- function() plot(x)
+    vdiffr::expect_doppelganger("plot.rvec_chr", p)
 })
 
 test_that("plot.rvec_dbl works", {
@@ -19,8 +18,8 @@ test_that("plot.rvec_dbl works", {
     m <- matrix(rnorm(1000),
                 nrow = 10)
     x <- rvec(m)
-    p <- plot(x)
-    expect_true(TRUE)
+    p <- function() plot(x)
+    vdiffr::expect_doppelganger("plot.rvec_dbl", p)
 })
 
 test_that("plot.rvec_int works", {
@@ -28,8 +27,8 @@ test_that("plot.rvec_int works", {
     m <- matrix(rpois(1000, lambda = 10),
                 nrow = 10)
     x <- rvec(m)
-    p <- plot(x)
-    expect_true(TRUE)
+    p <- function() plot(x)
+    vdiffr::expect_doppelganger("plot.rvec_int", p)
 })
 
 test_that("plot.rvec_lgl works", {
@@ -37,10 +36,9 @@ test_that("plot.rvec_lgl works", {
     m <- matrix(sample(c(TRUE, FALSE), size =1000, prob = c(5, 1), replace = TRUE),
                 nrow = 10)
     x <- rvec(m)
-    p <- plot(x)
-    expect_true(TRUE)
+    p <- function() plot(x)
+    vdiffr::expect_doppelganger("plot.rvec_lgl", p)
 })
-
 
 
 ## 'yval_labels_for_plot_chr' -------------------------------------------------

@@ -321,6 +321,12 @@ test_that("'mean' works with empty rvec_lgl", {
     expect_equal(ans_obtained, ans_expected)
 })
 
+test_that("'cumprod' returns rvec_dbl with integer inputs", {
+    x <- rvec_int(rbind(1:4, 5:8))
+    ans <- cumprod(x)
+    expect_s3_class(ans, "rvec_dbl")
+})
+
 test_that("'cummax' works with non-empty double", {
     x <- rvec_dbl(rbind(1:4, 5:8))
     ans_obtained <- cummax(x)
