@@ -20,7 +20,7 @@ standard R vector.
 ## Installation
 
 ``` r
-install.packages("rvec")                            ## CRAN version
+## install.packages("rvec")                         ## CRAN version - not ready yet
 devtools::install_github("bayesiandemography/rvec") ## development version
 ```
 
