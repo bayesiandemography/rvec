@@ -352,7 +352,7 @@
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;1000&gt;[2]&gt;</span></span>
-<span><span class="co">#&gt; [1] -0.00059 (-2, 1.9) 0.012 (-1.8, 1.9)</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -0.03 (-1.9, 1.9) 0.039 (-1.9, 2.1)</span></span></code></pre></div>
 <p>or an atomic vector</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -435,12 +435,12 @@
 <span><span class="co">#&gt; [1] 0.1258,0.1283 0.08066,0.018</span></span>
 <span><span class="fu"><a href="../reference/rvec-distributions.html">rbinom_rvec</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">y</span><span class="op">+</span><span class="fl">10</span><span class="op">)</span>, prob <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_int&lt;2&gt;[2]&gt;</span></span>
-<span><span class="co">#&gt; [1] 6,8  10,3</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 9,7  12,3</span></span></code></pre></div>
 <p>The return value from an <strong>rvec</strong> probability function is an rvec if and only if at least one argument to the function is an rvec – with one exception. The exception is random variate functions where a value is suppplied for a special argument called <code>n_draw</code>. When a value for <code>n_draw</code> is supplied, the return value is an rvec with <code>n_draw</code> draws,</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rvec-distributions.html">rnorm_rvec</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">10</span>, n_draw <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[3]&gt;</span></span>
-<span><span class="co">#&gt; [1] 87.47,92.63 115.5,107.2 104,97.55</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 78.08,101.6 102.6,112.9 103.2,110.3</span></span></code></pre></div>
 <p>This is a convenient way to create inputs to a simulation.</p>
 </div>
 <div class="section level2" number="7">
