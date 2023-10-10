@@ -57,6 +57,8 @@ test_that("'as.logical' method for rvec works", {
 test_that("'as.numeric' method for rvec works", {
     m <- matrix(c(0, 1, 0, -1), nr = 2)
     x <- rvec(m)
+    expect_identical(as.numeric.rvec(x),
+                     as.numeric(m))
     expect_identical(as.numeric(x),
                      as.numeric(m))
 })

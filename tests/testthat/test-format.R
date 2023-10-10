@@ -89,3 +89,15 @@ test_that("format_rvec_elements works with logical", {
     expect_identical(format_rvec_elements(matrix(c(TRUE, FALSE, NA), nr = 1)),
                      matrix(c("T", "F", NA), nr = 1))
 })                     
+
+test_that("obj_print_data.rvec works with length 0", {
+    x <- rvec_dbl()
+    ans_obtained <- vctrs::obj_print_data(x)
+    ans_expected <- x
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("obj_print_data.rvec works with length > 0", {
+    x <- rvec_dbl(matrix(1:4, 2))
+    expect_snapshot(vctrs::obj_print_data(x))
+})

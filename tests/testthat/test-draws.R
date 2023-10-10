@@ -134,6 +134,11 @@ test_that("'draws_ci' works with rvec_int when nrow == 0", {
     expect_equal(ans_obtained, ans_expected)
 })
 
+test_that("'draws_ci' throws correct error with rvec_chr", {
+    expect_error(draws_ci(rvec_chr("a")),
+                 "Credible intervals not defined for character.")
+})
+
 
 ## 'draws_median' -------------------------------------------------------------
 

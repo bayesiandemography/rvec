@@ -238,6 +238,29 @@ test_that("'expand_from_rvec_inner' works with two 'by' columns and two data col
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'expand_from_rvec_inner' gives correct error when already has draw column", {
+    df <- data.frame(g = c("a", "b", "a", "b"),
+                     value1 = rvec_int(rbind(1:2, 3:4, 5:6, 7:8)),
+                     h = c("y", "y", "z", "z"),
+                     value2 = rvec_int(rbind(8:7, 6:5, 4:3, 2:1)))
+    expect_error(expand_from_rvec_inner(data = df,
+                                        draw = "value2",
+                                        colnums_values = c(value1 = 2L)),
+                 "`data` already has a column called \"value2\"")
+})
+
+test_that("'expand_from_rvec_inner' gives correct error when no rvecs", {
+    df <- data.frame(g = c("a", "b", "a", "b"),
+                     value = 1:4,
+                     h = c("y", "y", "z", "z"))
+    expect_error(expand_from_rvec_inner(data = df,
+                                        draw = "draw",
+                                        colnums_values = integer()),
+                 "`data` does not have any rvecs")
+})
+
+
+
 
 
     
