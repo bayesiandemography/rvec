@@ -11,6 +11,17 @@ test_that("'dbeta_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'dbeta_rvec' works with valid input - ncp nonzero", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    shape1 <- rvec(m)
+    shape2 <- rvec(2 * m)
+    ans_obtained <- dbeta_rvec(x = x, shape1 = shape1, shape2 = shape2, ncp = 0.5, log = TRUE)
+    ans_expected <- rvec(matrix(dbeta(x = x, shape1 = m, shape2 = 2 * m, ncp = 0.5, log = TRUE),
+                                nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
 test_that("'pbeta_rvec' works with valid input", {
     m <- matrix(1:6, nr = 2)
     q <- 2:1
@@ -21,17 +32,49 @@ test_that("'pbeta_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'qbeta_rvec' works with valid input", {
+test_that("'pbeta_rvec' works with valid input - ncp nonzero", {
     m <- matrix(1:6, nr = 2)
-    q <- rvec(m)
+    q <- 2:1
+    shape1 <- rvec(m)
+    shape2 <- rvec(2 * m)
+    ans_obtained <- pbeta_rvec(q, shape1, shape2, ncp = 0.5, log.p = TRUE)
+    ans_expected <- rvec(matrix(pbeta(q = q, shape1 = m, shape2 = 2 * m, ncp = 0.5, log.p = TRUE),
+                                nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qbeta_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)/6
+    p <- rvec(m)
     shape1 <- rvec(m)
     shape2 <- 3
-    ans_obtained <- pbeta_rvec(q, shape1, shape2)
-    ans_expected <- rvec(matrix(pbeta(q = m, shape1 = m, shape2 = 3), nr = 2))
+    ans_obtained <- qbeta_rvec(p, shape1, shape2)
+    ans_expected <- rvec(matrix(qbeta(p = m, shape1 = m, shape2 = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qbeta_rvec' works with valid input - ncp nonzero", {
+    m <- matrix(1:6, nr = 2)/6
+    p <- rvec(m)
+    shape1 <- rvec(m)
+    shape2 <- 3
+    ans_obtained <- qbeta_rvec(p, shape1, shape2, ncp = 0.5)
+    ans_expected <- rvec(matrix(qbeta(p = m, shape1 = m, shape2 = 3, ncp = 0.5), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'rbeta_rvec' works with valid input - n_draw is NULL", {
+    m <- matrix(1:6, nr = 2)
+    shape1 <- rvec(m)
+    shape2 <- 3
+    set.seed(0)
+    ans_obtained <- rbeta_rvec(n = 2, shape1, shape2)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rbeta(n = 6, shape1 = m, shape2 = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rbeta_rvec' works with valid input - n_draw is NULL, ncp nonzero", {
     m <- matrix(1:6, nr = 2)
     shape1 <- rvec(m)
     shape2 <- 3
@@ -76,12 +119,12 @@ test_that("'pbinom_rvec' works with valid input", {
 })
 
 test_that("'qbinom_rvec' works with valid input", {
-    m <- matrix(1:6, nr = 2)
-    q <- 0.5 * rvec(m)
+    m <- matrix(1:6, nr = 2)/6
+    p <- rvec(m)
     size <- rvec(m)
     prob <- rvec(0.1 * m)
-    ans_obtained <- pbinom_rvec(q, size, prob)
-    ans_expected <- rvec(matrix(pbinom(q = 0.5 * m, size = m, prob = 0.1 * m), nr = 2))
+    ans_obtained <- qbinom_rvec(p, size, prob)
+    ans_expected <- rvec(matrix(qbinom(m, size = m, prob = 0.1 * m), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -172,6 +215,16 @@ test_that("'dchisq_rvec' works with valid input", {
     df <- rvec(m)
     x <- 2:1
     df <- rvec(m)
+    ans_obtained <- dchisq_rvec(x, df)
+    ans_expected <- rvec(matrix(dchisq(x = x, df = m, log = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dchisq_rvec' works with valid input - ncp supplied", {
+    m <- matrix(1:6, nr = 2)
+    df <- rvec(m)
+    x <- 2:1
+    df <- rvec(m)
     ans_obtained <- dchisq_rvec(x, df, ncp = 0.001)
     ans_expected <- rvec(matrix(dchisq(x = x, df = m, ncp = 0.001, log = FALSE), nr = 2))
     expect_identical(ans_obtained, ans_expected)
@@ -187,12 +240,31 @@ test_that("'pchisq_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'pchisq_rvec' works with valid input - ncp supplied", {
+    m <- matrix(1:6, nr = 2)
+    df <- rvec(m)
+    q <- 2:1
+    df <- rvec(m)
+    ans_obtained <- pchisq_rvec(q, df, lower.tail = FALSE, ncp = 0.3)
+    ans_expected <- rvec(matrix(pchisq(q, df = m, lower.tail = FALSE, ncp = 0.3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
 test_that("'qchisq_rvec' works with valid input", {
     m <- matrix(seq(0.1, 0.6, 0.1), nr = 2)
     p <- rvec(m)
     df <- c(2.1, 0.8)
     ans_obtained <- qchisq_rvec(p, df, lower.tail = FALSE)
     ans_expected <- rvec(matrix(qchisq(m, df = df, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qchisq_rvec' works with valid input - ncp supplied", {
+    m <- matrix(seq(0.1, 0.6, 0.1), nr = 2)
+    p <- rvec(m)
+    df <- c(2.1, 0.8)
+    ans_obtained <- qchisq_rvec(p, df, lower.tail = FALSE, ncp = 0.3)
+    ans_expected <- rvec(matrix(qchisq(m, df = df, lower.tail = FALSE, ncp = 0.3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -212,6 +284,15 @@ test_that("'rchisq_rvec' works with valid input - n_draw supplied", {
     ans_obtained <- rchisq_rvec(2, df, n_draw = 3)
     set.seed(0)
     ans_expected <- rvec(matrix(rchisq(6, df = df), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rchisq_rvec' works with valid input - n_draw supplied, ncp supplied", {
+    df <- 3:4
+    set.seed(0)
+    ans_obtained <- rchisq_rvec(2, df, n_draw = 3, ncp = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rchisq(6, df = df, ncp = 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -280,6 +361,16 @@ test_that("'df_rvec' works with valid input", {
     expect_equal(ans_obtained, ans_expected)
 })
 
+test_that("'df_rvec' works with valid input - ncp supplied", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    df1 <- rvec(m)
+    df2 <- rvec(2 * m)
+    ans_obtained <- df_rvec(x = x, df1 = df1, df2 = df2, ncp = 0.5, log = TRUE)
+    ans_expected <- rvec(matrix(df(x = x, df1 = m, df2 = 2 * m, ncp = 0.5, log = TRUE), nr = 2))
+    expect_equal(ans_obtained, ans_expected)
+})
+
 test_that("'pf_rvec' works with valid input", {
     m <- matrix(1:6, nr = 2)
     q <- 2:1
@@ -290,13 +381,33 @@ test_that("'pf_rvec' works with valid input", {
     expect_equal(ans_obtained, ans_expected)
 })
 
-test_that("'qf_rvec' works with valid input", {
+test_that("'pf_rvec' works with valid input, ncp supplied", {
     m <- matrix(1:6, nr = 2)
-    q <- rvec(m)
+    q <- 2:1
+    df1 <- rvec(m)
+    df2 <- rvec(2 * m)
+    ans_obtained <- pf_rvec(q, df1, df2, ncp = 1, log.p = TRUE)
+    ans_expected <- rvec(matrix(pf(q = q, df1 = m, df2 = 2 * m, ncp = 1, log.p = TRUE), nr = 2))
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'qf_rvec' works with valid input", {
+    m <- matrix(1:6, nr = 2)/6
+    p <- rvec(m)
     df1 <- rvec(m)
     df2 <- 3
-    ans_obtained <- pf_rvec(q, df1, df2)
-    ans_expected <- rvec(matrix(pf(q = m, df1 = m, df2 = 3), nr = 2))
+    ans_obtained <- qf_rvec(p, df1, df2)
+    ans_expected <- rvec(matrix(qf(p = m, df1 = m, df2 = 3), nr = 2))
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'qf_rvec' works with valid input, ncp supplied", {
+    m <- matrix(1:6, nr = 2)/6
+    p <- rvec(m)
+    df1 <- rvec(m)
+    df2 <- 3
+    ans_obtained <- qf_rvec(p, df1, df2, ncp = 3)
+    ans_expected <- rvec(matrix(qf(p = m, df1 = m, df2 = 3, ncp = 3), nr = 2))
     expect_equal(ans_obtained, ans_expected)
 })
 
@@ -321,6 +432,16 @@ test_that("'rf_rvec' works with valid input - n_draw supplied", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'rf_rvec' works with valid input - n_draw supplied, ncp supplied", {
+    df1 <- 2:1
+    df2 <- 3
+    set.seed(0)
+    ans_obtained <- rf_rvec(n = 2, df1, df2, ncp = 3, n_draw = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rf(n = 6, df1 = 2:1, df2 = 3, ncp = 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
 
 ## 'gamma' ---------------------------------------------------------------------
 
@@ -332,9 +453,21 @@ test_that("'dgamma_rvec' works with valid input", {
     ans_obtained <- dgamma_rvec(x = x, shape = shape, rate = rate, log = TRUE)
     ans_expected <- rvec(matrix(dgamma(x = x, shape = m, rate = 2 * m, log = TRUE), nr = 2))
     expect_identical(ans_obtained, ans_expected)
+    ans_obtained_scale <- dgamma_rvec(x = x, shape = shape, scale = 1 / rate, log = TRUE)
+    expect_equal(ans_obtained_scale, ans_obtained)    
 })
 
-test_that("'pgamma_rvec' works with valid input", {
+test_that("'dgamma_rvec' throws correct error when rate and scale both supplied", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    shape <- rvec(m)
+    rate <- rvec(2 * m)
+    scale <- 1 / rate
+    expect_error(dgamma_rvec(x = x, shape = shape, scale = scale, rate = rate, log = TRUE),
+                 "Value supplied for `rate` and for `scale`.")
+})
+
+test_that("'pgamma_rvec' works with valid input - scale", {
     m <- matrix(1:6, nr = 2)
     q <- 2:1
     shape <- rvec(m)
@@ -344,14 +477,52 @@ test_that("'pgamma_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'qgamma_rvec' works with valid input", {
+test_that("'pgamma_rvec' works with valid input - rate", {
     m <- matrix(1:6, nr = 2)
-    q <- rvec(m)
+    q <- 2:1
+    shape <- rvec(m)
+    scale <- rvec(2 * m)
+    ans_obtained <- pgamma_rvec(q, shape = shape, rate = 1 / scale, log.p = TRUE)
+    ans_expected <- rvec(matrix(pgamma(q = q, shape = m, rate = 1 / (2 * m), log.p = TRUE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'pgamma_rvec' throws error when rate and scale both supplied", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    shape <- rvec(m)
+    scale <- rvec(2 * m)
+    expect_error(pgamma_rvec(q, shape = shape, scale = scale, rate = 1 / scale, log.p = TRUE),
+                 "Value supplied for `rate` and for `scale`.")
+})
+
+test_that("'qgamma_rvec' works with valid input - rate supplied", {
+    m <- matrix(1:6, nr = 2)/6
+    p <- rvec(m)
     shape <- rvec(m)
     rate <- 3
-    ans_obtained <- pgamma_rvec(q, shape, rate = rate)
-    ans_expected <- rvec(matrix(pgamma(q = m, shape = m, rate = 3), nr = 2))
+    ans_obtained <- qgamma_rvec(p, shape, rate = rate)
+    ans_expected <- rvec(matrix(qgamma(p = m, shape = m, rate = 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qgamma_rvec' works with valid input - scale supplied", {
+    m <- matrix(1:6, nr = 2)/6
+    p <- rvec(m)
+    shape <- rvec(m)
+    scale <- 3
+    ans_obtained <- qgamma_rvec(p, shape, scale = scale)
+    ans_expected <- rvec(matrix(qgamma(p = m, shape = m, scale = scale), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qgamma_rvec' throws error when rate and scale both supplied", {
+    m <- matrix(1:6, nr = 2)
+    p <- 0.3
+    shape <- rvec(m)
+    scale <- rvec(2 * m)
+    expect_error(qgamma_rvec(p, shape = shape, scale = scale, rate = 1 / scale, log.p = TRUE),
+                 "Value supplied for `rate` and for `scale`.")
 })
 
 test_that("'rgamma_rvec' works with valid input - n_draw is NULL", {
@@ -374,6 +545,14 @@ test_that("'rgamma_rvec' works with valid input - n_draw is supplied", {
     set.seed(0)
     ans_expected <- rvec(matrix(rgamma(n = 6, shape = m, scale = 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'qgamma_rvec' throws error when rate and scale both supplied", {
+    m <- matrix(1:6, nr = 2)
+    shape <- rvec(m)
+    scale <- rvec(2 * m)
+    expect_error(rgamma_rvec(3, shape = shape, scale = scale, rate = 1 / scale),
+                 "Value supplied for `rate` and for `scale`.")
 })
 
 
@@ -474,12 +653,12 @@ test_that("'phyper_rvec' works with valid input", {
 
 test_that("'qhyper_rvec' works with valid input", {
     mm <- matrix(1:6, nr = 2)
-    q <- rvec(mm)
+    p <- rvec(mm) / 7
     m <- rvec(mm)
     n <- rvec(mm)
     k <- 1:2
-    ans_obtained <- phyper_rvec(q, m = m, n = n, k = k)
-    ans_expected <- rvec(matrix(phyper(q = mm, m = mm, n = mm, k = 1:2), nr = 2))
+    ans_obtained <- qhyper_rvec(p, m = m, n = n, k = k)
+    ans_expected <- rvec(matrix(qhyper(mm/7, m = mm, n = mm, k = 1:2), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -532,11 +711,11 @@ test_that("'plnorm_rvec' works with valid input", {
 
 test_that("'qlnorm_rvec' works with valid input", {
     m <- matrix(1:6, nr = 2)
-    q <- rvec(m)
+    p <- rvec(m)/6
     meanlog <- rvec(m)
     sdlog <- 3
-    ans_obtained <- plnorm_rvec(q, meanlog, sdlog)
-    ans_expected <- rvec(matrix(plnorm(q = m, meanlog = m, sdlog = 3), nr = 2))
+    ans_obtained <- qlnorm_rvec(p, meanlog, sdlog)
+    ans_expected <- rvec(matrix(qlnorm(p = m/6, meanlog = m, sdlog = 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -575,6 +754,17 @@ test_that("'dmultinom_rvec' works with valid input - x, size rvec", {
     ans_expected[[2]] <- dmultinom(x = 1:3, size = 6, prob = prob, log = TRUE)
     ans_expected <- rvec(matrix(ans_expected, nr = 1))
     expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dmultinom_rvec' works with valid input - size not supplied", {
+    x <- rvec(1:3)
+    prob <- rvec(cbind(3:1, 4:2))
+    ans_obtained <- dmultinom_rvec(x = x, prob = prob, log = TRUE)
+    ans_expected <- double(2)
+    ans_expected[[1]] <- dmultinom(x = 1:3, prob = 3:1, log = TRUE)
+    ans_expected[[2]] <- dmultinom(x = 1:3, prob = 4:2, log = TRUE)
+    ans_expected <- rvec(matrix(ans_expected, nr = 1))
+    expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'dmultinom_rvec' works with valid input - prob is rvec", {

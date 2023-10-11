@@ -785,7 +785,7 @@ dgamma_rvec <- function(x, shape, rate = 1, scale = 1/rate, log = FALSE) {
     has_rate <- !missing(rate)
     has_scale <- !missing(scale)
     if (has_rate && has_scale)
-        cli::cli_abort("Value supplied for {.arg rate} ({rate}) and for {.arg scale} ({scale})")
+        cli::cli_abort("Value supplied for {.arg rate} and for {.arg scale}.")
     if (!has_rate && has_scale)
         rate <- 1 / scale
     check_flag(log)
@@ -808,7 +808,7 @@ pgamma_rvec <- function(q, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, l
     has_rate <- !missing(rate)
     has_scale <- !missing(scale)
     if (has_rate && has_scale)
-        cli::cli_abort("Value supplied for {.arg rate} ({rate}) and for {.arg scale} ({scale})")
+        cli::cli_abort("Value supplied for {.arg rate} and for {.arg scale}.")
     if (!has_rate && has_scale)
         rate <- 1 / scale
     check_flag(lower.tail)
@@ -833,7 +833,7 @@ qgamma_rvec <- function(p, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, l
     has_rate <- !missing(rate)
     has_scale <- !missing(scale)
     if (has_rate && has_scale)
-        cli::cli_abort("Value supplied for {.arg rate} ({rate}) and for {.arg scale} ({scale})")
+        cli::cli_abort("Value supplied for {.arg rate} and for {.arg scale}.")
     if (!has_rate && has_scale)
         rate <- 1 / scale
     check_flag(lower.tail)
@@ -858,7 +858,7 @@ rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
     has_rate <- !missing(rate)
     has_scale <- !missing(scale)
     if (has_rate && has_scale)
-        cli::cli_abort("Value supplied for {.arg rate} ({rate}) and for {.arg scale} ({scale})")
+        cli::cli_abort("Value supplied for {.arg rate} and for {.arg scale}.")
     if (!has_rate && has_scale)
         rate <- 1 / scale
     rgamma <- stats::rgamma
