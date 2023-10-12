@@ -91,3 +91,17 @@ test_that("'vec_cast' throws appropriate error with invalid cast to rvec_lgl", {
 })
 
 
+## 'to_logical' ---------------------------------------------------------------
+
+test_that("'vec_cast' works with convergion from rvec_lgl to logical", {
+    x <- rvec(rbind(c(TRUE, FALSE),
+                    c(TRUE, TRUE),
+                    c(NA, TRUE),
+                    c(FALSE, FALSE)))
+    ans_obtained <- vec_cast(x, to = logical())
+    ans_expected <- c(FALSE, TRUE, NA, FALSE)
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
+

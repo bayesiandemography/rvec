@@ -1294,9 +1294,9 @@ dnbinom_rvec <- function(x, size, prob, mu, log = FALSE) {
     has_prob <- !missing(prob)
     has_mu <- !missing(mu)
     if (has_prob && has_mu)
-        cli::cli_abort("Values supplied for {.arg prob} and for {.arg mu}")
+        cli::cli_abort("Value supplied for {.arg prob} and for {.arg mu}.")
     if (!has_prob && !has_mu)
-        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}")
+        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}.")
     if (has_prob) {
         args <- vec_recycle_common(x, size, prob)
         x <- args[[1]]
@@ -1327,9 +1327,9 @@ pnbinom_rvec <- function(q, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
     has_prob <- !missing(prob)
     has_mu <- !missing(mu)
     if (has_prob && has_mu)
-        cli::cli_abort("Values supplied for {.arg prob} and for {.arg mu}")
+        cli::cli_abort("Value supplied for {.arg prob} and for {.arg mu}.")
     if (!has_prob && !has_mu)
-        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}")
+        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}.")
     if (has_prob) {
         args <- vec_recycle_common(q, size, prob)
         q <- args[[1]]
@@ -1361,9 +1361,9 @@ qnbinom_rvec <- function(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
     has_prob <- !missing(prob)
     has_mu <- !missing(mu)
     if (has_prob && has_mu)
-        cli::cli_abort("Values supplied for {.arg prob} and for {.arg mu}")
+        cli::cli_abort("Value supplied for {.arg prob} and for {.arg mu}.")
     if (!has_prob && !has_mu)
-        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}")
+        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}.")
     if (has_prob) {
         args <- vec_recycle_common(p, size, prob)
         p <- args[[1]]
@@ -1393,9 +1393,9 @@ rnbinom_rvec <- function(n, size, prob, mu, n_draw = NULL) {
     has_prob <- !missing(prob)
     has_mu <- !missing(mu)
     if (has_prob && has_mu)
-        cli::cli_abort("Values supplied for {.arg prob} and for {.arg mu}")
+        cli::cli_abort("Value supplied for {.arg prob} and for {.arg mu}.")
     if (!has_prob && !has_mu)
-        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}")
+        cli::cli_abort("No value supplied for {.arg prob} or for {.arg mu}.")
     size <- vec_recycle(size, size = n)
     if (has_prob) {
         prob <- vec_recycle(prob, size = n)
@@ -2059,7 +2059,7 @@ dist_rvec_3 <- function(fun, arg1, arg2, arg3, ...) {
 #' already been recycled, if necessary,
 #' to have the required lengths.
 #'
-#' If the functin is a random variate
+#' If the function is a random variate
 #' function, then the 'n' argument
 #' is  passed in via ....
 #' The calling function
@@ -2154,8 +2154,8 @@ dist_rvec_4 <- function(fun, arg1, arg2, arg3, arg4, ...) {
             n_draw <- n_draw(arg2)
         else if (identical(case, c(TRUE, FALSE, FALSE, FALSE)))
             n_draw <- n_draw(arg1)
-        else
-            cli::cli_abort("Internal error: invalid combinations of rvecs")
+        else                                                                # nocov
+            cli::cli_abort("Internal error: invalid combinations of rvecs") # nocov
         if (is_rv_1) {
             check_not_rvec_chr(arg1, nm_arg = nm_arg1)
             arg1 <- rvec_to_rvec_dbl(arg1, n_draw = n_draw)

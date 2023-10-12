@@ -418,7 +418,7 @@ promote_args_to_rvec <- function(args, n_draw) {
             n_draw_arg <- n_draw(arg)
             if (n_draw_arg != n_draw) {
                 cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
-                                     "has {n_draw} draws"))
+                                     "has {n_draw_arg} draws."))
             }
         }
         else if (is.atomic(arg) && is.vector(arg)) {
@@ -428,7 +428,8 @@ promote_args_to_rvec <- function(args, n_draw) {
             args[[i]] <- arg
         }
         else
-            cli::cli_abort("{.arg {nm}} has class {.cls class(arg)}")
+            cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                             i = "{.arg {nm}} has class {.cls {class(arg)}}."))
     }
     args
 }        

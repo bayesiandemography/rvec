@@ -199,9 +199,7 @@ vec_cast.rvec_lgl.logical <- function(x, to, ...) {
 
 ## to logical -------------------------------------------------------------------
 
-## THIS IS EXPERIMENTAL
-
-## NO_TESTS
+## HAS_TESTS
 #' @export
 vec_cast.logical.rvec_lgl <- function(x, to, ...) {
     m <- field(x, "data")

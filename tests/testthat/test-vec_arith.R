@@ -1,5 +1,6 @@
 
 
+    
 test_that("'vec_arith' works with rvec_dbl", {
     ## rvec_dbl
     expect_identical(rvec_dbl(matrix(1:2, nr = 1)) + rvec_dbl(matrix(2:5, nr = 2)),

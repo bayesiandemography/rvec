@@ -622,8 +622,8 @@ test_that("'rgeom_rvec' works with valid input - n_draw, rvec input", {
 test_that("'dhyper_rvec' works with valid input", {
     mm <- matrix(1:6, nr = 2)
     m <- rvec(mm)
-    n <- 1:2
-    k <- 2:1
+    n <- 1
+    k <- 2
     x <- rvec(2:1)
     ans_obtained <- dhyper_rvec(x = x, m = m, n = n, k = k, log = TRUE)
     ans_expected <- rvec(matrix(dhyper(x = rep(2:1, 3),
@@ -968,6 +968,23 @@ test_that("'dnbinom_rvec' works with valid input - mu supplied", {
     expect_equal(ans_obtained, ans_expected)
 })
 
+test_that("'dnbinom_rvec' throws correct error if prob and mu both supplied", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    size <- rvec(m)
+    mu <- 0.5 * rvec(m)
+    expect_error(dnbinom_rvec(x = x, size = size, prob = 0.3, mu = mu, log = TRUE),
+                 "Value supplied for `prob` and for `mu`.")
+})
+
+test_that("'dnbinom_rvec' throws correct error if neighter prob nor mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    x <- 2:1
+    size <- rvec(m)
+    expect_error(dnbinom_rvec(x = x, size = size, log = TRUE),
+                 "No value supplied for `prob` or for `mu`.")
+})
+
 test_that("'pnbinom_rvec' works with valid input - prob supplied", {
     m <- matrix(1:6, nr = 2)
     q <- 2:1
@@ -988,24 +1005,58 @@ test_that("'pnbinom_rvec' works with valid input - mu supplied", {
     expect_equal(ans_obtained, ans_expected)
 })
 
+test_that("'dnbinom_rvec' throws correct error if prob and mu both supplied", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    size <- rvec(m)
+    mu <- 0.5 * rvec(m)
+    expect_error(pnbinom_rvec(q = q, size = size, prob = 0.3, mu = mu, log = TRUE),
+                 "Value supplied for `prob` and for `mu`.")
+})
+
+test_that("'pnbinom_rvec' throws correct error if neighter prob nor mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    q <- 2:1
+    size <- rvec(m)
+    expect_error(pnbinom_rvec(q = q, size = size, log = TRUE),
+                 "No value supplied for `prob` or for `mu`.")
+})
+
 test_that("'qnbinom_rvec' works with valid input - prob supplied", {
     m <- matrix(1:6, nr = 2)
-    q <- 0.5 * rvec(m)
+    p <-rvec(m) / 7
     size <- rvec(m)
     prob <- rvec(0.1 * m)
-    ans_obtained <- pnbinom_rvec(q, size, prob)
-    ans_expected <- rvec(matrix(pnbinom(q = 0.5 * m, size = m, prob = 0.1 * m), nr = 2))
+    ans_obtained <- qnbinom_rvec(p, size, prob)
+    ans_expected <- rvec(matrix(qnbinom(p = m / 7, size = m, prob = 0.1 * m), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'qnbinom_rvec' works with valid input - mu supplied", {
     m <- matrix(1:6, nr = 2)
-    q <- 0.5 * rvec(m)
+    p <- rvec(m) / 7
     size <- rvec(m)
     mu <- rvec(1.3 * m)
-    ans_obtained <- pnbinom_rvec(q, size, mu = mu)
-    ans_expected <- rvec(matrix(pnbinom(q = 0.5 * m, size = m, mu = 1.3 * m), nr = 2))
+    ans_obtained <- qnbinom_rvec(p, size, mu = mu)
+    ans_expected <- rvec(matrix(qnbinom(p = m / 7, size = m, mu = 1.3 * m), nr = 2))
     expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'qnbinom_rvec' throws correct error if prob and mu both supplied", {
+    m <- matrix(1:6, nr = 2)
+    p = rvec(m) / 7
+    size <- rvec(m)
+    mu <- 0.5 * rvec(m)
+    expect_error(qnbinom_rvec(p = p, size = size, prob = 0.3, mu = mu, log = TRUE),
+                 "Value supplied for `prob` and for `mu`.")
+})
+
+test_that("'qnbinom_rvec' throws correct error if neighter prob nor mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    p <- 0.5
+    size <- rvec(m)
+    expect_error(qnbinom_rvec(p = p, size = size, log = TRUE),
+                 "No value supplied for `prob` or for `mu`.")
 })
 
 test_that("'rnbinom_rvec' works with valid input - n_draw is NULL, prob supplied", {
@@ -1052,6 +1103,22 @@ test_that("'rnbinom_rvec' works with valid input - n_draw is 3, mu supplied", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'rnbinom_rvec' throws correct error if prob and mu both supplied", {
+    m <- matrix(1:6, nr = 2)
+    size <- rvec(m)
+    mu <- 0.5 * rvec(m)
+    expect_error(rnbinom_rvec(n = 2, size = size, prob = 0.3, mu = mu),
+                 "Value supplied for `prob` and for `mu`.")
+})
+
+test_that("'rnbinom_rvec' throws correct error if neighter prob nor mu supplied", {
+    m <- matrix(1:6, nr = 2)
+    p <- 0.5
+    size <- rvec(m)
+    expect_error(rnbinom_rvec(n = 2, size = size),
+                 "No value supplied for `prob` or for `mu`.")
+})
+
 
 ## 'norm' ---------------------------------------------------------------------
 
@@ -1077,11 +1144,11 @@ test_that("'pnorm_rvec' works with valid input", {
 
 test_that("'qnorm_rvec' works with valid input", {
     m <- matrix(1:6, nr = 2)
-    q <- rvec(m)
+    p <- rvec(m) / 7
     mean <- rvec(m)
     sd <- 3
-    ans_obtained <- pnorm_rvec(q, mean, sd)
-    ans_expected <- rvec(matrix(pnorm(q = m, mean = m, sd = 3), nr = 2))
+    ans_obtained <- qnorm_rvec(p, mean, sd)
+    ans_expected <- rvec(matrix(qnorm(p = m / 7, mean = m, sd = 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1176,6 +1243,16 @@ test_that("'dt_rvec' works with valid input", {
     df <- rvec(m)
     x <- 2:1
     df <- rvec(m)
+    ans_obtained <- dt_rvec(x, df)
+    ans_expected <- rvec(matrix(dt(x = x, df = m, log = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dt_rvec' works with valid input - ncp supplied", {
+    m <- matrix(1:6, nr = 2)
+    df <- rvec(m)
+    x <- 2:1
+    df <- rvec(m)
     ans_obtained <- dt_rvec(x, df, ncp = 0.001)
     ans_expected <- rvec(matrix(dt(x = x, df = m, ncp = 0.001, log = FALSE), nr = 2))
     expect_identical(ans_obtained, ans_expected)
@@ -1191,6 +1268,16 @@ test_that("'pt_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'pt_rvec' works with valid input - ncp supplied", {
+    m <- matrix(1:6, nr = 2)
+    df <- rvec(m)
+    q <- 2:1
+    df <- rvec(m)
+    ans_obtained <- pt_rvec(q, df, ncp = 0.1, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(pt(q, df = m, ncp = 0.1, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
 test_that("'qt_rvec' works with valid input", {
     m <- matrix(seq(0.1, 0.6, 0.1), nr = 2)
     p <- rvec(m)
@@ -1200,8 +1287,17 @@ test_that("'qt_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'rt_rvec' works with valid input - n_draw is NULL", {
-    m <- matrix(seq(2.1, 2.6, 0.1), nr = 2)
+test_that("'qt_rvec' works with valid input - ncp supplied", {
+    m <- matrix(seq(0.1, 0.6, 0.1), nr = 2)
+    p <- rvec(m)
+    df <- c(2.1, 0.8)
+    ans_obtained <- qt_rvec(p, df, ncp = 1, lower.tail = FALSE)
+    ans_expected <- rvec(matrix(qt(m, df = df, ncp = 1, lower.tail = FALSE), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rt_rvec' works with valid input - n_draw not supplied", {
+    m <- matrix(1:6, nr = 2)
     df <- rvec(m)
     set.seed(0)
     ans_obtained <- rt_rvec(2, df)
@@ -1216,6 +1312,15 @@ test_that("'rt_rvec' works with valid input - n_draw supplied", {
     ans_obtained <- rchisq_rvec(2, df, n_draw = 3)
     set.seed(0)
     ans_expected <- rvec(matrix(rchisq(6, df = df), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'rt_rvec' works with valid input - n_draw, ncp supplied", {
+    df <- 3:4
+    set.seed(0)
+    ans_obtained <- rchisq_rvec(2, df, ncp = 2, n_draw = 3)
+    set.seed(0)
+    ans_expected <- rvec(matrix(rchisq(6, df = df, ncp = 2), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1244,11 +1349,11 @@ test_that("'punif_rvec' works with valid input", {
 
 test_that("'qunif_rvec' works with valid input", {
     m <- matrix(1:6, nr = 2)
-    q <- rvec(m)
+    p <- rvec(m) / 7
     min <- rvec(m)
     max <- 7
-    ans_obtained <- punif_rvec(q, min, max)
-    ans_expected <- rvec(matrix(punif(q = m, min = m, max = 7), nr = 2))
+    ans_obtained <- qunif_rvec(p, min, max)
+    ans_expected <- rvec(matrix(qunif(p = m / 7, min = m, max = 7), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1275,7 +1380,6 @@ test_that("'runif_rvec' works with valid input - n_draw is supplied", {
 })
 
 
-
 ## 'weibull' ---------------------------------------------------------------------
 
 test_that("'dweibull_rvec' works with valid input", {
@@ -1300,11 +1404,11 @@ test_that("'pweibull_rvec' works with valid input", {
 
 test_that("'qweibull_rvec' works with valid input", {
     m <- matrix(1:6, nr = 2)
-    q <- rvec(m)
+    p <- rvec(m) / 7
     shape <- rvec(m)
     scale <- 7
-    ans_obtained <- pweibull_rvec(q, shape, scale)
-    ans_expected <- rvec(matrix(pweibull(q = m, shape = m, scale = 7), nr = 2))
+    ans_obtained <- qweibull_rvec(p, shape, scale)
+    ans_expected <- rvec(matrix(qweibull(p = m / 7, shape = m, scale = 7), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1404,6 +1508,15 @@ test_that("'dist_rvec_2' throws appropriate error with invalid inputs", {
                  "`x` has class.")
 })
 
+test_that("'dist_rvec_2' throws appropriate error with error in fun", {
+    mean <- rvec(matrix(1, nr = 2, nc = 3))
+    sd <- rvec(matrix(-1, nr = 2, nc = 3))
+    op <- options(warn = 3)
+    expect_error(dist_rvec_2(fun = rnorm, arg1 = mean, arg2 = sd, n = 3),
+                 "Problem with call to function `rnorm\\(\\)`.")
+    options(op)
+})
+
 
 ## 'dist_rvec_3' --------------------------------------------------------------
 
@@ -1419,6 +1532,34 @@ test_that("'dist_rvec_3' works with valid rvec input - density, all args rvecs",
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'dist_rvec_3' works with valid rvec input - density, arg2 numeric", {
+    m <- matrix(1:6, nr = 2)
+    x <- rvec(m)
+    mean <- 1:2
+    sd <- rvec(m + 3)
+    set.seed(0)
+    ans_obtained <- dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
+    set.seed(0)
+    ans_expected <- rvec(matrix(dnorm(x = m, mean = rep(1:2, times = 3), sd = m + 3), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_3' works with valid rvec input - density, arg1, arg2 numeric", {
+    x <- 3:4
+    mean <- 1:2
+    m <- matrix(1:6, nr = 2)
+    sd <- rvec(m)
+    set.seed(0)
+    ans_obtained <- dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
+    set.seed(0)
+    ans_expected <- rvec(matrix(dnorm(x = rep(3:4, times = 3),
+                                      mean = rep(1:2, times = 3),
+                                      sd = m),
+                                nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+
 test_that("'dist_rvec_3' works with valid rvec input - density, arg1 numeric", {
     m <- matrix(1:6, nr = 2)
     x <- 2:1
@@ -1430,6 +1571,7 @@ test_that("'dist_rvec_3' works with valid rvec input - density, arg1 numeric", {
     ans_expected <- rvec(matrix(dnorm(x = x, mean = m + 1, sd = m + 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
+
 
 test_that("'dist_rvec_3' works with valid rvec input - density, arg1, arg2, arg3 numeric", {
     x <- 2:1
@@ -1453,16 +1595,145 @@ test_that("'dist_rvec_3' throws appropriate error with invalid inputs", {
 ## 'dist_rvec_4' --------------------------------------------------------------
 
 test_that("'dist_rvec_4' works with valid rvec input - density, all args rvecs", {
-    mm <- matrix(1:6, nr = 2)
-    x <- rvec(mm)
-    m <- rvec(mm)
-    n <- 1:2
-    k <- 2:1
-    set.seed(0)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = x, arg2 = m,
-                                arg3 = n, arg4 = k)
-    set.seed(0)
-    ans_expected <- rvec(matrix(dhyper(x = mm, m = mm, n = n, k = k), nr = 2))
+    y <- matrix(1:6, nr = 2)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = yy,
+                                arg3 = zz, arg4 = zz)
+    ans_expected <- rvec(matrix(dhyper(y, y, z, z), nrow = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 2,3,4 rvecs", {
+    y <- matrix(1:6, nr = 2)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = yy,
+                                arg3 = zz, arg4 = zz)
+    ans_expected <- rvec(matrix(dhyper(x = z, m = y, n = z, k = z), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 1,3,4 rvecs", {
+    y <- matrix(1:6, nr = 2)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
+                                arg3 = zz, arg4 = zz)
+    ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = z), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 1,2,4 rvecs", {
+    y <- matrix(1:6, nr = 2)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = yy,
+                                arg3 = z, arg4 = zz)
+    ans_expected <- rvec(matrix(dhyper(x = y, m = y, n = z, k = z), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 1,2,3 rvecs", {
+    y <- matrix(1:6, nr = 2)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = yy,
+                                arg3 = zz, arg4 = z)
+    ans_expected <- rvec(matrix(dhyper(x = y, m = y, n = z, k = z), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 3,4 rvecs", {
+    y <- matrix(1:6, nr = 2)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = z,
+                                arg3 = yy, arg4 = yy)
+    ans_expected <- rvec(matrix(dhyper(x = z, m = z, n = y, k = y), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 2,4 rvecs", {
+    y <- matrix(1, nr = 2, nc = 3)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = zz,
+                                arg3 = z, arg4 = yy)
+    ans_expected <- rvec(matrix(dhyper(x = z, m = z, n = z, k = y), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 1,4 rvecs", {
+    y <- matrix(1, nr = 2, nc = 3)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
+                                arg3 = z, arg4 = yy)
+    ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = y), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 1,3 rvecs", {
+    y <- matrix(1, nr = 2, nc = 3)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
+                                arg3 = zz, arg4 = z)
+    ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = z), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, arg 4 rvec", {
+    y <- matrix(1, nr = 2, nc = 3)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = z,
+                                arg3 = z, arg4 = yy)
+    ans_expected <- rvec(matrix(dhyper(x = z, m = z, n = z, k = y), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, arg 3 rvec", {
+    y <- matrix(1, nr = 2, nc = 3)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = z,
+                                arg3 = yy, arg4 = z)
+    ans_expected <- rvec(matrix(dhyper(x = z, m = z, n = y, k = z), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, arg 2 rvec", {
+    y <- matrix(1, nr = 2, nc = 3)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = yy,
+                                arg3 = z, arg4 = z)
+    ans_expected <- rvec(matrix(dhyper(x = z, m = y, n = z, k = z), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, arg 1 rvec", {
+    y <- matrix(1, nr = 2, nc = 3)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
+                                arg3 = z, arg4 = z)
+    ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 

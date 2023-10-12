@@ -35,6 +35,11 @@ test_that("var.rvec works with rvec and non-rvec", {
                                       use = "everything"))
 })
 
+test_that("var.rvec throws appopriate error with character", {
+    expect_error(var(rvec("a")),
+                 "Variance not defined for character vectors.")
+})
+
 test_that("'var_rvec' works with valid inputs, nrow > 0", {
     set.seed(0)
     m <- matrix(rnorm(10), nr = 5)

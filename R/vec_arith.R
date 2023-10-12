@@ -11,7 +11,7 @@ vec_arith.rvec_dbl <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_dbl default
 vec_arith.rvec_dbl.default <- function(op, x, y, ...) {
-  stop_incompatible_op(op, x, y)
+  stop_incompatible_op(op, x, y) # nocov
 }
 
 ## HAS_TESTS
@@ -108,7 +108,7 @@ vec_arith.rvec_int <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_int default
 vec_arith.rvec_int.default <- function(op, x, y, ...) {
-  stop_incompatible_op(op, x, y)
+  stop_incompatible_op(op, x, y) # nocov
 }
 
 ## HAS_TESTS
@@ -205,7 +205,7 @@ vec_arith.rvec_lgl <- function(op, x, y, ...) {
 #' @export
 #' @method vec_arith.rvec_lgl default
 vec_arith.rvec_lgl.default <- function(op, x, y, ...) {
-  stop_incompatible_op(op, x, y)
+  stop_incompatible_op(op, x, y) # nocov
 }
 
 ## HAS_TESTS

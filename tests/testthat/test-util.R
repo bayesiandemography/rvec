@@ -320,6 +320,22 @@ test_that("'promote_args_to_rvec' works with valid inputs - mix of rvec, ordinar
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'promote_args_to_rvec' throws correct error when rvec has wrong number of draws", {
+    args <- list(a = rvec_dbl(matrix(1:6, nr = 2)),
+                 b = c(x = "a", y = "b"),
+                 c = rvec(list(1:4)))
+    expect_error(promote_args_to_rvec(args, n_draw = 3),
+                 "`n_draw` is 3 but `c` has 4 draws.")
+})
+
+test_that("'promote_args_to_rvec' throws correct error when argument is not rvec or vector", {
+    args <- list(a = rvec_dbl(matrix(1:6, nr = 2)),
+                 b = c(x = "a", y = "b"),
+                 c = lm)
+    expect_error(promote_args_to_rvec(args, n_draw = 3),
+                 "`c` is not a vector or rvec")
+})
+
 
 ## 'ptype_rvec' ---------------------------------------------------------------
 

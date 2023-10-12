@@ -96,6 +96,7 @@ is.na.rvec <- function(x) {
     rvec_lgl(data)
 }
 
+## HAS_TESTS
 ## modified from na.exclude.vctrs_vctr
 #' @rdname missing
 #' @importFrom stats na.exclude
@@ -104,6 +105,7 @@ na.exclude.rvec <- function(object, ...) {
   na_remove_rvec(object, class_loc = "exclude")
 }
 
+## HAS_TESTS
 ## modified from na.fail.vctrs_vctr
 #' @importFrom stats na.fail
 #' @export
@@ -116,6 +118,7 @@ na.fail.rvec <- function(object, ...) {
     object
 }
 
+## HAS_TESTS
 ## modified from na.omit.vctrs_vctr
 #' @rdname missing
 #' @importFrom stats na.omit
@@ -131,6 +134,7 @@ na.omit.rvec <- function(object, ...) {
 
 ## Helper functions -----------------------------------------------------------
 
+## HAS_TESTS
 #' Modified from vctrs::na_remove
 #' @noRd
 na_remove_rvec <- function(x, class_loc) {
