@@ -53,7 +53,13 @@ test_that("'na.exclude' works", {
 
 ## 'na.fail' ------------------------------------------------------------------
 
-test_that("na.omit.rvec works", {
+test_that("na.fail.rvec returns object when object has no NAs", {
+    x <- rvec(rbind(1:3,
+                    7:9))
+    expect_identical(na.fail(x), x)
+})
+
+test_that("na.fail.rvec raises error when object has NAs", {
     x <- rvec(rbind(1:3,
                     c(4, NA, 6),
                     7:9,
@@ -61,7 +67,6 @@ test_that("na.omit.rvec works", {
     expect_error(na.fail(x),
                  "missing values in object")
 })
-
 
 ## 'na.omit' ------------------------------------------------------------------
 

@@ -11,8 +11,8 @@ plot.rvec_chr <- function(x,
                           ...) {
     m <- field(x, "data")
     if (!is.null(y))
-        cli::cli_abort(paste("{.arg x} has class {.cls {class(x)}},",
-                             "but {.arg y} is not {.val NULL}"))
+        cli::cli_abort(c("Value supplied for {.arg y}.",
+                         i = "Value cannot be supplied for {.arg y} when {.arg x} has class {.cls {class(x)}}."))
     if (is.null(ylab))
         ylab <- deparse1(substitute(x))
     if (is.null(factor))
@@ -54,8 +54,8 @@ plot.rvec_dbl <- function(x,
                           ...) {
     m <- field(x, "data")
     if (!is.null(y))
-        cli::cli_abort(paste("{.arg x} has class {.cls {class(x)}},",
-                             "but {.arg y} is not {.val NULL}"))
+        cli::cli_abort(c("Value supplied for {.arg y}.",
+                         i = "Value cannot be supplied for {.arg y} when {.arg x} has class {.cls {class(x)}}."))
     if (is.null(ylab))
         ylab <- deparse1(substitute(x))
     if (is.null(alpha))
@@ -85,8 +85,8 @@ plot.rvec_int <- function(x,
                           ...) {
     m <- field(x, "data")
     if (!is.null(y))
-        cli::cli_abort(paste("{.arg x} has class {.cls {class(x)}},",
-                             "but {.arg y} is not {.val NULL}"))
+        cli::cli_abort(c("Value supplied for {.arg y}.",
+                         i = "Value cannot be supplied for {.arg y} when {.arg x} has class {.cls {class(x)}}."))
     if (is.null(ylab))
         ylab <- deparse1(substitute(x))
     if (is.null(factor))
@@ -120,8 +120,8 @@ plot.rvec_lgl <- function(x,
                           ...) {
     m <- field(x, "data")
     if (!is.null(y))
-        cli::cli_abort(paste("{.arg x} has class {.cls {class(x)}},",
-                             "but {.arg y} is not {.val NULL}"))
+        cli::cli_abort(c("Value supplied for {.arg y}.",
+                         i = "Value cannot be supplied for {.arg y} when {.arg x} has class {.cls {class(x)}}."))
     if (is.null(ylab))
         ylab <- deparse1(substitute(x))
     if (is.null(factor))

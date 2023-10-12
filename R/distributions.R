@@ -2154,7 +2154,7 @@ dist_rvec_4 <- function(fun, arg1, arg2, arg3, arg4, ...) {
             n_draw <- n_draw(arg2)
         else if (identical(case, c(TRUE, FALSE, FALSE, FALSE)))
             n_draw <- n_draw(arg1)
-        else                                                                # nocov
+        else                                                               
             cli::cli_abort("Internal error: invalid combinations of rvecs") # nocov
         if (is_rv_1) {
             check_not_rvec_chr(arg1, nm_arg = nm_arg1)

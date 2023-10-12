@@ -176,12 +176,12 @@ test_that("'pcauchy_rvec' works with valid input", {
 })
 
 test_that("'qcauchy_rvec' works with valid input", {
-    m <- -1 * matrix(1:6, nr = 2)
-    q <- 0.5 * rvec(m)
+    m <- matrix(1:6, nr = 2)
+    p <- rvec(m) / 7
     location <- rvec(m)
     scale <- rvec(abs(0.1 * m))
-    ans_obtained <- pcauchy_rvec(q, location, scale)
-    ans_expected <- rvec(matrix(pcauchy(q = 0.5 * m, location = m,
+    ans_obtained <- qcauchy_rvec(p, location, scale)
+    ans_expected <- rvec(matrix(qcauchy(p = m / 7, location = m,
                                         scale = abs(0.1 * m)), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
@@ -432,13 +432,13 @@ test_that("'rf_rvec' works with valid input - n_draw supplied", {
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'rf_rvec' works with valid input - n_draw supplied, ncp supplied", {
+test_that("'rf_rvec' works with valid input - n_draw supplied, ncp not supplied", {
     df1 <- 2:1
     df2 <- 3
     set.seed(0)
-    ans_obtained <- rf_rvec(n = 2, df1, df2, ncp = 3, n_draw = 3)
+    ans_obtained <- rf_rvec(n = 2, df1, df2, n_draw = 3)
     set.seed(0)
-    ans_expected <- rvec(matrix(rf(n = 6, df1 = 2:1, df2 = 3, ncp = 3), nr = 2))
+    ans_expected <- rvec(matrix(rf(n = 6, df1 = 2:1, df2 = 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1309,18 +1309,18 @@ test_that("'rt_rvec' works with valid input - n_draw not supplied", {
 test_that("'rt_rvec' works with valid input - n_draw supplied", {
     df <- 3:4
     set.seed(0)
-    ans_obtained <- rchisq_rvec(2, df, n_draw = 3)
+    ans_obtained <- rt_rvec(2, df, n_draw = 3)
     set.seed(0)
-    ans_expected <- rvec(matrix(rchisq(6, df = df), nr = 2))
+    ans_expected <- rvec(matrix(rt(6, df = df), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'rt_rvec' works with valid input - n_draw, ncp supplied", {
     df <- 3:4
     set.seed(0)
-    ans_obtained <- rchisq_rvec(2, df, ncp = 2, n_draw = 3)
+    ans_obtained <- rt_rvec(2, df, ncp = 2, n_draw = 3)
     set.seed(0)
-    ans_expected <- rvec(matrix(rchisq(6, df = df, ncp = 2), nr = 2))
+    ans_expected <- rvec(matrix(rt(6, df = df, ncp = 2), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1690,6 +1690,17 @@ test_that("'dist_rvec_4' works with valid rvec input - density, args 1,3 rvecs",
     ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
                                 arg3 = zz, arg4 = z)
     ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = z), nr = 2))
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'dist_rvec_4' works with valid rvec input - density, args 2,3 rvecs", {
+    y <- matrix(1, nr = 2, nc = 3)
+    yy <- rvec(y)
+    z <- matrix(1:2, nr = 2)
+    zz <- rvec(z)
+    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = yy,
+                                arg3 = zz, arg4 = z)
+    ans_expected <- rvec(matrix(dhyper(x = z, m = y, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
