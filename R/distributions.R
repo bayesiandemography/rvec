@@ -55,8 +55,6 @@
 #' See [stats::dhyper()]. Can be rvec.
 #' @param lambda Vector of means.
 #' See [stats::rpois()] Can be rvec.
-#' @param location Parameter for Cauchy distribution.
-#' Default is `0`. See [stats::dcauchy()]. Can be rvec.
 #' @param log,log.p Whether to return
 #' `log(p)` rather than `p`. Default is
 #' `FALSE`. Can be rvec.
@@ -103,9 +101,6 @@
 #' @param q Quantiles. Can be rvec.
 #' @param rate Rates. See [stats::dexp()],
 #' [stats::dgamma()]. Can be rvec.
-#' @param scale Parameter
-#' for Cauchy distribution. Default is `1`.
-#' See [stats::dcauchy()]. Can be rvec.
 #' @param sd Standard deviation. 
 #' Default is `1`. See [stats::dnorm()].
 #' Can be rvec.
@@ -190,7 +185,73 @@ NULL
 ## results from calling *beta with ncp missing.
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Beta Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' Beta distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dbeta_rvec()`, `pbeta_rvec()`,
+#' `pbeta_rvec()` and `rbeta_rvec()` work like
+#' base R functions [dbeta()], [pbeta()],
+#' [qbeta()], and [rbeta()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rbeta_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dbeta_rvec()`, `pbeta_rvec()`,
+#' `pbeta_rvec()` and `rbeta_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @param log,log.p Whether to return results
+#' on a log scale. Default is
+#' `FALSE`. Cannot be an rvec.
+#' @param lower.tail Whether to return
+#' \eqn{P[X \le x]}, as opposed to
+#' \eqn{P[X > x]}. Default is `TRUE`.
+#' Cannot be an rvec. 
+#' @param n The length of random vector being
+#' created. Cannot be an rvec.
+#' @param n_draw Number of random draws
+#' in the random vector being
+#' created. Cannot be an rvec.
+#' @param ncp Non-centrality parameter. 
+#' Default is `0`. Cannot be an rvec.
+#' @param p Probabilities. Can be rvec.
+#' @param q Quantiles. Can be an rvec.
+#' @param shape1,shape2 Parameters
+#' for beta distribution. Non-negative. 
+#' See [stats::dbeta()]. Can be rvecs.
+#' @param x Quantiles. Can be rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dbeta()]
+#' - [pbeta()]
+#' - [qbeta()]
+#' - [rbeta()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(0, 0.25),
+#'                c(0.5, 0.99)))
+#' dbeta_rvec(x, shape1 = 1, shape2 = 1)
+#' pbeta_rvec(x, shape1 = 1, shape2 = 1)
+#'
+#' rbeta_rvec(n = 2,
+#'            shape = 1:2,
+#'            shape2 = 1,
+#'            n_draw = 100)
 #' @export
 dbeta_rvec <- function(x, shape1, shape2, ncp = 0, log = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -218,7 +279,7 @@ dbeta_rvec <- function(x, shape1, shape2, ncp = 0, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dbeta_rvec
 #' @export
 pbeta_rvec <- function(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -249,7 +310,7 @@ pbeta_rvec <- function(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FA
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dbeta_rvec
 #' @export
 qbeta_rvec <- function(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -280,7 +341,7 @@ qbeta_rvec <- function(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FA
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dbeta_rvec
 #' @export
 rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
     ncp_not_supplied <- missing(ncp)
@@ -313,7 +374,58 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
 ## 'binom' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Binomial Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' binomial distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dbinom_rvec()`, `pbinom_rvec()`,
+#' `pbinom_rvec()` and `rbinom_rvec()` work like
+#' base R functions [dbinom()], [pbinom()],
+#' [qbinom()], and [rbinom()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rbinom_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dbinom_rvec()`, `pbinom_rvec()`,
+#' `pbinom_rvec()` and `rbinom_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param prob Probability of success in each trial.
+#' See [stats::dnbinom()]. Can be an rvec.
+#' @param size Number of trials.
+#' See [stats::dbinom()]. Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dbinom()]
+#' - [pbinom()]
+#' - [qbinom()]
+#' - [rbinom()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 8),
+#'                c(0, 2)))
+#' dbinom_rvec(x, size = 8, prob = 0.3)
+#' pbinom_rvec(x, size = 8, prob = 0.3)
+#'
+#' rbinom_rvec(n = 2,
+#'             size = 10,
+#'             prob = c(0.7, 0.3),
+#'             n_draw = 100)
 #' @export
 dbinom_rvec <- function(x, size, prob, log = FALSE) {
     check_flag(log)
@@ -330,7 +442,7 @@ dbinom_rvec <- function(x, size, prob, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dbinom_rvec
 #' @export
 pbinom_rvec <- function(q, size, prob, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -349,7 +461,7 @@ pbinom_rvec <- function(q, size, prob, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dbinom_rvec
 #' @export
 qbinom_rvec <- function(p, size, prob, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -368,7 +480,7 @@ qbinom_rvec <- function(p, size, prob, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dbinom_rvec
 #' @export
 rbinom_rvec <- function(n, size, prob, n_draw = NULL) {
     rbinom <- stats::rbinom
@@ -391,7 +503,59 @@ rbinom_rvec <- function(n, size, prob, n_draw = NULL) {
 ## 'cauchy' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Cauchy Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' Cauchy distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dcauchy_rvec()`, `pcauchy_rvec()`,
+#' `pcauchy_rvec()` and `rcauchy_rvec()` work like
+#' base R functions [dcauchy()], [pcauchy()],
+#' [qcauchy()], and [rcauchy()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rcauchy_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dcauchy_rvec()`, `pcauchy_rvec()`,
+#' `pcauchy_rvec()` and `rcauchy_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param location Center of distribution.
+#' Default is `0`.
+#' See [stats::dcauchy()]. Can be an rvec.
+#' @param scale Scale parameter.
+#' Default is `1`.
+#' See [stats::dcauchy()]. Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dcauchy()]
+#' - [pcauchy()]
+#' - [qcauchy()]
+#' - [rcauchy()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, -5.1),
+#'                c(0, -2.3)))
+#' dcauchy_rvec(x)
+#' pcauchy_rvec(x)
+#'
+#' rcauchy_rvec(n = 2,
+#'              location = c(-5, 5),
+#'              n_draw = 100)
 #' @export
 dcauchy_rvec <- function(x, location = 0, scale = 1, log = FALSE) {
     check_flag(log)
@@ -408,7 +572,7 @@ dcauchy_rvec <- function(x, location = 0, scale = 1, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dcauchy_rvec
 #' @export
 pcauchy_rvec <- function(q, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -427,7 +591,7 @@ pcauchy_rvec <- function(q, location = 0, scale = 1, lower.tail = TRUE, log.p = 
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dcauchy_rvec
 #' @export
 qcauchy_rvec <- function(p, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -446,7 +610,7 @@ qcauchy_rvec <- function(p, location = 0, scale = 1, lower.tail = TRUE, log.p = 
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dcauchy_rvec
 #' @export
 rcauchy_rvec <- function(n, location = 0, scale = 1, n_draw = NULL) {
     rcauchy <- stats::rcauchy
@@ -470,7 +634,56 @@ rcauchy_rvec <- function(n, location = 0, scale = 1, n_draw = NULL) {
 ## 'chisq' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Chi-Squared Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' chi-squared distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dchisq_rvec()`, `pchisq_rvec()`,
+#' `pchisq_rvec()` and `rchisq_rvec()` work like
+#' base R functions [dchisq()], [pchisq()],
+#' [qchisq()], and [rchisq()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rchisq_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dchisq_rvec()`, `pchisq_rvec()`,
+#' `pchisq_rvec()` and `rchisq_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param df Degrees of freedom. 
+#' See [stats::dchisq()].
+#' Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dchisq()]
+#' - [pchisq()]
+#' - [qchisq()]
+#' - [rchisq()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 5.1),
+#'                c(0.1, 2.3)))
+#' dchisq_rvec(x, df = 3)
+#' pchisq_rvec(x, df = 3)
+#'
+#' rchisq_rvec(n = 2,
+#'             df = 3:4,
+#'             n_draw = 100)
 #' @export
 dchisq_rvec <- function(x, df, ncp = 0, log = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -495,7 +708,7 @@ dchisq_rvec <- function(x, df, ncp = 0, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dchisq_rvec
 #' @export
 pchisq_rvec <- function(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -523,7 +736,7 @@ pchisq_rvec <- function(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dchisq_rvec
 #' @export
 qchisq_rvec <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -551,7 +764,7 @@ qchisq_rvec <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dchisq_rvec
 #' @export
 rchisq_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
     ncp_not_supplied <- missing(ncp)
@@ -580,7 +793,59 @@ rchisq_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
 ## 'exp' ----------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Exponential Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' exponential distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dexp_rvec()`, `pexp_rvec()`,
+#' `pexp_rvec()` and `rexp_rvec()` work like
+#' base R functions [dexp()], [pexp()],
+#' [qexp()], and [rexp()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rexp_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dexp_rvec()`, `pexp_rvec()`,
+#' `pexp_rvec()` and `rexp_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param rate Vector of rates.
+#' See [stats::dexp()].
+#' Can be an rvec.
+#' @param log Whether to return
+#' `log(p)` rather than `p`. Default is
+#' `FALSE`. Cannot be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dexp()]
+#' - [pexp()]
+#' - [qexp()]
+#' - [rexp()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 5.1),
+#'                c(0.1, 2.3)))
+#' dexp_rvec(x, rate = 1.5)
+#' pexp_rvec(x, rate = 1.5)
+#'
+#' rexp_rvec(n = 2,
+#'           rate = c(1.5, 4),
+#'           n_draw = 100)
 #' @export
 dexp_rvec <- function(x, rate = 1, log = FALSE) {
     check_flag(log)

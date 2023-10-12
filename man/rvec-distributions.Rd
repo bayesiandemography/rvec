@@ -2,23 +2,6 @@
 % Please edit documentation in R/distributions.R
 \name{rvec-distributions}
 \alias{rvec-distributions}
-\alias{dbeta_rvec}
-\alias{pbeta_rvec}
-\alias{qbeta_rvec}
-\alias{rbeta_rvec}
-\alias{dbinom_rvec}
-\alias{pbinom_rvec}
-\alias{qbinom_rvec}
-\alias{rbinom_rvec}
-\alias{dcauchy_rvec}
-\alias{pcauchy_rvec}
-\alias{qcauchy_rvec}
-\alias{rcauchy_rvec}
-\alias{dchisq_rvec}
-\alias{pchisq_rvec}
-\alias{qchisq_rvec}
-\alias{rchisq_rvec}
-\alias{dexp_rvec}
 \alias{pexp_rvec}
 \alias{qexp_rvec}
 \alias{rexp_rvec}
@@ -70,40 +53,6 @@
 \alias{rweibull_rvec}
 \title{Probability distributions}
 \usage{
-dbeta_rvec(x, shape1, shape2, ncp = 0, log = FALSE)
-
-pbeta_rvec(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
-
-qbeta_rvec(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
-
-rbeta_rvec(n, shape1, shape2, ncp = 0, n_draw = NULL)
-
-dbinom_rvec(x, size, prob, log = FALSE)
-
-pbinom_rvec(q, size, prob, lower.tail = TRUE, log.p = FALSE)
-
-qbinom_rvec(p, size, prob, lower.tail = TRUE, log.p = FALSE)
-
-rbinom_rvec(n, size, prob, n_draw = NULL)
-
-dcauchy_rvec(x, location = 0, scale = 1, log = FALSE)
-
-pcauchy_rvec(q, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE)
-
-qcauchy_rvec(p, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE)
-
-rcauchy_rvec(n, location = 0, scale = 1, n_draw = NULL)
-
-dchisq_rvec(x, df, ncp = 0, log = FALSE)
-
-pchisq_rvec(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
-
-qchisq_rvec(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
-
-rchisq_rvec(n, df, ncp = 0, n_draw = NULL)
-
-dexp_rvec(x, rate = 1, log = FALSE)
-
 pexp_rvec(q, rate = 1, lower.tail = TRUE, log.p = FALSE)
 
 qexp_rvec(p, rate = 1, lower.tail = TRUE, log.p = FALSE)
@@ -217,22 +166,10 @@ qweibull_rvec(p, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
 rweibull_rvec(n, shape, scale = 1, n_draw = NULL)
 }
 \arguments{
-\item{x}{Quantiles. Can be rvec.}
-
-\item{shape1, shape2}{Parameters
-for beta distribution. Non-negative.
-See \code{\link[stats:Beta]{stats::dbeta()}}. Can be rvecs.}
-
-\item{ncp}{Non-centrality parameter.
-Default is \code{0}. See \code{\link[stats:Beta]{stats::dbeta()}},
-\code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}},
-\code{\link[stats:TDist]{stats::dt()}}. Cannot be rvec.}
-
-\item{log, log.p}{Whether to return
-\code{log(p)} rather than \code{p}. Default is
-\code{FALSE}. Can be rvec.}
-
 \item{q}{Quantiles. Can be rvec.}
+
+\item{rate}{Rates. See \code{\link[stats:Exponential]{stats::dexp()}},
+\code{\link[stats:GammaDist]{stats::dgamma()}}. Can be rvec.}
 
 \item{lower.tail}{Whether to return
 \eqn{P[X \le x]}, as opposed to
@@ -253,31 +190,24 @@ in the urn, and can be an rvec. See \code{\link[stats:Hypergeometric]{stats::rhy
 in random vector being created.
 Optional. Cannot be rvec.}
 
-\item{size}{Number of trials.
-See \code{\link[stats:Binomial]{stats::dbinom()}}, \code{\link[stats:Multinom]{stats::dmultinom()}},
-\code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be rvec.}
+\item{x}{Quantiles. Can be rvec.}
+
+\item{ncp}{Non-centrality parameter.
+Default is \code{0}. See \code{\link[stats:Beta]{stats::dbeta()}},
+\code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}},
+\code{\link[stats:TDist]{stats::dt()}}. Cannot be rvec.}
+
+\item{log, log.p}{Whether to return
+\code{log(p)} rather than \code{p}. Default is
+\code{FALSE}. Can be rvec.}
+
+\item{shape}{Parameter for gamma distribution.
+See \code{\link[stats:GammaDist]{stats::dgamma()}}, \code{\link[stats:Weibull]{stats::dweibull()}}.
+Can be rvec.}
 
 \item{prob}{Probability of
 success in each trial.
 See \code{\link[stats:Geometric]{stats::dgeom()}}, \code{\link[stats:NegBinomial]{stats::dnbinom()}}.
-Can be rvec.}
-
-\item{location}{Parameter for Cauchy distribution.
-Default is \code{0}. See \code{\link[stats:Cauchy]{stats::dcauchy()}}. Can be rvec.}
-
-\item{scale}{Parameter
-for Cauchy distribution. Default is \code{1}.
-See \code{\link[stats:Cauchy]{stats::dcauchy()}}. Can be rvec.}
-
-\item{df, df1, df2}{Degrees of freedom.
-See \code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}}, \code{\link[stats:TDist]{stats::dt()}}.
-Can be rvec.}
-
-\item{rate}{Rates. See \code{\link[stats:Exponential]{stats::dexp()}},
-\code{\link[stats:GammaDist]{stats::dgamma()}}. Can be rvec.}
-
-\item{shape}{Parameter for gamma distribution.
-See \code{\link[stats:GammaDist]{stats::dgamma()}}, \code{\link[stats:Weibull]{stats::dweibull()}}.
 Can be rvec.}
 
 \item{m}{The number of white balls in the urn.
@@ -300,6 +230,10 @@ on log scale.
 Default is \code{1}. See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
 Can be rvec.}
 
+\item{size}{Number of trials.
+See \code{\link[stats:Binomial]{stats::dbinom()}}, \code{\link[stats:Multinom]{stats::dmultinom()}},
+\code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be rvec.}
+
 \item{mu}{Mean for negative binomial distribution.
 See \code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be rvec.}
 
@@ -314,10 +248,18 @@ Can be rvec.}
 \item{lambda}{Vector of means.
 See \code{\link[stats:Poisson]{stats::rpois()}} Can be rvec.}
 
+\item{df, df1, df2}{Degrees of freedom.
+See \code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}}, \code{\link[stats:TDist]{stats::dt()}}.
+Can be rvec.}
+
 \item{min, max}{Lower and upper limits of
 the uniform distribution. Defaults are
 \code{0} and \code{1}.  See \code{\link[stats:Uniform]{stats::dunif()}}.
 Can be rvec.}
+
+\item{shape1, shape2}{Parameters
+for beta distribution. Non-negative.
+See \code{\link[stats:Beta]{stats::dbeta()}}. Can be rvecs.}
 }
 \value{
 If any of the arguments are rvecs,
