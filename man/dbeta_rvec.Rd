@@ -16,11 +16,11 @@ qbeta_rvec(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 rbeta_rvec(n, shape1, shape2, ncp = 0, n_draw = NULL)
 }
 \arguments{
-\item{x}{Quantiles. Can be rvec.}
+\item{x}{Quantiles. Can be an rvec.}
 
 \item{shape1, shape2}{Parameters
 for beta distribution. Non-negative.
-See \code{\link[stats:Beta]{stats::dbeta()}}. Can be rvecs.}
+See \code{\link[stats:Beta]{stats::dbeta()}}. Can be an rvecs.}
 
 \item{ncp}{Non-centrality parameter.
 Default is \code{0}. Cannot be an rvec.}
@@ -36,7 +36,7 @@ on a log scale. Default is
 \eqn{P[X > x]}. Default is \code{TRUE}.
 Cannot be an rvec.}
 
-\item{p}{Probabilities. Can be rvec.}
+\item{p}{Probabilities. Can be an rvec.}
 
 \item{n}{The length of random vector being
 created. Cannot be an rvec.}
@@ -87,7 +87,7 @@ pbeta_rvec(x, shape1 = 1, shape2 = 1)
 rbeta_rvec(n = 2,
            shape = 1:2,
            shape2 = 1,
-           n_draw = 100)
+           n_draw = 1000)
 }
 \seealso{
 \itemize{

@@ -2,17 +2,6 @@
 % Please edit documentation in R/distributions.R
 \name{rvec-distributions}
 \alias{rvec-distributions}
-\alias{pexp_rvec}
-\alias{qexp_rvec}
-\alias{rexp_rvec}
-\alias{df_rvec}
-\alias{pf_rvec}
-\alias{qf_rvec}
-\alias{rf_rvec}
-\alias{dgamma_rvec}
-\alias{pgamma_rvec}
-\alias{qgamma_rvec}
-\alias{rgamma_rvec}
 \alias{dgeom_rvec}
 \alias{pgeom_rvec}
 \alias{qgeom_rvec}
@@ -53,42 +42,6 @@
 \alias{rweibull_rvec}
 \title{Probability distributions}
 \usage{
-pexp_rvec(q, rate = 1, lower.tail = TRUE, log.p = FALSE)
-
-qexp_rvec(p, rate = 1, lower.tail = TRUE, log.p = FALSE)
-
-rexp_rvec(n, rate = 1, n_draw = NULL)
-
-df_rvec(x, df1, df2, ncp = 0, log = FALSE)
-
-pf_rvec(q, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
-
-qf_rvec(p, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
-
-rf_rvec(n, df1, df2, ncp = 0, n_draw = NULL)
-
-dgamma_rvec(x, shape, rate = 1, scale = 1/rate, log = FALSE)
-
-pgamma_rvec(
-  q,
-  shape,
-  rate = 1,
-  scale = 1/rate,
-  lower.tail = TRUE,
-  log.p = FALSE
-)
-
-qgamma_rvec(
-  p,
-  shape,
-  rate = 1,
-  scale = 1/rate,
-  lower.tail = TRUE,
-  log.p = FALSE
-)
-
-rgamma_rvec(n, shape, rate = 1, scale = 1/rate, n_draw = NULL)
-
 dgeom_rvec(x, prob, log = FALSE)
 
 pgeom_rvec(q, prob, lower.tail = TRUE, log.p = FALSE)
@@ -166,10 +119,18 @@ qweibull_rvec(p, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
 rweibull_rvec(n, shape, scale = 1, n_draw = NULL)
 }
 \arguments{
-\item{q}{Quantiles. Can be rvec.}
+\item{x}{Quantiles. Can be rvec.}
 
-\item{rate}{Rates. See \code{\link[stats:Exponential]{stats::dexp()}},
-\code{\link[stats:GammaDist]{stats::dgamma()}}. Can be rvec.}
+\item{prob}{Probability of
+success in each trial.
+See \code{\link[stats:Geometric]{stats::dgeom()}}, \code{\link[stats:NegBinomial]{stats::dnbinom()}}.
+Can be rvec.}
+
+\item{log, log.p}{Whether to return
+\code{log(p)} rather than \code{p}. Default is
+\code{FALSE}. Can be rvec.}
+
+\item{q}{Quantiles. Can be rvec.}
 
 \item{lower.tail}{Whether to return
 \eqn{P[X \le x]}, as opposed to
@@ -189,26 +150,6 @@ in the urn, and can be an rvec. See \code{\link[stats:Hypergeometric]{stats::rhy
 \item{n_draw}{Number of random draws, per observation,
 in random vector being created.
 Optional. Cannot be rvec.}
-
-\item{x}{Quantiles. Can be rvec.}
-
-\item{ncp}{Non-centrality parameter.
-Default is \code{0}. See \code{\link[stats:Beta]{stats::dbeta()}},
-\code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}},
-\code{\link[stats:TDist]{stats::dt()}}. Cannot be rvec.}
-
-\item{log, log.p}{Whether to return
-\code{log(p)} rather than \code{p}. Default is
-\code{FALSE}. Can be rvec.}
-
-\item{shape}{Parameter for gamma distribution.
-See \code{\link[stats:GammaDist]{stats::dgamma()}}, \code{\link[stats:Weibull]{stats::dweibull()}}.
-Can be rvec.}
-
-\item{prob}{Probability of
-success in each trial.
-See \code{\link[stats:Geometric]{stats::dgeom()}}, \code{\link[stats:NegBinomial]{stats::dnbinom()}}.
-Can be rvec.}
 
 \item{m}{The number of white balls in the urn.
 See \code{\link[stats:Hypergeometric]{stats::dhyper()}}. Can be rvec.}
@@ -252,10 +193,22 @@ See \code{\link[stats:Poisson]{stats::rpois()}} Can be rvec.}
 See \code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}}, \code{\link[stats:TDist]{stats::dt()}}.
 Can be rvec.}
 
+\item{ncp}{Non-centrality parameter.
+Default is \code{0}. See \code{\link[stats:Beta]{stats::dbeta()}},
+\code{\link[stats:Chisquare]{stats::dchisq()}}, \code{\link[stats:Fdist]{stats::df()}},
+\code{\link[stats:TDist]{stats::dt()}}. Cannot be rvec.}
+
 \item{min, max}{Lower and upper limits of
 the uniform distribution. Defaults are
 \code{0} and \code{1}.  See \code{\link[stats:Uniform]{stats::dunif()}}.
 Can be rvec.}
+
+\item{shape}{Parameter for gamma distribution.
+See \code{\link[stats:GammaDist]{stats::dgamma()}}, \code{\link[stats:Weibull]{stats::dweibull()}}.
+Can be rvec.}
+
+\item{rate}{Rates. See \code{\link[stats:Exponential]{stats::dexp()}},
+\code{\link[stats:GammaDist]{stats::dgamma()}}. Can be rvec.}
 
 \item{shape1, shape2}{Parameters
 for beta distribution. Non-negative.

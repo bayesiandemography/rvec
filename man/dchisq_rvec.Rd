@@ -16,7 +16,7 @@ qchisq_rvec(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 rchisq_rvec(n, df, ncp = 0, n_draw = NULL)
 }
 \arguments{
-\item{x}{Quantiles. Can be rvec.}
+\item{x}{Quantiles. Can be an rvec.}
 
 \item{df}{Degrees of freedom.
 See \code{\link[stats:Chisquare]{stats::dchisq()}}.
@@ -36,7 +36,7 @@ on a log scale. Default is
 \eqn{P[X > x]}. Default is \code{TRUE}.
 Cannot be an rvec.}
 
-\item{p}{Probabilities. Can be rvec.}
+\item{p}{Probabilities. Can be an rvec.}
 
 \item{n}{The length of random vector being
 created. Cannot be an rvec.}
@@ -86,7 +86,7 @@ pchisq_rvec(x, df = 3)
 
 rchisq_rvec(n = 2,
             df = 3:4,
-            n_draw = 100)
+            n_draw = 1000)
 }
 \seealso{
 \itemize{

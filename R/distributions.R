@@ -222,12 +222,12 @@ NULL
 #' created. Cannot be an rvec.
 #' @param ncp Non-centrality parameter. 
 #' Default is `0`. Cannot be an rvec.
-#' @param p Probabilities. Can be rvec.
+#' @param p Probabilities. Can be an rvec.
 #' @param q Quantiles. Can be an rvec.
 #' @param shape1,shape2 Parameters
 #' for beta distribution. Non-negative. 
-#' See [stats::dbeta()]. Can be rvecs.
-#' @param x Quantiles. Can be rvec.
+#' See [stats::dbeta()]. Can be an rvecs.
+#' @param x Quantiles. Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
@@ -251,7 +251,7 @@ NULL
 #' rbeta_rvec(n = 2,
 #'            shape = 1:2,
 #'            shape2 = 1,
-#'            n_draw = 100)
+#'            n_draw = 1000)
 #' @export
 dbeta_rvec <- function(x, shape1, shape2, ncp = 0, log = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -425,7 +425,7 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
 #' rbinom_rvec(n = 2,
 #'             size = 10,
 #'             prob = c(0.7, 0.3),
-#'             n_draw = 100)
+#'             n_draw = 1000)
 #' @export
 dbinom_rvec <- function(x, size, prob, log = FALSE) {
     check_flag(log)
@@ -555,7 +555,7 @@ rbinom_rvec <- function(n, size, prob, n_draw = NULL) {
 #'
 #' rcauchy_rvec(n = 2,
 #'              location = c(-5, 5),
-#'              n_draw = 100)
+#'              n_draw = 1000)
 #' @export
 dcauchy_rvec <- function(x, location = 0, scale = 1, log = FALSE) {
     check_flag(log)
@@ -683,7 +683,7 @@ rcauchy_rvec <- function(n, location = 0, scale = 1, n_draw = NULL) {
 #'
 #' rchisq_rvec(n = 2,
 #'             df = 3:4,
-#'             n_draw = 100)
+#'             n_draw = 1000)
 #' @export
 dchisq_rvec <- function(x, df, ncp = 0, log = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -820,9 +820,6 @@ rchisq_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
 #' @param rate Vector of rates.
 #' See [stats::dexp()].
 #' Can be an rvec.
-#' @param log Whether to return
-#' `log(p)` rather than `p`. Default is
-#' `FALSE`. Cannot be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
@@ -845,7 +842,7 @@ rchisq_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
 #'
 #' rexp_rvec(n = 2,
 #'           rate = c(1.5, 4),
-#'           n_draw = 100)
+#'           n_draw = 1000)
 #' @export
 dexp_rvec <- function(x, rate = 1, log = FALSE) {
     check_flag(log)
@@ -860,7 +857,7 @@ dexp_rvec <- function(x, rate = 1, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dexp_rvec
 #' @export
 pexp_rvec <- function(q, rate = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -877,7 +874,7 @@ pexp_rvec <- function(q, rate = 1, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dexp_rvec
 #' @export
 qexp_rvec <- function(p, rate = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -894,7 +891,7 @@ qexp_rvec <- function(p, rate = 1, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dexp_rvec
 #' @export
 rexp_rvec <- function(n, rate = 1, n_draw = NULL) {
     rexp <- stats::rexp
@@ -918,7 +915,53 @@ rexp_rvec <- function(n, rate = 1, n_draw = NULL) {
 ## results from calling *f with ncp missing.
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The F Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' F distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `df_rvec()`, `pf_rvec()`,
+#' `pf_rvec()` and `rf_rvec()` work like
+#' base R functions [df()], [pf()],
+#' [qf()], and [rf()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rf_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `df_rvec()`, `pf_rvec()`,
+#' `pf_rvec()` and `rf_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param df1,df2 Degrees of freedom. 
+#' See [stats::df()]. Can be rvecs.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [df()]
+#' - [pf()]
+#' - [qf()]
+#' - [rf()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 5.1),
+#'                c(0.1, 2.3)))
+#' df_rvec(x, df1 = 1, df2 = 3)
+#' pf_rvec(x, df1 = 1, df2 = 3)
+#'
+#' rf_rvec(n = 2, df1 = 1,df2 = 2:3, n_draw = 1000)
 #' @export
 df_rvec <- function(x, df1, df2, ncp = 0, log = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -946,7 +989,7 @@ df_rvec <- function(x, df1, df2, ncp = 0, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname df_rvec
 #' @export
 pf_rvec <- function(q, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -977,7 +1020,7 @@ pf_rvec <- function(q, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname df_rvec
 #' @export
 qf_rvec <- function(p, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -1008,7 +1051,7 @@ qf_rvec <- function(p, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname df_rvec
 #' @export
 rf_rvec <- function(n, df1, df2, ncp = 0, n_draw = NULL) {
     ncp_not_supplied <- missing(ncp)
@@ -1044,7 +1087,61 @@ rf_rvec <- function(n, df1, df2, ncp = 0, n_draw = NULL) {
 ## because 'rate' appears first in base R gamma functions
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Gamma Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' gamma distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dgamma_rvec()`, `pgamma_rvec()`,
+#' `pgamma_rvec()` and `rgamma_rvec()` work like
+#' base R functions [dgamma()], [pgamma()],
+#' [qgamma()], and [rgamma()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rgamma_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dgamma_rvec()`, `pgamma_rvec()`,
+#' `pgamma_rvec()` and `rgamma_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param shape Shape parameter.
+#' See [stats::dgamma()]. Can be an rvec.
+#' @param rate Rate parameter. See [stats::dgamma()].
+#' Can be an rvec.
+#' @param scale Scale parameter.
+#' An alterative to `rate`. See [stats::dgamma()].
+#' Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dgamma()]
+#' - [pgamma()]
+#' - [qgamma()]
+#' - [rgamma()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 5.1),
+#'                c(0.1, 2.3)))
+#' dgamma_rvec(x, shape = 1)
+#' pgamma_rvec(x, shape = 1)
+#'
+#' rgamma_rvec(n = 2,
+#'             shape = 1,
+#'             rate = c(0.5, 1),
+#'             n_draw = 1000)
 #' @export
 dgamma_rvec <- function(x, shape, rate = 1, scale = 1/rate, log = FALSE) {
     has_rate <- !missing(rate)
@@ -1067,7 +1164,7 @@ dgamma_rvec <- function(x, shape, rate = 1, scale = 1/rate, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dgamma_rvec
 #' @export
 pgamma_rvec <- function(q, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, log.p = FALSE) {
     has_rate <- !missing(rate)
@@ -1092,7 +1189,7 @@ pgamma_rvec <- function(q, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, l
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dgamma_rvec
 #' @export
 qgamma_rvec <- function(p, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, log.p = FALSE) {
     has_rate <- !missing(rate)
@@ -1117,7 +1214,7 @@ qgamma_rvec <- function(p, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, l
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dgamma_rvec
 #' @export
 rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
     has_rate <- !missing(rate)

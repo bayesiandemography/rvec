@@ -16,7 +16,7 @@ qcauchy_rvec(p, location = 0, scale = 1, lower.tail = TRUE, log.p = FALSE)
 rcauchy_rvec(n, location = 0, scale = 1, n_draw = NULL)
 }
 \arguments{
-\item{x}{Quantiles. Can be rvec.}
+\item{x}{Quantiles. Can be an rvec.}
 
 \item{location}{Center of distribution.
 Default is \code{0}.
@@ -37,7 +37,7 @@ on a log scale. Default is
 \eqn{P[X > x]}. Default is \code{TRUE}.
 Cannot be an rvec.}
 
-\item{p}{Probabilities. Can be rvec.}
+\item{p}{Probabilities. Can be an rvec.}
 
 \item{n}{The length of random vector being
 created. Cannot be an rvec.}
@@ -87,7 +87,7 @@ pcauchy_rvec(x)
 
 rcauchy_rvec(n = 2,
              location = c(-5, 5),
-             n_draw = 100)
+             n_draw = 1000)
 }
 \seealso{
 \itemize{

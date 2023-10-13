@@ -16,7 +16,7 @@ qbinom_rvec(p, size, prob, lower.tail = TRUE, log.p = FALSE)
 rbinom_rvec(n, size, prob, n_draw = NULL)
 }
 \arguments{
-\item{x}{Quantiles. Can be rvec.}
+\item{x}{Quantiles. Can be an rvec.}
 
 \item{size}{Number of trials.
 See \code{\link[stats:Binomial]{stats::dbinom()}}. Can be an rvec.}
@@ -35,7 +35,7 @@ on a log scale. Default is
 \eqn{P[X > x]}. Default is \code{TRUE}.
 Cannot be an rvec.}
 
-\item{p}{Probabilities. Can be rvec.}
+\item{p}{Probabilities. Can be an rvec.}
 
 \item{n}{The length of random vector being
 created. Cannot be an rvec.}
@@ -86,7 +86,7 @@ pbinom_rvec(x, size = 8, prob = 0.3)
 rbinom_rvec(n = 2,
             size = 10,
             prob = c(0.7, 0.3),
-            n_draw = 100)
+            n_draw = 1000)
 }
 \seealso{
 \itemize{
