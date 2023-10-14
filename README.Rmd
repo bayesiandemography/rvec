@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/bayesiandemography/rvec/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bayesiandemography/rvec?branch=main)
 <!-- badges: end -->
 
-Tools for working with multiple random draws, including output from a simulation or from a Bayesian analysis. The main data structure is an `rvec`, which holds multiple draws, but which behaves (mainly) like a standard R vector.
+Tools for working with random draws, including draws from a simulation or Bayesian analysis. The main data structure is an `rvec`, which holds multiple draws but which behaves (mainly) like a standard R vector.
 
 
 ## Installation
@@ -69,3 +69,7 @@ Summarise it.
 draws_mean(x)
 ```
 
+## Other packages for working with random draws
+
+- [rv](https://CRAN.R-project.org/package=rv)
+- [posterior](https://CRAN.R-project.org/package=posterior)

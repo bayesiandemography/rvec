@@ -1,3 +1,8 @@
+
+# rvec 0.0.3
+
+- Split help for distributions into multiple files
+
 # rvec 0.0.2
 
 ## Bug fix

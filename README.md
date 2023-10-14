@@ -12,10 +12,9 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 coverage](https://codecov.io/gh/bayesiandemography/rvec/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bayesiandemography/rvec?branch=main)
 <!-- badges: end -->
 
-Tools for working with multiple random draws, including output from a
-simulation or from a Bayesian analysis. The main data structure is an
-`rvec`, which holds multiple draws, but which behaves (mainly) like a
-standard R vector.
+Tools for working with random draws, including draws from a simulation
+or Bayesian analysis. The main data structure is an `rvec`, which holds
+multiple draws but which behaves (mainly) like a standard R vector.
 
 ## Installation
 
@@ -83,3 +82,8 @@ Summarise it.
 draws_mean(x)
 #> [1]   10.5  100.5 1000.5
 ```
+
+## Other packages for working with random draws
+
+-   [rv](https://CRAN.R-project.org/package=rv)
+-   [posterior](https://CRAN.R-project.org/package=posterior)
