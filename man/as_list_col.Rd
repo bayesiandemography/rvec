@@ -4,7 +4,7 @@
 \alias{as_list_col}
 \alias{as_list_col.rvec}
 \alias{as_list_col.matrix}
-\title{Convert to list column}
+\title{Convert to List Column}
 \usage{
 as_list_col(x)
 

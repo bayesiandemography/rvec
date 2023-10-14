@@ -2,7 +2,7 @@
 % Please edit documentation in R/map_rvec.R
 \name{map_rvec}
 \alias{map_rvec}
-\title{Apply a function and combine into an rvec}
+\title{Apply a Function and Combine into an Rvec}
 \usage{
 map_rvec(.x, .f, ...)
 }

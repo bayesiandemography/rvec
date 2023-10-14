@@ -35,7 +35,7 @@ An rvec with the following class:
 }
 }
 \description{
-Create an object of class \code{"rvec"}.
+Create an Object of Class \code{"rvec"}.
 }
 \details{
 Class \code{"rvec"} has four subclasses, each dealing with

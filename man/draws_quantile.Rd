@@ -4,7 +4,7 @@
 \alias{draws_quantile}
 \alias{draws_quantile.rvec}
 \alias{draws_quantile.rvec_chr}
-\title{Quantiles across random draws}
+\title{Quantiles Across Random Draws}
 \usage{
 draws_quantile(x, probs = c(0.025, 0.25, 0.5, 0.75, 0.975), na_rm = FALSE)
 

@@ -3,7 +3,7 @@
 \name{draws_fun}
 \alias{draws_fun}
 \alias{draws_fun.rvec}
-\title{Apply summary function across random draws}
+\title{Apply Summary Function Across Random Draws}
 \usage{
 draws_fun(x, fun, ...)
 

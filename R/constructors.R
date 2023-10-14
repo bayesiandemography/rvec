@@ -4,7 +4,7 @@
 ## HAS_TESTS
 #' Create an rvec
 #'
-#' Create an object of class `"rvec"`.
+#' Create an Object of Class `"rvec"`.
 #'
 #' Class `"rvec"` has four subclasses, each dealing with
 #' a diffent type:

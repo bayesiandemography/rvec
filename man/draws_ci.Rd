@@ -4,7 +4,7 @@
 \alias{draws_ci}
 \alias{draws_ci.rvec}
 \alias{draws_ci.rvec_chr}
-\title{Credible intervals from random draws}
+\title{Credible Intervals from Random Draws}
 \usage{
 draws_ci(x, width = 0.95, prefix = NULL, na_rm = FALSE)
 

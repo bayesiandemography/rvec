@@ -16,7 +16,7 @@
 \alias{weighted_var}
 \alias{weighted_var.default}
 \alias{weighted_var.rvec}
-\title{Calculate weighted summaries}
+\title{Calculate Weighted Summaries}
 \usage{
 weighted_mean(x, wt = NULL, na_rm = FALSE)
 

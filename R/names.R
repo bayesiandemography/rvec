@@ -1,6 +1,6 @@
 
 
-## NO_TESTS
+## HAS_TESTS
 #' @export
 names.rvec <- function(x) {
     data <- field(x, "data")
@@ -9,7 +9,7 @@ names.rvec <- function(x) {
 
 
 
-## NO_TESTS
+## HAS_TESTS
 #' @export
 `names<-.rvec` <- function(x, value) {
     if (is.null(value))

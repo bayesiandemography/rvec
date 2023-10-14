@@ -1,5 +1,5 @@
 
-#' Convert to list column
+#' Convert to List Column
 #'
 #' Convert an [rvec][rvec()] or matrix
 #' to a list that can be used

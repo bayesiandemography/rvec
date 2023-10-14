@@ -1,11 +1,11 @@
 
 ## HAS_TESTS
-#' Number of draws in a random sample
+#' Query Number of Draws in a Random Sample
 #'
 #' @param x An object holding a random sample.
 #'
-#' @returns A count, or `NULL`, if the
-#' vector being sampled as no elements.
+#' @returns A count, or, if the
+#' vector being sampled as no elements, `NULL`.
 #'
 #' @examples
 #' m <- matrix(1:40, nrow = 4, ncol = 10)

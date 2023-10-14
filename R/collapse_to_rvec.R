@@ -1,13 +1,14 @@
 
 ## User-visible functions -----------------------------------------------------
 
-#' Convert a data frame between 'database'
-#' and 'rvec' formats
+#' Convert a Data Frame Between 'Database'
+#' and 'Rvec' Formats
 #'
 #' `collapse_to_rvec()` converts a data frame from
 #' a 'database' format to an 'rvec' format.
-#' `expand_from_rvec()` converts a data frame
-#' from an rvecs format to a database format.
+#' `expand_from_rvec()`, does the opposite,
+#' converting a data frame from an rvecs format
+#' to a database format.
 #'
 #' In database format, each row represents
 #' one random draw. The data frame contains

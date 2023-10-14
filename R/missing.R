@@ -1,6 +1,6 @@
 
-#' Missing, finite, and infinite values
-#' in rvecs
+#' Missing, Finite, and Infinite Values
+#' in Rvecs
 #'
 #' @description
 #' rvec methods for `is.na()`, `is.nan()`,

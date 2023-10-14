@@ -6,8 +6,8 @@
 \alias{is.na.rvec}
 \alias{na.exclude.rvec}
 \alias{na.omit.rvec}
-\title{Missing, finite, and infinite values
-in rvecs}
+\title{Missing, Finite, and Infinite Values
+in Rvecs}
 \usage{
 \method{anyNA}{rvec}(x, recursive = FALSE)
 

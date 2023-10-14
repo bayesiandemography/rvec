@@ -9,7 +9,7 @@
 \alias{draws_mean.rvec_chr}
 \alias{draws_mode}
 \alias{draws_mode.rvec}
-\title{Medians, means, and modes across random draws}
+\title{Medians, Means, and Modes Across Random Draws}
 \usage{
 draws_median(x, na_rm = FALSE)
 

@@ -3,7 +3,7 @@
 \name{n_draw}
 \alias{n_draw}
 \alias{n_draw.rvec}
-\title{Number of draws in a random sample}
+\title{Query Number of Draws in a Random Sample}
 \usage{
 n_draw(x)
 
@@ -13,11 +13,11 @@ n_draw(x)
 \item{x}{An object holding a random sample.}
 }
 \value{
-A count, or \code{NULL}, if the
-vector being sampled as no elements.
+A count, or, if the
+vector being sampled as no elements, \code{NULL}.
 }
 \description{
-Number of draws in a random sample
+Query Number of Draws in a Random Sample
 }
 \examples{
 m <- matrix(1:40, nrow = 4, ncol = 10)

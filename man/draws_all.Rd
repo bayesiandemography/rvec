@@ -7,7 +7,7 @@
 \alias{draws_any}
 \alias{draws_any.rvec_chr}
 \alias{draws_any.rvec}
-\title{Logical operations across random draws}
+\title{Logical Operations Across Random Draws}
 \usage{
 draws_all(x, na_rm = FALSE)
 

@@ -1,7 +1,7 @@
 
 ## 'draws_all', 'draws_any' ---------------------------------------------------
 
-#' Logical operations across random draws
+#' Logical Operations Across Random Draws
 #'
 #' Apply `all` or `any` logical summaries
 #' across random draws.
@@ -99,7 +99,7 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 
 ## 'draws_ci' -----------------------------------------------------------------
 
-#' Credible intervals from random draws
+#' Credible Intervals from Random Draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using a simple credible interval.
@@ -225,7 +225,7 @@ draws_ci.rvec_chr <- function(x,
 
 ## 'draws_median', 'draws_mean', 'draws_mode' ---------------------------------
 
-#' Medians, means, and modes across random draws
+#' Medians, Means, and Modes Across Random Draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using means, medians, or modes.
@@ -360,7 +360,7 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 
 ## 'draws_quantile ------------------------------------------------------------
 
-#' Quantiles across random draws
+#' Quantiles Across Random Draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using quantiles.
@@ -478,7 +478,7 @@ draws_quantile.rvec_chr <- function(x,
 
 ## 'draws_fun' ----------------------------------------------------------------
 
-#' Apply summary function across random draws
+#' Apply Summary Function Across Random Draws
 #'
 #' Summarise the distribution of random draws
 #' in an `rvec`, using a function.

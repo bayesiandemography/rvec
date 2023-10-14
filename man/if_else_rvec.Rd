@@ -2,7 +2,7 @@
 % Please edit documentation in R/if_else_rvec.R
 \name{if_else_rvec}
 \alias{if_else_rvec}
-\title{Vectorised if-else, when condition is an rvec}
+\title{Vectorised If-Else, When Condition is an Rvec}
 \usage{
 if_else_rvec(condition, true, false, missing = NULL, size = NULL)
 }

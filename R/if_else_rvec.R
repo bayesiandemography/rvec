@@ -1,6 +1,6 @@
 
 ## HAS_TESTS
-#' Vectorised if-else, when condition is an rvec
+#' Vectorised If-Else, When Condition is an Rvec
 #'
 #' A version of
 #' [if_else](https://dplyr.tidyverse.org/reference/if_else.html)

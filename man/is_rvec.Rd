@@ -2,7 +2,7 @@
 % Please edit documentation in R/util.R
 \name{is_rvec}
 \alias{is_rvec}
-\title{Test whether an object is an rvec}
+\title{Is an Object an Rvec}
 \usage{
 is_rvec(x)
 }

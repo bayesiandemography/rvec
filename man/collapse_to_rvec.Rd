@@ -7,8 +7,8 @@
 \alias{expand_from_rvec}
 \alias{expand_from_rvec.data.frame}
 \alias{expand_from_rvec.grouped_df}
-\title{Convert a data frame between 'database'
-and 'rvec' formats}
+\title{Convert a Data Frame Between 'Database'
+and 'Rvec' Formats}
 \usage{
 collapse_to_rvec(data, draw = draw, values = value, type = NULL)
 
@@ -56,8 +56,9 @@ data frame.
 \description{
 \code{collapse_to_rvec()} converts a data frame from
 a 'database' format to an 'rvec' format.
-\code{expand_from_rvec()} converts a data frame
-from an rvecs format to a database format.
+\code{expand_from_rvec()}, does the opposite,
+converting a data frame from an rvecs format
+to a database format.
 }
 \details{
 In database format, each row represents

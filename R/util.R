@@ -194,7 +194,7 @@ get_rvec_funs <- function(type, colnums_values) {
 
 
 ## HAS_TESTS
-#' Test whether an object is an rvec
+#' Is an Object an Rvec
 #'
 #' Test whether `x` inherits from
 #' class `"rvec"`.

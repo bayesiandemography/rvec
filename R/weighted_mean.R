@@ -1,5 +1,5 @@
 
-#' Calculate weighted summaries
+#' Calculate Weighted Summaries
 #'
 #' Calculate weighted
 #' - means
