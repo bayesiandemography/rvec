@@ -31,7 +31,49 @@
     <loc>https://bayesiandemography.github.io/rvec/reference/collapse_to_rvec.html</loc>
   </url>
   <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dbeta_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dbinom_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dcauchy_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dchisq_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dexp_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/df_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dgamma_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dgeom_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dhyper_rvec.html</loc>
+  </url>
+  <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/divorce.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dlnorm_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dmultinom_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dnbinom_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dnorm_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dpois_rvec.html</loc>
   </url>
   <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/draws_all.html</loc>
@@ -47,6 +89,15 @@
   </url>
   <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/draws_quantile.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dt_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dunif_rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/dweibull_rvec.html</loc>
   </url>
   <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/if_else_rvec.html</loc>
@@ -71,9 +122,6 @@
   </url>
   <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/reg_post.html</loc>
-  </url>
-  <url>
-    <loc>https://bayesiandemography.github.io/rvec/reference/rvec-distributions.html</loc>
   </url>
   <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/rvec-package.html</loc>
