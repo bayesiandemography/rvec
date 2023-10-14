@@ -1,183 +1,4 @@
 
-#' Probability distributions
-#'
-#' Modified versions of standard probability
-#' functions that can accommodate rvecs.
-#' If any of arguments to the functions are
-#' rvecs, then the functions return rvecs;
-#' otherwise they return ordinary R vectors,
-#  (with one exception, described below.)
-#'
-#' @section Creating an rvec by supplying a value for n_draw:
-#'
-#' The `r*_rvec` functions for generating random variates
-#' include one argument that is not present in
-#' base R functions: `n_draw`. If a value for `n_draw`
-#' is supplied, then the return value is always an
-#' rvec, even if none of the inputs are rvecs.
-#' This is a convenient way to create
-#' an rvec to use in a simulation. See below for an example.
-#'
-#' @section Recycling:
-#' 
-#' Unlike the base R distribution functions,
-#' the rvec functions use [tidyverse][vctrs::vector_recycling_rules]
-#' vector recycling rules:
-#' - Vectors of length 1 are recycled
-#' - All other vectors must have the same size
-#'
-#' These rules are more restrictive than base R rules,
-#' but are also more predictable. Base R style
-#' recycling can be done through explicit
-#' calls to [base::rep()],
-#' [base::rep_len()], and [base::rep.int()],
-#' all of which have methods for [rvecs][rvec()].
-#'
-#' @section Multinomial:
-#'
-#' The multinomial distribution is the only
-#' distribution described here that  has a
-#' multivariate outcome. Base R and rvec
-#' multinomial distribution functions both
-#' behave differently from other distribution
-#' functions:
-#'
-#' | Base R                           | rvec                                       |
-#' |:---------------------------------|:-------------------------------------------|
-#' | No `pmultinom() or `qmultinom()` | No `pmultinom_rvec() or `qmultinom_rvec()` |
-#' | No recycling of arguments        | No recycling of arguments                  |
-#' | `rmultinom()` returns matrix     | `rmultinom_rvec()` returns list if `n > 1` |
-#'
-#' @param df,df1,df2 Degrees of freedom. 
-#' See [stats::dchisq()], [stats::df()], [stats::dt()].
-#' Can be rvec.
-#' @param k Number of balls drawn from urn.
-#' See [stats::dhyper()]. Can be rvec.
-#' @param lambda Vector of means.
-#' See [stats::rpois()] Can be rvec.
-#' @param log,log.p Whether to return
-#' `log(p)` rather than `p`. Default is
-#' `FALSE`. Can be rvec.
-#' @param lower.tail Whether to return
-#' \eqn{P[X \le x]}, as opposed to
-#' \eqn{P[X > x]}. Default is `TRUE`.
-#' Cannot be rvec. 
-#' @param m The number of white balls in the urn.
-#' See [stats::dhyper()]. Can be rvec. 
-#' @param mean Mean of distribution. 
-#' Default is `0`.  See [stats::dlnorm()].
-#' Can be rvec.
-#' @param meanlog Mean of distribution, on log scale.
-#' Default is `0`. See [stats::dlnorm()].
-#' Can be rvec.
-#' @param min,max Lower and upper limits of
-#' the uniform distribution. Defaults are
-#' `0` and `1`.  See [stats::dunif()].
-#' Can be rvec.
-#' @param mu Mean for negative binomial distribution.
-#' See [stats::dnbinom()]. Can be rvec.
-#' @param n
-#' - In functions other than `rhyper_rvec()`, `n` is the
-#' length of random vector being created, and cannot be
-#' an rvec.
-#' - In `rhyper_rvec()`, `n` is the number of black balls
-#' in the urn, and can be an rvec. See [stats::rhyper()].
-#' @param nn The length of the random vector being created,
-#' in a call to `rhyper_rvec()`. The equivalent of `n` in
-#' other random variate functions. 
-#' See [stats::rhyper()]. Cannot be an rvec.
-#' @param n_draw Number of random draws, per observation,
-#' in random vector being created. 
-#' Optional. Cannot be rvec.
-#' @param ncp Non-centrality parameter. 
-#' Default is `0`. See [stats::dbeta()],
-#' [stats::dchisq()], [stats::df()],
-#' [stats::dt()]. Cannot be rvec.
-#' @param p Probabilities. Can be rvec.
-#' @param prob Probability of
-#' success in each trial.
-#' See [stats::dgeom()], [stats::dnbinom()].
-#' Can be rvec.
-#' @param q Quantiles. Can be rvec.
-#' @param rate Rates. See [stats::dexp()],
-#' [stats::dgamma()]. Can be rvec.
-#' @param sd Standard deviation. 
-#' Default is `1`. See [stats::dnorm()].
-#' Can be rvec.
-#' @param sdlog Standard deviation of distribution,
-#' on log scale.
-#' Default is `1`. See [stats::dlnorm()].
-#' Can be rvec.
-#' @param shape Parameter for gamma distribution.
-#' See [stats::dgamma()], [stats::dweibull()].
-#' Can be rvec.
-#' @param shape1,shape2 Parameters
-#' for beta distribution. Non-negative. 
-#' See [stats::dbeta()]. Can be rvecs.
-#' @param size Number of trials.
-#' See [stats::dbinom()], [stats::dmultinom()],
-#' [stats::dnbinom()]. Can be rvec.
-#' @param x Quantiles. Can be rvec.
-#'
-#' @returns
-#' If any of the arguments are rvecs,
-#' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]; otherwise an ordinary R vector.
-#'
-#' @seealso
-#' - Equivalent functions in base R: [stats::distributions].
-#'
-#' @examples
-#' x_rv <- rvec(list(c(-0.8, 1.3),
-#'                   c(-9.1, 8.7)))
-#' mean_rv <- rvec(list(c(-1, 1),
-#'                      c(-10, 10)))
-#' sd_rv <- rvec(list(c(0.2, 20)))
-#' x_rv
-#' mean_rv
-#' sd_rv
-#'
-#' ## densities: all arguments rvecs
-#' dnorm_rvec(x = x_rv, mean = mean_rv, sd = sd_rv)
-#'
-#' ## densities: 'x' is ordinary vector
-#' dnorm_rvec(x = c(0, 2), mean = mean_rv, sd = sd_rv)
-#'
-#' ## ...which is equivalent to
-#' c(dnorm_rvec(0, mean = mean_rv[1], sd = sd_rv),
-#'   dnorm_rvec(2, mean = mean_rv[2], sd = sd_rv))
-#'
-#' ## random variates: mean is rvec, sd is rvec
-#' rnorm_rvec(n = 2, mean = mean_rv, sd = sd_rv)
-#'
-#' ## random variates: mean is rvec, sd is scalar
-#' rnorm_rvec(n = 2, mean = mean_rv, sd = 0.5)
-#'
-#' ## create rvecs via the 'n_draw' argument,
-#' ## and use to created a simulated 'y'
-#' mu <- rnorm_rvec(n = 3,
-#'                  mean = 2,
-#'                  sd = 0.5,
-#'                  n_draw = 1000)
-#' sigma <- rgamma_rvec(n = 3,
-#'                      shape = 1,
-#'                      scale = 0.5,
-#'                      n_draw = 1000)
-#' y <- rnorm_rvec(n = 3,
-#'                 mean = mu,
-#'                 sd = sigma)
-#' y
-#'
-#' ## multinomial distribution
-#' size <- rvec(list(10:12))
-#' prob <- c(0.1, 0.4, 0.2, 0.3)
-#' x <- rmultinom_rvec(n = 1, size = size, prob = prob)
-#' x
-#' sum(x)
-#' @name rvec-distributions
-NULL
-
-
 ## 'beta' ---------------------------------------------------------------------
 
 ## The help for the base *beta functions notes that
@@ -399,7 +220,7 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param prob Probability of success in each trial.
-#' See [stats::dnbinom()]. Can be an rvec.
+#' See [stats::dbinom()]. Can be an rvec.
 #' @param size Number of trials.
 #' See [stats::dbinom()]. Can be an rvec.
 #'
@@ -1243,7 +1064,57 @@ rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
 ## 'geom' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Geometric Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' geometric distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dgeom_rvec()`, `pgeom_rvec()`,
+#' `pgeom_rvec()` and `rgeom_rvec()` work like
+#' base R functions [dgeom()], [pgeom()],
+#' [qgeom()], and [rgeom()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rgeom_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dgeom_rvec()`, `pgeom_rvec()`,
+#' `pgeom_rvec()` and `rgeom_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param prob Probability of
+#' success in each trial.
+#' See [stats::dgeom()].
+#' Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dgeom()]
+#' - [pgeom()]
+#' - [qgeom()]
+#' - [rgeom()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 5),
+#'                c(0, 2)))
+#' dgeom_rvec(x, prob = 0.3)
+#' pgeom_rvec(x, prob = 0.3)
+#'
+#' rgeom_rvec(n = 2,
+#'            prob = c(0.5, 0.8),
+#'            n_draw = 1000)
 #' @export
 dgeom_rvec <- function(x, prob, log = FALSE) {
     check_flag(log)
@@ -1258,7 +1129,7 @@ dgeom_rvec <- function(x, prob, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dgeom_rvec
 #' @export
 pgeom_rvec <- function(q, prob, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1275,7 +1146,7 @@ pgeom_rvec <- function(q, prob, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dgeom_rvec
 #' @export
 qgeom_rvec <- function(p, prob, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1292,7 +1163,7 @@ qgeom_rvec <- function(p, prob, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dgeom_rvec
 #' @export
 rgeom_rvec <- function(n, prob, n_draw = NULL) {
     rgeom <- stats::rgeom
@@ -1312,7 +1183,66 @@ rgeom_rvec <- function(n, prob, n_draw = NULL) {
 ## 'hyper' --------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Hypergeometric Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' hypergeometric distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dhyper_rvec()`, `phyper_rvec()`,
+#' `phyper_rvec()` and `rhyper_rvec()` work like
+#' base R functions [dhyper()], [phyper()],
+#' [qhyper()], and [rhyper()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rhyper_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dhyper_rvec()`, `phyper_rvec()`,
+#' `phyper_rvec()` and `rhyper_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param k Number of balls drawn from urn.
+#' See [stats::dhyper()]. Can be an rvec.
+#' @param m Number of white balls in the urn.
+#' See [stats::dhyper()]. Can be an rvec. 
+#' @param n Number of black balls
+#' in the urn. See [stats::rhyper()].
+#' Can be an rvec. 
+#' @param nn The length of the random vector
+#' being created. The equivalent of `n` in
+#' other random variate functions. 
+#' See [stats::rhyper()]. Cannot be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dhyper()]
+#' - [phyper()]
+#' - [qhyper()]
+#' - [rhyper()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 5),
+#'                c(0, 2)))
+#' dhyper_rvec(x, m = 6, n = 6, k = 5)
+#' phyper_rvec(x, m = 6, n = 6, k = 5)
+#'
+#' rhyper_rvec(nn = 2,
+#'             k = c(3, 5),
+#'             m = 6,
+#'             n = 6,
+#'             n_draw = 1000)
 #' @export
 dhyper_rvec <- function(x, m, n, k, log = FALSE) {
     check_flag(log)
@@ -1331,7 +1261,7 @@ dhyper_rvec <- function(x, m, n, k, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dhyper_rvec
 #' @export
 phyper_rvec <- function(q, m, n, k, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1352,7 +1282,7 @@ phyper_rvec <- function(q, m, n, k, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dhyper_rvec
 #' @export
 qhyper_rvec <- function(p, m, n, k, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1373,7 +1303,7 @@ qhyper_rvec <- function(p, m, n, k, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dhyper_rvec
 #' @export
 rhyper_rvec <- function(nn, m, n, k, n_draw = NULL) {
     rhyper <- stats::rhyper
@@ -1399,7 +1329,59 @@ rhyper_rvec <- function(nn, m, n, k, n_draw = NULL) {
 ## 'lnorm' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Log-Normal Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' log-normal distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dlnorm_rvec()`, `plnorm_rvec()`,
+#' `plnorm_rvec()` and `rlnorm_rvec()` work like
+#' base R functions [dlnorm()], [plnorm()],
+#' [qlnorm()], and [rlnorm()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rlnorm_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dlnorm_rvec()`, `plnorm_rvec()`,
+#' `plnorm_rvec()` and `rlnorm_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param meanlog Mean of distribution, on log scale.
+#' Default is `0`. See [stats::dlnorm()].
+#' Can be an rvec.
+#' @param sdlog Standard deviation of distribution,
+#' on log scale. Default is `1`. See [stats::dlnorm()].
+#' Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dlnorm()]
+#' - [plnorm()]
+#' - [qlnorm()]
+#' - [rlnorm()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3.1, 5.7),
+#'                c(0.2, 2.3)))
+#' dlnorm_rvec(x)
+#' plnorm_rvec(x)
+#'
+#' rlnorm_rvec(n = 2,
+#'             meanlog = c(1, 3),
+#'             n_draw = 1000)
 #' @export
 dlnorm_rvec <- function(x, meanlog = 0, sdlog = 1, log = FALSE) {
     check_flag(log)
@@ -1416,7 +1398,7 @@ dlnorm_rvec <- function(x, meanlog = 0, sdlog = 1, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dlnorm_rvec
 #' @export
 plnorm_rvec <- function(q, meanlog = 0, sdlog = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1435,7 +1417,7 @@ plnorm_rvec <- function(q, meanlog = 0, sdlog = 1, lower.tail = TRUE, log.p = FA
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dlnorm_rvec
 #' @export
 qlnorm_rvec <- function(p, meanlog = 0, sdlog = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1454,7 +1436,7 @@ qlnorm_rvec <- function(p, meanlog = 0, sdlog = 1, lower.tail = TRUE, log.p = FA
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dlnorm_rvec
 #' @export
 rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
     rlnorm <- stats::rlnorm
@@ -1477,7 +1459,66 @@ rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
 ## 'multinom' -----------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Multinomial Distribution, Using Multiple Draws
+#'
+#' Density function random generation for the
+#' multinomial distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dmultinom_rvec()`and
+#' `rmultinom_rvec()` work like
+#' base R functions [dmultinom()]
+#' and [rmultinom()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rmultinom_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' Like the base R functions [dmultinom()]
+#' and [rmultinom(), `dmultinom_rvec()` and
+#' `rmultinom_rvec()` do not recycle their arguments.
+#' 
+#' @inheritParams dbeta_rvec
+#' @param size Total number of trials.
+#' See [stats::dmultinom()].
+#' Can be an rvec.
+#' @param prob Numeric non-negative vector,
+#' giving the probability of each outcome.
+#' Internally normalized to sum to 1.
+#' See [stats::dmultinom()].
+#' Can be an rvec.
+#' @param log Whether to return
+#' `log(p)` rather than `p`. Default is
+#' `FALSE`. Cannot be an rvec.
+#'
+#' @returns
+#' - `dmultinom()`
+#'     - If any of the arguments are rvecs,
+#'     or if a value for `n_draw` is supplied,
+#'     then an [rvec][rvec()]
+#'     - Otherwise an ordinary R vector.
+#' - `rmultinom()`
+#'     - If `n` is 1, an rvec or
+#'     ordinary R vector.
+#'     - If `n` is greater than 1, a list
+#'     of rvecs or ordinary R vectors
+#'
+#' @seealso
+#' - [dmultinom()]
+#' - [rmultinom()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(1, 4, 0),
+#'                c(1, 0, 0),
+#'                c(1, 0, 0),
+#'                c(1, 0, 4)))
+#' prob <- c(1/4, 1/4, 1/4, 1/4)
+#' dmultinom_rvec(x = x, prob = prob)
+#' rmultinom_rvec(n = 1,
+#'                size = 100,
+#'                prob = c(0.1, 0.4, 0.2, 0.3),
+#'                n_draw = 1000)
 #' @export
 dmultinom_rvec <- function(x, size = NULL, prob, log = FALSE) {
     check_flag(log)
@@ -1574,7 +1615,7 @@ dmultinom_rvec <- function(x, size = NULL, prob, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dmultinom_rvec
 #' @export
 rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
     check_n(n)
@@ -1648,7 +1689,60 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
 ## 'nbinom' -------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Negative Binomial Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' negative binomial distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dnbinom_rvec()`, `pnbinom_rvec()`,
+#' `pnbinom_rvec()` and `rnbinom_rvec()` work like
+#' base R functions [dnbinom()], [pnbinom()],
+#' [qnbinom()], and [rnbinom()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rnbinom_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dnbinom_rvec()`, `pnbinom_rvec()`,
+#' `pnbinom_rvec()` and `rnbinom_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param mu Mean value. See [stats::dnbinom()].
+#' Can be an rvec.
+#' @param prob Probability of success in each trial.
+#' See [stats::dnbinom()]. Can be an rvec.
+#' @param size Number of trials.
+#' See [stats::dnbinom()]. Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dnbinom()]
+#' - [pnbinom()]
+#' - [qnbinom()]
+#' - [rnbinom()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 5),
+#'                c(0, 2)))
+#' dnbinom_rvec(x, size = 6, prob = 0.2)
+#' pnbinom_rvec(x, size = 6, prob = 0.2)
+#'
+#' rnbinom_rvec(n = 2,
+#'              size = 2,
+#'              mu = c(4, 8),
+#'              n_draw = 1000)
 #' @export
 dnbinom_rvec <- function(x, size, prob, mu, log = FALSE) {
     check_flag(log)
@@ -1680,7 +1774,7 @@ dnbinom_rvec <- function(x, size, prob, mu, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dnbinom_rvec
 #' @export
 pnbinom_rvec <- function(q, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1714,7 +1808,7 @@ pnbinom_rvec <- function(q, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dnbinom_rvec
 #' @export
 qnbinom_rvec <- function(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1748,7 +1842,7 @@ qnbinom_rvec <- function(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dnbinom_rvec
 #' @export
 rnbinom_rvec <- function(n, size, prob, mu, n_draw = NULL) {
     rnbinom <- stats::rnbinom
@@ -1788,7 +1882,60 @@ rnbinom_rvec <- function(n, size, prob, mu, n_draw = NULL) {
 ## 'norm' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Normal Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' normal distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dnorm_rvec()`, `pnorm_rvec()`,
+#' `pnorm_rvec()` and `rnorm_rvec()` work like
+#' base R functions [dnorm()], [pnorm()],
+#' [qnorm()], and [rnorm()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rnorm_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dnorm_rvec()`, `pnorm_rvec()`,
+#' `pnorm_rvec()` and `rnorm_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param mean Mean of distribution. 
+#' Default is `0`.  See [stats::dnorm()].
+#' Can be an rvec.
+#' @param sd Standard deviation. 
+#' Default is `1`. See [stats::dnorm()].
+#' Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dnorm()]
+#' - [pnorm()]
+#' - [qnorm()]
+#' - [rnorm()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3.1, -5.4),
+#'                c(0.1, 2.3)))
+#' dnorm_rvec(x)
+#' pnorm_rvec(x)
+#'
+#' rnorm_rvec(n = 2,
+#'            mean = c(-3, 3),
+#'            sd = c(2, 4),
+#'            n_draw = 1000)
 #' @export
 dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
     check_flag(log)
@@ -1805,7 +1952,7 @@ dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dnorm_rvec
 #' @export
 pnorm_rvec <- function(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1824,7 +1971,7 @@ pnorm_rvec <- function(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dnorm_rvec
 #' @export
 qnorm_rvec <- function(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1843,7 +1990,7 @@ qnorm_rvec <- function(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dnorm_rvec
 #' @export
 rnorm_rvec <- function(n, mean = 0, sd = 1, n_draw = NULL) {
     rnorm <- stats::rnorm
@@ -1866,7 +2013,55 @@ rnorm_rvec <- function(n, mean = 0, sd = 1, n_draw = NULL) {
 ## 'pois' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' The Poisson Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' Poisson distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dpois_rvec()`, `ppois_rvec()`,
+#' `ppois_rvec()` and `rpois_rvec()` work like
+#' base R functions [dpois()], [ppois()],
+#' [qpois()], and [rpois()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rpois_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dpois_rvec()`, `ppois_rvec()`,
+#' `ppois_rvec()` and `rpois_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param lambda Vector of means.
+#' See [stats::rpois()]. Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dpois()]
+#' - [ppois()]
+#' - [qpois()]
+#' - [rpois()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3, 5),
+#'                c(1, 2)))
+#' dpois_rvec(x, lambda = 3)
+#' ppois_rvec(x, lambda = 3)
+#'
+#' rpois_rvec(n = 2,
+#'            lambda = c(5, 10),
+#'            n_draw = 1000)
 #' @export
 dpois_rvec <- function(x, lambda, log = FALSE) {
     check_flag(log)
@@ -1881,7 +2076,7 @@ dpois_rvec <- function(x, lambda, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dpois_rvec
 #' @export
 ppois_rvec <- function(q, lambda, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1898,7 +2093,7 @@ ppois_rvec <- function(q, lambda, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dpois_rvec
 #' @export
 qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -1915,7 +2110,7 @@ qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dpois_rvec
 #' @export
 rpois_rvec <- function(n, lambda, n_draw = NULL) {
     rpois <- stats::rpois
@@ -1935,7 +2130,59 @@ rpois_rvec <- function(n, lambda, n_draw = NULL) {
 ## 't' ------------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' Student t Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' t distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dt_rvec()`, `pt_rvec()`,
+#' `pt_rvec()` and `rt_rvec()` work like
+#' base R functions [dt()], [pt()],
+#' [qt()], and [rt()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rt_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dt_rvec()`, `pt_rvec()`,
+#' `pt_rvec()` and `rt_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param df Degrees of freedom. 
+#' See [stats::dt()].
+#' Can be an rvec.
+#' @param ncp Non-centrality parameter. 
+#' Default is `0`. See [stats::dt()].
+#' Cannot be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dt()]
+#' - [pt()]
+#' - [qt()]
+#' - [rt()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(-3.2, 5.3),
+#'                c(-1.6, 2)))
+#' dt_rvec(x, df = 4)
+#' pt_rvec(x, df = 4)
+#'
+#' rt_rvec(n = 2,
+#'         df = c(3, 5),
+#'         n_draw = 1000)
 #' @export
 dt_rvec <- function(x, df, ncp = 0, log = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -1960,7 +2207,7 @@ dt_rvec <- function(x, df, ncp = 0, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dt_rvec
 #' @export
 pt_rvec <- function(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -1988,7 +2235,7 @@ pt_rvec <- function(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dt_rvec
 #' @export
 qt_rvec <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     ncp_not_supplied <- missing(ncp)
@@ -2016,7 +2263,7 @@ qt_rvec <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dt_rvec
 #' @export
 rt_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
     ncp_not_supplied <- missing(ncp)
@@ -2045,7 +2292,57 @@ rt_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
 ## 'unif' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' Uniform Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' uniform distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dunif_rvec()`, `punif_rvec()`,
+#' `punif_rvec()` and `runif_rvec()` work like
+#' base R functions [dt()], [pt()],
+#' [qt()], and [rt()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `runif_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dunif_rvec()`, `punif_rvec()`,
+#' `punif_rvec()` and `runif_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param min Lower limits. Default is `0`.
+#' See [stats::dunif()]. Can be an rvec.
+#' @param max Upper limited. Default is `1`.
+#' See [stats::dunif()]. Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dunif()]
+#' - [punif()]
+#' - [qunif()]
+#' - [runif()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(0.2, 0.5),
+#'                c(0.6, 0.7)))
+#' dunif_rvec(x)
+#' punif_rvec(x)
+#'
+#' runif_rvec(n = 2,
+#'            min = c(0, 0.5),
+#'            n_draw = 1000)
 #' @export
 dunif_rvec <- function(x, min = 0, max = 1, log = FALSE) {
     check_flag(log)
@@ -2062,7 +2359,7 @@ dunif_rvec <- function(x, min = 0, max = 1, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dunif_rvec
 #' @export
 punif_rvec <- function(q, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -2081,7 +2378,7 @@ punif_rvec <- function(q, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dunif_rvec
 #' @export
 qunif_rvec <- function(p, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -2100,7 +2397,7 @@ qunif_rvec <- function(p, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dunif_rvec
 #' @export
 runif_rvec <- function(n, min = 0, max = 1, n_draw = NULL) {
     runif <- stats::runif
@@ -2124,7 +2421,57 @@ runif_rvec <- function(n, min = 0, max = 1, n_draw = NULL) {
 ## 'weibull' ------------------------------------------------------------------
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' Weibull Distribution, Using Multiple Draws
+#'
+#' Density, distribution function,
+#' quantile function and random generation for the
+#' Weibull distribution, modified to work with
+#' rvecs.
+#'
+#' Functions `dweibull_rvec()`, `pweibull_rvec()`,
+#' `pweibull_rvec()` and `rweibull_rvec()` work like
+#' base R functions [dt()], [pt()],
+#' [qt()], and [rt()], except that
+#' they accept rvecs as inputs. If any
+#' input is an rvec, then the output will be too.
+#' Function `rweibull_rvec()` also returns an
+#' rvec if a value for `n_draw` is supplied.
+#'
+#' `dweibull_rvec()`, `pweibull_rvec()`,
+#' `pweibull_rvec()` and `rweibull_rvec()`
+#' use [tidyverse][vctrs::vector_recycling_rules]
+#' vector recycling rules:
+#' - Vectors of length 1 are recycled
+#' - All other vectors must have the same size
+#'
+#' @inheritParams dbeta_rvec
+#' @param scale Scale parameter. See [stats::dweibull()]
+#' Default is `1`. Can be an rvec.
+#' @param shape Shape parameter. See [stats::dweibull()].
+#' Can be an rvec.
+#'
+#' @returns
+#' - If any of the arguments are rvecs,
+#' or if a value for `n_draw` is supplied,
+#' then an [rvec][rvec()]
+#' - Otherwise an ordinary R vector.
+#'
+#' @seealso
+#' - [dweibull()]
+#' - [pweibull()]
+#' - [qweibull()]
+#' - [rweibull()]
+#' - [stats::distributions].
+#'
+#' @examples
+#' x <- rvec(list(c(3.2, 4.5),
+#'                c(7.6, 0.7)))
+#' dweibull_rvec(x, shape = 2)
+#' pweibull_rvec(x, shape = 2)
+#'
+#' rweibull_rvec(n = 2,
+#'               shape = c(2, 3),
+#'               n_draw = 1000)
 #' @export
 dweibull_rvec <- function(x, shape, scale = 1, log = FALSE) {
     check_flag(log)
@@ -2141,7 +2488,7 @@ dweibull_rvec <- function(x, shape, scale = 1, log = FALSE) {
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dweibull_rvec
 #' @export
 pweibull_rvec <- function(q, shape, scale = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -2160,7 +2507,7 @@ pweibull_rvec <- function(q, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dweibull_rvec
 #' @export
 qweibull_rvec <- function(p, shape, scale = 1, lower.tail = TRUE, log.p = FALSE) {
     check_flag(lower.tail)
@@ -2179,7 +2526,7 @@ qweibull_rvec <- function(p, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
 }
 
 ## HAS_TESTS
-#' @rdname rvec-distributions
+#' @rdname dweibull_rvec
 #' @export
 rweibull_rvec <- function(n, shape, scale = 1, n_draw = NULL) {
     rweibull <- stats::rweibull

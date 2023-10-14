@@ -22,7 +22,7 @@ rbinom_rvec(n, size, prob, n_draw = NULL)
 See \code{\link[stats:Binomial]{stats::dbinom()}}. Can be an rvec.}
 
 \item{prob}{Probability of success in each trial.
-See \code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be an rvec.}
+See \code{\link[stats:Binomial]{stats::dbinom()}}. Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
 on a log scale. Default is
