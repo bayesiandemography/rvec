@@ -69,7 +69,7 @@ cbind(df, draws_quantile(x))
 
 ## a tidyverse alternative:
 ## mutate with no '='
-df \%>\%
+df |>
   mutate(draws_quantile(x))
 }
 \seealso{

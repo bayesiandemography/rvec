@@ -68,7 +68,7 @@ cbind(df, draws_ci(x))
 
 ## a tidyverse alternative:
 ## mutate with no '='
-df \%>\% mutate(draws_ci(x))
+df |> mutate(draws_ci(x))
 }
 \seealso{
 \code{\link[=draws_quantile]{draws_quantile()}} gives more options

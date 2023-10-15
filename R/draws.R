@@ -169,7 +169,7 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #'
 #' ## a tidyverse alternative:
 #' ## mutate with no '='
-#' df %>% mutate(draws_ci(x))
+#' df |> mutate(draws_ci(x))
 #' @export
 draws_ci <- function(x,
                      width = 0.95,
@@ -430,7 +430,7 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #'
 #' ## a tidyverse alternative:
 #' ## mutate with no '='
-#' df %>%
+#' df |>
 #'   mutate(draws_quantile(x))
 #' @export
 draws_quantile <- function(x,
