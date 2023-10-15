@@ -20,42 +20,34 @@
 #' multiple draws are stored in an [rvec][rvec()].
 #' See below for examples.
 #'
-#' @section Data frame variables:
+#' @section `by` argument:
 #'
-#' `collapse_to_rvec()` and `expand_from_rvec()`
-#' operate with three kinds of variables:
-#' - 'values' variables, holding hold measurements
-#'   of some random or uncertain quantity.
-#'   In `collapse_to_rvec()`,
-#'   values variables are specified by the
-#'   `values` argument. `expand_from_rvec()`
-#'   treats all rvecs as value variables.
-#' - The draw variable, used to uniquely identify
-#'   each draw in a database format, within
-#'   each combination of 'by' values. Specified
-#'   by the `draw` argument.
-#' - 'by' variables, which hold covariates or
-#'   classification variables.
-#'       - If `data` is an ordinary data frame, then
-#'         `collapse_to_rvec()` and `expand_from_rvec()`
-#'         assume that all variables that are not
-#'         values or draw variables are 'by' variables.
-#'       - If `data` is a
-#'         [grouped](https://dplyr.tidyverse.org/reference/group_data.html)
-#'         data frame, then `collapse_to_rvec()`
-#'         and `expand_from_rvec()` assume that the
-#'         grouping variables are by variables.
+#' The `by` argument is used to specify stratifying
+#' variables. For instance if `by` includes `sex` and `age`,
+#' then data frame produced by `collapse_to_rvec()`
+#' has separate rows for each
+#' combination of `sex` and `age`.
 #'
+#' If `data` is a
+#' [grouped](https://dplyr.tidyverse.org/reference/group_data.html)
+#' data frame, then the grouping variables
+#' take precedence over `by`.
+#'
+#' If no value for `by` is provided,
+#' and `data` is not a grouped data frame,
+#' then `collapse_to_rvec()`
+#' assumes that all variables in `data` that are
+#' not included in `value`
+#' and `draw` should be included in `by`.
+#' 
 #' @section `type` argument:
 #'
 #' By default, `collapse_to_rvec()` calls function
 #' [rvec()] on each values variable in `data`.
-#' [rvec()] chooses between `rvec_chr, `rvec_dbl`,
-#' `rvec_int`,and  `rvec_lgl`, based
-#' on the contents of each values variable.
-#'
-#' Instead of leaving the choice of class to [rvec()],
-#' it can be specified in advance, using the `type` argument.
+#' [rvec()] chooses the class of the output (ie
+#' `rvec_chr`, `rvec_dbl`, `rvec_int`, or `rvec_lgl`)
+#' depending on the input. Types can instead
+#' be specified in advance, using the `type` argument.
 #' `type` is a string, each character of which
 #' specifies the class of the corresponding values variable.
 #' The characters have the following meanings:
@@ -65,7 +57,7 @@
 #' - `"l"`: `rvec_lgl`
 #' - `"?"`: Depends on inputs.
 #'
-#' These codes are modified from ones used by the
+#' The codes for `type` are modified from ones used by the
 #' [readr](https://readr.tidyverse.org) package.
 #'
 #' @param data A data frame, possibly
@@ -77,9 +69,12 @@
 #' for `expand_from_rvec()`.
 #' @param values <[`tidyselect`][tidyselect::language]>
 #' One or more variables of `data` that hold measurements.
+#' @param by <[`tidyselect`][tidyselect::language]>
+#' Variables used to stratify or cross-classify the data.
+#' See Details.
 #' @param type Code specifying the class of rvec
 #' to use for each value, combined into a string.
-#' Optional.
+#' Optional. See Details.
 #'
 #' @returns A data frame.
 #' - `collapse_to_rvec()` **reduces** the number of rows
@@ -126,46 +121,45 @@
 #' )
 #'
 #' ## database format to rvec format
-#' data_rv <- data_db %>%
+#' data_rv <- data_db |>
 #'   collapse_to_rvec(draw = sim,
 #'                    values = pay)
 #' data_rv
 #'
 #' ## rvec format to database format
-#' data_rv %>%
+#' data_rv |>
 #'   expand_from_rvec()
 #'
 #' ## provide a name for the draw variable
-#' data_rv %>%
+#' data_rv |>
 #'   expand_from_rvec(draw = "sim")
 #' 
 #' ## specify that rvec variable
 #' ## must be rvec_int
-#' data_rv <- data_db %>%
+#' data_rv <- data_db |>
 #'   collapse_to_rvec(draw = sim,
 #'                    values = pay,
 #'                    type = "i")
-#' 
-#' ## if we add add a redundant variable,
-#' ## then our earlier call no longer works
-#' data_db2 <- data_db %>%
-#'   mutate(newcol = 1:6)
-#' try(
-#'   data_db2 %>%
-#'     collapse_to_rvec(draw = sim,
-#'                      values = pay)
-#' )
 #'
-#' ## one solution: use 'group_by' to
-#' ## specify the 'by' variables
-#' data_db2 %>%
-#'   group_by(occupation) %>%
+#' ## specify stratifying variable explicitly,
+#' ## using 'by' argument
+#' data_db |>
+#'   collapse_to_rvec(draw = sim,
+#'                    values = pay,
+#'                    by = occupation)
+#'
+#' ## specify stratifying variable explicitly,
+#' ## using 'group_by'
+#' library(dplyr)
+#' data_db |>
+#'   group_by(occupation) |>
 #'   collapse_to_rvec(draw = sim,
 #'                    values = pay)
 #' @export
 collapse_to_rvec <- function(data,
                              draw = draw,
                              values = value,
+                             by = NULL,
                              type = NULL) {
     UseMethod("collapse_to_rvec")
 }
@@ -176,16 +170,20 @@ collapse_to_rvec <- function(data,
 collapse_to_rvec.data.frame <- function(data,
                                         draw = draw,
                                         values = value,
+                                        by = NULL,
                                         type = NULL) {
     draw_quo <- rlang::enquo(draw)
     values_quo <- rlang::enquo(values)
-    colnum_draw <- tidyselect::eval_select(draw_quo, data = data)
-    colnums_values <- tidyselect::eval_select(values_quo, data = data)
-    colnums_groups <- integer()
+    by_quo <- rlang::enquo(by)
+    draw_colnum <- tidyselect::eval_select(draw_quo, data = data)
+    values_colnums <- tidyselect::eval_select(values_quo, data = data)
+    by_colnums <- tidyselect::eval_select(by_quo, data = data)
+    groups_colnums <- integer()
     collapse_to_rvec_inner(data = data,
-                           colnum_draw = colnum_draw,
-                           colnums_values = colnums_values,
-                           colnums_groups = colnums_groups,
+                           draw_colnum = draw_colnum,
+                           values_colnums = values_colnums,
+                           by_colnums = by_colnums,
+                           groups_colnums = groups_colnums,
                            type = type)
 }
 
@@ -195,43 +193,50 @@ collapse_to_rvec.data.frame <- function(data,
 collapse_to_rvec.grouped_df <- function(data,
                                         draw = draw,
                                         values = value,
+                                        by = NULL,
                                         type = NULL) {
     draw_quo <- rlang::enquo(draw)
     values_quo <- rlang::enquo(values)
-    colnum_draw <- tidyselect::eval_select(draw_quo, data = data)
-    colnums_values <- tidyselect::eval_select(values_quo, data = data)
-    colnums_groups <- get_colnums_groups(data)
+    by_quo <- rlang::enquo(by)
+    draw_colnum <- tidyselect::eval_select(draw_quo, data = data)
+    values_colnums <- tidyselect::eval_select(values_quo, data = data)
+    by_colnums <- tidyselect::eval_select(by_quo, data = data)
+    groups_colnums <- get_groups_colnums(data)
     collapse_to_rvec_inner(data = data,
-                           colnum_draw = colnum_draw,
-                           colnums_values = colnums_values,
-                           colnums_groups = colnums_groups,
+                           draw_colnum = draw_colnum,
+                           values_colnums = values_colnums,
+                           by_colnums = by_colnums,
+                           groups_colnums = groups_colnums,
                            type = type)
 }
 
 #' @rdname collapse_to_rvec
 #' @export
-expand_from_rvec <- function(data, draw = "draw") {
+expand_from_rvec <- function(data,
+                             draw = "draw") {
     UseMethod("expand_from_rvec")
 }
 
 ## HAS_TESTS
 #' @rdname collapse_to_rvec
 #' @export
-expand_from_rvec.data.frame <- function(data, draw = "draw") {
-    colnums_values <- get_colnums_rvec(data)
+expand_from_rvec.data.frame <- function(data,
+                                        draw = "draw") {
+    values_colnums <- get_rvec_colnums(data)
     expand_from_rvec_inner(data = data,
                            draw = draw,
-                           colnums_values = colnums_values)
+                           values_colnums = values_colnums)
 }
 
 ## HAS_TESTS
 #' @rdname collapse_to_rvec
 #' @export
-expand_from_rvec.grouped_df <- function(data, draw = "draw") {
-    colnums_values <- get_colnums_rvec(data)
+expand_from_rvec.grouped_df <- function(data,
+                                        draw = "draw") {
+    values_colnums <- get_rvec_colnums(data)
     expand_from_rvec_inner(data = data,
                            draw = draw,
-                           colnums_values = colnums_values)
+                           values_colnums = values_colnums)
 }
 
 
@@ -244,11 +249,13 @@ expand_from_rvec.grouped_df <- function(data, draw = "draw") {
 #' to minimise repetition.
 #'
 #' @param data A data frame
-#' @param colnum_draw String. A named integer vector
+#' @param draw_colnum String. A named integer vector
 #' giving the location of the draw column.
-#' @param colnums_values A named integer vector
+#' @param values_colnums A named integer vector
 #' giving the locations of rvec columns.
-#' @param colnums_groups A named integer vector
+#' @param by_colnums A named integer vector
+#' giving the locations of any by columns.
+#' @param groups_colnums A named integer vector
 #' giving the locations of any grouping columns.
 #'
 #' @returns A modified version of 'data'
@@ -256,66 +263,75 @@ expand_from_rvec.grouped_df <- function(data, draw = "draw") {
 #'
 #' @noRd
 collapse_to_rvec_inner <- function(data,
-                                   colnum_draw,
-                                   colnums_values,
-                                   colnums_groups,
+                                   draw_colnum,
+                                   values_colnums,
+                                   by_colnums,
+                                   groups_colnums,
                                    type) {
     ## check and process inputs
-    check_colnum_draw(colnum_draw)
-    check_colnums_values(colnums_values)
-    check_overlap_draw_values(colnum_draw = colnum_draw,
-                              colnums_values = colnums_values)
-    check_overlap_draw_groups(colnum_draw = colnum_draw,
-                              colnums_groups = colnums_groups)
-    check_overlap_values_groups(colnums_values = colnums_values,
-                                colnums_groups = colnums_groups)
+    check_draw_colnum(draw_colnum)
+    check_values_colnums(values_colnums)
+    check_overlap_draw_values(draw_colnum = draw_colnum,
+                              values_colnums = values_colnums)
+    check_overlap_draw_by(draw_colnum = draw_colnum,
+                          by_colnums = by_colnums)
+    check_overlap_draw_groups(draw_colnum = draw_colnum,
+                              groups_colnums = groups_colnums)
+    check_overlap_values_by(values_colnums = values_colnums,
+                            by_colnums = by_colnums)
+    check_overlap_values_groups(values_colnums = values_colnums,
+                                groups_colnums = groups_colnums)
+    check_not_has_by_and_groups(by_colnums = by_colnums,
+                                groups_colnums = groups_colnums)
     check_has_no_rvecs(data, nm_df = "data")
     check_type(type)
-    check_values_type_consistent(colnums_values = colnums_values,
+    check_values_type_consistent(values_colnums = values_colnums,
                                  type = type)
-    colnums_all <- get_colnums_all(data)
-    has_groups <- length(colnums_groups) > 0L
-    if (has_groups) {
-        colnums_id <- colnums_groups
-        colnums_delete <- vec_set_difference(colnums_all,
-                                             c(colnum_draw,
-                                               colnums_values,
-                                               colnums_id))
+    all_colnums <- get_all_colnums(data)
+    has_groups <- length(groups_colnums) > 0L
+    has_by <- length(by_colnums) > 0L
+    if (has_groups || has_by) {
+        if (has_groups)
+            by_colnums <- groups_colnums
+        delete_colnums <- vec_set_difference(all_colnums,
+                                             c(draw_colnum,
+                                               values_colnums,
+                                               by_colnums))
     }
     else {
-        colnums_id <- vec_set_difference(colnums_all,
-                                         c(colnum_draw,
-                                           colnums_values))
-        colnums_delete <- integer()
+        by_colnums <- vec_set_difference(all_colnums,
+                                         c(draw_colnum,
+                                           values_colnums))
+        delete_colnums <- integer()
     }
     ## start calculations
     rvec_funs <- get_rvec_funs(type = type,
-                               colnums_values = colnums_values)
+                               values_colnums = values_colnums)
     if (nrow(data) > 0L) {
-        colnums_blank <- c(colnum_draw, colnums_values, colnums_delete)
-        ans <- set_cols_to_blank(data, colnums = colnums_blank)
+        blank_colnums <- c(draw_colnum, values_colnums, delete_colnums)
+        ans <- set_cols_to_blank(data, colnums = blank_colnums)
         ans <- unique(ans)
         ## derive and check indices for contents of rvecs
-        key_id_data <- paste_dot(data[colnums_id])
-        key_id_ans <- paste_dot(ans[colnums_id])
-        draw_data <- data[[colnum_draw]]
+        key_id_data <- paste_dot(data[by_colnums])
+        key_id_ans <- paste_dot(ans[by_colnums])
+        draw_data <- data[[draw_colnum]]
         draw_ans <- sort(unique(draw_data))
         idx <- cbind(match(key_id_data, key_id_ans),
                      match(draw_data, draw_ans))
         check_idx_dup(idx = idx,
                       data = data,
-                      colnum_draw = colnum_draw,
-                      colnums_id = colnums_id)
-        nm_draw <- names(colnum_draw)
-        idvars_ans <- ans[colnums_id]
+                      draw_colnum = draw_colnum,
+                      by_colnums = by_colnums)
+        nm_draw <- names(draw_colnum)
+        idvars_ans <- ans[by_colnums]
         check_idx_gap(idx = idx,
                       idvars_ans = idvars_ans,
                       draw_ans = draw_ans,
                       nm_draw = nm_draw)
         ## make rvec objects
         m_tmp <- matrix(nrow = nrow(ans), ncol = length(draw_ans))
-        for (i in seq_along(colnums_values)) {
-            colnum <- colnums_values[[i]]
+        for (i in seq_along(values_colnums)) {
+            colnum <- values_colnums[[i]]
             m_tmp[idx] <- data[[colnum]]
             rvec_fun <- rvec_funs[[i]]
             ans[[colnum]] <- rvec_fun(m_tmp)
@@ -323,14 +339,14 @@ collapse_to_rvec_inner <- function(data,
     }
     else {
         ans <- data
-        for (i in seq_along(colnums_values)) {
-            colnum <- colnums_values[[i]]
+        for (i in seq_along(values_colnums)) {
+            colnum <- values_colnums[[i]]
             rvec_fun <- rvec_funs[[i]]
             m <- matrix(data[[colnum]], nrow = 0L, ncol = 1L)
             ans[[colnum]] <- rvec_fun(m)
         }
     }
-    ans <- ans[-c(colnum_draw, colnums_delete)]
+    ans <- ans[-c(draw_colnum, delete_colnums)]
     rownames(ans) <- NULL
     ans
 }
@@ -342,7 +358,7 @@ collapse_to_rvec_inner <- function(data,
 #' @param data A data frame
 #' @param draw Name of the new draw
 #' column being created. A string.
-#' @param colnums_values A named integer vector
+#' @param values_colnums A named integer vector
 #' giving the locations of rvec columns
 #'
 #' @returns A modified version of 'data'
@@ -351,23 +367,23 @@ collapse_to_rvec_inner <- function(data,
 #' @noRd
 expand_from_rvec_inner <- function(data,
                                    draw,
-                                   colnums_values) {
+                                   values_colnums) {
     check_str(draw, x_arg = "draw")
     if (draw %in% names(data))
         cli::cli_abort(c("Name clash with {.arg draw}.",
                          i = "{.arg data} already has a column called {.val {draw}}."))
-    if (length(colnums_values) == 0L)
+    if (length(values_colnums) == 0L)
         cli::cli_abort("{.arg data} does not have any rvecs")
-    ans <- set_cols_to_blank(data, colnums = colnums_values)
+    ans <- set_cols_to_blank(data, colnums = values_colnums)
     n_draw <- n_draw_df(data)
     ans <- vec_rep_each(ans, times = n_draw)
-    for (colnum in colnums_values) {
+    for (colnum in values_colnums) {
         var <- data[[colnum]]
         m <- field(var, "data")
         ans[[colnum]] <- as.vector(t(m))
     }
     val_draw <- vec_rep(seq_len(n_draw), times = nrow(data))
-    after <- colnums_values[[1L]] - 1L
+    after <- values_colnums[[1L]] - 1L
     ans <- append_col(ans,
                       value = val_draw,
                       after = after,

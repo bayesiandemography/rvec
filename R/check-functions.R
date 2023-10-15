@@ -1,32 +1,17 @@
 
 ## HAS_TESTS
-#' Check that 'colnum_draw' has length 1
+#' Check that 'draw_colnum' has length 1
 #'
-#' @param colnum_draw A named integer vector of length 1
+#' @param draw_colnum A named integer vector of length 1
 #'
 #' @returns TRUE, invisibly
 #'
 #' @noRd
-check_colnum_draw <- function(colnum_draw) {
-    if (length(colnum_draw) == 0L)
+check_draw_colnum <- function(draw_colnum) {
+    if (length(draw_colnum) == 0L)
         cli::cli_abort("No {.var draw} variable selected.")
-    if (length(colnum_draw) > 1L)
+    if (length(draw_colnum) > 1L)
         cli::cli_abort("More than one {.var draw} variable selected.")
-    invisible(TRUE)
-}
-
-
-## HAS_TESTS
-#' Check that 'colnum_values' does not have length 0
-#'
-#' @param colnums_values A named integer vector.
-#'
-#' @returns TRUE, invisibly
-#'
-#' @noRd
-check_colnums_values <- function(colnums_values) {
-    if (length(colnums_values) == 0L)
-        cli::cli_abort("No {.var values} variables selected.")
     invisible(TRUE)
 }
 
@@ -57,31 +42,35 @@ check_flag <- function(x) {
 #' @param idx Two-column matrix, where first column
 #' indexes row in data part of rvec and second
 #' column indexes column.
-#' @param data A data frame
-#' @param colnum_draw Named integer vector
-#' of length 1 identifying 'draw' column
-#' @param colnums_id Named integer vector
-#' indentifying ID columns
+#' @param data Data frame with the data.
+#' @param draw_colnum Named length-1 integer vector
+#' identifying draw variable.
+#' @param by_colnums Named integer vector
+#' indentifying stratifying variables
 #'
 #' @returns TRUE, invisibly
 #'
 #' @noRd
-check_idx_dup <- function(idx,
-                          data,
-                          colnum_draw,
-                          colnums_id) {
+check_idx_dup <- function(idx, data, draw_colnum, by_colnums) {
     is_dup <- duplicated(idx)
     i_dup <- match(TRUE, is_dup, nomatch = 0L)
     if (i_dup > 0L) {
-        colnums <- c(colnums_id, colnum_draw)
-        nms <- names(colnums)
-        msg_vals <- sprintf("{.var %s}: {.val {%s}}", nms, nms)
-        msg_vals <- rlang::set_names(msg_vals, nm = " ")
-        .envir <- data[i_dup, colnums, drop = FALSE]
-        .envir <- as.environment(.envir)
-        cli::cli_abort(c("Multiple rows with the same values for 'by' variables:",
-                         msg_vals),
-                       .envir = .envir)
+        has_by <- length(by_colnums) > 0L
+        if (has_by) {
+            nms_by <- names(by_colnums)
+            cli::cli_abort(c(paste("{cli::qty(nms_by)}Column{?s} {.val {nms_by}} do{?es/} not",
+                                   "uniquely identify rows in {.arg data}."),
+                             i = "Do you need additional {.arg by} or grouping variables?"))
+        }
+        else {
+            val_draw <- data[[draw_colnum]][[i_dup]]
+            nm_draw <- names(draw_colnum)
+            cli::cli_abort(c(paste("Multiple rows in {.arg data} have the same value for",
+                                   "the {.arg draw} variable."),
+                             i = paste("Multiple rows have value {.val {val_draw}} for variable",
+                                       "{.arg {nm_draw}}."),
+                             i = "Do you need {.arg by} or grouping variables?"))
+        }
     }
     invisible(TRUE)
 }
@@ -349,6 +338,23 @@ check_nonneg_num_vector <- function(x) {
 }
 
 
+#' Check that no value supplied for 'by' if 'data' is a grouped data frame
+#'
+#' @param by_colnums Named integer vector with locations of by columns
+#' @param groups_colnums Named integer vector with locations of grouping columns
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_not_has_by_and_groups <- function(by_colnums, groups_colnums) {
+    has_by <- length(by_colnums) > 0L
+    has_groups <- length(groups_colnums) > 0L
+    if (has_by && has_groups)
+        cli::cli_abort("Can't supply {.arg by} when {.arg data} is a grouped data frame.")
+    invisible(TRUE)
+}
+
+
 ## HAS_TESTS
 #' Check that an rvec is not an rvec_chr
 #'
@@ -366,51 +372,78 @@ check_not_rvec_chr <- function(arg, nm_arg) {
 
 
 ## HAS_TESTS
-#' Check that draw variable not used as grouping variable
+#' Check that draw variable and by variables do not overlap
 #'
-#' Assume that the colnum_draw and colnums_groups
+#' Assume that the draw_colnum and by_colnums
 #' are both valid.
 #'
-#' @param colnum_draw A named integer vector of
+#' @param draw_colnum A named integer vector of
 #' length 1 giving the location of the draw variable
-#' @param colnums_groups A named vector of
+#' @param by_colnums A named vector of
+#' length >0, giving the location(s) of the
+#' by variable(s)
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_overlap_draw_by <- function(draw_colnum, by_colnums) {
+    if (draw_colnum %in% by_colnums) {
+        nm <- names(draw_colnum)
+        nms_by <- names(by_colnums)
+        cli::cli_abort(c("{.var {nm}} used in {.arg draw} and in {.arg by}.",
+                         i = "{.arg draw}: {nm}",
+                         i = "{.arg by}: {nms_by}"))
+    }
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
+#' Check that draw variable not used as grouping variable
+#'
+#' Assume that the draw_colnum and groups_colnums
+#' are both valid.
+#'
+#' @param draw_colnum A named integer vector of
+#' length 1 giving the location of the draw variable
+#' @param groups_colnums A named vector of
 #' length >0, giving the location(s) of the
 #' grouping variable(s)
 #'
 #' @returns TRUE, invisibly
 #'
 #' @noRd
-check_overlap_draw_groups <- function(colnum_draw, colnums_groups) {
-    if (colnum_draw %in% colnums_groups) {
-        nm <- names(colnum_draw)
-        nms_gp <- names(colnums_groups)
+check_overlap_draw_groups <- function(draw_colnum, groups_colnums) {
+    if (draw_colnum %in% groups_colnums) {
+        nm <- names(draw_colnum)
+        nms_gp <- names(groups_colnums)
         cli::cli_abort(c("{.var {nm}} is a grouping variable, so cannot be used for {.arg draw}.",
                          i = "grouping variables: {nms_gp}",
                          i = "{.arg draw}: {nm}"))
     }
     invisible(TRUE)
-}    
+}
 
 
 ## HAS_TESTS
 #' Check that draw variable not used as values variable
 #'
-#' Assume that the colnum_draw and colnums_values
+#' Assume that the draw_colnum and values_colnums
 #' are both valid.
 #'
-#' @param colnum_draw A named integer vector of
+#' @param draw_colnum A named integer vector of
 #' length 1 giving the location of the draw variable
-#' @param colnums_values A named vector of
+#' @param values_colnums A named vector of
 #' length >0, giving the location(s) of the
 #' values variable(s)
 #'
 #' @returns TRUE, invisibly
 #'
 #' @noRd
-check_overlap_draw_values <- function(colnum_draw, colnums_values) {
-    if (colnum_draw %in% colnums_values) {
-        nm <- names(colnum_draw)
-        nms_val <- names(colnums_values)
+check_overlap_draw_values <- function(draw_colnum, values_colnums) {
+    if (draw_colnum %in% values_colnums) {
+        nm <- names(draw_colnum)
+        nms_val <- names(values_colnums)
         cli::cli_abort(c("{.var {nm}} used in {.arg draw} and in {.arg values}.",
                          i = "{.arg draw}: {nm}",
                          i = "{.arg values}: {nms_val}"))
@@ -418,28 +451,55 @@ check_overlap_draw_values <- function(colnum_draw, colnums_values) {
     invisible(TRUE)
 }    
                                       
+## HAS_TESTS
+#' Check if any values variables are also by variables
+#'
+#' Assume that values_colnums and by_colnums are both valid.
+#'
+#' @param values_colnums A named vector of
+#' length >0, giving the location(s) of the
+#' values variable(s)
+#' @param by_colnums A named vector of
+#' length >0, giving the location(s) of the
+#' by variable(s)
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_overlap_values_by <- function(values_colnums, by_colnums) {
+    nms_val <- names(values_colnums)
+    nms_by <- names(by_colnums)
+    for (nm in nms_val) {
+        if (nm %in% nms_by)
+        cli::cli_abort(c("{.var {nm}} used in {.arg values} and in {.arg by}.",
+                         i = "{.arg values}: {nms_val}",
+                         i = "{.arg by}: {nms_by}"))
+    }
+    invisible(TRUE)
+}    
+    
 
 ## HAS_TESTS
 #' Check if any values variables are also groups variables
 #'
-#' Assume that colnums_values and colnums_groups are both valid.
+#' Assume that values_colnums and groups_colnums are both valid.
 #'
-#' @param colnums_values A named vector of
+#' @param values_colnums A named vector of
 #' length >0, giving the location(s) of the
 #' values variable(s)
-#' @param colnums_groups A named vector of
+#' @param groups_colnums A named vector of
 #' length >0, giving the location(s) of the
 #' grouping variable(s)
 #'
 #' @returns TRUE, invisibly
 #'
 #' @noRd
-check_overlap_values_groups <- function(colnums_values, colnums_groups) {
-    is_in_gp <- colnums_values %in% colnums_groups
+check_overlap_values_groups <- function(values_colnums, groups_colnums) {
+    is_in_gp <- values_colnums %in% groups_colnums
     i_in_gp <- match(TRUE, is_in_gp, nomatch = 0L)
     if (i_in_gp > 0L) {
-        nms_val <- names(colnums_values)
-        nms_gp <- names(colnums_groups)
+        nms_val <- names(values_colnums)
+        nms_gp <- names(groups_colnums)
         nm_in <- nms_val[[i_in_gp]]
         cli::cli_abort(c("{.var {nm_in}} is a grouping variable, so cannot be included in {.arg values}",
                          i = "grouping variable{?s}: {nms_gp}",
@@ -554,19 +614,34 @@ check_type <- function(type) {
 
 
 ## HAS_TESTS
+#' Check that 'colnum_values' does not have length 0
+#'
+#' @param values_colnums A named integer vector.
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_values_colnums <- function(values_colnums) {
+    if (length(values_colnums) == 0L)
+        cli::cli_abort("No {.var values} variables selected.")
+    invisible(TRUE)
+}
+
+
+## HAS_TESTS
 #' Check that number of characters in 'type'
 #' equal to length of values
 #'
-#' @param colnums_values A named integer vector
+#' @param values_colnums A named integer vector
 #' giving locations of values variables
 #' @param type A string
 #'
 #' @return TRUE, invisibly
 #'
 #' @noRd
-check_values_type_consistent <- function(colnums_values, type) {
+check_values_type_consistent <- function(values_colnums, type) {
     if (!is.null(type)) {
-        n_values <- length(colnums_values)
+        n_values <- length(values_colnums)
         n_type <- nchar(type)
         if (!identical(n_type, n_values))
             cli::cli_abort(c("Number of characters in {.arg type} must equal number of values variables",

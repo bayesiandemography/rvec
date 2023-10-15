@@ -41,49 +41,39 @@ test_that("'append_col' throws correct error with zero-length df", {
 })
 
 
-## 'get_colnum_draw' ----------------------------------------------------------
+## 'get_all_colnums' ----------------------------------------------------------
 
-test_that("'get_colnum_draw' works with valid inputs", {
+test_that("'get_all_colnums' works with valid inputs", {
     data <- data.frame(a = -1, b = 99, c = "x")
-    ans_obtained <- get_colnum_draw(draw = "b", data = data)
-    ans_expected <- c(b = 2L)
-    expect_identical(ans_obtained, ans_expected)
-})
-
-test_that("'get_colnum_draw' throws correct error with invalid inputs", {
-    data <- data.frame(a = -1, b = 99, c = "x")
-    expect_error(get_colnum_draw(draw = "wrong", data = data),
-                 "Variable specified by `draw` not found in `data`.")
-})
-
-
-## 'get_colnums_all' ----------------------------------------------------------
-
-test_that("'get_colnums_all' works with valid inputs", {
-    data <- data.frame(a = -1, b = 99, c = "x")
-    ans_obtained <- get_colnums_all(data)
+    ans_obtained <- get_all_colnums(data)
     ans_expected <- c(a = 1L, b = 2L, c = 3L)
     expect_identical(ans_obtained, ans_expected)
 })
 
 
-## 'get_colnums_groups' -------------------------------------------------------
+## 'get_draw_colnum' ----------------------------------------------------------
 
-test_that("'get_colnums_groups' works with valid inputs", {
+test_that("'get_draw_colnum' works with valid inputs", {
     data <- data.frame(a = -1, b = 99, c = "x")
-    data <- dplyr::group_by(data, c, a)
-    ans_obtained <- get_colnums_groups(data)
-    ans_expected <- c(c = 3L, a = 1L)
+    ans_obtained <- get_draw_colnum(draw = "b", data = data)
+    ans_expected <- c(b = 2L)
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'get_draw_colnum' throws correct error with invalid inputs", {
+    data <- data.frame(a = -1, b = 99, c = "x")
+    expect_error(get_draw_colnum(draw = "wrong", data = data),
+                 "Variable specified by `draw` not found in `data`.")
+})
 
-## 'get_colnums_rvec' ---------------------------------------------------------
 
-test_that("'get_colnums_rvec' works with valid inputs", {
-    data <- data.frame(a = 1, b = rvec(matrix(1)), c = rvec(matrix("x")))
-    ans_obtained <- get_colnums_rvec(data)
-    ans_expected <- c(b = 2L, c = 3L)
+## 'get_groups_colnums' -------------------------------------------------------
+
+test_that("'get_groups_colnums' works with valid inputs", {
+    data <- data.frame(a = -1, b = 99, c = "x")
+    data <- dplyr::group_by(data, c, a)
+    ans_obtained <- get_groups_colnums(data)
+    ans_expected <- c(c = 3L, a = 1L)
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -100,6 +90,16 @@ test_that("'get_new_rvec_fun' works with valid input", {
 test_that("'get_new_rvec_fun' throws correct error invalid input", {
     expect_error(get_new_rvec_fun(NULL),
                  "Internal error: `x` is NULL")
+})
+
+
+## 'get_rvec_colnums' ---------------------------------------------------------
+
+test_that("'get_rvec_colnums' works with valid inputs", {
+    data <- data.frame(a = 1, b = rvec(matrix(1)), c = rvec(matrix("x")))
+    ans_obtained <- get_rvec_colnums(data)
+    ans_expected <- c(b = 2L, c = 3L)
+    expect_identical(ans_obtained, ans_expected)
 })
 
 
@@ -120,7 +120,7 @@ test_that("'get_rvec_fun' thows correct error invalid inputs", {
 
 test_that("'get_rvec_funs' works with valid inputs - type non-NULL", {
     expect_identical(get_rvec_funs("c?ldi?",
-                                   colnums_values = c(a = 1L, b = 2L, c = 3L,
+                                   values_colnums = c(a = 1L, b = 2L, c = 3L,
                                                       d = 4L, e = 5L, f = 6L)),
                      list(rvec_chr,
                           rvec,
@@ -130,10 +130,9 @@ test_that("'get_rvec_funs' works with valid inputs - type non-NULL", {
                           rvec))
 })
 
-
 test_that("'get_rvec_funs' works with valid inputs - type NULL", {
     expect_identical(get_rvec_funs(NULL,
-                                   colnums_values = c(a = 1L, b = 2L)),
+                                   values_colnums = c(a = 1L, b = 2L)),
                      list(rvec,
                           rvec))
 })

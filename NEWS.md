@@ -2,6 +2,8 @@
 # rvec 0.0.3
 
 - Split help for distributions into multiple files
+- added 'by' argument to collapse_to_rvec
+
 
 # rvec 0.0.2
 

@@ -1,4 +1,5 @@
 
+
 ## HAS_TESTS
 #' Insert a column into a data frame
 #'
@@ -31,30 +32,6 @@ append_col <- function(df, value, after, nm) {
 }
 
 
-## HAS_TESTS
-#' Get a named length-1 vector giving the
-#' location of the draw variable,
-#'
-#' Assume that 'draw' has already been
-#' verified to be a string.
-#' 
-#' @param draw Name of the draw variable. A string.
-#' @param data A data frame
-#'
-#' @returns A named integer vector of length 1.
-#'
-#' @noRd
-get_colnum_draw <- function(draw, data) {
-    nms <- names(data)
-    ans <- match(draw, nms, nomatch = 0L)
-    if (ans == 0L)
-        cli::cli_abort(c("Variable specified by {.arg draw} not found in {.arg data}.",
-                         i = "{.arg draw}: {.val {draw}}.",
-                         i = "Variables in {.arg data}: {nms}"))
-    names(ans) <- draw
-    ans
-}
-
 
 ## HAS_TESTS
 #' Construct a named vector of column indices
@@ -70,9 +47,34 @@ get_colnum_draw <- function(draw, data) {
 #' @returns A named integer vector.
 #'
 #' @noRd
-get_colnums_all <- function(data) {
+get_all_colnums <- function(data) {
     ans <- seq_along(data)
     names(ans) <- names(data)
+    ans
+}
+
+
+## HAS_TESTS
+#' Get a named length-1 vector giving the
+#' location of the draw variable,
+#'
+#' Assume that 'draw' has already been
+#' verified to be a string.
+#' 
+#' @param draw Name of the draw variable. A string.
+#' @param data A data frame
+#'
+#' @returns A named integer vector of length 1.
+#'
+#' @noRd
+get_draw_colnum <- function(draw, data) {
+    nms <- names(data)
+    ans <- match(draw, nms, nomatch = 0L)
+    if (ans == 0L)
+        cli::cli_abort(c("Variable specified by {.arg draw} not found in {.arg data}.",
+                         i = "{.arg draw}: {.val {draw}}.",
+                         i = "Variables in {.arg data}: {nms}"))
+    names(ans) <- draw
     ans
 }
 
@@ -98,7 +100,7 @@ get_colnums_all <- function(data) {
 #' @returns A named integer vector.
 #'
 #' @noRd
-get_colnums_groups <- function(data) {
+get_groups_colnums <- function(data) {
     attr <- attributes(data)
     nms_data <- attr$names
     groups <- attr$groups
@@ -107,19 +109,6 @@ get_colnums_groups <- function(data) {
     names(ans) <- nms_groups
     ans
 }
-
-
-## HAS_TESTS
-#' Get a named vector of column indices
-#' for columns with rvecs
-#' 
-#' @param data A data frame.
-#'
-#' @returns A named integer vector.
-#'
-#' @noRd
-get_colnums_rvec <- function(data)
-    which(vapply(data, is_rvec, TRUE))
 
 
 ## HAS_TESTS
@@ -142,6 +131,18 @@ get_new_rvec_fun <- function(x) {
            cli::cli_abort("Internal error: {.arg x} is {.obj_type_friendly {x}}"))
 }
 
+
+## HAS_TESTS
+#' Get a named vector of column indices
+#' for columns with rvecs
+#' 
+#' @param data A data frame.
+#'
+#' @returns A named integer vector.
+#'
+#' @noRd
+get_rvec_colnums <- function(data)
+    which(vapply(data, is_rvec, TRUE))
 
 
 ## HAS_TESTS
@@ -170,15 +171,15 @@ get_rvec_fun <- function(code) {
 #' of rvec constructor functions
 #'
 #' @param type A string
-#' @param colnums_values Named integer vector
+#' @param values_colnums Named integer vector
 #' giving locations of values variables.
 #'
 #' @returns A list of functions.
 #'
 #' @noRd
-get_rvec_funs <- function(type, colnums_values) {
+get_rvec_funs <- function(type, values_colnums) {
     if (is.null(type)) {
-        n <- length(colnums_values)
+        n <- length(values_colnums)
         ans <- rep(list(rvec), times = n)
     }
     else {

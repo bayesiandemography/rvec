@@ -1,31 +1,19 @@
 
-## 'check_colnum_draw' --------------------------------------------------------
+## 'check_draw_colnum' --------------------------------------------------------
 
-test_that("'check_colnum_draw' returns TRUE with valid inputs", {
-    expect_true(check_colnum_draw(colnum_draw = c(draw = 3L)))
+test_that("'check_draw_colnum' returns TRUE with valid inputs", {
+    expect_true(check_draw_colnum(draw_colnum = c(draw = 3L)))
 })
 
-test_that("'check_colnum_draw' throws expected error when length 0", {
-    expect_error(check_colnum_draw(colnum_draw = integer()),
+test_that("'check_draw_colnum' throws expected error when length 0", {
+    expect_error(check_draw_colnum(draw_colnum = integer()),
                  "No `draw` variable selected")
 })
 
 
-test_that("'check_colnum_draw' throws expected error when length 2", {
-    expect_error(check_colnum_draw(colnum_draw = c(draw = 3, sim = 4L)),
+test_that("'check_draw_colnum' throws expected error when length 2", {
+    expect_error(check_draw_colnum(draw_colnum = c(draw = 3, sim = 4L)),
                  "More than one `draw` variable selected")
-})
-
-
-## 'check_colnums_values' -----------------------------------------------------
-
-test_that("'check_colnums_values' returns TRUE with valid inputs", {
-    expect_true(check_colnums_values(colnums_values = c(val = 3L)))
-})
-
-test_that("'check_colnum_draw' throws expected error when length 0", {
-    expect_error(check_colnums_values(colnums_values = integer()),
-                 "No `values` variables selected")
 })
 
 
@@ -73,11 +61,11 @@ test_that("'check_idx_dup' returns TRUE with valid inputs", {
                        val = 4:1)
     expect_true(check_idx_dup(idx = idx,
                               data = data,
-                              colnum_draw = c(dr = 3L),
-                              colnums_id = c(id1 = 1L, id2 = 2L)))
+                              draw_colnum = c(dr = 3L),
+                              by_colnums = c(id1 = 1L, id2 = 2L)))
 })
 
-test_that("'check_idx_dup' throws expected error", {
+test_that("'check_idx_dup' throws expected error - no by columns", {
     idx <- rbind(c(1L, 1L),
                  c(1L, 1L),
                  c(1L, 2L),
@@ -88,10 +76,43 @@ test_that("'check_idx_dup' throws expected error", {
                        val = 4:1)
     expect_error(check_idx_dup(idx = idx,
                                data = data,
-                               colnum_draw = c(dr = 3L),
-                               colnums_id = c(id1 = 1L, id2 = 2L)),
-                 "Multiple rows with the same values for 'by' variables:")
+                               draw_colnum = c(dr = 3L),
+                               by_colnums = integer()),
+                 "Multiple rows in `data` have the same value for the `draw` variable.")
 })
+
+test_that("'check_idx_dup' throws expected error - single by columns", {
+    idx <- rbind(c(1L, 1L),
+                 c(1L, 1L),
+                 c(1L, 2L),
+                 c(3L, 1L))
+    data <- data.frame(id1 = "a",
+                       id2 = c(1, 1, 1, 2),
+                       dr = c(1L, 1L, 2L, 1L),
+                       val = 4:1)
+    expect_error(check_idx_dup(idx = idx,
+                               data = data,
+                               draw_colnum = c(dr = 3L),
+                               by_colnums = c(id1 = 1L)),
+                 "Column \"id1\" does not uniquely identify rows in `data`.")
+})
+
+test_that("'check_idx_dup' throws expected error - multiple by columns", {
+    idx <- rbind(c(1L, 1L),
+                 c(1L, 1L),
+                 c(1L, 2L),
+                 c(3L, 1L))
+    data <- data.frame(id1 = "a",
+                       id2 = c(1, 1, 1, 2),
+                       dr = c(1L, 1L, 2L, 1L),
+                       val = 4:1)
+    expect_error(check_idx_dup(idx = idx,
+                               data = data,
+                               draw_colnum = c(dr = 3L),
+                               by_colnums = c(id1 = 1L, id2 = 2L)),
+                 "Columns \"id1\" and \"id2\" do not uniquely identify rows in `data`.")
+})
+
 
 
 ## 'check_idx_gap' ---------------------------------------------------
@@ -325,6 +346,22 @@ test_that("'check_nonneg_num_vector' throws expected error if negative", {
 })
 
 
+## 'check_not_has_by_and_groups' ----------------------------------------------
+
+test_that("'check_not_has_by_and_groups' returns TRUE with valid inputs", {
+    expect_true(check_not_has_by_and_groups(by_colnums = c(x = 1L),
+                                            groups_colnums = integer()))
+    expect_true(check_not_has_by_and_groups(by_colnums = integer(),
+                                            groups_colnums = c(x = 3L)))
+})
+
+test_that("'check_not_has_by_and_groups' throws correct error with rvec_chr", {
+    expect_error(check_not_has_by_and_groups(by_colnums = c(x = 1L),
+                                             groups_colnums = c(x = 2L)),
+                 "Can't supply `by` when `data` is a grouped data frame.")
+})
+
+
 ## 'check_not_rvec_chr' -------------------------------------------------------
 
 test_that("'check_not_rvec_chr' returns TRUE with valid rvec", {
@@ -339,16 +376,30 @@ test_that("'check_not_rvec_chr' throws correct error with rvec_chr", {
 })
 
 
+## 'check_overlap_draw_by' ----------------------------------------------------
+
+test_that("'check_overlap_draw_by' returns TRUE with valid inputs", {
+    expect_true(check_overlap_draw_by(draw_colnum = c(draw = 3L),
+                                      by_colnums = c(v1 = 1L, v2 = 5L)))
+})
+
+test_that("'check_overlap_draw_by' throws expected error with overlap", {
+    expect_error(check_overlap_draw_by(draw_colnum = c(v2 = 3L),
+                                       by_colnums = c(v1 = 1L, v2 = 3L)),
+                 "`v2` used in `draw` and in `by`.")
+})
+
+
 ## 'check_overlap_draw_groups' ------------------------------------------------
 
 test_that("'check_overlap_draw_groups' returns TRUE with valid inputs", {
-    expect_true(check_overlap_draw_groups(colnum_draw = c(draw = 3L),
-                                          colnums_groups = c(v1 = 1L, v2 = 5L)))
+    expect_true(check_overlap_draw_groups(draw_colnum = c(draw = 3L),
+                                          groups_colnums = c(v1 = 1L, v2 = 5L)))
 })
 
 test_that("'check_overlap_draw_groups' throws expected error with overlap", {
-    expect_error(check_overlap_draw_groups(colnum_draw = c(v2 = 3L),
-                                           colnums_groups = c(v1 = 1L, v2 = 3L)),
+    expect_error(check_overlap_draw_groups(draw_colnum = c(v2 = 3L),
+                                           groups_colnums = c(v1 = 1L, v2 = 3L)),
                  "`v2` is a grouping variable, so cannot be used for `draw`.")
 })
 
@@ -356,27 +407,41 @@ test_that("'check_overlap_draw_groups' throws expected error with overlap", {
 ## 'check_overlap_draw_values' ------------------------------------------------
 
 test_that("'check_overlap_draw_values' returns TRUE with valid inputs", {
-    expect_true(check_overlap_draw_values(colnum_draw = c(draw = 3L),
-                                          colnums_values = c(v1 = 1L, v2 = 5L)))
+    expect_true(check_overlap_draw_values(draw_colnum = c(draw = 3L),
+                                          values_colnums = c(v1 = 1L, v2 = 5L)))
 })
 
 test_that("'check_overlap_draw_values' throws expected error with overlap", {
-    expect_error(check_overlap_draw_values(colnum_draw = c(v2 = 3L),
-                                           colnums_values = c(v1 = 1L, v2 = 3L)),
+    expect_error(check_overlap_draw_values(draw_colnum = c(v2 = 3L),
+                                           values_colnums = c(v1 = 1L, v2 = 3L)),
                  "`v2` used in `draw` and in `values`")
+})
+
+
+## 'check_overlap_values_by' ------------------------------------------------
+
+test_that("'check_overlap_values_by' returns TRUE with valid inputs", {
+    expect_true(check_overlap_values_by(values_colnums = c(v1 = 1L, v2 = 5L),
+                                        by_colnums = c(v3 = 2L)))
+})
+
+test_that("'check_overlap_values_by' throws expected error with overlap", {
+    expect_error(check_overlap_values_by(values_colnums = c(v1 = 1L, v2 = 3L),
+                                         by_colnums = c(v2 = 3L, v3 = 4L)),
+                 "`v2` used in `values` and in `by`.")
 })
 
 
 ## 'check_overlap_values_groups' ------------------------------------------------
 
 test_that("'check_overlap_values_groups' returns TRUE with valid inputs", {
-    expect_true(check_overlap_values_groups(colnums_values = c(v1 = 1L, v2 = 5L),
-                                            colnums_groups = c(v3 = 2L)))
+    expect_true(check_overlap_values_groups(values_colnums = c(v1 = 1L, v2 = 5L),
+                                            groups_colnums = c(v3 = 2L)))
 })
 
 test_that("'check_overlap_values_groups' throws expected error with overlap", {
-    expect_error(check_overlap_values_groups(colnums_values = c(v1 = 1L, v2 = 3L),
-                                             colnums_groups = c(v2 = 3L, v3 = 4L)),
+    expect_error(check_overlap_values_groups(values_colnums = c(v1 = 1L, v2 = 3L),
+                                             groups_colnums = c(v2 = 3L, v3 = 4L)),
                  "`v2` is a grouping variable, so cannot be included in `values`")
 })
 
@@ -482,22 +547,34 @@ test_that("'check_type' throws expected error with invalid character", {
 })
 
 
+## 'check_values_colnums' -----------------------------------------------------
+
+test_that("'check_values_colnums' returns TRUE with valid inputs", {
+    expect_true(check_values_colnums(values_colnums = c(val = 3L)))
+})
+
+test_that("'check_draw_colnum' throws expected error when length 0", {
+    expect_error(check_values_colnums(values_colnums = integer()),
+                 "No `values` variables selected")
+})
+
+
 ## 'check_values_type_consistent' ---------------------------------------------
 
 test_that("'check_values_type_consistent' returns TRUE with valid inputs", {
-    expect_true(check_values_type_consistent(colnums_values = c(v = 1L),
+    expect_true(check_values_type_consistent(values_colnums = c(v = 1L),
                                              type = "d"))
-    expect_true(check_values_type_consistent(colnums_values = c(v = 1L, x = 2L),
+    expect_true(check_values_type_consistent(values_colnums = c(v = 1L, x = 2L),
                                              type = "di"))
-    expect_true(check_values_type_consistent(colnums_values = c(v = 1L, x = 2L),
+    expect_true(check_values_type_consistent(values_colnums = c(v = 1L, x = 2L),
                                              type = NULL))
 })
 
 test_that("'check_values_type_consistent' throws expected error with diff lengths", {
-    expect_error(check_values_type_consistent(colnums_values = c(a = 1L, b = 2L),
+    expect_error(check_values_type_consistent(values_colnums = c(a = 1L, b = 2L),
                                               type = "dd?"),
                  "Number of characters in `type` must equal number of values variables")
-    expect_error(check_values_type_consistent(colnums_values = c(a = 1L, b = 2L),
+    expect_error(check_values_type_consistent(values_colnums = c(a = 1L, b = 2L),
                                               type = "i"),
                  "Number of characters in `type` must equal number of values variables")
 })
