@@ -1,9 +1,17 @@
 
 # rvec 0.0.3
 
+## Documentation
+
 - Split help for distributions into multiple files
+- Revise vignette
+
+## Features
+
 - added 'by' argument to collapse_to_rvec
 - added summary method
+- added 'rank', 'order', 'sort'
+
 
 # rvec 0.0.2
 
