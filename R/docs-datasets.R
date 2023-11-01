@@ -1,6 +1,6 @@
 
 
-#' Divorce rates in New Zealand
+#' Divorce Rates in New Zealand
 #'
 #' Posterior sample from a model of divorce rates
 #' in New Zealand.
@@ -21,7 +21,7 @@
 "divorce"
 
 
-#' Posterior sample from linear regression
+#' Posterior Sample from Linear Regression
 #'
 #' Posterior sample for parameters from a linear
 #' regression model.

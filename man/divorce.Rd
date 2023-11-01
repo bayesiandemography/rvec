@@ -3,7 +3,7 @@
 \docType{data}
 \name{divorce}
 \alias{divorce}
-\title{Divorce rates in New Zealand}
+\title{Divorce Rates in New Zealand}
 \format{
 A tibble with 30,000 rows and the following variables:
 \itemize{

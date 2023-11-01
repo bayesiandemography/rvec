@@ -6,7 +6,7 @@
 \alias{rvec_dbl}
 \alias{rvec_int}
 \alias{rvec_lgl}
-\title{Create an rvec}
+\title{Create an Rvec}
 \usage{
 rvec(x)
 

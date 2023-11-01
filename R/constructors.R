@@ -2,7 +2,7 @@
 ## User-visible constructors --------------------------------------------------
 
 ## HAS_TESTS
-#' Create an rvec
+#' Create an Rvec
 #'
 #' Create an Object of Class `"rvec"`.
 #'

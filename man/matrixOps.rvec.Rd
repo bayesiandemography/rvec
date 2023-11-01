@@ -2,15 +2,15 @@
 % Please edit documentation in R/matrixOps.R
 \name{matrixOps.rvec}
 \alias{matrixOps.rvec}
-\title{Matrix multiplication with rvecs}
+\title{Matrix Multiplication with Rvecs}
 \usage{
-\method{matrixOps}{rvec}(e1, e2)
+\method{matrixOps}{rvec}(x, y)
 }
 \arguments{
-\item{e1, e2}{Vectors, matrices, or rvecs.}
+\item{x, y}{Vectors, matrices, or rvecs.}
 }
 \value{
-An rvec, if \code{e1} or \code{e2}
+An rvec, if \code{x} or \code{y}
 is an rvec.
 }
 \description{

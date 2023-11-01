@@ -2,6 +2,7 @@
 ## based on
 ## https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Adding-new-generics
 
+#' @export
 sd <- function(x, na.rm = FALSE) {
     UseMethod("sd")
 }

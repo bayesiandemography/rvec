@@ -3,7 +3,7 @@
 \docType{data}
 \name{reg_post}
 \alias{reg_post}
-\title{Posterior sample from linear regression}
+\title{Posterior Sample from Linear Regression}
 \format{
 A matrix with 200 columns and
 the following rows:
