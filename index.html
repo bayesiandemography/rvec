@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/vig1_overview.html">Package rvecs</a>
+    <a class="dropdown-item" href="articles/vig1_overview.html">Package rvec</a>
   </div>
 </li>
 <li class="nav-item">
@@ -73,7 +73,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>Tools for working with multiple random draws, including output from a simulation or from a Bayesian analysis. The main data structure is an <code>rvec</code>, which holds multiple draws, but which behaves (mainly) like a standard R vector.</p>
+<p>Tools for working with random draws, including draws from a simulation or Bayesian analysis. The main data structure is an <code>rvec</code>, which holds multiple draws but which behaves (mainly) like a standard R vector.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -125,6 +125,14 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draws_median.html">draws_mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1]   10.5  100.5 1000.5</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="other-packages-for-working-with-random-draws">Other packages for working with random draws<a class="anchor" aria-label="anchor" href="#other-packages-for-working-with-random-draws"></a>
+</h2>
+<ul>
+<li><a href="https://CRAN.R-project.org/package=rv" class="external-link">rv</a></li>
+<li><a href="https://CRAN.R-project.org/package=posterior" class="external-link">posterior</a></li>
+</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
