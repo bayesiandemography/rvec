@@ -27,7 +27,7 @@ Calculate correlations and variances, including when
 \details{
 To enable different behavior for rvecs and for ordinary vectors,
 the base R function \code{\link[stats:cor]{stats::var()}} is turned into a generic,
-with \code{stats::var()} as the default.
+with \code{\link[stats:cor]{stats::var()}} as the default.
 
 For details on the calculations, see the documentation
 for \code{\link[stats:cor]{stats::var()}}.

@@ -2,25 +2,36 @@
 % Please edit documentation in R/n_draw.R
 \name{n_draw}
 \alias{n_draw}
+\alias{n_draw.default}
 \alias{n_draw.rvec}
-\title{Query Number of Draws in a Random Sample}
+\title{Query Number of Draws}
 \usage{
 n_draw(x)
+
+\method{n_draw}{default}(x)
 
 \method{n_draw}{rvec}(x)
 }
 \arguments{
-\item{x}{An object holding a random sample.}
+\item{x}{An object that holds random draws,
+eg an \link[=rvec]{rvec}.}
 }
 \value{
-A count, or, if the
-vector being sampled as no elements, \code{NULL}.
+An integer scalar.
 }
 \description{
-Query Number of Draws in a Random Sample
+Get a count of the random draws
+held by \code{x}. If \code{x}
+does not hold random draws, then \code{n_draw()}
+throws an error.
 }
 \examples{
 m <- matrix(1:40, nrow = 4, ncol = 10)
 x <- rvec(m)
 n_draw(x)
+}
+\seealso{
+\itemize{
+\item \code{\link[=is_rvec]{is_rvec()}} to test if an object is an rvec.
+}
 }

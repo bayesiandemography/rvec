@@ -11,7 +11,7 @@
 #'
 #' To enable different behavior for rvecs and for ordinary vectors,
 #' the base R function [stats::sd()] is turned into a generic,
-#' with `stats::sd()` as the default.
+#' with [stats::sd()] as the default.
 #'
 #' For details on the calculations, see the documentation
 #' for [stats::sd()].

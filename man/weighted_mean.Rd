@@ -75,8 +75,10 @@ Calculate weighted
 \item MADs (mean absolute deviations)
 \item variances
 \item standard deviations.
-Works with ordinary vectors, and with \link[=rvec]{rvecs}.
 }
+
+These functions all work with ordinary vectors
+and with \link[=rvec]{rvecs}.
 }
 \details{
 \code{x} and \code{wt} must have the same length.

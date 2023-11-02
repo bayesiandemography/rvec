@@ -14,24 +14,24 @@ rank(
 \item{x}{An ordinary vector or an \code{\link[=rvec]{rvec()}}.}
 
 \item{na.last}{Treatment of \code{NA}s. Options are
-\code{TRUE}, \code{FALSE}, or \code{keep}. See [base::rank() for details.}
+\code{TRUE}, \code{FALSE}, or \code{"keep"}. See \code{\link[base:rank]{base::rank()}} for details.}
 
 \item{ties.method}{Treatment of ties.
 See \code{\link[base:rank]{base::rank()}} for details.}
 }
 \value{
-An object of class \code{rvec_int()} if \code{x} is
+An object of class \code{\link[=rvec_int]{rvec_int()}} if \code{x} is
 an rvec. Otherwise an ordinary integer vector.
 }
 \description{
-Calculate sample ranks, for ordinary vectors, or for rvecs.
+Calculate sample ranks for ordinary vectors or for rvecs.
 In the case of rvecs, ranks are calculated independently
 for each draw.
 }
 \details{
 To enable different behavior for rvecs and for ordinary vectors,
 the base R function \code{\link[base:rank]{base::rank()}} is turned into a generic,
-with \code{base::rank()} as the default.
+with \code{\link[base:rank]{base::rank()}} as the default.
 
 For details on the calculations, see the documentation
 for \code{\link[base:rank]{base::rank()}}.

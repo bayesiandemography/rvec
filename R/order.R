@@ -11,24 +11,24 @@
 
 #' Sample Ranks, Including Rvecs
 #'
-#' Calculate sample ranks, for ordinary vectors, or for rvecs.
+#' Calculate sample ranks for ordinary vectors or for rvecs.
 #' In the case of rvecs, ranks are calculated independently
 #' for each draw.
 #'
 #' To enable different behavior for rvecs and for ordinary vectors,
 #' the base R function [base::rank()] is turned into a generic,
-#' with `base::rank()` as the default.
+#' with [base::rank()] as the default.
 #'
 #' For details on the calculations, see the documentation
 #' for [base::rank()].
 #'
 #' @param x An ordinary vector or an [rvec::rvec()].
 #' @param na.last Treatment of `NA`s. Options are
-#' `TRUE`, `FALSE`, or `keep`. See [base::rank() for details.
+#' `TRUE`, `FALSE`, or `"keep"`. See [base::rank()] for details.
 #' @param ties.method Treatment of ties.
 #' See [base::rank()] for details.
 #'
-#' @returns An object of class `rvec_int()` if `x` is
+#' @returns An object of class [rvec_int()] if `x` is
 #' an rvec. Otherwise an ordinary integer vector.
 #'
 #' @examples

@@ -108,14 +108,14 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #'
 #' It is tempting to assign the results
 #' of a call to `draws_ci()` to a
-#' column in a base R data frame or a tibble,
+#' column in a data frame,
 #' as in
 #'
 #' `my_df$ci <- draws_ci(my_rvec)`
 #'
 #' However, creating columns in
-#' this way currently corrupts data
-#' frames and tibbles. For safer options,
+#' this way can corrupt data frames.
+#' For safer options,
 #' see the examples below.
 #'
 #' @inheritParams draws_all
@@ -375,14 +375,14 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #'
 #' It is tempting to assign the results
 #' of a call to `draws_quantile()` to a
-#' column in a base R data frame or a tibble,
+#' column in a data frame,
 #' as in
 #'
 #' `my_df$quantile <- draws_quantile(my_rvec)`
 #'
 #' However, creating data frame columns in
-#' this way currently seems to corrupt both data
-#' frames and tibbles. For safer options,
+#' this way can corrupt data
+#' frames. For safer options,
 #' see the examples below.
 #'
 #' @inheritParams draws_all

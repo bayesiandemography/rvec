@@ -106,6 +106,8 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 Useful links:
 \itemize{
   \item \url{https://bayesiandemography.github.io/rvec/}
+  \item \url{https://github.com/bayesiandemography/rvec}
+  \item Report bugs at \url{https://github.com/bayesiandemography/rvec/issues}
 }
 
 }

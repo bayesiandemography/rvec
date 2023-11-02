@@ -9,7 +9,7 @@ Authors@R:
              email = "john@bayesiandemography.com"),
       person("Bayesian Demography Limited",
              role = "cph"))
-Description: Random vectors, called "rvecs". An "rvec" holds
+Description: Random vectors, called rvecs. An rvec holds
     holds multiple draws, but tries to behave like a standard
     R vector, including working well in data frames. Rvecs are
     useful for working with output from a simulation or
@@ -48,4 +48,5 @@ Suggests:
     vdiffr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-URL: https://bayesiandemography.github.io/rvec/
+URL: https://bayesiandemography.github.io/rvec/, https://github.com/bayesiandemography/rvec
+BugReports: https://github.com/bayesiandemography/rvec/issues

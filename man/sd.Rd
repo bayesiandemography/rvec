@@ -23,7 +23,7 @@ are calculated for each draw.
 \details{
 To enable different behavior for rvecs and for ordinary vectors,
 the base R function \code{\link[stats:sd]{stats::sd()}} is turned into a generic,
-with \code{stats::sd()} as the default.
+with \code{\link[stats:sd]{stats::sd()}} as the default.
 
 For details on the calculations, see the documentation
 for \code{\link[stats:sd]{stats::sd()}}.

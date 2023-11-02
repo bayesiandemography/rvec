@@ -1,6 +1,6 @@
 
 ## HAS_TESTS
-#' Apply a Function and Combine into an Rvec
+#' Apply a Function and Put Results in an Rvec
 #'
 #' Apply function `.f` to each element of `.x`,
 #' and then combine the results into an

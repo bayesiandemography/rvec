@@ -1,13 +1,19 @@
 
 #' Calculate Weighted Summaries
 #'
+#' @description
+#' 
 #' Calculate weighted
 #' - means
 #' - medians
 #' - MADs (mean absolute deviations)
 #' - variances
 #' - standard deviations.
-#' Works with ordinary vectors, and with [rvecs][rvec()].
+#'
+#' These functions all work with ordinary vectors
+#' and with [rvecs][rvec()].
+#'
+#' @details
 #'
 #' `x` and `wt` must have the same length.
 #'

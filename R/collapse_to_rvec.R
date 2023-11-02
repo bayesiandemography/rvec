@@ -68,12 +68,12 @@
 #' values for the 'by' variables. Must be quoted
 #' for `expand_from_rvec()`.
 #' @param values <[`tidyselect`][tidyselect::language]>
-#' One or more variables of `data` that hold measurements.
+#' One or more variables in `data` that hold measurements.
 #' @param by <[`tidyselect`][tidyselect::language]>
 #' Variables used to stratify or cross-classify the data.
 #' See Details.
-#' @param type Code specifying the class of rvec
-#' to use for each value, combined into a string.
+#' @param type String specifying the class of rvec
+#' to use for each variable.
 #' Optional. See Details.
 #'
 #' @returns A data frame.

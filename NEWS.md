@@ -1,4 +1,10 @@
 
+# rvec 0.0.5
+
+- added default case to n_draw
+- sundry tidying of help files
+- 
+
 # rvec 0.0.4
 
 ## Documentation

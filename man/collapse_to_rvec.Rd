@@ -33,14 +33,14 @@ values for the 'by' variables. Must be quoted
 for \code{expand_from_rvec()}.}
 
 \item{values}{<\code{\link[tidyselect:language]{tidyselect}}>
-One or more variables of \code{data} that hold measurements.}
+One or more variables in \code{data} that hold measurements.}
 
 \item{by}{<\code{\link[tidyselect:language]{tidyselect}}>
 Variables used to stratify or cross-classify the data.
 See Details.}
 
-\item{type}{Code specifying the class of rvec
-to use for each value, combined into a string.
+\item{type}{String specifying the class of rvec
+to use for each variable.
 Optional. See Details.}
 }
 \value{

@@ -38,14 +38,14 @@ in an \code{rvec}, using a simple credible interval.
 
 It is tempting to assign the results
 of a call to \code{draws_ci()} to a
-column in a base R data frame or a tibble,
+column in a data frame,
 as in
 
 \code{my_df$ci <- draws_ci(my_rvec)}
 
 However, creating columns in
-this way currently corrupts data
-frames and tibbles. For safer options,
+this way can corrupt data frames.
+For safer options,
 see the examples below.
 }
 
