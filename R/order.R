@@ -36,7 +36,6 @@
 #'                c(0, 100)))
 #' rank(x)
 #' @export
-#' @rdname rank
 rank <- function(x,
                  na.last = TRUE,
                  ties.method = c("average", "first", "last", "random", "max", "min")) {
