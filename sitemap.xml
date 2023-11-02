@@ -121,6 +121,9 @@
     <loc>https://bayesiandemography.github.io/rvec/reference/n_draw.html</loc>
   </url>
   <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/rank.html</loc>
+  </url>
+  <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/reg_post.html</loc>
   </url>
   <url>
@@ -128,6 +131,12 @@
   </url>
   <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/rvec.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/sd.html</loc>
+  </url>
+  <url>
+    <loc>https://bayesiandemography.github.io/rvec/reference/var.html</loc>
   </url>
   <url>
     <loc>https://bayesiandemography.github.io/rvec/reference/weighted_mean.html</loc>
