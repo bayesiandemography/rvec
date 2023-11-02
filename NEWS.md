@@ -1,4 +1,15 @@
 
+# rvec 0.0.4
+
+## Documentation
+
+- Export generices for sd, var, rank, and add documentation
+
+## Internals
+
+- Change argument names for matrixOps to 'x' and 'y'
+
+
 # rvec 0.0.3
 
 ## Documentation

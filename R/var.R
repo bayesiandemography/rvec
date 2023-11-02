@@ -4,7 +4,35 @@
 ## based on
 ## https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Adding-new-generics
 
+#' Correlation, Variance and Covariance (Matrices), Including Rvecs
+#'
+#' Calculate correlations and variances, including when
+#' `x` or `y` is an rvec.
+#'
+#' To enable different behavior for rvecs and for ordinary vectors,
+#' the base R function [stats::var()] is turned into a generic,
+#' with `stats::var()` as the default.
+#'
+#' For details on the calculations, see the documentation
+#' for [stats::var()].
+#'
+#' @param x A numeric vector, matrix, data frame, or [rvec::rvec()].
+#' @param y NULL (default) or a vector, matrix, data frame, or rvec
+#' with compatible dimensions to x.
+#' @param na.rm	Whether `NA`s removed before calculations.
+#' @param use Calculation method. See [stats::var()].
+#'
+#' @returns An rvec, if `x` or `y` is an rvec. Otherwise
+#' typically a numeric vector or matrix.
+#'
+#' @seealso [rvec::sd()]
+#'
+#' @examples
+#' x <- rvec(cbind(rnorm(10), rnorm(10, sd = 20)))
+#' x
+#' var(x)
 #' @export
+#' @rdname var
 var <- function(x, y = NULL, na.rm = FALSE, use) {
     UseMethod("var")
 }
