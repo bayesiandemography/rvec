@@ -43,7 +43,13 @@ to a database format."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/bayesiandemography/rvec/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -52,7 +58,7 @@ to a database format."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Convert a Data Frame Between 'Database'
 and 'Rvec' Formats</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/bayesiandemography/rvec/blob/HEAD/R/collapse_to_rvec.R" class="external-link"><code>R/collapse_to_rvec.R</code></a></small>
       <div class="d-none name"><code>collapse_to_rvec.Rd</code></div>
     </div>
 
@@ -100,7 +106,7 @@ for <code>expand_from_rvec()</code>.</p></dd>
 
 <dt>values</dt>
 <dd><p>&lt;<code><a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">tidyselect</a></code>&gt;
-One or more variables of <code>data</code> that hold measurements.</p></dd>
+One or more variables in <code>data</code> that hold measurements.</p></dd>
 
 
 <dt>by</dt>
@@ -110,8 +116,8 @@ See Details.</p></dd>
 
 
 <dt>type</dt>
-<dd><p>Code specifying the class of rvec
-to use for each value, combined into a string.
+<dd><p>String specifying the class of rvec
+to use for each variable.
 Optional. See Details.</p></dd>
 
 </dl></div>

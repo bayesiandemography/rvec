@@ -35,7 +35,13 @@ in an rvec, using quantiles."><!-- mathjax --><script src="https://cdnjs.cloudfl
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/bayesiandemography/rvec/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -43,7 +49,7 @@ in an rvec, using quantiles."><!-- mathjax --><script src="https://cdnjs.cloudfl
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Quantiles Across Random Draws</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/bayesiandemography/rvec/blob/HEAD/R/draws.R" class="external-link"><code>R/draws.R</code></a></small>
       <div class="d-none name"><code>draws_quantile.Rd</code></div>
     </div>
 
@@ -99,12 +105,12 @@ a 50% credible intervals, and a
 
 <p>It is tempting to assign the results
 of a call to <code>draws_quantile()</code> to a
-column in a base R data frame or a tibble,
+column in a data frame,
 as in</p>
 <p><code>my_df$quantile &lt;- draws_quantile(my_rvec)</code></p>
 <p>However, creating data frame columns in
-this way currently seems to corrupt both data
-frames and tibbles. For safer options,
+this way can corrupt data
+frames. For safer options,
 see the examples below.</p>
     </div>
     <div class="section level2">
