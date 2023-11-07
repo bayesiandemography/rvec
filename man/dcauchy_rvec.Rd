@@ -72,7 +72,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dcauchy_rvec()}, \code{pcauchy_rvec()},
 \code{pcauchy_rvec()} and \code{rcauchy_rvec()}
-use \link[vctrs:vector_recycling_rules]{tidyverse}
+use \link[vctrs:theory-faq-recycling]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled

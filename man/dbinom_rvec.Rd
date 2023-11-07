@@ -70,7 +70,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dbinom_rvec()}, \code{pbinom_rvec()},
 \code{pbinom_rvec()} and \code{rbinom_rvec()}
-use \link[vctrs:vector_recycling_rules]{tidyverse}
+use \link[vctrs:theory-faq-recycling]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled

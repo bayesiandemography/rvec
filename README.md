@@ -19,7 +19,7 @@ multiple draws but which behaves (mainly) like a standard R vector.
 ## Installation
 
 ``` r
-## install.packages("rvec")                         ## CRAN version - not ready yet
+install.packages("rvec")                            ## CRAN version
 devtools::install_github("bayesiandemography/rvec") ## development version
 ```
 
@@ -85,5 +85,5 @@ draws_mean(x)
 
 ## Other packages for working with random draws
 
--   [rv](https://CRAN.R-project.org/package=rv)
--   [posterior](https://CRAN.R-project.org/package=posterior)
+- [rv](https://CRAN.R-project.org/package=rv)
+- [posterior](https://CRAN.R-project.org/package=posterior)

@@ -76,7 +76,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dhyper_rvec()}, \code{phyper_rvec()},
 \code{phyper_rvec()} and \code{rhyper_rvec()}
-use \link[vctrs:vector_recycling_rules]{tidyverse}
+use \link[vctrs:theory-faq-recycling]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled

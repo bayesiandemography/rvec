@@ -27,7 +27,7 @@ Tools for working with random draws, including draws from a simulation or Bayesi
 ## Installation
 
 ``` r
-## install.packages("rvec")                         ## CRAN version - not ready yet
+install.packages("rvec")                            ## CRAN version
 devtools::install_github("bayesiandemography/rvec") ## development version
 ```
 
