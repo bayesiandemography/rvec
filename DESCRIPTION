@@ -1,7 +1,7 @@
 Package: rvec
 Type: Package
 Title: Vector Representing a Random Variable
-Version: 0.0.5
+Version: 0.0.6
 Authors@R: 
     c(person(given = "John",
              family = "Bryant",
@@ -10,7 +10,7 @@ Authors@R:
       person("Bayesian Demography Limited",
              role = "cph"))
 Description: Random vectors, called rvecs. An rvec holds
-    holds multiple draws, but tries to behave like a standard
+    multiple draws, but tries to behave like a standard
     R vector, including working well in data frames. Rvecs are
     useful for working with output from a simulation or
     a Bayesian analysis.

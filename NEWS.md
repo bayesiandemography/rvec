@@ -1,4 +1,16 @@
-# rvec 0.0.5
+
+# rvec 0.0.6
+
+## Documentation
+
+- Fixed typo in DESCRIPTION
+- Added 'value' section to documentation for "missing"
+- Added examples to documentation for "missing"
+
+## Interface
+
+- Changed `anyNA()` so it returns an rvec,
+  rather than a logical scalar.
 
 
 # rvec 0.0.5

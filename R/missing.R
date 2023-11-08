@@ -2,22 +2,11 @@
 #' Missing, Finite, and Infinite Values
 #' in Rvecs
 #'
-#' @description
-#' rvec methods for `is.na()`, `is.nan()`,
-#' `is.finite()`, and `is.infinite()` all
-#' return rvecs, with separate values for
-#' every draw.
+#' Detect or remove missing and infinite values in rvecs.
+#' Operations are done independently on each draw,
+#' though `na.omit()`, `na.exclude()`, and `na.fail()`
+#' also look across draws.
 #'
-#' The rvec method for `anyNA()` returns
-#' `TRUE` if any value for any draw is
-#' `NA` or `NaN`, and returns `FALSE` otherwise.
-#'
-#' Functions `na.omit()` and `na.exclude()`
-#' return versions of `x` in which observations
-#' with `NA` in any draws are omitted.
-#' 
-#'
-#' @details
 #' The behavior of the rvec methods
 #' for `is.na()`, `is.nan()`,
 #' `is.finite()`, and `is.infinite()`
@@ -36,6 +25,15 @@
 #' `x` is an rvec.
 #' @param ... Currently ignored.
 #'
+#' @returns
+#' - `anyNA()` - A logical rvec with length 1.
+#' - `is.na()`, `is.nan()`, `is.finite()`, `is.infinite()` - A
+#'    logical rvec with the same length as the original rvec.
+#' - `na.omit()`, `na.exclude()` - An rvec with the same
+#'    class as the original rvec, minus any elements that
+#'    have `NA`s in any draws.
+#' - `na.fail()` - The original rvec, or an error.
+#'
 #' @seealso
 #' - [if_else_rvec()] for modifying individual
 #'   values within draws.
@@ -46,7 +44,8 @@
 #'   all draws for an observation are missing.
 #' - [vctrs::vec_detect_complete()] to test whether
 #'   any draws for an observation are missing.
-#' 
+#' - [draws_any()], [draws_all()] to summarise
+#'   across draws.
 #' 
 #' @examples
 #' x <- rvec(list(c(1.2, NA),
@@ -59,8 +58,11 @@
 #' is.finite(x)
 #' is.infinite(x)
 #'
-#' ## return a logical scalar
+#' ## return a logical rvec with length 1
 #' anyNA(x)
+#'
+#' ## summarise across draws
+#' draws_any(anyNA(x))
 #'
 #' ## return an NA-free version of 'x'
 #' na.omit(x)
@@ -84,7 +86,9 @@ NULL
 #' @export
 anyNA.rvec <- function(x, recursive = FALSE) {
     m <- field(x, "data")
-    anyNA(m)
+    ans <- matrixStats::colAnyNAs(m)
+    ans <- matrix(ans, nrow = 1L)
+    rvec_lgl(ans)
 }
 
 ## HAS_TESTS

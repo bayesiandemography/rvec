@@ -26,19 +26,22 @@ applied recursively to lists. Ignored when
 
 \item{...}{Currently ignored.}
 }
+\value{
+\itemize{
+\item \code{anyNA()} - A logical rvec with length 1.
+\item \code{is.na()}, \code{is.nan()}, \code{is.finite()}, \code{is.infinite()} - A
+logical rvec with the same length as the original rvec.
+\item \code{na.omit()}, \code{na.exclude()} - An rvec with the same
+class as the original rvec, minus any elements that
+have \code{NA}s in any draws.
+\item \code{na.fail()} - The original rvec, or an error.
+}
+}
 \description{
-rvec methods for \code{is.na()}, \code{is.nan()},
-\code{is.finite()}, and \code{is.infinite()} all
-return rvecs, with separate values for
-every draw.
-
-The rvec method for \code{anyNA()} returns
-\code{TRUE} if any value for any draw is
-\code{NA} or \code{NaN}, and returns \code{FALSE} otherwise.
-
-Functions \code{na.omit()} and \code{na.exclude()}
-return versions of \code{x} in which observations
-with \code{NA} in any draws are omitted.
+Detect or remove missing and infinite values in rvecs.
+Operations are done independently on each draw,
+though \code{na.omit()}, \code{na.exclude()}, and \code{na.fail()}
+also look across draws.
 }
 \details{
 The behavior of the rvec methods
@@ -64,8 +67,11 @@ is.nan(x)
 is.finite(x)
 is.infinite(x)
 
-## return a logical scalar
+## return a logical rvec with length 1
 anyNA(x)
+
+## summarise across draws
+draws_any(anyNA(x))
 
 ## return an NA-free version of 'x'
 na.omit(x)
@@ -93,5 +99,7 @@ values within draws.
 all draws for an observation are missing.
 \item \code{\link[vctrs:vec_detect_complete]{vctrs::vec_detect_complete()}} to test whether
 any draws for an observation are missing.
+\item \code{\link[=draws_any]{draws_any()}}, \code{\link[=draws_all]{draws_all()}} to summarise
+across draws.
 }
 }

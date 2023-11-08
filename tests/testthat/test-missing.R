@@ -6,13 +6,15 @@ test_that("anyNA works with length > 0", {
     x <- rvec(list(c(1, NA),
                    c(3, 1),
                    c(NaN, Inf)))
-    expect_true(anyNA(x))
-    expect_false(anyNA(x[2]))
+    expect_identical(anyNA(x), rvec(list(c(TRUE, TRUE))))
+    expect_identical(anyNA(x[2]), rvec(list(c(FALSE, FALSE))))
 })
 
 test_that("is.na works with length 0", {
     x <- rvec_int()
-    expect_false(anyNA(x))
+    expect_identical(anyNA(x), rvec_lgl(FALSE))
+    x <- rvec_int(matrix(nrow = 0, ncol = 3))
+    expect_identical(anyNA(x), rvec_lgl(list(c(FALSE, FALSE, FALSE))))
 })
 
           
