@@ -1,7 +1,7 @@
 Package: rvec
 Type: Package
 Title: Vector Representing a Random Variable
-Version: 0.0.6
+Version: 0.0.6.9000
 Authors@R: 
     c(person(given = "John",
              family = "Bryant",
