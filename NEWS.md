@@ -1,3 +1,12 @@
+# rvec 0.1.0
+
+## Interface
+
+- Removed `is.numeric` methods for rvecs. These had been creating
+  problems with functions from non-rvec packages, since `is.numeric`
+  generally implies that an object is a base R style numeric vector.
+
+
 
 # rvec 0.0.6
 
