@@ -86,7 +86,7 @@ format_rvec_summaries <- function(x) {
     else {
         ans <- matrixStats::rowMeans2(1 * x, na.rm = TRUE)
         ans <- formatC(ans, format = "fg")
-        ans <- paste("p =", ans)
+        ans <- paste0("p=", ans)
     }
     ans
 }

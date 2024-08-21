@@ -5,7 +5,9 @@
 - Removed `is.numeric` methods for rvecs. These had been creating
   problems with functions from non-rvec packages, since `is.numeric`
   generally implies that an object is a base R style numeric vector.
-
+- Removed space from around `=` when printing `rvec_lgl`, so that, for
+  instance, `p = 0.5` becomes `p=0.5`.
+- 
 
 
 # rvec 0.0.6
