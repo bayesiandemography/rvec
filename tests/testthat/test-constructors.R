@@ -1,6 +1,18 @@
 
 ## 'rvec' ---------------------------------------------------------------------
 
+test_that("'rvec' works with rvec", {
+  m <- matrix(1:10, nr = 2)
+  x <- rvec_dbl(m)
+  expect_identical(rvec(x), rvec(1 * m))
+  m_name <- rbind(a = "a", b = "b")
+  x_name <- rvec_chr(m_name)
+  expect_identical(rvec(x_name), rvec(m_name))
+  m_int <- matrix(1:10, nr = 2)
+  x_int <- rvec_int(m_int)
+  expect_identical(rvec(x_int), rvec(m_int))
+})
+
 test_that("'rvec' works with valid matrices", {
     m <- matrix(1:6, 3)
     ans <- rvec(m)
@@ -44,13 +56,25 @@ test_that("'rvec' throws expected error with invalid input", {
     expect_error(rvec(list()),
                  "If `x` is a list, it must have at least one element.")
     expect_error(rvec(NULL),
-                 "`x` must be a matrix, a list, or an atomic vector.")
+                 "`x` must be an rvec, a matrix, a list, or an atomic vector.")
     expect_error(rvec(matrix(complex(1:3, 1:3), nr = 1)),
                  "`x` must be double, integer, logical, or character")
 })
 
 
 ## 'rvec_chr' -----------------------------------------------------------------
+
+test_that("'rvec_chr' works with rvec", {
+  m <- matrix(letters, nr = 2)
+  x <- rvec_chr(m)
+  expect_identical(rvec_chr(x), rvec_chr(m))
+  m_name <- rbind(a = "a", b = "b")
+  x_name <- rvec_chr(m_name)
+  expect_identical(rvec_chr(x_name), rvec_chr(m_name))
+  m_int <- matrix(1:10, nr = 2)
+  x_int <- rvec_int(m_int)
+  expect_identical(rvec_chr(x_int), rvec_chr(m_int))
+})
 
 test_that("'rvec_chr' works with NULL", {
     expect_s3_class(rvec_chr(NULL), "rvec_chr")
@@ -90,11 +114,23 @@ test_that("'rvec_chr' works with vectors", {
 
 test_that("'rvec_chr' throws error with invalid inputs", {
     expect_error(rvec_chr(lm),
-                 "`x` must be a matrix, a list, an atomic vector, or NULL.")
+                 "`x` must be an rvec, a matrix, a list, an atomic vector, or NULL.")
 })
 
 
 ## 'rvec_dbl' -----------------------------------------------------------------
+
+test_that("'rvec_dbl' works with rvec", {
+  m <- matrix(1:10 + 0.1, nr = 2)
+  x <- rvec_dbl(m)
+  expect_identical(rvec_dbl(x), rvec_dbl(m))
+  m_name <- rbind(a = 1:2 + 0.1, b = 3:4)
+  x_name <- rvec_dbl(m_name)
+  expect_identical(rvec_dbl(x_name), rvec_dbl(m_name))
+  m_int <- matrix(1:10, nr = 2)
+  x_int <- rvec_int(m_int)
+  expect_identical(rvec_dbl(x_int), rvec_dbl(m_int))
+})
 
 test_that("'rvec_dbl' works with NULL", {
     expect_s3_class(rvec_dbl(NULL), "rvec_dbl")
@@ -134,11 +170,22 @@ test_that("'rvec_dbl' works with valid vectors", {
 
 test_that("'rvec_dbl' throws error with invalid inputs", {
     expect_error(rvec_dbl(lm),
-                 "`x` must be a matrix, a list, an atomic vector, or NULL.")
+                 "`x` must be an rvec, a matrix, a list, an atomic vector, or NULL.")
 })
 
 
 ## 'rvec_int' -----------------------------------------------------------------
+
+test_that("'rvec_int' works with rvec", {
+  m <- matrix(1:10, nr = 2)
+  x <- rvec_int(m)
+  expect_identical(rvec_int(x), rvec_int(m))
+  x <- rvec_dbl(m)
+  expect_identical(rvec_int(x), rvec_int(m))
+  m_name <- rbind(a = 1:2, b = 3:4)
+  x_name <- rvec_int(m_name)
+  expect_identical(rvec_int(x_name), rvec_int(m_name))
+})
 
 test_that("'rvec_int' works with NULL", {
     expect_s3_class(rvec_int(NULL), "rvec_int")
@@ -177,11 +224,22 @@ test_that("'rvec_int' works with valid vectors", {
 
 test_that("'rvec_int' throws error with invalid inputs", {
     expect_error(rvec_int(lm),
-                 "`x` must be a matrix, a list, an atomic vector, or NULL.")
+                 "`x` must be an rvec, a matrix, a list, an atomic vector, or NULL.")
 })
 
 
 ## 'rvec_lgl' -----------------------------------------------------------------
+
+test_that("'rvec_lgl' works with rvec", {
+  m <- matrix(c(T,F,F,T), nr = 2)
+  x <- rvec_lgl(m)
+  expect_identical(rvec_lgl(x), rvec_lgl(m))
+  x <- rvec_int(m)
+  expect_identical(rvec_lgl(x), rvec_lgl(m))
+  m_name <- rbind(a = F, b = T)
+  x_name <- rvec_lgl(m_name)
+  expect_identical(rvec_lgl(x_name), rvec_lgl(m_name))
+})
 
 test_that("'rvec_lgl' works with NULL", {
     expect_s3_class(rvec_lgl(NULL), "rvec_lgl")
@@ -218,7 +276,7 @@ test_that("'rvec_lgl' works with valid vectors", {
 
 test_that("'rvec_lgl' throws error with invalid inputs", {
     expect_error(rvec_lgl(lm),
-                 "`x` must be a matrix, a list, an atomic vector, or NULL.")
+                 "`x` must be an rvec, a matrix, a list, an atomic vector, or NULL.")
 })
 
 

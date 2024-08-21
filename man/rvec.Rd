@@ -30,8 +30,7 @@ An rvec with the following class:
 \item \code{rvec_lgl()}: \code{"rvec_lgl"}
 \item \code{rvec_chr()}: \code{"rvec_chr"}
 \item \code{rvec()}: \code{"rvec_chr"}, \code{"rvec_dbl"}
-\code{"rvec_int"}, or \code{"rvec_lgl"}, depending on
-\code{typeof(x)}.
+\code{"rvec_int"}, or \code{"rvec_lgl"}
 }
 }
 \description{
@@ -58,11 +57,12 @@ objects of a particular subclass.
 
 \code{x} can be
 \itemize{
-\item A matrix, where each row is a set of draws
-for an unknown quantity.
-\item A list, where each element is a set of draws.
-\item An atomic vector, which is treated as a
-single-column matrix.
+\item a matrix, where each row is a set of draws
+for an unknown quantity;
+\item a list, where each element is a set of draws;
+\item an atomic vector, which is treated as a
+single-column matrix; or
+\item an rvec.
 }
 }
 \examples{
@@ -82,10 +82,9 @@ rvec(l)
 }
 \seealso{
 \itemize{
-\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} creates rvecs within
+\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} Create rvecs within
 a data frame.
-\item Random variate functions such as \code{\link[=rnorm_rvec]{rnorm_rvec()}} and
-\code{\link[=rbinom_rvec]{rbinom_rvec()}} can be used to create rvecs
+\item \code{\link[=rnorm_rvec]{rnorm_rvec()}}, \code{\link[=rbinom_rvec]{rbinom_rvec()}}, etc. Create rvecs
 representing probability distributions.
 }
 }
