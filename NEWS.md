@@ -7,7 +7,9 @@
   generally implies that an object is a base R style numeric vector.
 - Removed space from around `=` when printing `rvec_lgl`, so that, for
   instance, `p = 0.5` becomes `p=0.5`.
-- 
+- `rvec()`, `rvec_chr()`, `rvec_dbl()`, `rvec_int()`, and
+  `rvec_lgl()` now accept rvec arguments.
+  
 
 
 # rvec 0.0.6
