@@ -1,4 +1,47 @@
 
+## 'new_rvec' -----------------------------------------------------------------
+
+test_that("'new_rvec' works with default arguments", {
+  x <- new_rvec()
+  expect_s3_class(x, "rvec_dbl")
+  expect_identical(length(x), 0L)
+  expect_identical(n_draw(x), 1000L)
+})
+
+test_that("'new_rvec' works with character", {
+  x <- new_rvec(character(), length = 1)
+  expect_s3_class(x, "rvec_chr")
+  expect_identical(length(x), 1L)
+  expect_identical(n_draw(x), 1000L)
+})
+
+test_that("'new_rvec' works with double", {
+  x <- new_rvec(333, length = 10, n_draw = 100)
+  expect_s3_class(x, "rvec_dbl")
+  expect_identical(length(x), 10L)
+  expect_identical(n_draw(x), 100L)
+})
+
+test_that("'new_rvec' works with integer", {
+  x <- new_rvec(333:1000, length = 10, n_draw = 100)
+  expect_s3_class(x, "rvec_int")
+  expect_identical(length(x), 10L)
+  expect_identical(n_draw(x), 100L)
+})
+
+test_that("'new_rvec' works with logical", {
+  x <- new_rvec(NA, length = 10, n_draw = 100)
+  expect_s3_class(x, "rvec_lgl")
+  expect_identical(length(x), 10L)
+  expect_identical(n_draw(x), 100L)
+})
+
+test_that("'new_rvec' throws correct error with invalid type", {
+  expect_error(new_rvec(NULL, length = 10, n_draw = 100),
+               "Invalid type.")
+})
+
+
 ## 'rvec' ---------------------------------------------------------------------
 
 test_that("'rvec' works with rvec", {
@@ -277,29 +320,6 @@ test_that("'rvec_lgl' works with valid vectors", {
 test_that("'rvec_lgl' throws error with invalid inputs", {
     expect_error(rvec_lgl(lm),
                  "`x` must be an rvec, a matrix, a list, an atomic vector, or NULL.")
-})
-
-
-## 'new_rvec' -----------------------------------------------------------------
-
-test_that("'new_rvec' works", {
-    m <- matrix("a", nr = 3, nc = 4)
-    x <- new_rvec(m)
-    expect_s3_class(x, c("rvec_chr", "rvec"))
-    m <- matrix(0, nr = 3, nc = 4)
-    x <- new_rvec(m)
-    expect_s3_class(x, c("rvec_dbl", "rvec"))
-    m <- matrix(0L, nr = 3, nc = 4)
-    x <- new_rvec(m)
-    expect_s3_class(x, c("rvec_int", "rvec"))
-    m <- matrix(TRUE, nr = 3, nc = 4)
-    x <- new_rvec(m)
-    expect_s3_class(x, c("rvec_lgl", "rvec"))
-})
-
-test_that("'new_rvec' throws error with invalid inputs", {
-    expect_error(new_rvec(matrix(complex(real = 0, imaginary = 0), 2, 3)),
-                 "Internal error: `data` has type complex.")
 })
 
 

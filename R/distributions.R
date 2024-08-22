@@ -2465,7 +2465,7 @@ runif_rvec <- function(n, min = 0, max = 1, n_draw = NULL) {
 #'
 #' @examples
 #' x <- rvec(list(c(3.2, 4.5),
-#'                c(7.6, 0.7)))
+#'                c(0.6, 0.7)))
 #' dweibull_rvec(x, shape = 2)
 #' pweibull_rvec(x, shape = 2)
 #'

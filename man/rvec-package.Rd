@@ -23,74 +23,75 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 
 \strong{Creating rvecs}
 \itemize{
-\item \code{\link[=rvec]{rvec()}} - class depends on input
-\item \code{\link[=rvec_dbl]{rvec_dbl()}} - doubles
-\item \code{\link[=rvec_int]{rvec_int()}} - integers
-\item \code{\link[=rvec_lgl]{rvec_lgl()}} - logical
-\item \code{\link[=rvec_chr]{rvec_chr()}} - character
-\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} - data in data frame
+\item \code{\link[=rvec]{rvec()}} Class depends on input
+\item \code{\link[=rvec_dbl]{rvec_dbl()}} Doubles
+\item \code{\link[=rvec_int]{rvec_int()}} Integers
+\item \code{\link[=rvec_lgl]{rvec_lgl()}} Logical
+\item \code{\link[=rvec_chr]{rvec_chr()}} Character
+\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} Data in data frame
+\item \code{\link[=new_rvec]{new_rvec()}} Blanks
 }
 
 \strong{Manipulating rvecs}
 \itemize{
-\item \code{\link[=if_else_rvec]{if_else_rvec()}}
-\item \code{\link[=map_rvec]{map_rvec()}}
+\item \code{\link[=if_else_rvec]{if_else_rvec()}} \code{condition} is rvec
+\item \code{\link[=map_rvec]{map_rvec()}} \code{map()} for rvecs
 }
 
 \strong{Probability distributions}
 \itemize{
-\item \code{\link[=dbeta_rvec]{dbeta_rvec()}}
-\item \code{\link[=dbinom_rvec]{dbinom_rvec()}}
-\item \code{\link[=dcauchy_rvec]{dcauchy_rvec()}}
-\item \code{\link[=dchisq_rvec]{dchisq_rvec()}}
-\item \code{\link[=dexp_rvec]{dexp_rvec()}}
-\item \code{\link[=df_rvec]{df_rvec()}}
-\item \code{\link[=dgamma_rvec]{dgamma_rvec()}}
-\item \code{\link[=dgeom_rvec]{dgeom_rvec()}}
-\item \code{\link[=dhyper_rvec]{dhyper_rvec()}}
-\item \code{\link[=dlnorm_rvec]{dlnorm_rvec()}}
-\item \code{\link[=dmultinom]{dmultinom()}}
-\item \code{\link[=dnbinom_rvec]{dnbinom_rvec()}}
-\item \code{\link[=dnorm_rvec]{dnorm_rvec()}}
-\item \code{\link[=dpois_rvec]{dpois_rvec()}}
-\item \code{\link[=dt_rvec]{dt_rvec()}}
-\item \code{\link[=dunif_rvec]{dunif_rvec()}}
-\item \code{\link[=dweibull_rvec]{dweibull_rvec()}}
+\item \code{\link[=dbeta_rvec]{dbeta_rvec()}} Beta
+\item \code{\link[=dbinom_rvec]{dbinom_rvec()}} Binomial
+\item \code{\link[=dcauchy_rvec]{dcauchy_rvec()}} Cauchy
+\item \code{\link[=dchisq_rvec]{dchisq_rvec()}} Chi-square
+\item \code{\link[=dexp_rvec]{dexp_rvec()}} Exponential
+\item \code{\link[=df_rvec]{df_rvec()}} F
+\item \code{\link[=dgamma_rvec]{dgamma_rvec()}} Gamma
+\item \code{\link[=dgeom_rvec]{dgeom_rvec()}} Geometric
+\item \code{\link[=dhyper_rvec]{dhyper_rvec()}} Hypergeometric
+\item \code{\link[=dlnorm_rvec]{dlnorm_rvec()}} Lognormal
+\item \code{\link[=dmultinom]{dmultinom()}} Multinomial
+\item \code{\link[=dnbinom_rvec]{dnbinom_rvec()}} Negative binomial
+\item \code{\link[=dnorm_rvec]{dnorm_rvec()}} Normal
+\item \code{\link[=dpois_rvec]{dpois_rvec()}} Poisson
+\item \code{\link[=dt_rvec]{dt_rvec()}} Student's T
+\item \code{\link[=dunif_rvec]{dunif_rvec()}} Uniform
+\item \code{\link[=dweibull_rvec]{dweibull_rvec()}} Weibull
 }
 
 \strong{Summarizing across draws}
 \itemize{
-\item \code{\link[=draws_all]{draws_all()}}
-\item \code{\link[=draws_any]{draws_any()}}
-\item \code{\link[=draws_median]{draws_median()}}
-\item \code{\link[=draws_mean]{draws_mean()}}
-\item \code{\link[=draws_mode]{draws_mode()}}
-\item \code{\link[=draws_ci]{draws_ci()}}
-\item \code{\link[=draws_quantile]{draws_quantile()}}
-\item \code{\link[=draws_fun]{draws_fun()}}
-\item \code{\link[=n_draw]{n_draw()}}
+\item \code{\link[=draws_all]{draws_all()}} All drawz
+\item \code{\link[=draws_any]{draws_any()}} Any draws
+\item \code{\link[=draws_median]{draws_median()}} Median draw
+\item \code{\link[=draws_mean]{draws_mean()}} Mean draw
+\item \code{\link[=draws_mode]{draws_mode()}} Modal draw
+\item \code{\link[=draws_ci]{draws_ci()}} Credible intervals
+\item \code{\link[=draws_quantile]{draws_quantile()}} Quantiles
+\item \code{\link[=draws_fun]{draws_fun()}} Arbitrary function
+\item \code{\link[=n_draw]{n_draw()}} Number of draws
 }
 
 \strong{Coercion, classes}
 \itemize{
-\item \code{\link[=as_list_col]{as_list_col()}}
-\item \code{\link[=expand_from_rvec]{expand_from_rvec()}}
-\item \code{\link[=is_rvec]{is_rvec()}}
+\item \code{\link[=as_list_col]{as_list_col()}} Rvec or matrix to list
+\item \code{\link[=expand_from_rvec]{expand_from_rvec()}} Inverse of \code{\link[=collapse_to_rvec]{collapse_to_rvec()}}
+\item \code{\link[=is_rvec]{is_rvec()}} Object an rvec?
 }
 
 \strong{Weighted summaries}
 \itemize{
-\item \code{\link[=weighted_mad]{weighted_mad()}}
-\item \code{\link[=weighted_mean]{weighted_mean()}}
-\item \code{\link[=weighted_median]{weighted_median()}}
-\item \code{\link[=weighted_sd]{weighted_sd()}}
-\item \code{\link[=weighted_var]{weighted_var()}}
+\item \code{\link[=weighted_mad]{weighted_mad()}} Weighted mean absolute deviation
+\item \code{\link[=weighted_mean]{weighted_mean()}} Weighted mean
+\item \code{\link[=weighted_median]{weighted_median()}} Weighted median
+\item \code{\link[=weighted_sd]{weighted_sd()}} Weighted standard deviation
+\item \code{\link[=weighted_var]{weighted_var()}} Weighted variances
 }
 
 \strong{Datasets}
 \itemize{
-\item \code{\link[=divorce]{divorce()}}
-\item \code{\link[=reg_post]{reg_post()}}
+\item \code{\link[=divorce]{divorce()}} Divorce rates
+\item \code{\link[=reg_post]{reg_post()}} Regression coefficients
 }
 }
 

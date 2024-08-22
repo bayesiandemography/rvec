@@ -1,6 +1,6 @@
 # rvec 0.1.0
 
-## Interface
+## Changes to interface
 
 - Removed `is.numeric` methods for rvecs. These had been creating
   problems with functions from non-rvec packages, since `is.numeric`
@@ -10,6 +10,11 @@
 - `rvec()`, `rvec_chr()`, `rvec_dbl()`, `rvec_int()`, and
   `rvec_lgl()` now accept rvec arguments.
   
+
+## New functions
+
+- Added function `new_rvec()`, which creates rvecs with a given type,
+  length, and `n_draw`, consisting entirely of NAs.
 
 
 # rvec 0.0.6

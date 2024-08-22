@@ -6,7 +6,7 @@
 \alias{rvec_dbl}
 \alias{rvec_int}
 \alias{rvec_lgl}
-\title{Create an Rvec}
+\title{Create an Rvec from Data}
 \usage{
 rvec(x)
 
@@ -20,7 +20,7 @@ rvec_lgl(x = NULL)
 }
 \arguments{
 \item{x}{A matrix, a list of vectors,
-or an atomic vector.}
+an atomic vector, or an rvec.}
 }
 \value{
 An rvec with the following class:
@@ -34,7 +34,8 @@ An rvec with the following class:
 }
 }
 \description{
-Create an Object of Class \code{"rvec"}.
+Create an object of class \code{"rvec"}, based
+on input data.
 }
 \details{
 Class \code{"rvec"} has four subclasses, each dealing with
@@ -82,6 +83,7 @@ rvec(l)
 }
 \seealso{
 \itemize{
+\item \code{\link[=new_rvec]{new_rvec()}} Create a blank rvec.
 \item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} Create rvecs within
 a data frame.
 \item \code{\link[=rnorm_rvec]{rnorm_rvec()}}, \code{\link[=rbinom_rvec]{rbinom_rvec()}}, etc. Create rvecs
