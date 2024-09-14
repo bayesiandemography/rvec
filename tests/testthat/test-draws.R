@@ -101,7 +101,7 @@ test_that("'draws_any' throws correct error with rvec_chr", {
 
 ## 'draws_ci' -----------------------------------------------------------
 
-test_that("'draws_ci' works with rvec_dbl when nrow > 0 - no width, prefix supplied", {
+test_that("'draws_ci' works with rvec_dbl when nrow > 0 - no width, prefix supplied, width length 1", {
     set.seed(0)
     m <- matrix(rnorm(20), nr = 5)
     y <- rvec(m)
@@ -112,7 +112,8 @@ test_that("'draws_ci' works with rvec_dbl when nrow > 0 - no width, prefix suppl
     expect_equal(ans_obtained, ans_expected)
 })
 
-test_that("'draws_ci' works with rvec_dbl when nrow > 0 - prefix, width supplied", {
+
+test_that("'draws_ci' works with rvec_dbl when nrow > 0 - prefix, length 1 width supplied", {
     set.seed(0)
     m <- matrix(rnorm(20), nr = 5)
     y <- rvec(m)
@@ -120,6 +121,30 @@ test_that("'draws_ci' works with rvec_dbl when nrow > 0 - prefix, width supplied
     ans_expected <- apply(m, 1, quantile, prob = c(0.1, 0.5, 0.9))
     ans_expected <- tibble::as_tibble(t(ans_expected))
     names(ans_expected) <- c("var.lower", "var.mid", "var.upper")
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_ci' works with rvec_dbl when nrow > 0 - prefix, length 2 width supplied", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_ci(y, width = c(0.8, 0.9), prefix = "var")
+    ans_expected <- apply(m, 1, quantile, prob = c(0.05, 0.1, 0.5, 0.9, 0.95))
+    ans_expected <- tibble::as_tibble(t(ans_expected))
+    names(ans_expected) <- c("var.lower", "var.lower1", "var.mid", "var.upper1", "var.upper")
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_ci' works with rvec_dbl when nrow > 0 - prefix, length 3 width supplied", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_ci(y, width = c(0.8, 0.9, 1), prefix = "var")
+    ans_expected <- apply(m, 1, quantile, prob = c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+    ans_expected <- tibble::as_tibble(t(ans_expected))
+    names(ans_expected) <- c("var.lower", "var.lower1", "var.lower2",
+                             "var.mid",
+                             "var.upper2", "var.upper1", "var.upper")
     expect_equal(ans_obtained, ans_expected)
 })
 

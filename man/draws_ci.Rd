@@ -15,7 +15,9 @@ draws_ci(x, width = 0.95, prefix = NULL, na_rm = FALSE)
 \arguments{
 \item{x}{An object of class \link[=rvec]{rvec}.}
 
-\item{width}{A number, where \verb{0 < width <= 1}.
+\item{width}{Width(s) of credible interval(s).
+One or more numbers greater than 0
+and less than or equal to 1.
 Default is \code{0.975}.}
 
 \item{prefix}{String to be added to the
@@ -31,7 +33,7 @@ with three columns.
 }
 \description{
 Summarise the distribution of random draws
-in an \code{rvec}, using a simple credible interval.
+in an \code{rvec}, using  credible intervals.
 }
 \section{Warning}{
 
@@ -44,7 +46,7 @@ as in
 \code{my_df$ci <- draws_ci(my_rvec)}
 
 However, creating columns in
-this way can corrupt data frames.
+this way can corrupt an ordinary data frames.
 For safer options,
 see the examples below.
 }
@@ -57,6 +59,8 @@ m <- rbind(a = rnorm(100, mean = 5, sd = 2),
 x <- rvec(m)
 x
 draws_ci(x)
+draws_ci(x, width = c(0.5, 0.99))
+draws_ci(x, prefix = "results")
 
 ## results from 'draws_ci'
 ## assigned to a data frame

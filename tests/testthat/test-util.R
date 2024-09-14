@@ -148,9 +148,14 @@ test_that("'is_rvec' works", {
 
 ## 'make_probs' ---------------------------------------------------------------
 
-test_that("'make_probs' works", {
+test_that("'make_probs' works with single width", {
     expect_equal(make_probs(0.5), c(0.25, 0.5, 0.75))
     expect_equal(make_probs(1), c(0, 0.5, 1))
+})
+
+test_that("'make_probs' works with multiple widths", {
+    expect_equal(make_probs(c(0.5, 0.9)), c(0.05, 0.25, 0.5, 0.75, 0.95))
+    expect_equal(make_probs(c(1, 0.2)), c(0, 0.4, 0.5, 0.6, 1))
 })    
 
 

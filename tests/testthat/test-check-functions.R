@@ -584,15 +584,13 @@ test_that("'check_values_type_consistent' throws expected error with diff length
 
 test_that("'check_width' returns TRUE with valid inputs", {
     expect_true(check_width(0.96))
-    expect_true(check_width(0.2))
+    expect_true(check_width(c(0.2, 0.3, 0.7, 0.99)))
     expect_true(check_width(1))
 })
 
-test_that("'check_width' throws expected error non-length-1", {
-    expect_error(check_width(c(0.3, 0.4)),
-                 "`width` does not have length 1.")
+test_that("'check_width' throws expected error length 0", {
     expect_error(check_width(numeric()),
-                 "`width` does not have length 1.")
+                 "`width` has length 0.")
 })
 
 test_that("'check_width' throws expected error non-numeric", {
@@ -602,12 +600,23 @@ test_that("'check_width' throws expected error non-numeric", {
 
 test_that("'check_width' throws expected error NA", {
     expect_error(check_width(NA_real_),
-                 "`width` is NA.")
+                 "`width` has NA.")
+    expect_error(check_width(c(NA_real_, NA_real_)),
+                 "`width` has NAs.")
+})
+
+test_that("'check_width' throws expected error with duplicates", {
+    expect_error(check_width(c(0.3, 0.3)),
+                 "`width` has duplicate.")
+    expect_error(check_width(c(0.3, 0.3, 0.3)),
+                 "`width` has duplicates.")
 })
 
 test_that("'check_width' throws expected error too low", {
     expect_error(check_width(0),
-                 "`width` not in interval \\(0, 1\\].")
+                 "`width` has value not in interval \\(0, 1\\].")
+    expect_error(check_width(c(0, 1.2)),
+                 "`width` has values not in interval \\(0, 1\\].")
 })
 
 

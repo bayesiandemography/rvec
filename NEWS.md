@@ -9,12 +9,15 @@
   instance, `p = 0.5` becomes `p=0.5`.
 - `rvec()`, `rvec_chr()`, `rvec_dbl()`, `rvec_int()`, and
   `rvec_lgl()` now accept rvec arguments.
+- `draws_ci()` now accepts `width` arguments with length greater than
+  1.
+  
   
 
 ## New functions
 
-- Added function `new_rvec()`, which creates rvecs with a given type,
-  length, and `n_draw`, consisting entirely of NAs.
+- Added function `new_rvec()`, which creates rvecs with specified
+  values for type, length, and `n_draw`, consisting entirely of NAs.
 
 
 # rvec 0.0.6

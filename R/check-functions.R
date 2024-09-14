@@ -653,7 +653,7 @@ check_values_type_consistent <- function(values_colnums, type) {
 
 
 ## HAS_TESTS
-#' Check that 'width' is a number between 0 and 1
+#' Check that 'width' Consists of Unique Numbers Between 0 and 1
 #'
 #' @param width 
 #'
@@ -661,18 +661,31 @@ check_values_type_consistent <- function(values_colnums, type) {
 #'
 #' @noRd
 check_width <- function(width) {
-    if (!identical(length(width), 1L))
-        cli::cli_abort(c("{.arg width} does not have length 1.",
-                         i = "{.arg width} has length {length(width)}."))
-    if (is.na(width))
-        cli::cli_abort("{.arg width} is NA.")
-    if (!is.numeric(width))
-        cli::cli_abort(c("{.arg width} is non-numeric",
-                         i = "{.arg width} has class {.cls {class(width)}}."))
-    if (width <= 0 || width > 1)
-        cli::cli_abort(c("{.arg width} not in interval (0, 1]",
-                         i = "{.arg width} equals {width}"))
-    invisible(TRUE)
+  ## not length 0
+  if (identical(length(width), 0L))
+    cli::cli_abort("{.arg width} has length 0.")
+  ## no NA
+  n_na <- sum(is.na(width))
+  if (n_na > 0L) 
+    cli::cli_abort("{.arg width} has {cli::qty(n_na)} NA{?s}.")
+  ## numeric
+  if (!is.numeric(width))
+    cli::cli_abort(c("{.arg width} is non-numeric",
+                     i = "{.arg width} has class {.cls {class(width)}}."))
+  ## no duplicates
+  is_dup <- duplicated(width)
+  n_dup <- sum(is_dup)
+  if (n_dup > 0L)
+    cli::cli_abort(c("{.arg width} has {cli::qty(n_dup)} duplicate{?s}",
+                     i = "{.arg width}: {width}"))
+  ## inside interval
+  is_outside <- width <= 0 | width > 1
+  n_outside <- sum(is_outside)
+  if (n_outside > 0L)
+    cli::cli_abort(c("{.arg width} has {cli::qty(n_outside)} value{?s} not in interval (0, 1].",
+                     i = "{.arg width}: {width}"))
+  ## all OK
+  invisible(TRUE)
 }
 
 
