@@ -26,11 +26,11 @@ test_that("'extract_draw' works when x has zero rows", {
   expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'extract_draw' throws correct error when i too high", {
-  x <- rvec(matrix(1:4, nr = 2))
-  expect_error(extract_draw(x, i = 3),
-               "`i` is greater than the number of draws in `x`.")
+test_that("'extract_draw' throws correct error when x not rvec", {
+  expect_error(extract_draw(NULL),
+               "`x` is not an rvec.")
 })
+
 
 
 

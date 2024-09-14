@@ -48,6 +48,29 @@ test_that("'check_flag' throws expected error NA", {
 })
 
 
+## 'check_i' ------------------------------------------------------------------
+
+test_that("'check_i' returns TRUE with valid inputs", {
+  expect_true(check_i(i = 2L, n_draw = 3))
+  expect_true(check_i(i = 1, n_draw = 1))
+})
+
+test_that("'check_i' raises correct error with non-integer", {
+  expect_error(check_i(i = 1.3, n_draw = 2),
+               "`i` has non-integer value \\(1.3\\).")
+})
+
+test_that("'check_i' raises correct error with 0", {
+  expect_error(check_i(i = 0, n_draw = 2),
+               "`i` equals 0.")
+})
+
+test_that("'check_i' throws correct error when i too high", {
+  expect_error(check_i(i = 3, n_draw = 2L),
+               "`i` is greater than the number of draws in `x`.")
+})
+
+
 ## 'check_idx_dup' ------------------------------------------------------------
 
 test_that("'check_idx_dup' returns TRUE with valid inputs", {

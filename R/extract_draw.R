@@ -30,21 +30,13 @@
 #' @export
 extract_draw <- function(x, i = NULL) {
   if (!is_rvec(x))
-    cli::cli_abort("{.arg x} is not an rvec.")
+    cli::cli_abort(c("{.arg x} is not an rvec.",
+                     i = "{.arg x} has class {.cls {class(x)}}."))
   n_draw <- n_draw(x)
   if (is.null(i))
     i <- sample(x = n_draw, size = 1L)
-  else {
-    poputils::check_n(n = i,
-                      nm_n = "i",
-                      min = 1L,
-                      max = NULL,
-                      divisible_by = NULL)
-    if (i > n_draw)
-      cli::cli_abort(c("{.arg i} is greater than the number of draws in {.arg x}.",
-                       i = "{.arg i}: {.val {i}}.",
-                       i = "Number of draws: {.val {n_draw}}."))
-  }
+  else
+    check_i(i = i, n_draw = n_draw)
   m <- as.matrix(x)
   m[, i]
 }

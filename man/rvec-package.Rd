@@ -34,8 +34,9 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 
 \strong{Manipulating rvecs}
 \itemize{
-\item \code{\link[=if_else_rvec]{if_else_rvec()}} \code{condition} is rvec
+\item \code{\link[=if_else_rvec]{if_else_rvec()}} \code{if_else()} where \code{condition} is rvec
 \item \code{\link[=map_rvec]{map_rvec()}} \code{map()} for rvecs
+\item \code{\link[=extract_draw]{extract_draw()}} Single draw from rvec
 }
 
 \strong{Probability distributions}

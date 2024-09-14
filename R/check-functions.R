@@ -34,6 +34,50 @@ check_flag <- function(x) {
     invisible(TRUE)
 }
 
+## HAS_TESTS
+#' Check that a data frame does not contain
+#' any rvecs
+#'
+#' @param df A data frame
+#' @param nm_df Name for df to be used in error message.
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_has_no_rvecs <- function(df, nm_df) {
+    is_rv <- vapply(df, is_rvec, FALSE)
+    i_rv <- match(TRUE, is_rv, nomatch = 0L)
+    if (i_rv > 0L) {
+        nm_rv <- names(df)[[i_rv]]
+        cls_rv <- class(df[[i_rv]])
+        cli::cli_abort(c("{.arg {nm_df}} contains an rvec",
+                         i = "{.var {nm_rv}} has class {.cls cls_rv}"))
+    }
+    invisible(TRUE)
+}
+
+
+#' Check Index Used in 'extract_draw'
+#'
+#' @param i Index of draw
+#' @param n_draw Number of draws
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_i <- function(i, n_draw) {
+  check_nonneg_num_scalar(i)
+  if (round(i) != i)
+    cli::cli_abort("{.arg i} has non-integer value ({i}).")
+  if (i == 0L)
+    cli::cli_abort("{.arg i} equals 0.")
+  if (i > n_draw)
+    cli::cli_abort(c("{.arg i} is greater than the number of draws in {.arg x}.",
+                     i = "{.arg i}: {.val {i}}.",
+                     i = "Number of draws: {.val {n_draw}}."))
+  invisible(TRUE)
+}
+
 
 ## HAS_TESTS
 #' Check that indices for position in data
@@ -116,29 +160,6 @@ check_idx_gap <- function(idx,
         cli::cli_abort(c("Missing combination of values for 'by' and 'draw' variables:",
                          msg),
                        .envir = .envir)
-    }
-    invisible(TRUE)
-}
-
-
-## HAS_TESTS
-#' Check that a data frame does not contain
-#' any rvecs
-#'
-#' @param df A data frame
-#' @param nm_df Name for df to be used in error message.
-#'
-#' @returns TRUE, invisibly
-#'
-#' @noRd
-check_has_no_rvecs <- function(df, nm_df) {
-    is_rv <- vapply(df, is_rvec, FALSE)
-    i_rv <- match(TRUE, is_rv, nomatch = 0L)
-    if (i_rv > 0L) {
-        nm_rv <- names(df)[[i_rv]]
-        cls_rv <- class(df[[i_rv]])
-        cli::cli_abort(c("{.arg {nm_df}} contains an rvec",
-                         i = "{.var {nm_rv}} has class {.cls cls_rv}"))
     }
     invisible(TRUE)
 }

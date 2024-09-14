@@ -1462,6 +1462,13 @@ test_that("'dist_rvec_1' throws appropriate error with invalid inputs", {
                  "Problem with call to function `rpois\\(\\)`.")
 })
 
+test_that("'dist_rvec_1' gives appropriate warning with NAs", {
+    m <- matrix(c(1:5, NA), nr = 2)
+    lambda <- rvec(m)
+    expect_warning(dist_rvec_1(fun = rpois, arg = lambda, n = 6),
+                   "NAs produced")
+})
+
 
 ## 'dist_rvec_2' --------------------------------------------------------------
 
@@ -1503,18 +1510,25 @@ test_that("'dist_rvec_2' works with valid rvec input - density, arg1, arg2 numer
 test_that("'dist_rvec_2' throws appropriate error with invalid inputs", {
     m <- matrix(letters[1:6], nr = 2)
     x <- rvec(m)
-    lambda <- 1:2
+    lambda <- c(1, 1)
     expect_error(dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda),
-                 "`x` has class.")
+                 "`x` has class")
 })
 
 test_that("'dist_rvec_2' throws appropriate error with error in fun", {
-    mean <- rvec(matrix(1, nr = 2, nc = 3))
-    sd <- rvec(matrix(-1, nr = 2, nc = 3))
-    op <- options(warn = 3)
-    expect_error(dist_rvec_2(fun = rnorm, arg1 = mean, arg2 = sd, n = 3),
-                 "Problem with call to function `rnorm\\(\\)`.")
-    options(op)
+    m <- matrix(1:6, nr = 2)
+    x <- rvec(m)
+    lambda <- c(1, "a")
+    expect_error(dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda),
+                 "Non-numeric argument")
+})
+
+test_that("'dist_rvec_2' warns about NAs", {
+    m <- matrix(1:6, nr = 2)
+    x <- rvec(m)
+    lambda <- c(1, -1)
+    expect_warning(dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda),
+                 "NAs produced")
 })
 
 
@@ -1589,6 +1603,15 @@ test_that("'dist_rvec_3' throws appropriate error with invalid inputs", {
     sd  <- c("a", 0)
     expect_error(dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd),
                  "Problem with call to function `dnorm\\(\\)`.")
+})
+
+test_that("'dist_rvec_3' warns about NAs", {
+    m <- matrix(c(1:5, NA), nr = 2)
+    x <- rvec(m)
+    mean <- 1:2
+    sd  <- c(0.1, -0.4)
+    expect_warning(dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd),
+                   "NAs produced")
 })
 
 
@@ -1757,3 +1780,14 @@ test_that("'dist_rvec_4' throws appropriate error with invalid inputs", {
                              arg3 = n, arg4 = "k"),
                  "Problem with call to function `dhyper\\(\\)`.")
 })
+
+test_that("'dist_rvec_4' warns about NAs", {
+  m <- matrix(c(1:5, NA), nr = 2)
+  x <- rvec(m)
+  n <- 1:2
+  k <- c(1, -2)
+  expect_warning(dist_rvec_4(fun = dhyper, arg1 = x, arg2 = m,
+                             arg3 = n, arg4 = k),
+                 "NAs produced")
+})
+
