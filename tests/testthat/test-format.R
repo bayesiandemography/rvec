@@ -63,7 +63,7 @@ test_that("'format' method for rvec works - four columns, int", {
 test_that("'format' method for rvec works - four columns, lgl", {
     x <- rvec(matrix(c(T,F,F,T), nr = 2, nc = 4))
     ans_obtained <- format(x)
-    ans_expected <- c("p = 0.5", "p = 0.5")
+    ans_expected <- c("p=0.5", "p=0.5")
     expect_identical(ans_obtained, ans_expected)
 })
 

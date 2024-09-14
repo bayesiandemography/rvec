@@ -2465,7 +2465,7 @@ runif_rvec <- function(n, min = 0, max = 1, n_draw = NULL) {
 #'
 #' @examples
 #' x <- rvec(list(c(3.2, 4.5),
-#'                c(7.6, 0.7)))
+#'                c(0.6, 0.7)))
 #' dweibull_rvec(x, shape = 2)
 #' pweibull_rvec(x, shape = 2)
 #'
@@ -2575,22 +2575,30 @@ rweibull_rvec <- function(n, shape, scale = 1, n_draw = NULL) {
 #'
 #' @noRd
 dist_rvec_1 <- function(fun, arg, ...) {
-    nm_fun <- rlang::as_name(rlang::enquo(fun))
-    is_arg_rvec <- is_rvec(arg)
-    if (is_arg_rvec) {
-        n_draw <- n_draw(arg)
-        arg <- as.vector(as.matrix(arg))
-    }
-    ans <- tryCatch(fun(arg, ...),
-                    error = function(e) e)
-    if (inherits(ans, "error"))
-        cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
-                         i = ans$message))
-    if (is_arg_rvec) {
-        ans <- matrix(ans, ncol = n_draw)
-        ans <- rvec(ans)
-    }
-    ans
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  is_arg_rvec <- is_rvec(arg)
+  if (is_arg_rvec) {
+    n_draw <- n_draw(arg)
+    arg <- as.vector(as.matrix(arg))
+  }
+  ans <- tryCatch(
+    withCallingHandlers(fun(arg, ...),
+                        warning = function(w) {
+                          if (grepl("NAs produced|NaNs produced", w$message))
+                            invokeRestart("muffleWarning")
+                        }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (is_arg_rvec) {
+    ans <- matrix(ans, ncol = n_draw)
+    ans <- rvec(ans)
+  }
+  ans
 }
 
 
@@ -2618,47 +2626,55 @@ dist_rvec_1 <- function(fun, arg, ...) {
 #'
 #' @noRd
 dist_rvec_2 <- function(fun, arg1, arg2, ...) {
-    nm_fun <- rlang::as_name(rlang::enquo(fun))
-    nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
-    nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
-    is_rv_1 <- is_rvec(arg1)
-    is_rv_2 <- is_rvec(arg2)
-    is_rv <- is_rv_1 || is_rv_2
-    if (is_rv) {
-        if (is_rv_1 && is_rv_2)
-            n_draw <- n_draw_common(x = arg1,
-                                    y = arg2,
-                                    x_arg = nm_arg1,
-                                    y_arg = nm_arg2)
-        else if (is_rv_1 && !is_rv_2)
-            n_draw <- n_draw(arg1)
-        else
-            n_draw <- n_draw(arg2)
-        if (is_rv_1) {
-            check_not_rvec_chr(arg1, nm_arg = nm_arg1)
-            arg1 <- rvec_to_rvec_dbl(x = arg1, n_draw = n_draw)
-            arg1 <- as.vector(as.matrix(arg1))
-        }
-        else
-            arg1 <- rep.int(arg1, times = n_draw)
-        if (is_rv_2) {
-            check_not_rvec_chr(arg2, nm_arg = nm_arg2)
-            arg2 <- rvec_to_rvec_dbl(x = arg2, n_draw = n_draw)
-            arg2 <- as.vector(as.matrix(arg2))
-        }
-        else
-            arg2 <- rep.int(arg2, times = n_draw)
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+  nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  is_rv_1 <- is_rvec(arg1)
+  is_rv_2 <- is_rvec(arg2)
+  is_rv <- is_rv_1 || is_rv_2
+  if (is_rv) {
+    if (is_rv_1 && is_rv_2)
+      n_draw <- n_draw_common(x = arg1,
+                              y = arg2,
+                              x_arg = nm_arg1,
+                              y_arg = nm_arg2)
+    else if (is_rv_1 && !is_rv_2)
+      n_draw <- n_draw(arg1)
+    else
+      n_draw <- n_draw(arg2)
+    if (is_rv_1) {
+      check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+      arg1 <- rvec_to_rvec_dbl(x = arg1, n_draw = n_draw)
+      arg1 <- as.vector(as.matrix(arg1))
     }
-    ans <- tryCatch(fun(arg1, arg2, ...),
-                    error = function(e) e)
-    if (inherits(ans, "error"))
-        cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
-                         i = ans$message))
-    if (is_rv) {
-        ans <- matrix(ans, ncol = n_draw)
-        ans <- rvec(ans)
+    else
+      arg1 <- rep.int(arg1, times = n_draw)
+    if (is_rv_2) {
+      check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+      arg2 <- rvec_to_rvec_dbl(x = arg2, n_draw = n_draw)
+      arg2 <- as.vector(as.matrix(arg2))
     }
-    ans
+    else
+      arg2 <- rep.int(arg2, times = n_draw)
+  }
+  ans <- tryCatch(
+    withCallingHandlers(fun(arg1, arg2, ...),
+                        warning = function(w) {
+                          if (grepl("NAs produced|NaNs produced", w$message))
+                            invokeRestart("muffleWarning")
+                        }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (is_rv) {
+    ans <- matrix(ans, ncol = n_draw)
+    ans <- rvec(ans)
+  }
+  ans
 }
 
 
@@ -2686,77 +2702,85 @@ dist_rvec_2 <- function(fun, arg1, arg2, ...) {
 #'
 #' @noRd
 dist_rvec_3 <- function(fun, arg1, arg2, arg3, ...) {
-    nm_fun <- rlang::as_name(rlang::enquo(fun))
-    nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
-    nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
-    nm_arg3 <- rlang::as_name(rlang::enquo(arg3))
-    is_rv_1 <- is_rvec(arg1)
-    is_rv_2 <- is_rvec(arg2)
-    is_rv_3 <- is_rvec(arg3)
-    is_rv <- is_rv_1 || is_rv_2 || is_rv_3
-    if (is_rv) {
-        if (is_rv_1 && is_rv_2)
-            n_draw_12 <- n_draw_common(x = arg1,
-                                       y = arg2,
-                                       x_arg = nm_arg1,
-                                       y_arg = nm_arg2)
-        if (is_rv_1 && is_rv_3)
-            n_draw_13 <- n_draw_common(x = arg1,
-                                       y = arg3,
-                                       x_arg = nm_arg1,
-                                       y_arg = nm_arg3)
-        if (is_rv_2 && is_rv_3)
-            n_draw_23 <- n_draw_common(x = arg2,
-                                       y = arg3,
-                                       x_arg = nm_arg2,
-                                       y_arg = nm_arg3)
-        case <- c(is_rv_1, is_rv_2, is_rv_3)
-        if (identical(case, c(TRUE, TRUE, TRUE)))
-            n_draw <- max(n_draw_12, n_draw_13, n_draw_23)
-        else if (identical(case, c(FALSE, TRUE, TRUE)))
-            n_draw <- n_draw_23
-        else if (identical(case, c(TRUE, FALSE, TRUE)))
-            n_draw <- n_draw_13
-        else if (identical(case, c(FALSE, FALSE, TRUE)))
-            n_draw <- n_draw(arg3)
-        else if (identical(case, c(TRUE, TRUE, FALSE)))
-            n_draw <- n_draw_12
-        else if (identical(case, c(FALSE, TRUE, FALSE)))
-            n_draw <- n_draw(arg2)
-        else if (identical(case, c(TRUE, FALSE, FALSE)))
-            n_draw <- n_draw(arg1)
-        if (is_rv_1) {
-            check_not_rvec_chr(arg1, nm_arg = nm_arg1)
-            arg1 <- rvec_to_rvec_dbl(arg1, n_draw = n_draw)
-            arg1 <- as.vector(as.matrix(arg1))
-        }
-        else
-            arg1 <- rep.int(arg1, times = n_draw)
-        if (is_rv_2) {
-            check_not_rvec_chr(arg2, nm_arg = nm_arg2)
-            arg2 <- rvec_to_rvec_dbl(arg2, n_draw = n_draw)
-            arg2 <- as.vector(as.matrix(arg2))
-        }
-        else
-            arg2 <- rep.int(arg2, times = n_draw)
-        if (is_rv_3) {
-            check_not_rvec_chr(arg3, nm_arg = nm_arg3)
-            arg3 <- rvec_to_rvec_dbl(arg3, n_draw = n_draw)
-            arg3 <- as.vector(as.matrix(arg3))
-        }
-        else
-            arg3 <- rep.int(arg3, times = n_draw)
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+  nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  nm_arg3 <- rlang::as_name(rlang::enquo(arg3))
+  is_rv_1 <- is_rvec(arg1)
+  is_rv_2 <- is_rvec(arg2)
+  is_rv_3 <- is_rvec(arg3)
+  is_rv <- is_rv_1 || is_rv_2 || is_rv_3
+  if (is_rv) {
+    if (is_rv_1 && is_rv_2)
+      n_draw_12 <- n_draw_common(x = arg1,
+                                 y = arg2,
+                                 x_arg = nm_arg1,
+                                 y_arg = nm_arg2)
+    if (is_rv_1 && is_rv_3)
+      n_draw_13 <- n_draw_common(x = arg1,
+                                 y = arg3,
+                                 x_arg = nm_arg1,
+                                 y_arg = nm_arg3)
+    if (is_rv_2 && is_rv_3)
+      n_draw_23 <- n_draw_common(x = arg2,
+                                 y = arg3,
+                                 x_arg = nm_arg2,
+                                 y_arg = nm_arg3)
+    case <- c(is_rv_1, is_rv_2, is_rv_3)
+    if (identical(case, c(TRUE, TRUE, TRUE)))
+      n_draw <- max(n_draw_12, n_draw_13, n_draw_23)
+    else if (identical(case, c(FALSE, TRUE, TRUE)))
+      n_draw <- n_draw_23
+    else if (identical(case, c(TRUE, FALSE, TRUE)))
+      n_draw <- n_draw_13
+    else if (identical(case, c(FALSE, FALSE, TRUE)))
+      n_draw <- n_draw(arg3)
+    else if (identical(case, c(TRUE, TRUE, FALSE)))
+      n_draw <- n_draw_12
+    else if (identical(case, c(FALSE, TRUE, FALSE)))
+      n_draw <- n_draw(arg2)
+    else if (identical(case, c(TRUE, FALSE, FALSE)))
+      n_draw <- n_draw(arg1)
+    if (is_rv_1) {
+      check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+      arg1 <- rvec_to_rvec_dbl(arg1, n_draw = n_draw)
+      arg1 <- as.vector(as.matrix(arg1))
     }
-    ans <- tryCatch(fun(arg1, arg2, arg3, ...),
-                    error = function(e) e)
-    if (inherits(ans, "error"))
-        cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
-                         i = ans$message))
-    if (is_rv) {
-        ans <- matrix(ans, ncol = n_draw)
-        ans <- rvec(ans)
+    else
+      arg1 <- rep.int(arg1, times = n_draw)
+    if (is_rv_2) {
+      check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+      arg2 <- rvec_to_rvec_dbl(arg2, n_draw = n_draw)
+      arg2 <- as.vector(as.matrix(arg2))
     }
-    ans
+    else
+      arg2 <- rep.int(arg2, times = n_draw)
+    if (is_rv_3) {
+      check_not_rvec_chr(arg3, nm_arg = nm_arg3)
+      arg3 <- rvec_to_rvec_dbl(arg3, n_draw = n_draw)
+      arg3 <- as.vector(as.matrix(arg3))
+    }
+    else
+      arg3 <- rep.int(arg3, times = n_draw)
+  }
+  ans <- tryCatch(
+    withCallingHandlers(fun(arg1, arg2, arg3, ...),
+                        warning = function(w) {
+                          if (grepl("NAs produced|NaNs produced", w$message))
+                            invokeRestart("muffleWarning")
+                        }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (is_rv) {
+    ans <- matrix(ans, ncol = n_draw)
+    ans <- rvec(ans)
+  }
+  ans
 }
 
 
@@ -2789,121 +2813,129 @@ dist_rvec_3 <- function(fun, arg1, arg2, arg3, ...) {
 #'
 #' @noRd
 dist_rvec_4 <- function(fun, arg1, arg2, arg3, arg4, ...) {
-    nm_fun <- rlang::as_name(rlang::enquo(fun))
-    nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
-    nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
-    nm_arg3 <- rlang::as_name(rlang::enquo(arg3))
-    nm_arg4 <- rlang::as_name(rlang::enquo(arg4))
-    is_rv_1 <- is_rvec(arg1)
-    is_rv_2 <- is_rvec(arg2)
-    is_rv_3 <- is_rvec(arg3)
-    is_rv_4 <- is_rvec(arg4)
-    is_rv <- is_rv_1 || is_rv_2 || is_rv_3 || is_rv_4
-    if (is_rv) {
-        if (is_rv_1 && is_rv_2)
-            n_draw_12 <- n_draw_common(x = arg1,
-                                       y = arg2,
-                                       x_arg = nm_arg1,
-                                       y_arg = nm_arg2)
-        if (is_rv_1 && is_rv_3)
-            n_draw_13 <- n_draw_common(x = arg1,
-                                       y = arg3,
-                                       x_arg = nm_arg1,
-                                       y_arg = nm_arg3)
-        if (is_rv_1 && is_rv_4)
-            n_draw_14 <- n_draw_common(x = arg1,
-                                       y = arg4,
-                                       x_arg = nm_arg1,
-                                       y_arg = nm_arg4)
-        if (is_rv_2 && is_rv_3)
-            n_draw_23 <- n_draw_common(x = arg2,
-                                       y = arg3,
-                                       x_arg = nm_arg2,
-                                       y_arg = nm_arg3)
-        if (is_rv_2 && is_rv_4)
-            n_draw_24 <- n_draw_common(x = arg2,
-                                       y = arg4,
-                                       x_arg = nm_arg2,
-                                       y_arg = nm_arg4)
-        if (is_rv_3 && is_rv_4)
-            n_draw_34 <- n_draw_common(x = arg3,
-                                       y = arg4,
-                                       x_arg = nm_arg4,
-                                       y_arg = nm_arg4)
-        case <- c(is_rv_1, is_rv_2, is_rv_3, is_rv_4)
-        if (identical(case, c(TRUE, TRUE, TRUE, TRUE)))
-            n_draw <- max(n_draw_12, n_draw_13, n_draw_14,
-                          n_draw_23, n_draw_24,
-                          n_draw_34)
-        else if (identical(case, c(FALSE, TRUE, TRUE, TRUE)))
-            n_draw <- max(n_draw_23, n_draw_24, n_draw_34)
-        else if (identical(case, c(TRUE, FALSE, TRUE, TRUE)))
-            n_draw <- max(n_draw_13, n_draw_14, n_draw_34)
-        else if (identical(case, c(FALSE, FALSE, TRUE, TRUE)))
-            n_draw <- n_draw_34
-        else if (identical(case, c(TRUE, TRUE, FALSE, TRUE)))
-            n_draw <- max(n_draw_12, n_draw_14, n_draw_24)
-        else if (identical(case, c(FALSE, TRUE, FALSE, TRUE)))
-            n_draw <- n_draw_24
-        else if (identical(case, c(TRUE, FALSE, FALSE, TRUE)))
-            n_draw <- n_draw_14
-        else if (identical(case, c(FALSE, FALSE, FALSE, TRUE)))
-            n_draw <- n_draw(arg4)
-        else if (identical(case, c(TRUE, TRUE, TRUE, FALSE)))
-            n_draw <- max(n_draw_12, n_draw_13, n_draw_23)
-        else if (identical(case, c(FALSE, TRUE, TRUE, FALSE)))
-            n_draw <- n_draw_23
-        else if (identical(case, c(TRUE, FALSE, TRUE, FALSE)))
-            n_draw <- n_draw_13
-        else if (identical(case, c(FALSE, FALSE, TRUE, FALSE)))
-            n_draw <- n_draw(arg3)
-        else if (identical(case, c(TRUE, TRUE, FALSE, FALSE)))
-            n_draw <- n_draw_12
-        else if (identical(case, c(FALSE, TRUE, FALSE, FALSE)))
-            n_draw <- n_draw(arg2)
-        else if (identical(case, c(TRUE, FALSE, FALSE, FALSE)))
-            n_draw <- n_draw(arg1)
-        else                                                               
-            cli::cli_abort("Internal error: invalid combinations of rvecs") # nocov
-        if (is_rv_1) {
-            check_not_rvec_chr(arg1, nm_arg = nm_arg1)
-            arg1 <- rvec_to_rvec_dbl(arg1, n_draw = n_draw)
-            arg1 <- as.vector(as.matrix(arg1))
-        }
-        else
-            arg1 <- rep.int(arg1, times = n_draw)
-        if (is_rv_2) {
-            check_not_rvec_chr(arg2, nm_arg = nm_arg2)
-            arg2 <- rvec_to_rvec_dbl(arg2, n_draw = n_draw)
-            arg2 <- as.vector(as.matrix(arg2))
-        }
-        else
-            arg2 <- rep.int(arg2, times = n_draw)
-        if (is_rv_3) {
-            check_not_rvec_chr(arg3, nm_arg = nm_arg3)
-            arg3 <- rvec_to_rvec_dbl(arg3, n_draw = n_draw)
-            arg3 <- as.vector(as.matrix(arg3))
-        }
-        else
-            arg3 <- rep.int(arg3, times = n_draw)
-        if (is_rv_4) {
-            check_not_rvec_chr(arg4, nm_arg = nm_arg4)
-            arg4 <- rvec_to_rvec_dbl(arg4, n_draw = n_draw)
-            arg4 <- as.vector(as.matrix(arg4))
-        }
-        else
-            arg4 <- rep.int(arg4, times = n_draw)
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+  nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  nm_arg3 <- rlang::as_name(rlang::enquo(arg3))
+  nm_arg4 <- rlang::as_name(rlang::enquo(arg4))
+  is_rv_1 <- is_rvec(arg1)
+  is_rv_2 <- is_rvec(arg2)
+  is_rv_3 <- is_rvec(arg3)
+  is_rv_4 <- is_rvec(arg4)
+  is_rv <- is_rv_1 || is_rv_2 || is_rv_3 || is_rv_4
+  if (is_rv) {
+    if (is_rv_1 && is_rv_2)
+      n_draw_12 <- n_draw_common(x = arg1,
+                                 y = arg2,
+                                 x_arg = nm_arg1,
+                                 y_arg = nm_arg2)
+    if (is_rv_1 && is_rv_3)
+      n_draw_13 <- n_draw_common(x = arg1,
+                                 y = arg3,
+                                 x_arg = nm_arg1,
+                                 y_arg = nm_arg3)
+    if (is_rv_1 && is_rv_4)
+      n_draw_14 <- n_draw_common(x = arg1,
+                                 y = arg4,
+                                 x_arg = nm_arg1,
+                                 y_arg = nm_arg4)
+    if (is_rv_2 && is_rv_3)
+      n_draw_23 <- n_draw_common(x = arg2,
+                                 y = arg3,
+                                 x_arg = nm_arg2,
+                                 y_arg = nm_arg3)
+    if (is_rv_2 && is_rv_4)
+      n_draw_24 <- n_draw_common(x = arg2,
+                                 y = arg4,
+                                 x_arg = nm_arg2,
+                                 y_arg = nm_arg4)
+    if (is_rv_3 && is_rv_4)
+      n_draw_34 <- n_draw_common(x = arg3,
+                                 y = arg4,
+                                 x_arg = nm_arg4,
+                                 y_arg = nm_arg4)
+    case <- c(is_rv_1, is_rv_2, is_rv_3, is_rv_4)
+    if (identical(case, c(TRUE, TRUE, TRUE, TRUE)))
+      n_draw <- max(n_draw_12, n_draw_13, n_draw_14,
+                    n_draw_23, n_draw_24,
+                    n_draw_34)
+    else if (identical(case, c(FALSE, TRUE, TRUE, TRUE)))
+      n_draw <- max(n_draw_23, n_draw_24, n_draw_34)
+    else if (identical(case, c(TRUE, FALSE, TRUE, TRUE)))
+      n_draw <- max(n_draw_13, n_draw_14, n_draw_34)
+    else if (identical(case, c(FALSE, FALSE, TRUE, TRUE)))
+      n_draw <- n_draw_34
+    else if (identical(case, c(TRUE, TRUE, FALSE, TRUE)))
+      n_draw <- max(n_draw_12, n_draw_14, n_draw_24)
+    else if (identical(case, c(FALSE, TRUE, FALSE, TRUE)))
+      n_draw <- n_draw_24
+    else if (identical(case, c(TRUE, FALSE, FALSE, TRUE)))
+      n_draw <- n_draw_14
+    else if (identical(case, c(FALSE, FALSE, FALSE, TRUE)))
+      n_draw <- n_draw(arg4)
+    else if (identical(case, c(TRUE, TRUE, TRUE, FALSE)))
+      n_draw <- max(n_draw_12, n_draw_13, n_draw_23)
+    else if (identical(case, c(FALSE, TRUE, TRUE, FALSE)))
+      n_draw <- n_draw_23
+    else if (identical(case, c(TRUE, FALSE, TRUE, FALSE)))
+      n_draw <- n_draw_13
+    else if (identical(case, c(FALSE, FALSE, TRUE, FALSE)))
+      n_draw <- n_draw(arg3)
+    else if (identical(case, c(TRUE, TRUE, FALSE, FALSE)))
+      n_draw <- n_draw_12
+    else if (identical(case, c(FALSE, TRUE, FALSE, FALSE)))
+      n_draw <- n_draw(arg2)
+    else if (identical(case, c(TRUE, FALSE, FALSE, FALSE)))
+      n_draw <- n_draw(arg1)
+    else                                                               
+      cli::cli_abort("Internal error: invalid combinations of rvecs") # nocov
+    if (is_rv_1) {
+      check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+      arg1 <- rvec_to_rvec_dbl(arg1, n_draw = n_draw)
+      arg1 <- as.vector(as.matrix(arg1))
     }
-    ans <- tryCatch(fun(arg1, arg2, arg3, arg4, ...),
-                    error = function(e) e)
-    if (inherits(ans, "error"))
-        cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
-                         i = ans$message))
-    if (is_rv) {
-        ans <- matrix(ans, ncol = n_draw)
-        ans <- rvec(ans)
+    else
+      arg1 <- rep.int(arg1, times = n_draw)
+    if (is_rv_2) {
+      check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+      arg2 <- rvec_to_rvec_dbl(arg2, n_draw = n_draw)
+      arg2 <- as.vector(as.matrix(arg2))
     }
-    ans
+    else
+      arg2 <- rep.int(arg2, times = n_draw)
+    if (is_rv_3) {
+      check_not_rvec_chr(arg3, nm_arg = nm_arg3)
+      arg3 <- rvec_to_rvec_dbl(arg3, n_draw = n_draw)
+      arg3 <- as.vector(as.matrix(arg3))
+    }
+    else
+      arg3 <- rep.int(arg3, times = n_draw)
+    if (is_rv_4) {
+      check_not_rvec_chr(arg4, nm_arg = nm_arg4)
+      arg4 <- rvec_to_rvec_dbl(arg4, n_draw = n_draw)
+      arg4 <- as.vector(as.matrix(arg4))
+    }
+    else
+      arg4 <- rep.int(arg4, times = n_draw)
+  }
+  ans <- tryCatch(
+    withCallingHandlers(fun(arg1, arg2, arg3, arg4, ...),
+                        warning = function(w) {
+                          if (grepl("NAs produced|NaNs produced", w$message))
+                            invokeRestart("muffleWarning")
+                        }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (is_rv) {
+    ans <- matrix(ans, ncol = n_draw)
+    ans <- rvec(ans)
+  }
+  ans
 }
 
 

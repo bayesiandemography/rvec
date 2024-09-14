@@ -10,6 +10,8 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Codecov test
 coverage](https://codecov.io/gh/bayesiandemography/rvec/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bayesiandemography/rvec?branch=main)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/rvec)](https://CRAN.R-project.org/package=rvec)
 <!-- badges: end -->
 
 Tools for working with random draws, including draws from a simulation

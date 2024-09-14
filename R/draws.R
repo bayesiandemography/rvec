@@ -14,6 +14,8 @@
 #'
 #' @seealso
 #' Apply pre-specified functions across draws:
+#' - [draws_min()]
+#' - [draws_max()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
@@ -21,7 +23,7 @@
 #' - [draws_quantile()]
 #'
 #' Apply arbitrary function across draws:
-#' - [draws_fun()] to apply abritrary functions
+#' - [draws_fun()]
 #'
 #' For additional functions for summarising random draws, see
 #' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
@@ -102,7 +104,7 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' Credible Intervals from Random Draws
 #'
 #' Summarise the distribution of random draws
-#' in an `rvec`, using a simple credible interval.
+#' in an `rvec`, using  credible intervals.
 #'
 #' @section Warning:
 #'
@@ -114,12 +116,14 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' `my_df$ci <- draws_ci(my_rvec)`
 #'
 #' However, creating columns in
-#' this way can corrupt data frames.
+#' this way can corrupt an ordinary data frames.
 #' For safer options,
 #' see the examples below.
 #'
 #' @inheritParams draws_all
-#' @param width A number, where `0 < width <= 1`.
+#' @param width Width(s) of credible interval(s).
+#' One or more numbers greater than 0
+#' and less than or equal to 1.
 #' Default is `0.975`.
 #' @param prefix String to be added to the
 #' names of columns in the result.
@@ -136,13 +140,15 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' across draws are:
 #' - [draws_all()]
 #' - [draws_any]
+#' - [draws_min()]
+#' - [draws_max()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
 #' - [draws_quantile()]
 #'
 #' Apply arbitrary function across draws:
-#' - [draws_fun()] to apply abritrary functions
+#' - [draws_fun()]
 #'
 #' For additional functions for summarising random draws, see
 #' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
@@ -158,6 +164,8 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' x <- rvec(m)
 #' x
 #' draws_ci(x)
+#' draws_ci(x, width = c(0.5, 0.99))
+#' draws_ci(x, prefix = "results")
 #'
 #' ## results from 'draws_ci'
 #' ## assigned to a data frame
@@ -185,31 +193,39 @@ draws_ci.rvec <- function(x,
                           width = 0.95,
                           prefix = NULL,
                           na_rm = FALSE) {
-    x_str <- deparse1(substitute(x))
-    check_width(width)
-    has_prefix <- !is.null(prefix)
-    if (has_prefix)
-        check_str(prefix, x_arg = "prefix")
-    check_flag(na_rm)
-    probs <- make_probs(width)
-    m <- field(x, "data")
-    if (nrow(m) == 0L)
-        ans <- stats::quantile(double(), probs = probs)
-    else {
-        ans <- matrixStats::rowQuantiles(m,
-                                         probs = probs,
-                                         na.rm = na_rm,
-                                         drop = FALSE)
-        ans <- matrix_to_list_of_cols(ans)
-    }
-    nms <- c(".lower", ".mid", ".upper")
-    if (has_prefix)
-        nms <- paste0(prefix, nms)
-    else
-        nms <- paste0(x_str, nms)
-    names(ans) <- nms
-    ans <- tibble::tibble(!!!ans)
-    ans
+  x_str <- deparse1(substitute(x))
+  check_width(width)
+  has_prefix <- !is.null(prefix)
+  if (has_prefix)
+    check_str(prefix, x_arg = "prefix")
+  check_flag(na_rm)
+  probs <- make_probs(width)
+  m <- field(x, "data")
+  if (nrow(m) == 0L)
+    ans <- stats::quantile(double(), probs = probs)
+  else {
+    ans <- matrixStats::rowQuantiles(m,
+                                     probs = probs,
+                                     na.rm = na_rm,
+                                     drop = FALSE)
+    ans <- matrix_to_list_of_cols(ans)
+  }
+  n <- length(width)
+  lower <- rep(".lower", times = n)
+  upper <- rep(".upper", times = n)
+  if (n > 1L) {
+    s <- seq_len(n - 1L)
+    lower[-1L] <- paste0(lower[-1L], s)
+    upper[-n] <- paste0(upper[-n], rev(s))
+  }
+  nms <- c(lower, ".mid", upper)
+  if (has_prefix)
+    nms <- paste0(prefix, nms)
+  else
+    nms <- paste0(x_str, nms)
+  names(ans) <- nms
+  ans <- tibble::tibble(!!!ans)
+  ans
 }
 
 ## HAS_TESTS
@@ -244,11 +260,13 @@ draws_ci.rvec_chr <- function(x,
 #' Apply pre-specified functions across draws:
 #' - [draws_all()]
 #' - [draws_any()]
+#' - [draws_min()]
+#' - [draws_max()]
 #' - [draws_ci()]
 #' - [draws_quantile()]
 #'
 #' Apply arbitrary function across draws:
-#' - [draws_fun()] to apply abritrary functions
+#' - [draws_fun()]
 #'
 #' For additional functions for summarising random draws, see
 #' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
@@ -358,6 +376,109 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 }
 
 
+## 'draws_min', 'draws_max' ---------------------------------------------------
+
+#' Minima and Maxima Across Random Draws
+#'
+#' Apply `min` or `max` across random draws.
+#'
+#' @param x An object of class [rvec][rvec()].
+#' @param na_rm Whether to remove NAs before
+#' calculating minima and maxima. Default is `FALSE`.
+#'
+#' @returns A vector.
+#'
+#' @seealso
+#' Apply pre-specified functions across draws:
+#' - [draws_all()]
+#' - [draws_any()]
+#' - [draws_median()] 
+#' - [draws_mean()]
+#' - [draws_mode()]
+#' - [draws_ci()]
+#' - [draws_quantile()]
+#'
+#' Apply arbitrary function across draws:
+#' - [draws_fun()]
+#'
+#' For additional functions for summarising random draws, see
+#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
+#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
+#' Function [as_list_col()] converts rvecs into a
+#' format that `tidybayes` and `ggdist` can work with.
+#'
+#' @examples
+#' m <- rbind(a = c(1,  -3,  2),
+#'            b = c(Inf,  0,   -Inf),
+#'            c = c(0.2, 0.3,  0.1))
+#' x <- rvec(m)
+#' x
+#' draws_min(x)
+#' draws_max(x)
+#' @export
+draws_min <- function(x, na_rm = FALSE) {
+    UseMethod("draws_min")
+}
+
+#' @rdname draws_min
+#' @export
+draws_max <- function(x, na_rm = FALSE) {
+    UseMethod("draws_max")
+}
+
+## HAS_TESTS
+#' @rdname draws_min
+#' @export
+draws_min.rvec_chr <- function(x, na_rm = FALSE) {
+  cli::cli_abort("Minimum not defined for character.")
+}
+
+## HAS_TESTS
+#' @rdname draws_min
+#' @export
+draws_min.rvec <- function(x, na_rm = FALSE) {
+  check_flag(na_rm)
+  m <- field(x, "data")
+  if (nrow(m) == 0L) {
+    cli::cli_warn("{.var n_draw} is 0: returning {.val Inf}.")
+    Inf ## base::min returns Inf, with warning, with zero-length 'x'
+  }
+  else {
+    if (is.logical(m))
+      m <- 1L * m
+    ans <- matrixStats::rowMins(m, na.rm = na_rm)
+    names(ans) <- rownames(m)
+    ans
+  }
+}
+
+## HAS_TESTS
+#' @rdname draws_min
+#' @export
+draws_max.rvec_chr <- function(x, na_rm = FALSE) {
+  cli::cli_abort("Maximum not defined for character.")
+}
+
+## HAS_TESTS
+#' @rdname draws_min
+#' @export
+draws_max.rvec <- function(x, na_rm = FALSE) {
+  check_flag(na_rm)
+  m <- field(x, "data")
+  if (nrow(m) == 0L) {
+    cli::cli_warn("{.var n_draw} is 0: returning {.val -Inf}.")
+    -Inf ## base::max returns -Inf, with warning, with zero-length 'x'
+  }
+  else {
+    if (is.logical(m))
+      m <- 1L * m
+    ans <- matrixStats::rowMaxs(m, na.rm = na_rm)
+    names(ans) <- rownames(m)
+    ans
+  }
+}
+
+
 ## 'draws_quantile ------------------------------------------------------------
 
 #' Quantiles Across Random Draws
@@ -398,12 +519,14 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' - [draws_all()]
 #' - [draws_any()]
 #' - [draws_ci()]
+#' - [draws_min()]
+#' - [draws_max()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
 #'
 #' Apply arbitrary function across draws:
-#' - [draws_fun()] to apply arbitrary functions
+#' - [draws_fun()]
 #'
 #' For additional functions for summarising random draws, see
 #' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
@@ -495,6 +618,8 @@ draws_quantile.rvec_chr <- function(x,
 #' - [draws_all()]
 #' - [draws_any()]
 #' - [draws_ci()]
+#' - [draws_min()]
+#' - [draws_max()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]

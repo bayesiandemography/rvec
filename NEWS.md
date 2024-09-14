@@ -1,4 +1,26 @@
-# rvec (development version)
+
+# rvec 0.0.7
+
+## Changes to interface
+
+- Removed `is.numeric` methods for rvecs. These had been creating
+  problems with functions from non-rvec packages, since `is.numeric`
+  generally implies that an object is a base R style numeric vector.
+- Removed space from around `=` when printing `rvec_lgl`, so that, for
+  instance, `p = 0.5` becomes `p=0.5`.
+- `rvec()`, `rvec_chr()`, `rvec_dbl()`, `rvec_int()`, and
+  `rvec_lgl()` now accept rvec arguments.
+- `draws_ci()` now accepts `width` arguments with length greater than
+  1.
+- Improved error messages from distribution functions.
+
+  
+## New functions
+
+- Added function `new_rvec()`, which creates rvecs with specified
+  values for type, length, and `n_draw`, consisting entirely of NAs.
+- Added function `extract_draw()`, which extracts a single
+  draw from an rvec.
 
 
 # rvec 0.0.6

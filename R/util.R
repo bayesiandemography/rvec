@@ -223,14 +223,17 @@ is_rvec <- function(x) {
 #' the 'probs' argument to use for calculating
 #' quantiles.
 #'
-#' @param width A number in interval (0, 1].
+#' @param width Vector of unique numbers in interval (0, 1].
 #'
-#' @return A numeric vector with 3
+#' @return A numeric vector with 3 * length(width) elements
 #'
 #' @noRd
 make_probs <- function(width) {
-    half_alpha <- 0.5 * (1 - width)
-    c(half_alpha, 0.5, rev(1 - half_alpha))
+  lower <- 0.5 - 0.5 * width
+  upper <- 0.5 + 0.5 * width
+  lower <- sort(lower)
+  upper <- sort(upper)
+  c(lower, 0.5, upper)
 }
 
 

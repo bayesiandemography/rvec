@@ -16,68 +16,72 @@
 #'
 #' **Creating rvecs**
 #'
-#' - [rvec()] - class depends on input
-#' - [rvec_dbl()] - doubles
-#' - [rvec_int()] - integers
-#' - [rvec_lgl()] - logical
-#' - [rvec_chr()] - character
-#' - [collapse_to_rvec()] - data in data frame
+#' - [rvec()] Class depends on input
+#' - [rvec_dbl()] Doubles
+#' - [rvec_int()] Integers
+#' - [rvec_lgl()] Logical
+#' - [rvec_chr()] Character
+#' - [collapse_to_rvec()] Data in data frame
+#' - [new_rvec()] Blanks
 #'
 #' **Manipulating rvecs**
 #'
-#' - [if_else_rvec()]
-#' - [map_rvec()]
+#' - [if_else_rvec()] `if_else()` where `condition` is rvec
+#' - [map_rvec()] `map()` for rvecs
+#' - [extract_draw()] Single draw from rvec
 #'
 #' **Probability distributions**
 #'
-#' - [dbeta_rvec()]
-#' - [dbinom_rvec()]
-#' - [dcauchy_rvec()]
-#' - [dchisq_rvec()]
-#' - [dexp_rvec()]
-#' - [df_rvec()]
-#' - [dgamma_rvec()]
-#' - [dgeom_rvec()]
-#' - [dhyper_rvec()]
-#' - [dlnorm_rvec()]
-#' - [dmultinom()]
-#' - [dnbinom_rvec()]
-#' - [dnorm_rvec()]
-#' - [dpois_rvec()]
-#' - [dt_rvec()]
-#' - [dunif_rvec()]
-#' - [dweibull_rvec()]
+#' - [dbeta_rvec()] Beta
+#' - [dbinom_rvec()] Binomial
+#' - [dcauchy_rvec()] Cauchy
+#' - [dchisq_rvec()] Chi-square
+#' - [dexp_rvec()] Exponential
+#' - [df_rvec()] F
+#' - [dgamma_rvec()] Gamma
+#' - [dgeom_rvec()] Geometric
+#' - [dhyper_rvec()] Hypergeometric
+#' - [dlnorm_rvec()] Lognormal
+#' - [dmultinom()] Multinomial
+#' - [dnbinom_rvec()] Negative binomial
+#' - [dnorm_rvec()] Normal
+#' - [dpois_rvec()] Poisson
+#' - [dt_rvec()] Student's T
+#' - [dunif_rvec()] Uniform
+#' - [dweibull_rvec()] Weibull
 #'
 #' **Summarizing across draws**
 #'
-#' - [draws_all()]
-#' - [draws_any()]
-#' - [draws_median()]
-#' - [draws_mean()]
-#' - [draws_mode()]
-#' - [draws_ci()]
-#' - [draws_quantile()]
-#' - [draws_fun()]
-#' - [n_draw()]
+#' - [draws_all()] All draws
+#' - [draws_any()] Any draws
+#' - [draws_min()] Minimum draw
+#' - [draws_max()] Maximum draw
+#' - [draws_median()] Median draw
+#' - [draws_mean()] Mean draw 
+#' - [draws_mode()] Modal draw
+#' - [draws_ci()] Credible intervals
+#' - [draws_quantile()] Quantiles
+#' - [draws_fun()] Arbitrary function
+#' - [n_draw()] Number of draws
 #'
 #' **Coercion, classes**
 #'
-#' - [as_list_col()]
-#' - [expand_from_rvec()]
-#' - [is_rvec()]
+#' - [as_list_col()] Rvec or matrix to list
+#' - [expand_from_rvec()] Inverse of [collapse_to_rvec()]
+#' - [is_rvec()] Object an rvec?
 #'
 #' **Weighted summaries**
 #'
-#' - [weighted_mad()]
-#' - [weighted_mean()]
-#' - [weighted_median()]
-#' - [weighted_sd()]
-#' - [weighted_var()]
+#' - [weighted_mad()] Weighted mean absolute deviation
+#' - [weighted_mean()] Weighted mean
+#' - [weighted_median()] Weighted median
+#' - [weighted_sd()] Weighted standard deviation
+#' - [weighted_var()] Weighted variances
 #'
 #' **Datasets**
 #'
-#' - [divorce()]
-#' - [reg_post()]
+#' - [divorce()] Divorce rates
+#' - [reg_post()] Regression coefficients
 #'
 #' @section Packages with similar functionality:
 #'
