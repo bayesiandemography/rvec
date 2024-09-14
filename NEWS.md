@@ -11,6 +11,8 @@
   `rvec_lgl()` now accept rvec arguments.
 - `draws_ci()` now accepts `width` arguments with length greater than
   1.
+- Improved error messages from distribution functions.
+
   
 ## New functions
 
