@@ -1,4 +1,4 @@
-# rvec 0.1.0
+# rvec 0.0.7
 
 ## Changes to interface
 
@@ -12,12 +12,12 @@
 - `draws_ci()` now accepts `width` arguments with length greater than
   1.
   
-  
-
 ## New functions
 
 - Added function `new_rvec()`, which creates rvecs with specified
   values for type, length, and `n_draw`, consisting entirely of NAs.
+- Added function `extract_draw()`, which extracts a single
+  draw from an rvec.
 
 
 # rvec 0.0.6

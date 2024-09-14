@@ -26,8 +26,9 @@
 #'
 #' **Manipulating rvecs**
 #'
-#' - [if_else_rvec()] `condition` is rvec
+#' - [if_else_rvec()] `if_else()` where `condition` is rvec
 #' - [map_rvec()] `map()` for rvecs
+#' - [extract_draw()] Single draw from rvec
 #'
 #' **Probability distributions**
 #'
