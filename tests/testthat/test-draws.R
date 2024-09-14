@@ -165,6 +165,44 @@ test_that("'draws_ci' throws correct error with rvec_chr", {
 })
 
 
+## 'draws_max' ----------------------------------------------------------------
+
+test_that("'draws_max' works with rvec_dbl when nrow > 0", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_max(y)
+    ans_expected <- apply(m, 1, max)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_max' works with rvec_int when nrow == 0", {
+    set.seed(0)
+    m <- matrix(integer(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- suppressWarnings(draws_max(x))
+    ans_expected <- -Inf
+    expect_equal(ans_obtained, ans_expected)
+    expect_warning(draws_max(x),
+                   "`n_draw` is 0: returning \"-Inf\"")
+})
+
+test_that("'draws_max' works with rvec_lgl", {
+    m <- matrix(TRUE, nrow = 5, ncol = 1)
+    y <- rvec(m)
+    ans_obtained <- draws_max(x = y)
+    ans_expected <- apply(m, 1, max)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_median' throws correct error with rvec_chr", {
+    m <- matrix("a", nrow = 5, ncol = 1)
+    x <- rvec(m)
+    expect_error(draws_max(x),
+                 "Maximum not defined for character.")
+})
+
+
 ## 'draws_median' -------------------------------------------------------------
 
 test_that("'draws_median' works with rvec_dbl when nrow > 0", {
@@ -253,6 +291,45 @@ test_that("'draws_mean' throws correct error with rvec_chr", {
     expect_error(draws_mean(x),
                  "Mean not defined for character.")
 })
+
+
+## 'draws_min' ----------------------------------------------------------------
+
+test_that("'draws_min' works with rvec_dbl when nrow > 0", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_min(y)
+    ans_expected <- apply(m, 1, min)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_min' works with rvec_int when nrow == 0", {
+    set.seed(0)
+    m <- matrix(integer(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- suppressWarnings(draws_min(x))
+    ans_expected <- Inf
+    expect_equal(ans_obtained, ans_expected)
+    expect_warning(draws_min(x),
+                   "`n_draw` is 0: returning \"Inf\"")
+})
+
+test_that("'draws_min' works with rvec_lgl", {
+    m <- matrix(TRUE, nrow = 5, ncol = 1)
+    y <- rvec(m)
+    ans_obtained <- draws_min(x = y)
+    ans_expected <- apply(m, 1, min)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_median' throws correct error with rvec_chr", {
+    m <- matrix("a", nrow = 5, ncol = 1)
+    x <- rvec(m)
+    expect_error(draws_min(x),
+                 "Minimum not defined for character.")
+})
+
 
 
 ## 'draws_mode' ---------------------------------------------------------------

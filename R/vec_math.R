@@ -46,16 +46,14 @@ vec_math.rvec_dbl <- function(.fn, .x, ...) {
     data <- .fn(m, ...)
   }
   ## --- return rvec ---
-  if (is.character(data))
-    new_rvec_chr(data)
-  else if (is.double(data))
+  if (is.double(data))
     new_rvec_dbl(data)
   else if (is.integer(data))
     new_rvec_int(data)
   else if (is.logical(data))
     new_rvec_lgl(data)
   else
-    cli::cli_abort("Internal error: {.arg data} has type {typeof(data)}.")
+    cli::cli_abort("Internal error: {.arg data} has type {typeof(data)}.") ## nocov
 }
 
 ## give same types as base functions

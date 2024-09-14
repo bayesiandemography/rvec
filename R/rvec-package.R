@@ -51,8 +51,10 @@
 #'
 #' **Summarizing across draws**
 #'
-#' - [draws_all()] All drawz
+#' - [draws_all()] All draws
 #' - [draws_any()] Any draws
+#' - [draws_min()] Minimum draw
+#' - [draws_max()] Maximum draw
 #' - [draws_median()] Median draw
 #' - [draws_mean()] Mean draw 
 #' - [draws_mode()] Modal draw

@@ -61,8 +61,10 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 
 \strong{Summarizing across draws}
 \itemize{
-\item \code{\link[=draws_all]{draws_all()}} All drawz
+\item \code{\link[=draws_all]{draws_all()}} All draws
 \item \code{\link[=draws_any]{draws_any()}} Any draws
+\item \code{\link[=draws_min]{draws_min()}} Minimum draw
+\item \code{\link[=draws_max]{draws_max()}} Maximum draw
 \item \code{\link[=draws_median]{draws_median()}} Median draw
 \item \code{\link[=draws_mean]{draws_mean()}} Mean draw
 \item \code{\link[=draws_mode]{draws_mode()}} Modal draw
