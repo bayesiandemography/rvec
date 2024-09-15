@@ -1,4 +1,43 @@
 
+# Submission of version 0.0.7 on 15 September 2024
+
+## Summary of changes from previous version (0.0.6)
+
+* Removed rvec methods for is.numeric, which were causing problems, eg
+  with display in RStudio.
+* Added new functions `extract_draw()`, `new_rvec()`
+* Extra functionality for `rvec()`, `rvec_chr()`, `rvec_dbl()`,
+  `rvec_int()`, `rvec_lgl()`, and `draws_ci()`
+* Nicer error messages from 'distribution' functions.
+
+
+## CRAN checks - WARN
+
+The checks for r-oldrel-macos-arm64 and r-oldrel-macos-x86_64 at
+https://cran.r-project.org/web/checks/check_results_rvec.html include
+two warnings of the form:
+
+```
+checking S3 generic/method consistency ... WARNING
+matrixOps:
+  function(e1, e2)
+matrixOps.rvec:
+  function(x, y)
+See section ‘Generic functions and methods’ in the ‘Writing R
+Extensions’ manual.
+```
+
+This appears to result from mismatches in the names for arguments to
+matrixOps in old code for base R. I think it's not possible for
+package authors to fix, and does not seem to occur on newer version of
+R, so will hopefully go away of its own accord.
+
+## Reverse dependencies
+
+* **rvec** has two reverse dependencies: **poputils** and **bage**. I
+  have tested both, and all tests are passing.
+
+
 ## 8 November 2023
 
 Thank you so much for the instant feedback.
