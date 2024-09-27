@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   vig1_overview: vig1_overview.html
-last_built: 2024-09-15T01:21Z
+last_built: 2024-09-27T07:47Z
 urls:
   reference: https://bayesiandemography.github.io/rvec/reference
   article: https://bayesiandemography.github.io/rvec/articles
