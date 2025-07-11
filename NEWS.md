@@ -1,4 +1,12 @@
 
+# rvec 0.0.8
+
+## Changes to interface
+
+- Added function `prob()`, a version of `draws_mean()` that works only
+  with logical rvecs.
+  
+
 # rvec 0.0.7
 
 ## Changes to interface

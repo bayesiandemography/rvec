@@ -661,10 +661,66 @@ draws_fun.rvec <- function(x, fun, ...) {
 }
 
 
+## 'prob' ---------------------------------------------------------------------
 
+#' Calculate Probabilities from Random Draws
+#'
+#' Convert an rvec of logical values (an [rvec_lgl][rvec_lgl()])
+#' into a vector of probabilities. 
+#'
+#' `prob()` is essentially just [draws_mean()]
+#' with a different name. The proportion of
+#' draws that are `TRUE` is used as an estimate of the
+#' underlying probability. The different name
+#' can make the intent of the code clearer.
+#'
+#' @inheritParams draws_all
+#' @param x An object of class [rvec_lgl][rvec_lgl()].
+#'
+#' @returns A logical vector with the same
+#' length as `x`.
+#'
+#' @seealso
+#' - [draws_mean()] Means across draws. Gives
+#'   the same result as `prob` when applied
+#'   to logical rvecs.
+#'
+#' @examples
+#' m <- rbind(c(FALSE,  TRUE),
+#'            c(TRUE,   TRUE),
+#'            c(FALSE,  FALSE))
+#' x <- rvec(m)
+#' x
+#' prob(x)
+#'
+#' ## logical rvec created on the fly
+#' ## through operations such as '>'
+#' m <- rbind(c(-1,  1.3, 2),
+#'            c(2, 0.1, -1),
+#'            c(Inf, 0, -0.5))
+#' y <- rvec(m)
+#' y
+#' prob(y > 0)
+#' prob(y >= 0)
+#' prob(y^2 > 0)
+#' @export
+prob <- function(x, na_rm = FALSE) {
+  UseMethod("prob")
+}
 
+## HAS_TESTS
+#' @rdname prob
+#' @export
+prob.rvec_lgl <- function(x, na_rm = FALSE) {
+  draws_mean(x = x, na_rm = na_rm)
+}
 
-
+## HAS_TESTS
+#' @rdname prob
+#' @export
+prob.logical <- function(x, na_rm = FALSE) {
+  x
+}
 
 
 
