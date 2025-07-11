@@ -454,3 +454,43 @@ test_that("'draws_median' works with rvec_int when nrow == 0", {
     expect_equal(ans_obtained, ans_expected)
 })
 
+
+## 'prob' ---------------------------------------------------------------------
+
+test_that("'prob' works with no NAs", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    x <- rvec(m)
+    ans_obtained <- prob(x > 0)
+    ans_expected <- apply(m > 0, 1, mean)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'prob' works when nrow == 0", {
+    set.seed(0)
+    m <- matrix(logical(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- prob(x)
+    ans_expected <- NaN
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'prob' works with rvec_lgl", {
+    m <- matrix(TRUE, nrow = 5, ncol = 1)
+    x <- rvec(m)
+    ans_obtained <- prob(x)
+    ans_expected <- rep(1, 5)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'prob' works with NA", {
+    m <- matrix(c(T,NA,T,T), nrow = 2, ncol = 2)
+    x <- rvec(m)
+    ans_obtained <- prob(x)
+    ans_expected <- c(1,NA)
+    expect_equal(ans_obtained, ans_expected)
+    ans_obtained <- prob(x, na_rm = TRUE)
+    ans_expected <- c(1,1)
+    expect_equal(ans_obtained, ans_expected)
+})
+
