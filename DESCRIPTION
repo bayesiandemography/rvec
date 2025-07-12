@@ -1,6 +1,6 @@
 Package: rvec
 Type: Package
-Title: Vector Representing a Random Variable
+Title: Vectors Representing Random Variables
 Version: 0.0.8
 Authors@R: 
     c(person(given = "John",
@@ -11,9 +11,9 @@ Authors@R:
              role = "cph"))
 Description: Random vectors, called rvecs. An rvec holds
     multiple draws, but tries to behave like a standard
-    R vector, including working well in data frames. Rvecs are
-    useful for working with output from a simulation or
-    a Bayesian analysis.
+    R vector, including working well with
+    tidyverse functions. Rvecs are useful for analysing
+    output from a simulation or a Bayesian analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -45,8 +45,7 @@ Suggests:
     Matrix,
     rmarkdown,
     testthat (>= 3.0.0),
-    tidyr,
-    vdiffr
+    tidyr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://bayesiandemography.github.io/rvec/, https://github.com/bayesiandemography/rvec
