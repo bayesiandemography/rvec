@@ -719,7 +719,7 @@ prob.rvec_lgl <- function(x, na_rm = FALSE) {
 #' @rdname prob
 #' @export
 prob.logical <- function(x, na_rm = FALSE) {
-  x
+  as.double(x)
 }
 
 

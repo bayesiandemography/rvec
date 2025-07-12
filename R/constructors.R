@@ -125,8 +125,10 @@ new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
 rvec <- function(x) {
   if (is_rvec(x))
     x <- vctrs::field(x, "data")
-  else if (is.matrix(x))
+  else if (is.matrix(x) || is_Matrix(x)) {
+    x <- as.matrix(x)
     check_x_has_at_least_one_col(x)
+  }
   else if (is.list(x)) {
     if (length(x) == 0L)
       cli::cli_abort("If {.arg x} is a list, it must have at least one element.")
@@ -221,7 +223,8 @@ rvec_dbl <- function(x = NULL) {
   }
   else if (is.null(x))
     data <- matrix(double(), nrow = 0, ncol = 1L)
-  else if (is.matrix(x)) {
+  else if (is.matrix(x) || is_Matrix(x)) {
+    x <- as.matrix(x)
     check_x_has_at_least_one_col(x)
     data_vec <- as.vector(x)
     data_vec <- vec_cast(data_vec, double())

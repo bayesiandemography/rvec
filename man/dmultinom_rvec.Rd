@@ -49,6 +49,7 @@ ordinary R vector.
 \item If \code{n} is greater than 1, a list
 of rvecs or ordinary R vectors
 }
+\item \code{rmultinom_rvec()} always returns doubles (not integers).
 }
 }
 \description{
@@ -70,6 +71,13 @@ Like the base R functions \code{\link[=dmultinom]{dmultinom()}}
 and [rmultinom(), \code{dmultinom_rvec()} and
 \code{rmultinom_rvec()} do not recycle their arguments.
 }
+\section{Warning}{
+
+
+From version rvec version 0.7.4 onwards,
+\code{rmultinom_rvec()} always returns doubles (not integers).
+}
+
 \examples{
 x <- rvec(list(c(1, 4, 0),
                c(1, 0, 0),

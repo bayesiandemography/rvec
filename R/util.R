@@ -194,6 +194,18 @@ get_rvec_funs <- function(type, values_colnums) {
 }    
 
 
+#' Test Whether Object is a Sparse Matrix
+#'
+#' @param x An object
+#'
+#' @returns TRUE or FALSE
+#'
+#' @noRd
+is_Matrix <- function(x) {
+  inherits(x, "Matrix")
+}
+  
+
 ## HAS_TESTS
 #' Is an Object an Rvec
 #'

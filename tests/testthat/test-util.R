@@ -138,6 +138,15 @@ test_that("'get_rvec_funs' works with valid inputs - type NULL", {
 })
 
 
+## 'is_Matrix' ----------------------------------------------------------------
+
+test_that("'is_Matrix' works", {
+    expect_true(is_Matrix(Matrix::Matrix(matrix(1:4, 2))))
+    expect_true(is_Matrix(Matrix::Matrix(diag(3))))
+    expect_false(is_Matrix(diag(3)))
+})
+
+
 ## 'is_rvec' ------------------------------------------------------------------
 
 test_that("'is_rvec' works", {

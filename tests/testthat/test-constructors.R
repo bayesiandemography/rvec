@@ -72,6 +72,16 @@ test_that("'rvec' works with valid matrices", {
     expect_s3_class(ans, "rvec_dbl")
 })
 
+test_that("'rvec' works with valid Matrices", {
+    m <- Matrix::Matrix(matrix(1:6, 3))
+    ans <- rvec(m)
+    expect_s3_class(ans, "rvec_dbl")
+    expect_identical(field(ans, "data"), as.matrix(m))
+    m <- Matrix::Matrix(matrix(c(1, NA), nrow = 2, ncol = 3))
+    ans <- rvec(m)
+    expect_s3_class(ans, "rvec_dbl")
+})
+
 test_that("'rvec' works with valid lists", {
     x <- list(1:3, 4:6)
     ans <- rvec(x)
@@ -187,6 +197,16 @@ test_that("'rvec_dbl' works with valid matrices", {
     expect_s3_class(rvec_dbl(matrix(1)), "rvec_dbl")
     expect_s3_class(rvec_dbl(matrix(1L)), "rvec_dbl")
     expect_s3_class(rvec_dbl(matrix(TRUE)), "rvec_dbl")
+})
+
+test_that("'rvec_dbl' works with valid Matrices", {
+    m <- Matrix::Matrix(matrix(1:6, 3))
+    ans <- rvec_dbl(m)
+    expect_s3_class(ans, "rvec_dbl")
+    expect_identical(field(ans, "data"), as.matrix(m))
+    m <- Matrix::Matrix(matrix(c(1, NA), nrow = 2, ncol = 3))
+    ans <- rvec_dbl(m)
+    expect_s3_class(ans, "rvec_dbl")
 })
 
 test_that("'rvec_dbl' works with valid lists", {

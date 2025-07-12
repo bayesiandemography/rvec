@@ -135,7 +135,8 @@ test_that("'rbinom_rvec' works with valid input - n_draw is NULL", {
     set.seed(0)
     ans_obtained <- rbinom_rvec(n = 2, size, prob)
     set.seed(0)
-    ans_expected <- rvec(matrix(rbinom(n = 6, size = m, prob = 0.23), nr = 2))
+    ans_expected <- rvec(matrix(as.double(rbinom(n = 6, size = m, prob = 0.23)),
+                                nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -146,7 +147,8 @@ test_that("'rbinom_rvec' works with valid input - n_draw is 3", {
     set.seed(0)
     ans_obtained <- rbinom_rvec(n = 2, size, prob, n_draw = 3)
     set.seed(0)
-    ans_expected <- rvec(matrix(rbinom(n = 6, size = m, prob = 0.23), nr = 2))
+    ans_expected <- rvec(matrix(as.double(rbinom(n = 6, size = m, prob = 0.23)),
+                                          nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -593,7 +595,7 @@ test_that("'rgeom_rvec' works with valid input - no n_draw", {
     set.seed(0)
     ans_obtained <- rgeom_rvec(2, prob)
     set.seed(0)
-    ans_expected <- rvec(matrix(rgeom(6, prob = m), nr = 2))
+    ans_expected <- rvec(matrix(as.double(rgeom(6, prob = m)), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -602,7 +604,8 @@ test_that("'rgeom_rvec' works with valid input - n_draw, non-rvec input", {
     set.seed(0)
     ans_obtained <- rgeom_rvec(3, prob, n_draw = 2)
     set.seed(0)
-    ans_expected <- rvec(matrix(rgeom(6, prob = rep(prob, 2)), nr = 3))
+    ans_expected <- rvec(matrix(as.double(rgeom(6, prob = rep(prob, 2))),
+                                nr = 3))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -612,7 +615,7 @@ test_that("'rgeom_rvec' works with valid input - n_draw, rvec input", {
     set.seed(0)
     ans_obtained <- rgeom_rvec(3, prob, n_draw = 2)
     set.seed(0)
-    ans_expected <- rvec(matrix(rgeom(6, prob = m), nr = 3))
+    ans_expected <- rvec(matrix(as.double(rgeom(6, prob = m)), nr = 3))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -670,7 +673,11 @@ test_that("'rhyper_rvec' works with valid input - n_draw is NULL", {
     set.seed(0)
     ans_obtained <- rhyper_rvec(nn = 2, m = m, n = n, k = k)
     set.seed(0)
-    ans_expected <- rvec(matrix(rhyper(nn = 6, m = mm, n = mm, k = k), nr = 2))
+    ans_expected <- rvec(matrix(as.double(rhyper(nn = 6,
+                                                 m = mm,
+                                                 n = mm,
+                                                 k = k)),
+                                          nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -682,7 +689,11 @@ test_that("'rhyper_rvec' works with valid input - n_draw is supplied", {
     set.seed(0)
     ans_obtained <- rhyper_rvec(nn = 2, m, n, k, n_draw = 3)
     set.seed(0)
-    ans_expected <- rvec(matrix(rhyper(nn = 6, m = mm, n = n, k = k), nr = 2))
+    ans_expected <- rvec(matrix(as.double(rhyper(nn = 6,
+                                                 m = mm,
+                                                 n = n,
+                                                 k = k)),
+                                          nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -844,8 +855,10 @@ test_that("'rmultinom_rvec' works with valid input - n_draw is NULL, size is rve
     set.seed(0)
     ans_obtained <- rmultinom_rvec(n = 1, size, prob)
     set.seed(0)
-    ans_expected <- rvec(cbind(rmultinom(n = 1, size = m[1], prob = prob),
-                               rmultinom(n = 1, size = m[2], prob = prob)))
+    ans_expected <- rvec(cbind(as.double(rmultinom(n = 1,
+                                                   size = m[1], prob = prob)),
+                               as.double(rmultinom(n = 1,
+                                                   size = m[2], prob = prob))))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -856,8 +869,10 @@ test_that("'rmultinom_rvec' works with valid input - n_draw is NULL, prob is rve
     set.seed(0)
     ans_obtained <- rmultinom_rvec(n = 1, size, prob)
     set.seed(0)
-    ans_expected <- rvec(cbind(rmultinom(n = 1, size = 10, prob = m[,1]),
-                               rmultinom(n = 1, size = 10, prob = m[,2])))
+    ans_expected <- rvec(cbind(as.double(rmultinom(n = 1,
+                                                   size = 10, prob = m[,1])),
+                               as.double(rmultinom(n = 1,
+                                                   size = 10, prob = m[,2]))))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -868,8 +883,10 @@ test_that("'rmultinom_rvec' works with valid input - n_draw is NULL, size is rve
     set.seed(0)
     ans_obtained <- rmultinom_rvec(n = 1, size, prob)
     set.seed(0)
-    ans_expected <- rvec(cbind(rmultinom(n = 1, size = 10, prob = m[,1]),
-                               rmultinom(n = 1, size = 11, prob = m[,2])))
+    ans_expected <- rvec(cbind(as.double(rmultinom(n = 1,
+                                                   size = 10, prob = m[,1])),
+                               as.double(rmultinom(n = 1,
+                                                   size = 11, prob = m[,2]))))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -877,9 +894,9 @@ test_that("'rmultinom_rvec' works with valid input - n_draw is NULL, size not rv
     size <- 10
     prob <- 1:3
     set.seed(0)
-    ans_obtained <- rmultinom_rvec(n = 1, size, prob)
+    ans_obtained <- as.double(rmultinom_rvec(n = 1, size, prob))
     set.seed(0)
-    ans_expected <- rmultinom(n = 1, size = size, prob = prob)
+    ans_expected <- as.double(rmultinom(n = 1, size = size, prob = prob))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -891,10 +908,18 @@ test_that("'rmultinom_rvec' works with valid input - n_draw is NULL, size is rve
     ans_obtained <- rmultinom_rvec(n = 2, size, prob)
     set.seed(0)
     ans_expected <- vector(mode = "list", length = 2)
-    ans_expected[[1]] <- rvec(cbind(rmultinom(n = 1, size = 10, prob = m[,1]),
-                                    rmultinom(n = 1, size = 11, prob = m[,2])))
-    ans_expected[[2]] <- rvec(cbind(rmultinom(n = 1, size = 10, prob = m[,1]),
-                                    rmultinom(n = 1, size = 11, prob = m[,2])))
+    ans_expected[[1]] <- rvec(cbind(as.double(rmultinom(n = 1,
+                                                        size = 10,
+                                                        prob = m[,1])),
+                                    as.double(rmultinom(n = 1,
+                                                        size = 11,
+                                                        prob = m[,2]))))
+    ans_expected[[2]] <- rvec(cbind(as.double(rmultinom(n = 1,
+                                                        size = 10,
+                                                        prob = m[,1])),
+                                    as.double(rmultinom(n = 1,
+                                                        size = 11,
+                                                        prob = m[,2]))))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -904,9 +929,15 @@ test_that("'rmultinom_rvec' works with valid input - n_draw is 3, size, prob not
     set.seed(0)
     ans_obtained <- rmultinom_rvec(n = 1, size, prob, n_draw = 3)
     set.seed(0)
-    ans_expected <- rvec(cbind(rmultinom(n = 1, size = size, prob = prob),
-                               rmultinom(n = 1, size = size, prob = prob),
-                               rmultinom(n = 1, size = size, prob = prob)))
+    ans_expected <- rvec(cbind(as.double(rmultinom(n = 1,
+                                                   size = size,
+                                                   prob = prob)),
+                               as.double(rmultinom(n = 1,
+                                                   size = size,
+                                                   prob = prob)),
+                               as.double(rmultinom(n = 1,
+                                                   size = size,
+                                                   prob = prob))))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -917,17 +948,25 @@ test_that("'rmultinom_rvec' works with valid input - n_draw is 3, prob is rvec",
     set.seed(0)
     ans_obtained <- rmultinom_rvec(n = 1, size, prob, n_draw = 3)
     set.seed(0)
-    ans_expected <- rvec(cbind(rmultinom(n = 1, size = size, prob = m[,1]),
-                               rmultinom(n = 1, size = size, prob = m[,2]),
-                               rmultinom(n = 1, size = size, prob = m[,3])))
+    ans_expected <- rvec(cbind(as.double(rmultinom(n = 1,
+                                                   size = size,
+                                                   prob = m[,1])),
+                               as.double(rmultinom(n = 1,
+                                                   size = size,
+                                                   prob = m[,2])),
+                               as.double(rmultinom(n = 1,
+                                                   size = size,
+                                                   prob = m[,3]))))
     expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'rmultinom' throws expected error when 'size' does not have length 1", {
-    size <- rvec(matrix(1:6, nr = 2))
-    prob <- 1:2
-    expect_error(rmultinom_rvec(n = 1, size = size, prob = prob),
-                 "`size` does not have length 1.")
+  size <- rvec(matrix(1:6, nr = 2))
+  prob <- 1:2
+  expect_error(rmultinom_rvec(n = 1,
+                              size = size,
+                              prob = prob),
+               "`size` does not have length 1.")
 })
 
 test_that("'rmultinom' throws expected error when 'size' does not have length 1", {
@@ -953,7 +992,9 @@ test_that("'dnbinom_rvec' works with valid input - prob supplied", {
     size <- rvec(m)
     prob <- rvec(m/7)
     ans_obtained <- dnbinom_rvec(x = x, size = size, prob = prob, log = TRUE)
-    ans_expected <- rvec(matrix(dnbinom(x = x, size = m, prob = m/7, log = TRUE), nr = 2))
+    ans_expected <- rvec(matrix(dnbinom(x = x,
+                                        size = m, prob = m/7, log = TRUE),
+                                nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1066,41 +1107,53 @@ test_that("'rnbinom_rvec' works with valid input - n_draw is NULL, prob supplied
     set.seed(0)
     ans_obtained <- rnbinom_rvec(n = 2, size, prob)
     set.seed(0)
-    ans_expected <- rvec(matrix(rnbinom(n = 6, size = m, prob = 0.23), nr = 2))
+    ans_expected <- rvec(matrix(as.double(rnbinom(n = 6,
+                                                  size = m,
+                                                  prob = 0.23)),
+                                nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'rnbinom_rvec' works with valid input - n_draw is NULL, mu supplied", {
-    m <- matrix(1:6, nr = 2)
-    size <- rvec(m)
-    mu <- 2.23
-    set.seed(0)
-    ans_obtained <- rnbinom_rvec(n = 2, size, mu = mu)
-    set.seed(0)
-    ans_expected <- rvec_int(matrix(rnbinom(n = 6, size = m, mu = mu), nr = 2))
-    expect_equal(ans_obtained, ans_expected)
+  m <- matrix(1:6, nr = 2)
+  size <- rvec(m)
+  mu <- 2.23
+  set.seed(0)
+  ans_obtained <- rnbinom_rvec(n = 2, size, mu = mu)
+  set.seed(0)
+  ans_expected <- rvec(matrix(as.double(rnbinom(n = 6,
+                                                size = m,
+                                                mu = mu)),
+                              nr = 2))
+  expect_equal(ans_obtained, ans_expected)
 })
 
 test_that("'rnbinom_rvec' works with valid input - n_draw is 3, prob supplied", {
-    m <- matrix(1:6, nr = 2)
-    size <- rvec(m)
-    prob <- 0.23
-    set.seed(0)
-    ans_obtained <- rnbinom_rvec(n = 2, size, prob, n_draw = 3)
-    set.seed(0)
-    ans_expected <- rvec(matrix(rnbinom(n = 6, size = m, prob = 0.23), nr = 2))
-    expect_identical(ans_obtained, ans_expected)
+  m <- matrix(1:6, nr = 2)
+  size <- rvec(m)
+  prob <- 0.23
+  set.seed(0)
+  ans_obtained <- rnbinom_rvec(n = 2, size, prob, n_draw = 3)
+  set.seed(0)
+  ans_expected <- rvec_dbl(matrix(rnbinom(n = 6,
+                                          size = m,
+                                          prob = 0.23),
+                                  nr = 2))
+  expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'rnbinom_rvec' works with valid input - n_draw is 3, mu supplied", {
-    m <- matrix(1:6, nr = 2)
-    size <- rvec(m)
-    mu <- 0.5
-    set.seed(0)
-    ans_obtained <- rnbinom_rvec(n = 2, size, mu = mu, n_draw = 3)
-    set.seed(0)
-    ans_expected <- rvec_int(matrix(rnbinom(n = 6, size = m, mu = mu), nr = 2))
-    expect_identical(ans_obtained, ans_expected)
+  m <- matrix(1:6, nr = 2)
+  size <- rvec(m)
+  mu <- 0.5
+  set.seed(0)
+  ans_obtained <- rnbinom_rvec(n = 2, size, mu = mu, n_draw = 3)
+  set.seed(0)
+  ans_expected <- rvec_dbl(matrix(rnbinom(n = 6,
+                                          size = m,
+                                          mu = mu),
+                                  nr = 2))
+  expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'rnbinom_rvec' throws correct error if prob and mu both supplied", {
@@ -1212,7 +1265,7 @@ test_that("'rpois_rvec' works with valid input - no n_draw", {
     set.seed(0)
     ans_obtained <- rpois_rvec(2, lambda)
     set.seed(0)
-    ans_expected <- rvec(matrix(rpois(6, lambda = m), nr = 2))
+    ans_expected <- rvec(matrix(as.double(rpois(6, lambda = m)), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1221,7 +1274,8 @@ test_that("'rpois_rvec' works with valid input - n_draw, non-rvec input", {
     set.seed(0)
     ans_obtained <- rpois_rvec(3, lambda, n_draw = 2)
     set.seed(0)
-    ans_expected <- rvec(matrix(rpois(6, lambda = rep(lambda, 2)), nr = 3))
+    ans_expected <- rvec(matrix(as.double(rpois(6, lambda = rep(lambda, 2))),
+                                nr = 3))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1231,7 +1285,7 @@ test_that("'rpois_rvec' works with valid input - n_draw, rvec input", {
     set.seed(0)
     ans_obtained <- rpois_rvec(3, lambda, n_draw = 2)
     set.seed(0)
-    ans_expected <- rvec(matrix(rpois(6, lambda = m), nr = 3))
+    ans_expected <- rvec(matrix(as.double(rpois(6, lambda = m)), nr = 3))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1443,7 +1497,7 @@ test_that("'dist_rvec_1' works with valid rvec input", {
     set.seed(0)
     ans_obtained <- dist_rvec_1(fun = rpois, arg = lambda, n = 6)
     set.seed(0)
-    ans_expected <- rvec(matrix(rpois(n = 6, lambda = 1:6), nr = 2))
+    ans_expected <- rvec_dbl(matrix(rpois(n = 6, lambda = 1:6), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1451,7 +1505,7 @@ test_that("'dist_rvec_1' works with valid non-rvec input", {
     set.seed(0)
     ans_obtained <- dist_rvec_1(fun = rpois, arg = 1:6, n = 6)
     set.seed(0)
-    ans_expected <- rpois(n = 6, lambda = 1:6)
+    ans_expected <- as.double(rpois(n = 6, lambda = 1:6))
     expect_identical(ans_obtained, ans_expected)
 })
 
@@ -1782,8 +1836,8 @@ test_that("'dist_rvec_4' throws appropriate error with invalid inputs", {
 })
 
 test_that("'dist_rvec_4' warns about NAs", {
-  m <- matrix(c(1:5, NA), nr = 2)
-  x <- rvec(m)
+  x <- rvec(matrix(c(1:5, NA), nr = 2))
+  m <- 2:1
   n <- 1:2
   k <- c(1, -2)
   expect_warning(dist_rvec_4(fun = dhyper, arg1 = x, arg2 = m,
