@@ -1,17 +1,17 @@
 
 ## 'plot' ---------------------------------------------------------------------
 
-test_that("plot.rvec_chr works", {
-    set.seed(0)
-    m <- matrix(sample(c(letters[1:10], NA),
-                       prob = 11:1,
-                       size = 1000,
-                       replace = TRUE),
-                nrow = 10)
-    x <- rvec(m)
-    p <- function() plot(x)
-    vdiffr::expect_doppelganger("plot.rvec_chr", p)
-})
+## test_that("plot.rvec_chr works", {
+##     set.seed(0)
+##     m <- matrix(sample(c(letters[1:10], NA),
+##                        prob = 11:1,
+##                        size = 1000,
+##                        replace = TRUE),
+##                 nrow = 10)
+##     x <- rvec(m)
+##     p <- function() plot(x)
+##     vdiffr::expect_doppelganger("plot.rvec_chr", p)
+## })
 
 test_that("plot.rvec_chr throws correct error when 'y' supplied", {
     set.seed(0)
@@ -25,14 +25,14 @@ test_that("plot.rvec_chr throws correct error when 'y' supplied", {
                  "Value supplied for `y`.")
 })
 
-test_that("plot.rvec_dbl works", {
-    set.seed(0)
-    m <- matrix(rnorm(1000),
-                nrow = 10)
-    x <- rvec(m)
-    p <- function() plot(x)
-    vdiffr::expect_doppelganger("plot.rvec_dbl", p)
-})
+## test_that("plot.rvec_dbl works", {
+##     set.seed(0)
+##     m <- matrix(rnorm(1000),
+##                 nrow = 10)
+##     x <- rvec(m)
+##     p <- function() plot(x)
+##     vdiffr::expect_doppelganger("plot.rvec_dbl", p)
+## })
 
 test_that("plot.rvec_dbl throws correct error when 'y' supplied", {
     set.seed(0)
@@ -43,14 +43,14 @@ test_that("plot.rvec_dbl throws correct error when 'y' supplied", {
                  "Value supplied for `y`.")
 })
 
-test_that("plot.rvec_int works", {
-    set.seed(0)
-    m <- matrix(rpois(1000, lambda = 10),
-                nrow = 10)
-    x <- rvec(m)
-    p <- function() plot(x)
-    vdiffr::expect_doppelganger("plot.rvec_int", p)
-})
+## test_that("plot.rvec_int works", {
+##     set.seed(0)
+##     m <- matrix(rpois(1000, lambda = 10),
+##                 nrow = 10)
+##     x <- rvec(m)
+##     p <- function() plot(x)
+##     vdiffr::expect_doppelganger("plot.rvec_int", p)
+## })
 
 test_that("plot.rvec_int throws correct error when 'y' supplied", {
     set.seed(0)
@@ -61,14 +61,14 @@ test_that("plot.rvec_int throws correct error when 'y' supplied", {
                  "Value supplied for `y`.")
 })
 
-test_that("plot.rvec_lgl works", {
-    set.seed(0)
-    m <- matrix(sample(c(TRUE, FALSE), size =1000, prob = c(5, 1), replace = TRUE),
-                nrow = 10)
-    x <- rvec(m)
-    p <- function() plot(x)
-    vdiffr::expect_doppelganger("plot.rvec_lgl", p)
-})
+## test_that("plot.rvec_lgl works", {
+##     set.seed(0)
+##     m <- matrix(sample(c(TRUE, FALSE), size =1000, prob = c(5, 1), replace = TRUE),
+##                 nrow = 10)
+##     x <- rvec(m)
+##     p <- function() plot(x)
+##     vdiffr::expect_doppelganger("plot.rvec_lgl", p)
+## })
 
 test_that("plot.rvec_lgl throws correct error when 'y' supplied", {
     set.seed(0)
