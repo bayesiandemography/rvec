@@ -121,6 +121,7 @@ created. Cannot be an rvec.</p></dd>
 or if a value for <code>n_draw</code> is supplied,
 then an <a href="rvec.html">rvec</a></p></li>
 <li><p>Otherwise an ordinary R vector.</p></li>
+<li><p><code>rgeom_rvec()</code> always returns doubles (not integers).</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -138,6 +139,14 @@ use <a href="https://vctrs.r-lib.org/reference/theory-faq-recycling.html" class=
 vector recycling rules:</p><ul><li><p>Vectors of length 1 are recycled</p></li>
 <li><p>All other vectors must have the same size</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="warning">Warning<a class="anchor" aria-label="anchor" href="#warning"></a></h2>
+
+
+
+<p>From version rvec version 0.7.4 onwards,
+<code>rgeom_rvec()</code> always returns doubles (not integers).</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
@@ -163,7 +172,7 @@ vector recycling rules:</p><ul><li><p>Vectors of length 1 are recycled</p></li>
 <span class="r-in"><span><span class="fu">rgeom_rvec</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>           prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.8</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>           n_draw <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;rvec_int&lt;1000&gt;[2]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;rvec_dbl&lt;1000&gt;[2]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0 (0, 6) 0 (0, 2)</span>
 </code></pre></div>
     </div>

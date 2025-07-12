@@ -46,7 +46,10 @@
 <h2 class="pkg-version" data-toc-text="0.0.8" id="rvec-008">rvec 0.0.8<a class="anchor" aria-label="anchor" href="#rvec-008"></a></h2>
 <div class="section level3">
 <h3 id="changes-to-interface-0-0-8">Changes to interface<a class="anchor" aria-label="anchor" href="#changes-to-interface-0-0-8"></a></h3>
-<ul><li>Added function <code><a href="../reference/prob.html">prob()</a></code>, a version of <code><a href="../reference/draws_median.html">draws_mean()</a></code> that works only with logical rvecs.</li>
+<ul><li>Added function <code><a href="../reference/prob.html">prob()</a></code>, a version of <code><a href="../reference/draws_median.html">draws_mean()</a></code> that works only with logical rvecs. (<a href="https://github.com/bayesiandemography/rvec/issues/27" class="external-link">#27</a>)</li>
+<li>
+<code><a href="../reference/rvec.html">rvec()</a></code> and <code><a href="../reference/rvec.html">rvec_dbl()</a></code> now accept sparse matrices (inheriting from “Matrix”), in addition to dense matrices. (<a href="https://github.com/bayesiandemography/rvec/issues/25" class="external-link">#25</a>)</li>
+<li>Function <code><a href="../reference/dbinom_rvec.html">rbinom_rvec()</a></code>, <code><a href="../reference/dgeom_rvec.html">rgeom_rvec()</a></code>, <code><a href="../reference/dhyper_rvec.html">rhyper_rvec()</a></code>, <code><a href="../reference/dmultinom_rvec.html">rmultinom_rvec()</a></code>, <code><a href="../reference/dnbinom_rvec.html">rnbinom_rvec()</a></code>, and <code><a href="../reference/dpois_rvec.html">rpois_rvec()</a></code> now always return doubles, even when the counts are small. The standard R approach of giving integers when counts are small and doubles when counts are large was generating Valgrind errors in dependent packages.</li>
 </ul></div>
 </div>
     <div class="section level2">

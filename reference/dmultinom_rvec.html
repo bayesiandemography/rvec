@@ -112,6 +112,7 @@ ordinary R vector.</p></li>
 <li><p>If <code>n</code> is greater than 1, a list
 of rvecs or ordinary R vectors</p></li>
 </ul></li>
+<li><p><code>rmultinom_rvec()</code> always returns doubles (not integers).</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -126,6 +127,14 @@ rvec if a value for <code>n_draw</code> is supplied.</p>
 <p>Like the base R functions <code><a href="https://rdrr.io/r/stats/Multinom.html" class="external-link">dmultinom()</a></code>
 and [rmultinom(), <code>dmultinom_rvec()</code> and
 <code>rmultinom_rvec()</code> do not recycle their arguments.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="warning">Warning<a class="anchor" aria-label="anchor" href="#warning"></a></h2>
+
+
+
+<p>From version rvec version 0.7.4 onwards,
+<code>rmultinom_rvec()</code> always returns doubles (not integers).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -150,7 +159,7 @@ and [rmultinom(), <code>dmultinom_rvec()</code> and
 <span class="r-in"><span>               size <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>               prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.4</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>               n_draw <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;rvec_int&lt;1000&gt;[4]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;rvec_dbl&lt;1000&gt;[4]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10 (5, 16)  40 (31, 50) 20 (12, 28) 30 (21, 39)</span>
 </code></pre></div>
     </div>

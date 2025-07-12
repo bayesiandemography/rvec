@@ -469,7 +469,7 @@
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 0.1258,0.1283 0.08066,0.018</span></span>
 <span><span class="fu"><a href="../reference/dbinom_rvec.html">rbinom_rvec</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">y</span><span class="op">+</span><span class="fl">10</span><span class="op">)</span>, prob <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;rvec_int&lt;2&gt;[2]&gt;</span></span>
+<span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 8,8  11,2</span></span></code></pre></div>
 <p>The return value from an <strong>rvec</strong> probability function is an rvec if and only if at least one argument to the function is an rvec – with one exception. The exception is random variate functions, where a value can be supplied for a special argument called <code>n_draw</code>. When a value for <code>n_draw</code> is supplied, the return value is an rvec with <code>n_draw</code> draws,</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
