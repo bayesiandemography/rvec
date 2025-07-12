@@ -218,6 +218,11 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
+#' @section Warning:
+#' 
+#' From version rvec version 0.7.4 onwards,
+#' `rbinom_rvec()` always returns doubles (not integers).
+#'
 #' @inheritParams dbeta_rvec
 #' @param prob Probability of success in each trial.
 #' See [stats::dbinom()]. Can be an rvec.
@@ -229,6 +234,7 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
 #' or if a value for `n_draw` is supplied,
 #' then an [rvec][rvec()]
 #' - Otherwise an ordinary R vector.
+#' - `rbinom_rvec()` always returns doubles (not integers).
 #'
 #' @seealso
 #' - [dbinom()]
@@ -1087,6 +1093,11 @@ rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
+#' @section Warning:
+#' 
+#' From version rvec version 0.7.4 onwards,
+#' `rgeom_rvec()` always returns doubles (not integers).
+#' 
 #' @inheritParams dbeta_rvec
 #' @param prob Probability of
 #' success in each trial.
@@ -1098,6 +1109,7 @@ rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
 #' or if a value for `n_draw` is supplied,
 #' then an [rvec][rvec()]
 #' - Otherwise an ordinary R vector.
+#' - `rgeom_rvec()` always returns doubles (not integers).
 #'
 #' @seealso
 #' - [dgeom()]
@@ -1206,6 +1218,11 @@ rgeom_rvec <- function(n, prob, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
+#' @section Warning:
+#' 
+#' From version rvec version 0.7.4 onwards,
+#' `rhyper_rvec()` always returns doubles (not integers).
+#' 
 #' @inheritParams dbeta_rvec
 #' @param k Number of balls drawn from urn.
 #' See [stats::dhyper()]. Can be an rvec.
@@ -1224,6 +1241,7 @@ rgeom_rvec <- function(n, prob, n_draw = NULL) {
 #' or if a value for `n_draw` is supplied,
 #' then an [rvec][rvec()]
 #' - Otherwise an ordinary R vector.
+#' - `rhyper_rvec()` always returns doubles (not integers).
 #'
 #' @seealso
 #' - [dhyper()]
@@ -1477,6 +1495,11 @@ rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
 #' Like the base R functions [dmultinom()]
 #' and [rmultinom(), `dmultinom_rvec()` and
 #' `rmultinom_rvec()` do not recycle their arguments.
+#'
+#' @section Warning:
+#' 
+#' From version rvec version 0.7.4 onwards,
+#' `rmultinom_rvec()` always returns doubles (not integers).
 #' 
 #' @inheritParams dbeta_rvec
 #' @param size Total number of trials.
@@ -1502,6 +1525,7 @@ rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
 #'     ordinary R vector.
 #'     - If `n` is greater than 1, a list
 #'     of rvecs or ordinary R vectors
+#' - `rmultinom_rvec()` always returns doubles (not integers).
 #'
 #' @seealso
 #' - [dmultinom()]
@@ -1674,7 +1698,11 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
             if (inherits(val, "error"))
                 cli::cli_abort(c("Problem with call to function {.fun rmultinom}:",
                                  i = val$message))
-            m[, i_draw] <- val
+            if (anyNA(val))
+              cli::cli_warn("NAs produced") # nocov - rmultinom never returns?
+            if (!identical(length(val), n_p))
+              cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+            m[, i_draw] <- as.double(val)
         }
         ans[[i_ans]] <- m
     }
@@ -1712,6 +1740,11 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
+#' @section Warning:
+#' 
+#' From version rvec version 0.7.4 onwards,
+#' `rnbinom_rvec()` always returns doubles (not integers).
+#' 
 #' @inheritParams dbeta_rvec
 #' @param mu Mean value. See [stats::dnbinom()].
 #' Can be an rvec.
@@ -1725,6 +1758,7 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
 #' or if a value for `n_draw` is supplied,
 #' then an [rvec][rvec()]
 #' - Otherwise an ordinary R vector.
+#' - `rnbinom_rvec()` always returns doubles (not integers).
 #'
 #' @seealso
 #' - [dnbinom()]
@@ -2036,6 +2070,11 @@ rnorm_rvec <- function(n, mean = 0, sd = 1, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
+#' @section Warning:
+#' 
+#' From version rvec version 0.7.4 onwards,
+#' `rpois_rvec()` always returns doubles (not integers).
+#' 
 #' @inheritParams dbeta_rvec
 #' @param lambda Vector of means.
 #' See [stats::rpois()]. Can be an rvec.
@@ -2045,6 +2084,7 @@ rnorm_rvec <- function(n, mean = 0, sd = 1, n_draw = NULL) {
 #' or if a value for `n_draw` is supplied,
 #' then an [rvec][rvec()]
 #' - Otherwise an ordinary R vector.
+#' - `rpois_rvec()` always returns doubles (not integers).
 #'
 #' @seealso
 #' - [dpois()]
@@ -2594,6 +2634,9 @@ dist_rvec_1 <- function(fun, arg, ...) {
                      i = ans$message))
   if (anyNA(ans))
     cli::cli_warn("NAs produced")
+  if (!identical(length(ans), length(arg)))
+    cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+  ans <- as.double(ans)
   if (is_arg_rvec) {
     ans <- matrix(ans, ncol = n_draw)
     ans <- rvec(ans)
@@ -2670,6 +2713,9 @@ dist_rvec_2 <- function(fun, arg1, arg2, ...) {
                      i = ans$message))
   if (anyNA(ans))
     cli::cli_warn("NAs produced")
+  if (!identical(length(ans), length(arg1)))
+    cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+  ans <- as.double(ans)
   if (is_rv) {
     ans <- matrix(ans, ncol = n_draw)
     ans <- rvec(ans)
@@ -2776,6 +2822,9 @@ dist_rvec_3 <- function(fun, arg1, arg2, arg3, ...) {
                      i = ans$message))
   if (anyNA(ans))
     cli::cli_warn("NAs produced")
+  if (!identical(length(ans), length(arg1)))
+    cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+  ans <- as.double(ans)
   if (is_rv) {
     ans <- matrix(ans, ncol = n_draw)
     ans <- rvec(ans)
@@ -2931,6 +2980,9 @@ dist_rvec_4 <- function(fun, arg1, arg2, arg3, arg4, ...) {
                      i = ans$message))
   if (anyNA(ans))
     cli::cli_warn("NAs produced")
+  if (!identical(length(ans), length(arg1)))
+    cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+  ans <- as.double(ans)
   if (is_rv) {
     ans <- matrix(ans, ncol = n_draw)
     ans <- rvec(ans)

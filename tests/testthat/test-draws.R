@@ -494,3 +494,11 @@ test_that("'prob' works with NA", {
     expect_equal(ans_obtained, ans_expected)
 })
 
+test_that("'prob' works with logical vector", {
+  x <- c(TRUE, FALSE, NA)
+  ans_obtained <- prob(x)
+  ans_expected <- c(1, 0, NA)
+  expect_equal(ans_obtained, ans_expected)
+})
+
+

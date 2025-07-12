@@ -4,7 +4,9 @@
 ## Changes to interface
 
 - Added function `prob()`, a version of `draws_mean()` that works only
-  with logical rvecs.
+  with logical rvecs. (#27)
+- `rvec()` and `rvec_dbl()` now accept sparse matrices (inheriting
+  from "Matrix"), in addition to dense matrices. (#25)
   
 
 # rvec 0.0.7

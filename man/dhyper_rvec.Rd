@@ -56,6 +56,7 @@ created. Cannot be an rvec.}
 or if a value for \code{n_draw} is supplied,
 then an \link[=rvec]{rvec}
 \item Otherwise an ordinary R vector.
+\item \code{rhyper_rvec()} always returns doubles (not integers).
 }
 }
 \description{
@@ -83,6 +84,13 @@ vector recycling rules:
 \item All other vectors must have the same size
 }
 }
+\section{Warning}{
+
+
+From version rvec version 0.7.4 onwards,
+\code{rhyper_rvec()} always returns doubles (not integers).
+}
+
 \examples{
 x <- rvec(list(c(3, 5),
                c(0, 2)))
