@@ -1,4 +1,15 @@
 
+# Submission of version 0.0.8 on 13 July 2025
+
+## Summary of changes from previous version (0.0.7)
+
+* Added new function `prob()`
+* Constructor functions now accept sparse matrices
+* Discrete random variate generators now only return doubles. Previous
+  version (which returned doubles or integers) was triggering Valgrind
+  errors in dependent packages.
+
+
 # Submission of version 0.0.7 on 15 September 2024
 
 ## Summary of changes from previous version (0.0.6)
