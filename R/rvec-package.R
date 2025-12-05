@@ -52,17 +52,20 @@
 #'
 #' **Summarizing across draws**
 #'
-#' - [draws_all()] All draws
-#' - [draws_any()] Any draws
-#' - [draws_min()] Minimum draw
-#' - [draws_max()] Maximum draw
-#' - [draws_median()] Median draw
-#' - [draws_mean()] Mean draw 
-#' - [draws_mode()] Modal draw
+#' - [draws_all()] All
+#' - [draws_any()] Any
+#' - [draws_min()] Minimum
+#' - [draws_max()] Maximum
+#' - [draws_median()] Median
+#' - [draws_mean()] Mean
+#' - [draws_mode()] Modal
+#' - [draws_sd()] Standard deviation
+#' - [draws_var()] Variances
+#' - [draws_cv()] Coefficients of variation
 #' - [draws_ci()] Credible intervals
 #' - [draws_quantile()] Quantiles
 #' - [draws_fun()] Arbitrary function
-#' - [n_draw()] Number of draws
+#' - [n_draw()] Number
 #'
 #' **Coercion, classes**
 #'
@@ -91,6 +94,8 @@
 #' @aliases rvec-package NULL
 #' @import vctrs
 #' @importFrom methods setOldClass
+#' @importFrom methods setMethod
+#' @importFrom Matrix Matrix
 #' @importFrom stats median
 #' @importFrom utils globalVariables
 "_PACKAGE"
@@ -101,8 +106,3 @@ NULL
 
 globalVariables('value') ## to allow use in collapse_to_rvec
 
-## for compatibility with the S4 system
-setOldClass(c("rvec_chr", "rvec", "vctrs_vctr"))
-setOldClass(c("rvec_dbl", "rvec", "vctrs_vctr"))
-setOldClass(c("rvec_int", "rvec", "vctrs_vctr"))
-setOldClass(c("rvec_lgl", "rvec", "vctrs_vctr"))

@@ -37,8 +37,9 @@ calculating summaries. Default is \code{FALSE}.}
 A vector.
 }
 \description{
-Summarise the distribution of random draws
-in an \code{rvec}, using means, medians, or modes.
+Use means, medians, or modes to
+summarise the distribution of random draws
+in an \code{rvec}.
 }
 \details{
 When \code{method} is \code{"mode"}, \code{reduce_rvec()}

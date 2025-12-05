@@ -1,7 +1,7 @@
 Package: rvec
 Type: Package
 Title: Vectors Representing Random Variables
-Version: 0.0.8
+Version: 1.0
 Authors@R: 
     c(person(given = "John",
              family = "Bryant",
@@ -18,7 +18,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Depends:
     R (>= 4.3.0)
 Imports:
@@ -26,6 +26,7 @@ Imports:
     glue,
     graphics,
     grDevices,
+    Matrix,
     matrixStats,
     methods,
     rlang,
@@ -42,7 +43,6 @@ Suggests:
     ggplot2,
     knitr,
     posterior,
-    Matrix,
     rmarkdown,
     testthat (>= 3.0.0),
     tidyr

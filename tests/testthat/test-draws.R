@@ -416,11 +416,154 @@ test_that("'draws_quantile' works with rvec_lgl", {
     expect_equal(ans_obtained, ans_expected)
 })
 
-test_that("'draws_median' throws correct error with rvec_chr", {
+test_that("'draws_quantile' throws correct error with rvec_chr", {
     m <- matrix("a", nrow = 5, ncol = 1)
     x <- rvec(m)
     expect_error(draws_quantile(x),
                  "Quantiles not defined for character.")
+})
+
+
+## 'draws_sd' -----------------------------------------------------------------
+
+test_that("'draws_sd' works with rvec_dbl when nrow > 0", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_sd(y)
+    ans_expected <- apply(m, 1, sd)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_sd' works with rvec_int when nrow == 0", {
+    set.seed(0)
+    m <- matrix(integer(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- draws_sd(x)
+    ans_expected <- NA_real_
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_sd' preserves names", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    rownames(m) <- 1:5
+    x <- rvec(m)
+    ans <- draws_sd(x)
+    expect_identical(names(ans), as.character(1:5))
+})
+
+test_that("'draws_sd' works with rvec_lgl", {
+    m <- matrix(TRUE, nrow = 5, ncol = 2)
+    x <- rvec(m)
+    ans_obtained <- draws_sd(x)
+    ans_expected <- rep(0, 5)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_sd' throws correct error with rvec_chr", {
+    m <- matrix("a", nrow = 5, ncol = 1)
+    x <- rvec(m)
+    expect_error(draws_sd(x),
+                 "Standard deviation not defined for character.")
+})
+
+
+## 'draws_var' -----------------------------------------------------------------
+
+test_that("'draws_var' works with rvec_dbl when nrow > 0", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_var(y)
+    ans_expected <- apply(m, 1, var)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_var' works with rvec_int when nrow == 0", {
+    set.seed(0)
+    m <- matrix(integer(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- draws_var(x)
+    ans_expected <- NA_real_
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_var' preserves names", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    rownames(m) <- 1:5
+    x <- rvec(m)
+    ans <- draws_var(x)
+    expect_identical(names(ans), as.character(1:5))
+})
+
+test_that("'draws_var' works with rvec_lgl", {
+    m <- matrix(TRUE, nrow = 5, ncol = 2)
+    x <- rvec(m)
+    ans_obtained <- draws_var(x)
+    ans_expected <- rep(0, 5)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_var' throws correct error with rvec_chr", {
+    m <- matrix("a", nrow = 5, ncol = 1)
+    x <- rvec(m)
+    expect_error(draws_var(x),
+                 "Variance not defined for character.")
+})
+
+
+## 'draws_cv' -----------------------------------------------------------------
+
+test_that("'draws_cv' works with rvec_dbl when nrow > 0", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    y <- rvec(m)
+    ans_obtained <- draws_cv(y)
+    ans_expected <- apply(m, 1, function(x) sd(x) / mean(x))
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_cv' works with rvec_int when nrow == 0", {
+    set.seed(0)
+    m <- matrix(integer(), nr = 0, ncol = 5)
+    x <- rvec(m)
+    ans_obtained <- draws_cv(x)
+    ans_expected <- NA_real_
+    expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'draws_cv' preserves names", {
+    set.seed(0)
+    m <- matrix(rnorm(20), nr = 5)
+    rownames(m) <- 1:5
+    x <- rvec(m)
+    ans <- draws_cv(x)
+    expect_identical(names(ans), as.character(1:5))
+})
+
+test_that("'draws_cv' works with rvec_lgl", {
+    m <- matrix(TRUE, nrow = 5, ncol = 2)
+    x <- rvec(m)
+    ans_obtained <- draws_cv(x)
+    ans_expected <- rep(0, 5)
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_cv' returns NA_real_ when mean is 0", {
+    m <- matrix(c(-1, 1), nrow = 1, ncol = 2)
+    x <- rvec(m)
+    ans_obtained <- draws_cv(x)
+    ans_expected <- NA_real_
+    expect_equal(ans_obtained, ans_expected)
+})
+
+test_that("'draws_cv' throws correct error with rvec_chr", {
+    m <- matrix("a", nrow = 5, ncol = 1)
+    x <- rvec(m)
+    expect_error(draws_cv(x),
+                 "Coefficient of variation not defined for character.")
 })
 
 
