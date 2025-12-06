@@ -81,10 +81,10 @@ test_that("'get_groups_colnums' works with valid inputs", {
 ## 'get_new_rvec_fun' ---------------------------------------------------------
 
 test_that("'get_new_rvec_fun' works with valid input", {
-    expect_identical(get_new_rvec_fun("a"), new_rvec_chr)
-    expect_identical(get_new_rvec_fun(1L), new_rvec_int)
-    expect_identical(get_new_rvec_fun(1), new_rvec_dbl)
-    expect_identical(get_new_rvec_fun(NA), new_rvec_lgl)
+    expect_identical(get_new_rvec_fun("a"), .new_rvec_chr)
+    expect_identical(get_new_rvec_fun(1L), .new_rvec_int)
+    expect_identical(get_new_rvec_fun(1), .new_rvec_dbl)
+    expect_identical(get_new_rvec_fun(NA), .new_rvec_lgl)
 })
 
 test_that("'get_new_rvec_fun' throws correct error invalid input", {

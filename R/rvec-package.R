@@ -1,3 +1,4 @@
+
 #' Package 'rvec'
 #'
 #' Tools for working with random draws from a distribution, eg
@@ -22,7 +23,10 @@
 #' - [rvec_lgl()] Logical
 #' - [rvec_chr()] Character
 #' - [collapse_to_rvec()] Data in data frame
-#' - [new_rvec()] Blanks
+#' - [new_rvec_dbl()] Empty doubles
+#' - [new_rvec_int()] Empty integers
+#' - [new_rvec_lgl()] Empty logical
+#' - [new_rvec_chr()] Empty character
 #'
 #' **Manipulating rvecs**
 #'
@@ -101,6 +105,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom lifecycle deprecated
 ## usethis namespace: end
 NULL
 

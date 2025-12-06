@@ -47,11 +47,11 @@ vec_math.rvec_dbl <- function(.fn, .x, ...) {
   }
   ## --- return rvec ---
   if (is.double(data))
-    new_rvec_dbl(data)
+    .new_rvec_dbl(data)
   else if (is.integer(data))
-    new_rvec_int(data)
+    .new_rvec_int(data)
   else if (is.logical(data))
-    new_rvec_lgl(data)
+    .new_rvec_lgl(data)
   else
     cli::cli_abort("Internal error: {.arg data} has type {typeof(data)}.") ## nocov
 }

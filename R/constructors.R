@@ -3,6 +3,8 @@
 
 #' Create a Blank Rvec
 #'
+#' `r lifecycle::badge('deprecated')`
+#' 
 #' Create an rvec, consisting entirely of `NAs`,
 #' with a given length and number of draws.
 #'
@@ -21,6 +23,10 @@
 #' @returns An rvec.
 #'
 #' @seealso
+#' - [new_rvec_chr()],
+#'   [new_rvec_dbl()],
+#'   [new_rvec_int()],
+#'   [new_rvec_lgl()] Replacements for `rvec_new()`
 #' - [rvec()] [rvec_chr()], [rvec_dbl()], [rvec_int()], [rvec_lgl()]
 #'   Create an rvec from data.
 #' - [n_draw()] Query number of draws.
@@ -32,6 +38,7 @@
 #' x <- new_rvec(length = 2)
 #' x[1] <- rnorm_rvec(n = 1, n_draw = 1000)
 #' x[2] <- runif_rvec(n = 1, n_draw = 1000)
+#' @name new_rvec_deprecated
 #' @export
 new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
   check_nonneg_num_scalar(length)
@@ -39,22 +46,86 @@ new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
   check_nonneg_num_scalar(n_draw)
   n_draw <- as.integer(n_draw)
   type <- typeof(x)
-  if (type == "character")
+  if (type == "character") {
     na <- NA_character_
-  else if (type == "integer")
+    with <- "new_rvec_chr()"
+  }
+  else if (type == "integer") {
     na <- NA_integer_
-  else if (type == "double")
+    with <- "new_rvec_int()"
+  }
+  else if (type == "double") {
     na <- NA_real_
-  else if (type == "logical")
+    with <- "new_rvec_dbl()"
+  }
+  else if (type == "logical") {
     na <- NA
+    with <- "new_rvec_lgl()"
+  }
   else {
     valid_types <- c("character", "integer", "double", "logical")
     cli::cli_abort(c("Invalid type.",
                      i = "{.arg x} has type {.val {type}}.",
                      i = "Valid types are: {.val {valid_types}}."))
   }
+  lifecycle::deprecate_soft(when = "1.0.0",
+                            what = "new_rvec()",
+                            with = with)
   m <- matrix(na, nrow = length, ncol = n_draw)
   rvec(m)
+}
+
+
+#' Create an Empty Rvec
+#'
+#' Create an rvec, filled with `0`, `""`,
+#' or `FALSE`, with a given length
+#' or number of draws.
+#'
+#' @param length Desired length of rvec.
+#' Default is `0`.
+#' @param n_draw Number of draws of rvec.
+#' Default is `1000`.
+#'
+#' @return An rvec.
+#'
+#' @seealso
+#' - [rvec()], [rvec_chr()], [rvec_dbl()], [rvec_int()], [rvec_lgl()]
+#'   Create an rvec from data.
+#' - [n_draw()] Query number of draws.
+#'
+#' @examples
+#' new_rvec_int()
+#' new_rvec_lgl(length = 1, n_draw = 5)
+#'
+#' x <- new_rvec_dbl(length = 2)
+#' x[1] <- rnorm_rvec(n = 1, n_draw = 1000)
+#' x[2] <- runif_rvec(n = 1, n_draw = 1000)
+#' @name new_rvec_blank
+NULL
+
+#' @export
+#' @rdname new_rvec_blank
+new_rvec_chr <- function(length = 0, n_draw = 1000) {
+  .new_rvec(type = "chr", length = length, n_draw = n_draw)
+}
+
+#' @export
+#' @rdname new_rvec_blank
+new_rvec_dbl <- function(length = 0, n_draw = 1000) {
+  .new_rvec(type = "dbl", length = length, n_draw = n_draw)
+}
+
+#' @export
+#' @rdname new_rvec_blank
+new_rvec_int <- function(length = 0, n_draw = 1000) {
+  .new_rvec(type = "int", length = length, n_draw = n_draw)
+}
+
+#' @export
+#' @rdname new_rvec_blank
+new_rvec_lgl <- function(length = 0, n_draw = 1000) {
+  .new_rvec(type = "lgl", length = length, n_draw = n_draw)
 }
 
 
@@ -146,13 +217,13 @@ rvec <- function(x) {
                      i = "{.arg x} has class {.cls {class(x)}}"))
   colnames(x) <- NULL
   if (is.character(x))
-    new_rvec_chr(x)
+    .new_rvec_chr(x)
   else if (is.double(x))
-    new_rvec_dbl(x)
+    .new_rvec_dbl(x)
   else if (is.integer(x))
-    new_rvec_int(x)
+    .new_rvec_int(x)
   else if (is.logical(x))
-    new_rvec_lgl(x)
+    .new_rvec_lgl(x)
   else
     cli::cli_abort(c("{.arg x} must be double, integer, logical, or character",
                      i = "{.arg x} has type {typeof(x)}"))
@@ -205,7 +276,7 @@ rvec_chr <- function(x = NULL) {
   else
     cli::cli_abort(c("{.arg x} must be an rvec, a matrix, a list, an atomic vector, or NULL.",
                      i = "{.arg x} has class {.cls {class(x)}}"))
-  new_rvec_chr(data)
+  .new_rvec_chr(data)
 }
 
 ## HAS_TESTS
@@ -256,7 +327,7 @@ rvec_dbl <- function(x = NULL) {
   else
     cli::cli_abort(c("{.arg x} must be an rvec, a matrix, a list, an atomic vector, or NULL.",
                      i = "{.arg x} has class {.cls {class(x)}}"))
-  new_rvec_dbl(data)
+  .new_rvec_dbl(data)
 }
 
 ## HAS_TESTS
@@ -307,7 +378,7 @@ rvec_int <- function(x = NULL) {
   else
     cli::cli_abort(c("{.arg x} must be an rvec, a matrix, a list, an atomic vector, or NULL.",
                      i = "{.arg x} has class {.cls {class(x)}}"))
-  new_rvec_int(data)
+  .new_rvec_int(data)
 }
 
 ## HAS_TESTS
@@ -357,32 +428,60 @@ rvec_lgl <- function(x = NULL) {
   else
     cli::cli_abort(c("{.arg x} must be an rvec, a matrix, a list, an atomic vector, or NULL.",
                      i = "{.arg x} has class {.cls {class(x)}}"))
-  new_rvec_lgl(data)
+  .new_rvec_lgl(data)
 }
 
 
 ## Internal constructors ------------------------------------------------------
 
+#' Create New Empty Rvec
+#'
+#' @param type Character, double, integer, or logical
+#' @param length Length of resulting rvec
+#' @param number of draws of resulting rvec
+#'
+#' @returns An rvec
+#'
+#' @noRd
+.new_rvec <- function(type, length, n_draw) {
+  type <- match.arg(type, choices = c("chr", "dbl", "int", "lgl"))
+  check_nonneg_num_scalar(length)
+  length <- as.integer(length)
+  check_nonneg_num_scalar(n_draw)
+  n_draw <- as.integer(n_draw)
+  if (type == "chr")
+    x <- ""
+  else if (type == "int")
+    x <- 0L
+  else if (type == "dbl")
+    x <- 0.0
+  else
+    x <- FALSE
+  m <- matrix(x, nrow = length, ncol = n_draw)
+  rvec(m)
+}
+
+
 ## HAS_TESTS
-new_rvec_chr <- function(data) {
+.new_rvec_chr <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_chr", "rvec"))
 }
 
 ## HAS_TESTS
-new_rvec_dbl <- function(data) {
+.new_rvec_dbl <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_dbl", "rvec"))
 }
 
 ## HAS_TESTS
-new_rvec_int <- function(data) {
+.new_rvec_int <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_int", "rvec"))
 }
 
 ## HAS_TESTS
-new_rvec_lgl <- function(data) {
+.new_rvec_lgl <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_lgl", "rvec"))
 }

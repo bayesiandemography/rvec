@@ -65,30 +65,30 @@ format_rvec_elements <- function(x) {
 #'
 #' @noRd
 format_rvec_summaries <- function(x) {
-    if (is.character(x)) {
-        tabs <- apply(x, 1L, table, useNA = "no", simplify = FALSE)
-        nms_tabs <- lapply(tabs, names)
-        i_max <- lapply(tabs, which.max)
-        ans <- .mapply(`[[`, dots = list(nms_tabs, i_max), MoreArgs = list())
-        ans <- unlist(ans)
-        ans <- paste0("..", ans, "..")
-    }
-    else if (is.numeric(x)) {
-        ans <- matrixStats::rowQuantiles(x,
-                                         probs = c(0.025, 0.5, 0.975),
-                                         na.rm = TRUE,
-                                         drop = FALSE)
-        ans <- sprintf("%s (%s, %s)",
-                       prettyNum(ans[, 2L], digits = 2L),
-                       prettyNum(ans[, 1L], digits = 2L),
-                       prettyNum(ans[, 3L], digits = 2L))
-    }
-    else {
-        ans <- matrixStats::rowMeans2(1 * x, na.rm = TRUE)
-        ans <- formatC(ans, format = "fg")
-        ans <- paste0("p=", ans)
-    }
-    ans
+  if (is.character(x)) {
+    tabs <- apply(x, 1L, table, useNA = "no", simplify = FALSE)
+    nms_tabs <- lapply(tabs, names)
+    i_max <- lapply(tabs, which.max)
+    ans <- .mapply(`[[`, dots = list(nms_tabs, i_max), MoreArgs = list())
+    ans <- unlist(ans)
+    ans <- sprintf('.."%s"..', ans)
+  }
+  else if (is.numeric(x)) {
+    ans <- matrixStats::rowQuantiles(x,
+                                     probs = c(0.025, 0.5, 0.975),
+                                     na.rm = TRUE,
+                                     drop = FALSE)
+    ans <- sprintf("%s (%s, %s)",
+                   prettyNum(ans[, 2L], digits = 2L),
+                   prettyNum(ans[, 1L], digits = 2L),
+                   prettyNum(ans[, 3L], digits = 2L))
+  }
+  else {
+    ans <- matrixStats::rowMeans2(1 * x, na.rm = TRUE)
+    ans <- formatC(ans, format = "fg")
+    ans <- paste0("p=", ans)
+  }
+  ans
 }
 
 

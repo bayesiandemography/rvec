@@ -1,4 +1,20 @@
 
+# rvec 1.0.0
+
+## Change to lifecycle status
+
+- Interface is now sufficiently stable that the "experimental"
+  lifecycle badge has been removed.
+  
+## Changes to interface
+
+- Added functions `draws_sd()`, `draws_var()`, `draws_cv()` for
+  summarising across draws.
+- Added quotation marks to printed rvec_chr objects.
+
+
+
+
 # rvec 0.0.8
 
 ## Changes to interface

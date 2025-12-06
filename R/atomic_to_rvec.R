@@ -24,7 +24,7 @@ atomic_to_rvec_chr.character <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_chr(data)
+    .new_rvec_chr(data)
 }
 
 ## HAS_TESTS
@@ -35,7 +35,7 @@ atomic_to_rvec_chr.double <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_chr(data)
+    .new_rvec_chr(data)
 }
 
 ## HAS_TESTS
@@ -46,7 +46,7 @@ atomic_to_rvec_chr.integer <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_chr(data)
+    .new_rvec_chr(data)
 }
 
 ## HAS_TESTS
@@ -57,7 +57,7 @@ atomic_to_rvec_chr.logical <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_chr(data)
+    .new_rvec_chr(data)
 }
 
 
@@ -76,7 +76,7 @@ atomic_to_rvec_dbl.double <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_dbl(data)
+    .new_rvec_dbl(data)
 }
 
 ## conversion to double always allowed
@@ -87,7 +87,7 @@ atomic_to_rvec_dbl.integer <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_dbl(data)
+    .new_rvec_dbl(data)
 }
 
 ## conversion to double always allowed
@@ -98,7 +98,7 @@ atomic_to_rvec_dbl.logical <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_dbl(data)
+    .new_rvec_dbl(data)
 }
 
 
@@ -117,7 +117,7 @@ atomic_to_rvec_int.double <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_int(data)
+    .new_rvec_int(data)
 }
 
 ## HAS_TESTS
@@ -127,7 +127,7 @@ atomic_to_rvec_int.integer <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_int(data)
+    .new_rvec_int(data)
 }
 
 ## conversion to integer always allowed
@@ -138,7 +138,7 @@ atomic_to_rvec_int.logical <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_int(data)
+    .new_rvec_int(data)
 }
 
 
@@ -159,7 +159,7 @@ atomic_to_rvec_lgl.double <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_lgl(data)
+    .new_rvec_lgl(data)
 }
 
 ## conversion to logical only allowed if information preserved
@@ -171,7 +171,7 @@ atomic_to_rvec_lgl.integer <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_lgl(data)
+    .new_rvec_lgl(data)
 }
 
 ## HAS_TESTS
@@ -181,7 +181,7 @@ atomic_to_rvec_lgl.logical <- function(x, n_draw) {
                    nrow = length(x),
                    ncol = n_draw)
     rownames(data) <- names(x)
-    new_rvec_lgl(data)
+    .new_rvec_lgl(data)
 }
 
 

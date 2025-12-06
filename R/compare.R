@@ -53,5 +53,5 @@ compare_rvec <- function(e1, e2, op) {
     args <- vec_cast_common(!!!args)
     args <- lapply(args, as.matrix)
     data <- Reduce(op, args)
-    new_rvec_lgl(data)
+    .new_rvec_lgl(data)
 }

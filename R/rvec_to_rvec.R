@@ -25,7 +25,7 @@ rvec_to_rvec_chr.rvec <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_chr(data_new)
+    .new_rvec_chr(data_new)
 }
 
 
@@ -47,7 +47,7 @@ rvec_to_rvec_dbl.rvec_dbl <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_dbl(data_new)
+    .new_rvec_dbl(data_new)
 }
 
 ## HAS_TESTS
@@ -59,7 +59,7 @@ rvec_to_rvec_dbl.rvec_int <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_dbl(data_new)
+    .new_rvec_dbl(data_new)
 }
 
 ## HAS_TESTS
@@ -71,7 +71,7 @@ rvec_to_rvec_dbl.rvec_lgl <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_dbl(data_new)
+    .new_rvec_dbl(data_new)
 }
 
 
@@ -92,7 +92,7 @@ rvec_to_rvec_int.rvec_dbl <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_int(data_new)
+    .new_rvec_int(data_new)
 }
 
 ## HAS_TESTS
@@ -104,7 +104,7 @@ rvec_to_rvec_int.rvec_int <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_int(data_new)
+    .new_rvec_int(data_new)
 }
 
 ## no method for rvec_int
@@ -118,7 +118,7 @@ rvec_to_rvec_int.rvec_lgl <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_int(data_new)
+    .new_rvec_int(data_new)
 }
 
 ## rvec_to_rvec_lgl -----------------------------------------------------------
@@ -139,7 +139,7 @@ rvec_to_rvec_lgl.rvec_dbl <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_lgl(data_new)
+    .new_rvec_lgl(data_new)
 }
 
 ## HAS_TESTS
@@ -152,7 +152,7 @@ rvec_to_rvec_lgl.rvec_int <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_lgl(data_new)
+    .new_rvec_lgl(data_new)
 }
 
 ## HAS_TESTS
@@ -163,7 +163,7 @@ rvec_to_rvec_lgl.rvec_lgl <- function(x, n_draw) {
     data_new <- data_matrix(data_new_vec = data_new_vec,
                             data_old = data_old,
                             n_draw = n_draw)
-    new_rvec_lgl(data_new)
+    .new_rvec_lgl(data_new)
 }
 
 ## Helper functions -----------------------------------------------------------

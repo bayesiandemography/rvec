@@ -29,7 +29,10 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 \item \code{\link[=rvec_lgl]{rvec_lgl()}} Logical
 \item \code{\link[=rvec_chr]{rvec_chr()}} Character
 \item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} Data in data frame
-\item \code{\link[=new_rvec]{new_rvec()}} Blanks
+\item \code{\link[=new_rvec_dbl]{new_rvec_dbl()}} Empty doubles
+\item \code{\link[=new_rvec_int]{new_rvec_int()}} Empty integers
+\item \code{\link[=new_rvec_lgl]{new_rvec_lgl()}} Empty logical
+\item \code{\link[=new_rvec_chr]{new_rvec_chr()}} Empty character
 }
 
 \strong{Manipulating rvecs}

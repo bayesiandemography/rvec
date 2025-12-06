@@ -28,7 +28,7 @@ test_that("'format' method for rvec works - four columns, chr", {
                 nr = 2, nc = 4)
     x <- rvec(m)                
     ans_obtained <- format(x)
-    ans_expected <- c("..b..", "..c..")
+    ans_expected <- c('.."b"..', '.."c"..')
     expect_identical(ans_obtained, ans_expected)
 })
 

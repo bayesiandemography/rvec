@@ -124,10 +124,10 @@ get_groups_colnums <- function(data) {
 get_new_rvec_fun <- function(x) {
     type <- typeof(x)
     switch(type,
-           character = new_rvec_chr,
-           double = new_rvec_dbl,
-           integer = new_rvec_int,
-           logical = new_rvec_lgl,
+           character = .new_rvec_chr,
+           double = .new_rvec_dbl,
+           integer = .new_rvec_int,
+           logical = .new_rvec_lgl,
            cli::cli_abort("Internal error: {.arg x} is {.obj_type_friendly {x}}"))
 }
 

@@ -1,7 +1,7 @@
 Package: rvec
 Type: Package
 Title: Vectors Representing Random Variables
-Version: 1.0
+Version: 1.0.0
 Authors@R: 
     c(person(given = "John",
              family = "Bryant",
@@ -26,6 +26,7 @@ Imports:
     glue,
     graphics,
     grDevices,
+    lifecycle,
     Matrix,
     matrixStats,
     methods,
@@ -45,7 +46,8 @@ Suggests:
     posterior,
     rmarkdown,
     testthat (>= 3.0.0),
-    tidyr
+    tidyr,
+    withr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://bayesiandemography.github.io/rvec/, https://github.com/bayesiandemography/rvec
