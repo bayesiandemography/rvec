@@ -5,7 +5,7 @@
 \alias{plnorm_rvec}
 \alias{qlnorm_rvec}
 \alias{rlnorm_rvec}
-\title{The Log-Normal Distribution, Using Multiple Draws}
+\title{Log-Normal Distribution, Using Multiple Draws}
 \usage{
 dlnorm_rvec(x, meanlog = 0, sdlog = 1, log = FALSE)
 
@@ -19,11 +19,11 @@ rlnorm_rvec(n, meanlog = 0, sdlog = 1, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{meanlog}{Mean of distribution, on log scale.
-Default is \code{0}. See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
+Default is \code{0}. See \code{\link[=dlnorm]{dlnorm()}}.
 Can be an rvec.}
 
 \item{sdlog}{Standard deviation of distribution,
-on log scale. Default is \code{1}. See \code{\link[stats:Lognormal]{stats::dlnorm()}}.
+on log scale. Default is \code{1}. See \code{\link[=dlnorm]{dlnorm()}}.
 Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
@@ -50,8 +50,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -91,10 +90,7 @@ rlnorm_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dlnorm]{dlnorm()}}
-\item \code{\link[=plnorm]{plnorm()}}
-\item \code{\link[=qlnorm]{qlnorm()}}
-\item \code{\link[=rlnorm]{rlnorm()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dlnorm]{dlnorm()}}, \code{\link[=plnorm]{plnorm()}}, \code{\link[=qlnorm]{qlnorm()}}, \code{\link[=rlnorm]{rlnorm()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

@@ -23,9 +23,9 @@
 #'
 #' Base R functions [sapply()] and [vapply()]
 #' do not work properly with rvecs.
-#' [lapply() works, but to combine the
+#' [lapply()] works, but to combine the
 #' results into a single rvec, functions such
-#' as [c()] or [vctrs::vec_c()] are needed.
+#' as [c()] or [vec_c()][vctrs::vec_c()] are needed.
 #' @examples
 #' l <- list(a = rvec(matrix(1:2, 1)),
 #'           b = rvec(matrix(1:4, 2)),

@@ -35,6 +35,24 @@ check_flag <- function(x) {
 }
 
 ## HAS_TESTS
+#' Check that 'data' has 'by' or 'groups' Columns
+#'
+#' @param by_colnums Named integer vector with locations of by columns
+#' @param groups_colnums Named integer vector with locations of grouping columns
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_has_by_or_groups <- function(by_colnums, groups_colnums) {
+    has_by <- length(by_colnums) > 0L
+    has_groups <- length(groups_colnums) > 0L
+    if (!has_by && !has_groups)
+      cli::cli_abort(paste("If {.arg data} is not a grouped data frame,",
+                           "then a value must be supplied for {.arg by}."))
+    invisible(TRUE)
+}
+
+## HAS_TESTS
 #' Check that a data frame does not contain
 #' any rvecs
 #'
@@ -359,6 +377,7 @@ check_nonneg_num_vector <- function(x) {
 }
 
 
+## HAS_TESTS
 #' Check that no value supplied for 'by' if 'data' is a grouped data frame
 #'
 #' @param by_colnums Named integer vector with locations of by columns
@@ -390,6 +409,62 @@ check_not_rvec_chr <- function(arg, nm_arg) {
         cli::cli_abort("{.arg {nm_arg}} has class {.cls {class(arg)}}")
     invisible(TRUE)
 }
+
+
+## HAS_TESTS
+#' Check if any by variables are rvecs
+#'
+#' Assume that by_colnums and by_colnums are both valid.
+#'
+#' @param rvec_colnums A named vector of
+#' length >0, giving the location(s) of rvec(s)
+#' @param by_colnums A named vector of
+#' length >0, giving the location(s) of the
+#' by variable(s)
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_overlap_rvec_by <- function(rvec_colnums, by_colnums) {
+  is_in_gp <- rvec_colnums %in% by_colnums
+  i_in_gp <- match(TRUE, is_in_gp, nomatch = 0L)
+  if (i_in_gp > 0L) {
+    nms_rvec <- names(rvec_colnums)
+    nms_gp <- names(by_colnums)
+    nm_in <- nms_rvec[[i_in_gp]]
+    cli::cli_abort(paste("{.var {nm_in}} is an rvec but is being used",
+                         "as a 'by' variable"))
+  }
+  invisible(TRUE)
+}    
+
+
+## HAS_TESTS
+#' Check if any groups variables are rvecs
+#'
+#' Assume that by_colnums and groups_colnums are both valid.
+#'
+#' @param rvec_colnums A named vector of
+#' length >0, giving the location(s) of rvec(s)
+#' @param groups_colnums A named vector of
+#' length >0, giving the location(s) of the
+#' grouping variable(s)
+#'
+#' @returns TRUE, invisibly
+#'
+#' @noRd
+check_overlap_rvec_groups <- function(rvec_colnums, groups_colnums) {
+  is_in_gp <- rvec_colnums %in% groups_colnums
+  i_in_gp <- match(TRUE, is_in_gp, nomatch = 0L)
+  if (i_in_gp > 0L) {
+    nms_rvec <- names(rvec_colnums)
+    nms_gp <- names(groups_colnums)
+    nm_in <- nms_rvec[[i_in_gp]]
+    cli::cli_abort(paste("{.var {nm_in}} is an rvec but is being used",
+                         "as a grouping variable"))
+  }
+  invisible(TRUE)
+}    
 
 
 ## HAS_TESTS

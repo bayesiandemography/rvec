@@ -5,7 +5,7 @@
 \alias{pnbinom_rvec}
 \alias{qnbinom_rvec}
 \alias{rnbinom_rvec}
-\title{The Negative Binomial Distribution, Using Multiple Draws}
+\title{Negative Binomial Distribution, Using Multiple Draws}
 \usage{
 dnbinom_rvec(x, size, prob, mu, log = FALSE)
 
@@ -19,12 +19,12 @@ rnbinom_rvec(n, size, prob, mu, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{size}{Number of trials.
-See \code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be an rvec.}
+See \code{\link[=dnbinom]{dnbinom()}}. Can be an rvec.}
 
 \item{prob}{Probability of success in each trial.
-See \code{\link[stats:NegBinomial]{stats::dnbinom()}}. Can be an rvec.}
+See \code{\link[=dnbinom]{dnbinom()}}. Can be an rvec.}
 
-\item{mu}{Mean value. See \code{\link[stats:NegBinomial]{stats::dnbinom()}}.
+\item{mu}{Mean value. See \code{\link[=dnbinom]{dnbinom()}}.
 Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
@@ -51,9 +51,9 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
-\item \code{rnbinom_rvec()} always returns doubles (not integers).
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+\item Unlike base \code{rbinom()}, \code{rnbinom_rvec()}
+always returns doubles.
 }
 }
 \description{
@@ -81,13 +81,6 @@ vector recycling rules:
 \item All other vectors must have the same size
 }
 }
-\section{Warning}{
-
-
-From version rvec version 0.7.4 onwards,
-\code{rnbinom_rvec()} always returns doubles (not integers).
-}
-
 \examples{
 x <- rvec(list(c(3, 5),
                c(0, 2)))
@@ -101,10 +94,7 @@ rnbinom_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dnbinom]{dnbinom()}}
-\item \code{\link[=pnbinom]{pnbinom()}}
-\item \code{\link[=qnbinom]{qnbinom()}}
-\item \code{\link[=rnbinom]{rnbinom()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dnbinom]{dnbinom()}}, \code{\link[=pnbinom]{pnbinom()}}, \code{\link[=qnbinom]{qnbinom()}}, \code{\link[=rnbinom]{rnbinom()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

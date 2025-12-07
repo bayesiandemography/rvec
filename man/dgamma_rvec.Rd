@@ -5,7 +5,7 @@
 \alias{pgamma_rvec}
 \alias{qgamma_rvec}
 \alias{rgamma_rvec}
-\title{The Gamma Distribution, Using Multiple Draws}
+\title{Gamma Distribution, Using Multiple Draws}
 \usage{
 dgamma_rvec(x, shape, rate = 1, scale = 1/rate, log = FALSE)
 
@@ -33,13 +33,13 @@ rgamma_rvec(n, shape, rate = 1, scale = 1/rate, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{shape}{Shape parameter.
-See \code{\link[stats:GammaDist]{stats::dgamma()}}. Can be an rvec.}
+See \code{\link[=dgamma]{dgamma()}}. Can be an rvec.}
 
 \item{rate}{Rate parameter. See \code{\link[stats:GammaDist]{stats::dgamma()}}.
 Can be an rvec.}
 
 \item{scale}{Scale parameter.
-An alterative to \code{rate}. See \code{\link[stats:GammaDist]{stats::dgamma()}}.
+An alterative to \code{rate}. See \code{\link[=dgamma]{dgamma()}}.
 Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
@@ -66,8 +66,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -108,10 +107,7 @@ rgamma_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dgamma]{dgamma()}}
-\item \code{\link[=pgamma]{pgamma()}}
-\item \code{\link[=qgamma]{qgamma()}}
-\item \code{\link[=rgamma]{rgamma()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dgamma]{dgamma()}}, \code{\link[=pgamma]{pgamma()}}, \code{\link[=qgamma]{qgamma()}}, \code{\link[=rgamma]{rgamma()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

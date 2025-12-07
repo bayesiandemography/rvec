@@ -32,12 +32,14 @@
 #' - [n_draw()] Query number of draws.
 #'
 #' @examples
-#' new_rvec()
-#' new_rvec(TRUE, length = 3, n_draw = 100)
+#' suppressWarnings({
+#'   new_rvec()
+#'   new_rvec(TRUE, length = 3, n_draw = 100)
 #'
-#' x <- new_rvec(length = 2)
-#' x[1] <- rnorm_rvec(n = 1, n_draw = 1000)
-#' x[2] <- runif_rvec(n = 1, n_draw = 1000)
+#'   x <- new_rvec(length = 2)
+#'   x[1] <- rnorm_rvec(n = 1, n_draw = 1000)
+#'   x[2] <- runif_rvec(n = 1, n_draw = 1000)
+#' })
 #' @name new_rvec_deprecated
 #' @export
 new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
@@ -68,7 +70,7 @@ new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
                      i = "{.arg x} has type {.val {type}}.",
                      i = "Valid types are: {.val {valid_types}}."))
   }
-  lifecycle::deprecate_soft(when = "1.0.0",
+  lifecycle::deprecate_warn(when = "1.0.0",
                             what = "new_rvec()",
                             with = with)
   m <- matrix(na, nrow = length, ncol = n_draw)

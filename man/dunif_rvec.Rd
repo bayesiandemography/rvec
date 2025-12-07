@@ -19,10 +19,10 @@ runif_rvec(n, min = 0, max = 1, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{min}{Lower limits. Default is \code{0}.
-See \code{\link[stats:Uniform]{stats::dunif()}}. Can be an rvec.}
+See \code{\link[=dunif]{dunif()}}. Can be an rvec.}
 
 \item{max}{Upper limited. Default is \code{1}.
-See \code{\link[stats:Uniform]{stats::dunif()}}. Can be an rvec.}
+See \code{\link[=dunif]{dunif()}}. Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
 on a log scale. Default is
@@ -48,8 +48,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -89,10 +88,7 @@ runif_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dunif]{dunif()}}
-\item \code{\link[=punif]{punif()}}
-\item \code{\link[=qunif]{qunif()}}
-\item \code{\link[=runif]{runif()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dunif]{dunif()}}, \code{\link[=punif]{punif()}}, \code{\link[=qunif]{qunif()}}, \code{\link[=runif]{runif()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

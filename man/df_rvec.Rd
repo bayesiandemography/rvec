@@ -5,7 +5,7 @@
 \alias{pf_rvec}
 \alias{qf_rvec}
 \alias{rf_rvec}
-\title{The F Distribution, Using Multiple Draws}
+\title{F Distribution, Using Multiple Draws}
 \usage{
 df_rvec(x, df1, df2, ncp = 0, log = FALSE)
 
@@ -19,7 +19,7 @@ rf_rvec(n, df1, df2, ncp = 0, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{df1, df2}{Degrees of freedom.
-See \code{\link[stats:Fdist]{stats::df()}}. Can be rvecs.}
+See \code{\link[=df]{df()}}. Can be rvecs.}
 
 \item{ncp}{Non-centrality parameter.
 Default is \code{0}. Cannot be an rvec.}
@@ -87,10 +87,7 @@ rf_rvec(n = 2, df1 = 1,df2 = 2:3, n_draw = 1000)
 }
 \seealso{
 \itemize{
-\item \code{\link[=df]{df()}}
-\item \code{\link[=pf]{pf()}}
-\item \code{\link[=qf]{qf()}}
-\item \code{\link[=rf]{rf()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=df]{df()}}, \code{\link[=pf]{pf()}}, \code{\link[=qf]{qf()}}, \code{\link[=rf]{rf()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

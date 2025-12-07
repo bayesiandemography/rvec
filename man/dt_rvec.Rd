@@ -19,11 +19,11 @@ rt_rvec(n, df, ncp = 0, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{df}{Degrees of freedom.
-See \code{\link[stats:TDist]{stats::dt()}}.
+See \code{\link[=dt]{dt()}}.
 Can be an rvec.}
 
 \item{ncp}{Non-centrality parameter.
-Default is \code{0}. See \code{\link[stats:TDist]{stats::dt()}}.
+Default is \code{0}. See \code{\link[=dt]{dt()}}.
 Cannot be an rvec.}
 
 \item{log, log.p}{Whether to return results
@@ -50,8 +50,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -91,10 +90,7 @@ rt_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dt]{dt()}}
-\item \code{\link[=pt]{pt()}}
-\item \code{\link[=qt]{qt()}}
-\item \code{\link[=rt]{rt()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dt]{dt()}}, \code{\link[=pt]{pt()}}, \code{\link[=qt]{qt()}}, \code{\link[=rt]{rt()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

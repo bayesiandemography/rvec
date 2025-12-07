@@ -28,11 +28,11 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 \item \code{\link[=rvec_int]{rvec_int()}} Integers
 \item \code{\link[=rvec_lgl]{rvec_lgl()}} Logical
 \item \code{\link[=rvec_chr]{rvec_chr()}} Character
-\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} Data in data frame
 \item \code{\link[=new_rvec_dbl]{new_rvec_dbl()}} Empty doubles
 \item \code{\link[=new_rvec_int]{new_rvec_int()}} Empty integers
 \item \code{\link[=new_rvec_lgl]{new_rvec_lgl()}} Empty logical
 \item \code{\link[=new_rvec_chr]{new_rvec_chr()}} Empty character
+\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} Data in data frame
 }
 
 \strong{Manipulating rvecs}
@@ -40,6 +40,7 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 \item \code{\link[=if_else_rvec]{if_else_rvec()}} \code{if_else()} where \code{condition} is rvec
 \item \code{\link[=map_rvec]{map_rvec()}} \code{map()} for rvecs
 \item \code{\link[=extract_draw]{extract_draw()}} Single draw from rvec
+\item \code{\link[=pool_draws]{pool_draws()}} Combine samples
 }
 
 \strong{Probability distributions}

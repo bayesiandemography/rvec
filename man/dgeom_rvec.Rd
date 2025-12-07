@@ -5,7 +5,7 @@
 \alias{pgeom_rvec}
 \alias{qgeom_rvec}
 \alias{rgeom_rvec}
-\title{The Geometric Distribution, Using Multiple Draws}
+\title{Geometric Distribution, Using Multiple Draws}
 \usage{
 dgeom_rvec(x, prob, log = FALSE)
 
@@ -20,7 +20,7 @@ rgeom_rvec(n, prob, n_draw = NULL)
 
 \item{prob}{Probability of
 success in each trial.
-See \code{\link[stats:Geometric]{stats::dgeom()}}.
+See \code{\link[=dgeom]{dgeom()}}.
 Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
@@ -47,9 +47,8 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
-\item \code{rgeom_rvec()} always returns doubles (not integers).
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+\item Unlike base \code{rgeom()}, \code{rgeom_rvec()} always  returns doubles.
 }
 }
 \description{
@@ -77,13 +76,6 @@ vector recycling rules:
 \item All other vectors must have the same size
 }
 }
-\section{Warning}{
-
-
-From version rvec version 0.7.4 onwards,
-\code{rgeom_rvec()} always returns doubles (not integers).
-}
-
 \examples{
 x <- rvec(list(c(3, 5),
                c(0, 2)))
@@ -96,10 +88,7 @@ rgeom_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dgeom]{dgeom()}}
-\item \code{\link[=pgeom]{pgeom()}}
-\item \code{\link[=qgeom]{qgeom()}}
-\item \code{\link[=rgeom]{rgeom()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dgeom]{dgeom()}}, \code{\link[=pgeom]{pgeom()}}, \code{\link[=qgeom]{qgeom()}}, \code{\link[=rgeom]{rgeom()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

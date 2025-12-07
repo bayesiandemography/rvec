@@ -48,6 +48,23 @@ test_that("'check_flag' throws expected error NA", {
 })
 
 
+
+## 'check_has_by_or_groups' ---------------------------------------------------
+
+test_that("'check_has_by_or_groups' returns TRUE with valid inputs", {
+  expect_true(check_has_by_or_groups(by_colnums = c(x = 1L),
+                                     groups_colnums = integer()))
+  expect_true(check_has_by_or_groups(by_colnums = integer(),
+                                     groups_colnums = c(x = 3L)))
+})
+
+test_that("'check_has_by_and_groups' throws correct error with no group or by", {
+    expect_error(check_has_by_or_groups(by_colnums = integer(),
+                                        groups_colnums = integer()),
+                 "If `data` is not a grouped data frame, then a value must be supplied for `by`.")
+})
+
+
 ## 'check_i' ------------------------------------------------------------------
 
 test_that("'check_i' returns TRUE with valid inputs", {
@@ -441,6 +458,35 @@ test_that("'check_overlap_draw_values' throws expected error with overlap", {
 })
 
 
+## 'check_overlap_rvec_by' ------------------------------------------------
+
+test_that("'check_overlap_rvec_by' returns TRUE with valid inputs", {
+    expect_true(check_overlap_rvec_by(rvec_colnums = c(y = 3L),
+                                          by_colnums = c(v1 = 1L, v2 = 5L)))
+})
+
+test_that("'check_overlap_rvec_by' throws expected error with overlap", {
+    expect_error(check_overlap_rvec_by(rvec_colnums = c(v2 = 3L),
+                                           by_colnums = c(v1 = 1L,
+                                                              v2 = 3L)),
+                 "`v2` is an rvec but is being used as a 'by' variable")
+})
+
+
+## 'check_overlap_rvec_groups' ------------------------------------------------
+
+test_that("'check_overlap_rvec_groups' returns TRUE with valid inputs", {
+    expect_true(check_overlap_rvec_groups(rvec_colnums = c(y = 3L),
+                                          groups_colnums = c(v1 = 1L, v2 = 5L)))
+})
+
+test_that("'check_overlap_rvec_groups' throws expected error with overlap", {
+    expect_error(check_overlap_rvec_groups(rvec_colnums = c(v2 = 3L),
+                                           groups_colnums = c(v1 = 1L,
+                                                              v2 = 3L)),
+                 "`v2` is an rvec but is being used as a grouping variable")
+})
+
 ## 'check_overlap_values_by' ------------------------------------------------
 
 test_that("'check_overlap_values_by' returns TRUE with valid inputs", {
@@ -455,7 +501,7 @@ test_that("'check_overlap_values_by' throws expected error with overlap", {
 })
 
 
-## 'check_overlap_values_groups' ------------------------------------------------
+## 'check_overlap_values_groups' ----------------------------------------------
 
 test_that("'check_overlap_values_groups' returns TRUE with valid inputs", {
     expect_true(check_overlap_values_groups(values_colnums = c(v1 = 1L, v2 = 5L),

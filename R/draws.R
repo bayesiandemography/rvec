@@ -19,17 +19,14 @@
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
+#' - [draws_sd()]
+#' - [draws_var()]
+#' - [draws_cv()]
 #' - [draws_ci()]
 #' - [draws_quantile()]
 #'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
-#'
-#' For additional functions for summarising random draws, see
-#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
-#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
-#' Function [as_list_col()] converts rvecs into a
-#' format that `tidybayes` and `ggdist` can work with.
 #'
 #' @examples
 #' m <- rbind(a = c(TRUE,  FALSE,  TRUE),
@@ -145,16 +142,13 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
+#' - [draws_sd()]
+#' - [draws_var()]
+#' - [draws_cv()]
 #' - [draws_quantile()]
 #'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
-#'
-#' For additional functions for summarising random draws, see
-#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
-#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
-#' Function [as_list_col()] converts rvecs into a
-#' format that `tidybayes` and `ggdist` can work with.
 #'
 #' @examples
 #' set.seed(0)
@@ -262,17 +256,14 @@ draws_ci.rvec_chr <- function(x,
 #' - [draws_any()]
 #' - [draws_min()]
 #' - [draws_max()]
+#' - [draws_sd()]
+#' - [draws_var()]
+#' - [draws_cv()]
 #' - [draws_ci()]
 #' - [draws_quantile()]
 #'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
-#'
-#' For additional functions for summarising random draws, see
-#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
-#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
-#' Function [as_list_col()] converts rvecs into a
-#' format that `tidybayes` and `ggdist` can work with.
 #'
 #' @examples
 #' m <- rbind(a = c(1, 1, 1, 2, 3),
@@ -395,17 +386,14 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' - [draws_median()] 
 #' - [draws_mean()]
 #' - [draws_mode()]
+#' - [draws_sd()]
+#' - [draws_var()]
+#' - [draws_cv()]
 #' - [draws_ci()]
 #' - [draws_quantile()]
 #'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
-#'
-#' For additional functions for summarising random draws, see
-#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
-#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
-#' Function [as_list_col()] converts rvecs into a
-#' format that `tidybayes` and `ggdist` can work with.
 #'
 #' @examples
 #' m <- rbind(a = c(1,  -3,  2),
@@ -518,21 +506,18 @@ draws_max.rvec <- function(x, na_rm = FALSE) {
 #' functions across draws are:
 #' - [draws_all()]
 #' - [draws_any()]
-#' - [draws_ci()]
 #' - [draws_min()]
 #' - [draws_max()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
+#' - [draws_sd()]
+#' - [draws_var()]
+#' - [draws_cv()]
+#' - [draws_ci()]
 #'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
-#'
-#' For additional functions for summarising random draws, see
-#' [tidybayes](https://CRAN.R-project.org/package=tidybayes)
-#' and [ggdist](https://CRAN.R-project.org/package=ggdist).
-#' Function [as_list_col()] converts rvecs into a
-#' format that `tidybayes` and `ggdist` can work with.
 #'
 #' @examples
 #' set.seed(0)
@@ -746,12 +731,15 @@ draws_cv.rvec <- function(x, na_rm = FALSE) {
 #' Apply pre-specified functions across draws:
 #' - [draws_all()]
 #' - [draws_any()]
-#' - [draws_ci()]
 #' - [draws_min()]
 #' - [draws_max()]
 #' - [draws_median()]
 #' - [draws_mean()]
 #' - [draws_mode()]
+#' - [draws_sd()]
+#' - [draws_var()]
+#' - [draws_cv()]
+#' - [draws_ci()]
 #' - [draws_quantile()]
 #'
 #' @examples

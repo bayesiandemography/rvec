@@ -33,12 +33,14 @@ then \code{new_rvec()} returns an object
 of class \code{"rvec_int"}.
 }
 \examples{
-new_rvec()
-new_rvec(TRUE, length = 3, n_draw = 100)
+suppressWarnings({
+  new_rvec()
+  new_rvec(TRUE, length = 3, n_draw = 100)
 
-x <- new_rvec(length = 2)
-x[1] <- rnorm_rvec(n = 1, n_draw = 1000)
-x[2] <- runif_rvec(n = 1, n_draw = 1000)
+  x <- new_rvec(length = 2)
+  x[1] <- rnorm_rvec(n = 1, n_draw = 1000)
+  x[2] <- runif_rvec(n = 1, n_draw = 1000)
+})
 }
 \seealso{
 \itemize{

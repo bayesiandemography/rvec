@@ -5,7 +5,7 @@
 \alias{pexp_rvec}
 \alias{qexp_rvec}
 \alias{rexp_rvec}
-\title{The Exponential Distribution, Using Multiple Draws}
+\title{Exponential Distribution, Using Multiple Draws}
 \usage{
 dexp_rvec(x, rate = 1, log = FALSE)
 
@@ -19,7 +19,7 @@ rexp_rvec(n, rate = 1, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{rate}{Vector of rates.
-See \code{\link[stats:Exponential]{stats::dexp()}}.
+See \code{\link[=dexp]{dexp()}}.
 Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
@@ -46,8 +46,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -87,10 +86,7 @@ rexp_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dexp]{dexp()}}
-\item \code{\link[=pexp]{pexp()}}
-\item \code{\link[=qexp]{qexp()}}
-\item \code{\link[=rexp]{rexp()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dexp]{dexp()}}, \code{\link[=pexp]{pexp()}}, \code{\link[=qexp]{qexp()}}, \code{\link[=rexp]{rexp()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

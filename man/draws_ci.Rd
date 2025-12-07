@@ -88,6 +88,9 @@ across draws are:
 \item \code{\link[=draws_median]{draws_median()}}
 \item \code{\link[=draws_mean]{draws_mean()}}
 \item \code{\link[=draws_mode]{draws_mode()}}
+\item \code{\link[=draws_sd]{draws_sd()}}
+\item \code{\link[=draws_var]{draws_var()}}
+\item \code{\link[=draws_cv]{draws_cv()}}
 \item \code{\link[=draws_quantile]{draws_quantile()}}
 }
 
@@ -95,10 +98,4 @@ Apply arbitrary function across draws:
 \itemize{
 \item \code{\link[=draws_fun]{draws_fun()}}
 }
-
-For additional functions for summarising random draws, see
-\href{https://CRAN.R-project.org/package=tidybayes}{tidybayes}
-and \href{https://CRAN.R-project.org/package=ggdist}{ggdist}.
-Function \code{\link[=as_list_col]{as_list_col()}} converts rvecs into a
-format that \code{tidybayes} and \code{ggdist} can work with.
 }

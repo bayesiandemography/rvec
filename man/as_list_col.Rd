@@ -39,15 +39,12 @@ as_list_col(r)
 }
 \seealso{
 \itemize{
-\item \code{\link[=rvec]{rvec()}} to construct an \code{rvec}.
-\item \code{\link[=expand_from_rvec]{expand_from_rvec()}} to convert a data frame
-from using \code{rvec}s to using \code{draw} and \code{value}
-columns.
-\item as_rvar???
-\item converting \code{rvec}s to
+\item \code{\link[=rvec]{rvec()}} Construct an \code{rvec}.
+\item \code{\link[=expand_from_rvec]{expand_from_rvec()}} Convert a data frame
+from 'rvec' format to 'draw-and-value' format
 \item Functions for summarising and plotting
 distributions in package
 \href{https://CRAN.R-project.org/package=ggdist}{ggdist}
-understand list columns.
+use list columns (among other formats).
 }
 }

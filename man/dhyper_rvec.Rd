@@ -5,7 +5,7 @@
 \alias{phyper_rvec}
 \alias{qhyper_rvec}
 \alias{rhyper_rvec}
-\title{The Hypergeometric Distribution, Using Multiple Draws}
+\title{Hypergeometric Distribution, Using Multiple Draws}
 \usage{
 dhyper_rvec(x, m, n, k, log = FALSE)
 
@@ -54,9 +54,9 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
-\item \code{rhyper_rvec()} always returns doubles (not integers).
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+\item Unlike base \code{rhyper()}, \code{rhyper_rvec()}
+always returns doubles.
 }
 }
 \description{
@@ -84,13 +84,6 @@ vector recycling rules:
 \item All other vectors must have the same size
 }
 }
-\section{Warning}{
-
-
-From version rvec version 0.7.4 onwards,
-\code{rhyper_rvec()} always returns doubles (not integers).
-}
-
 \examples{
 x <- rvec(list(c(3, 5),
                c(0, 2)))
@@ -105,10 +98,7 @@ rhyper_rvec(nn = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dhyper]{dhyper()}}
-\item \code{\link[=phyper]{phyper()}}
-\item \code{\link[=qhyper]{qhyper()}}
-\item \code{\link[=rhyper]{rhyper()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dhyper]{dhyper()}}, \code{\link[=phyper]{phyper()}}, \code{\link[=qhyper]{qhyper()}}, \code{\link[=rhyper]{rhyper()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

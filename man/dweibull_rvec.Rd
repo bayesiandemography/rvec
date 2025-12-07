@@ -18,10 +18,10 @@ rweibull_rvec(n, shape, scale = 1, n_draw = NULL)
 \arguments{
 \item{x}{Quantiles. Can be an rvec.}
 
-\item{shape}{Shape parameter. See \code{\link[stats:Weibull]{stats::dweibull()}}.
+\item{shape}{Shape parameter. See \code{\link[=dweibull]{dweibull()}}.
 Can be an rvec.}
 
-\item{scale}{Scale parameter. See \code{\link[stats:Weibull]{stats::dweibull()}}
+\item{scale}{Scale parameter. See \code{\link[=dweibull]{dweibull()}}
 Default is \code{1}. Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
@@ -48,8 +48,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -89,10 +88,7 @@ rweibull_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dweibull]{dweibull()}}
-\item \code{\link[=pweibull]{pweibull()}}
-\item \code{\link[=qweibull]{qweibull()}}
-\item \code{\link[=rweibull]{rweibull()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dweibull]{dweibull()}}, \code{\link[=pweibull]{pweibull()}}, \code{\link[=qweibull]{qweibull()}}, \code{\link[=rweibull]{rweibull()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

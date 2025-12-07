@@ -6,7 +6,7 @@
 ## results from calling *beta with ncp missing.
 
 ## HAS_TESTS
-#' The Beta Distribution, Using Multiple Draws
+#' Beta Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -47,21 +47,17 @@
 #' @param q Quantiles. Can be an rvec.
 #' @param shape1,shape2 Parameters
 #' for beta distribution. Non-negative. 
-#' See [stats::dbeta()]. Can be an rvecs.
+#' See [dbeta()]. Can be an rvec.
 #' @param x Quantiles. Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
-#' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#'   or if a value for `n_draw` is supplied,
+#'   then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dbeta()]
-#' - [pbeta()]
-#' - [qbeta()]
-#' - [rbeta()]
-#' - [stats::distributions].
+#' - [dbeta()], [pbeta()], [qbeta()], [rbeta()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(0, 0.25),
@@ -195,7 +191,7 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
 ## 'binom' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Binomial Distribution, Using Multiple Draws
+#' Binomial Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -218,30 +214,22 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
-#' @section Warning:
-#' 
-#' From version rvec version 0.7.4 onwards,
-#' `rbinom_rvec()` always returns doubles (not integers).
-#'
 #' @inheritParams dbeta_rvec
 #' @param prob Probability of success in each trial.
-#' See [stats::dbinom()]. Can be an rvec.
+#' See [dbinom()]. Can be an rvec.
 #' @param size Number of trials.
-#' See [stats::dbinom()]. Can be an rvec.
+#' See [dbinom()]. Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
-#' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
-#' - `rbinom_rvec()` always returns doubles (not integers).
+#'   or if a value for `n_draw` is supplied,
+#'   then an [rvec][rvec()]; otherwise an ordinary R vector.
+#' - Unlike base `rbinom()`, `rbinom_rvec()`
+#'   always returns doubles.
 #'
 #' @seealso
-#' - [dbinom()]
-#' - [pbinom()]
-#' - [qbinom()]
-#' - [rbinom()]
-#' - [stats::distributions].
+#' - [dbinom()], [pbinom()], [qbinom()], [rbinom()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 8),
@@ -330,7 +318,7 @@ rbinom_rvec <- function(n, size, prob, n_draw = NULL) {
 ## 'cauchy' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Cauchy Distribution, Using Multiple Draws
+#' Cauchy Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -356,23 +344,20 @@ rbinom_rvec <- function(n, size, prob, n_draw = NULL) {
 #' @inheritParams dbeta_rvec
 #' @param location Center of distribution.
 #' Default is `0`.
-#' See [stats::dcauchy()]. Can be an rvec.
+#' See [dcauchy()]. Can be an rvec.
 #' @param scale Scale parameter.
 #' Default is `1`.
-#' See [stats::dcauchy()]. Can be an rvec.
+#' See [dcauchy()]. Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
-#' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#'   or if a value for `n_draw` is supplied,
+#'   then an [rvec][rvec()];
+#'   otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dcauchy()]
-#' - [pcauchy()]
-#' - [qcauchy()]
-#' - [rcauchy()]
-#' - [stats::distributions].
+#' - [dcauchy()], [pcauchy()], [qcauchy()], [rcauchy()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, -5.1),
@@ -461,7 +446,7 @@ rcauchy_rvec <- function(n, location = 0, scale = 1, n_draw = NULL) {
 ## 'chisq' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Chi-Squared Distribution, Using Multiple Draws
+#' Chi-Squared Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -486,21 +471,17 @@ rcauchy_rvec <- function(n, location = 0, scale = 1, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param df Degrees of freedom. 
-#' See [stats::dchisq()].
+#' See [dchisq()].
 #' Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dchisq()]
-#' - [pchisq()]
-#' - [qchisq()]
-#' - [rchisq()]
-#' - [stats::distributions].
+#' - [dchisq()], [pchisq()], [qchisq()], [rchisq()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 5.1),
@@ -620,7 +601,7 @@ rchisq_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
 ## 'exp' ----------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Exponential Distribution, Using Multiple Draws
+#' Exponential Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -645,21 +626,17 @@ rchisq_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param rate Vector of rates.
-#' See [stats::dexp()].
+#' See [dexp()].
 #' Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dexp()]
-#' - [pexp()]
-#' - [qexp()]
-#' - [rexp()]
-#' - [stats::distributions].
+#' - [dexp()], [pexp()], [qexp()], [rexp()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 5.1),
@@ -742,7 +719,7 @@ rexp_rvec <- function(n, rate = 1, n_draw = NULL) {
 ## results from calling *f with ncp missing.
 
 ## HAS_TESTS
-#' The F Distribution, Using Multiple Draws
+#' F Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -767,7 +744,7 @@ rexp_rvec <- function(n, rate = 1, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param df1,df2 Degrees of freedom. 
-#' See [stats::df()]. Can be rvecs.
+#' See [df()]. Can be rvecs.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
@@ -776,11 +753,8 @@ rexp_rvec <- function(n, rate = 1, n_draw = NULL) {
 #' - Otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [df()]
-#' - [pf()]
-#' - [qf()]
-#' - [rf()]
-#' - [stats::distributions].
+#' - [df()], [pf()], [qf()], [rf()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 5.1),
@@ -914,7 +888,7 @@ rf_rvec <- function(n, df1, df2, ncp = 0, n_draw = NULL) {
 ## because 'rate' appears first in base R gamma functions
 
 ## HAS_TESTS
-#' The Gamma Distribution, Using Multiple Draws
+#' Gamma Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -939,25 +913,21 @@ rf_rvec <- function(n, df1, df2, ncp = 0, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param shape Shape parameter.
-#' See [stats::dgamma()]. Can be an rvec.
+#' See [dgamma()]. Can be an rvec.
 #' @param rate Rate parameter. See [stats::dgamma()].
 #' Can be an rvec.
 #' @param scale Scale parameter.
-#' An alterative to `rate`. See [stats::dgamma()].
+#' An alterative to `rate`. See [dgamma()].
 #' Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dgamma()]
-#' - [pgamma()]
-#' - [qgamma()]
-#' - [rgamma()]
-#' - [stats::distributions].
+#' - [dgamma()], [pgamma()], [qgamma()], [rgamma()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 5.1),
@@ -1070,7 +1040,7 @@ rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
 ## 'geom' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Geometric Distribution, Using Multiple Draws
+#' Geometric Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -1093,30 +1063,21 @@ rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
-#' @section Warning:
-#' 
-#' From version rvec version 0.7.4 onwards,
-#' `rgeom_rvec()` always returns doubles (not integers).
-#' 
 #' @inheritParams dbeta_rvec
 #' @param prob Probability of
 #' success in each trial.
-#' See [stats::dgeom()].
+#' See [dgeom()].
 #' Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
-#' - `rgeom_rvec()` always returns doubles (not integers).
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
+#' - Unlike base `rgeom()`, `rgeom_rvec()` always  returns doubles.
 #'
 #' @seealso
-#' - [dgeom()]
-#' - [pgeom()]
-#' - [qgeom()]
-#' - [rgeom()]
-#' - [stats::distributions].
+#' - [dgeom()], [pgeom()], [qgeom()], [rgeom()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 5),
@@ -1195,7 +1156,7 @@ rgeom_rvec <- function(n, prob, n_draw = NULL) {
 ## 'hyper' --------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Hypergeometric Distribution, Using Multiple Draws
+#' Hypergeometric Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -1218,11 +1179,6 @@ rgeom_rvec <- function(n, prob, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
-#' @section Warning:
-#' 
-#' From version rvec version 0.7.4 onwards,
-#' `rhyper_rvec()` always returns doubles (not integers).
-#' 
 #' @inheritParams dbeta_rvec
 #' @param k Number of balls drawn from urn.
 #' See [stats::dhyper()]. Can be an rvec.
@@ -1238,17 +1194,14 @@ rgeom_rvec <- function(n, prob, n_draw = NULL) {
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
-#' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
-#' - `rhyper_rvec()` always returns doubles (not integers).
+#'   or if a value for `n_draw` is supplied,
+#'   then an [rvec][rvec()]; otherwise an ordinary R vector.
+#' - Unlike base `rhyper()`, `rhyper_rvec()`
+#'   always returns doubles.
 #'
 #' @seealso
-#' - [dhyper()]
-#' - [phyper()]
-#' - [qhyper()]
-#' - [rhyper()]
-#' - [stats::distributions].
+#' - [dhyper()], [phyper()], [qhyper()], [rhyper()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 5),
@@ -1347,7 +1300,7 @@ rhyper_rvec <- function(nn, m, n, k, n_draw = NULL) {
 ## 'lnorm' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Log-Normal Distribution, Using Multiple Draws
+#' Log-Normal Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -1372,24 +1325,20 @@ rhyper_rvec <- function(nn, m, n, k, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param meanlog Mean of distribution, on log scale.
-#' Default is `0`. See [stats::dlnorm()].
+#' Default is `0`. See [dlnorm()].
 #' Can be an rvec.
 #' @param sdlog Standard deviation of distribution,
-#' on log scale. Default is `1`. See [stats::dlnorm()].
+#' on log scale. Default is `1`. See [dlnorm()].
 #' Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dlnorm()]
-#' - [plnorm()]
-#' - [qlnorm()]
-#' - [rlnorm()]
-#' - [stats::distributions].
+#' - [dlnorm()], [plnorm()], [qlnorm()], [rlnorm()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3.1, 5.7),
@@ -1477,7 +1426,7 @@ rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
 ## 'multinom' -----------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Multinomial Distribution, Using Multiple Draws
+#' Multinomial Distribution, Using Multiple Draws
 #'
 #' Density function random generation for the
 #' multinomial distribution, modified to work with
@@ -1496,11 +1445,6 @@ rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
 #' and [rmultinom(), `dmultinom_rvec()` and
 #' `rmultinom_rvec()` do not recycle their arguments.
 #'
-#' @section Warning:
-#' 
-#' From version rvec version 0.7.4 onwards,
-#' `rmultinom_rvec()` always returns doubles (not integers).
-#' 
 #' @inheritParams dbeta_rvec
 #' @param size Total number of trials.
 #' See [stats::dmultinom()].
@@ -1517,20 +1461,18 @@ rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
 #' @returns
 #' - `dmultinom()`
 #'     - If any of the arguments are rvecs,
-#'     or if a value for `n_draw` is supplied,
-#'     then an [rvec][rvec()]
-#'     - Otherwise an ordinary R vector.
+#'       or if a value for `n_draw` is supplied,
+#'       then an [rvec][rvec()]; otherwise an ordinary R vector.
 #' - `rmultinom()`
 #'     - If `n` is 1, an rvec or
-#'     ordinary R vector.
-#'     - If `n` is greater than 1, a list
-#'     of rvecs or ordinary R vectors
-#' - `rmultinom_rvec()` always returns doubles (not integers).
+#'       ordinary R vector; otherwise a list
+#'       of rvecs or ordinary R vectors
+#' - Unlike base `rmultinom()`, `rmultinom_rvec()`
+#'   always returns doubles.
 #'
 #' @seealso
-#' - [dmultinom()]
-#' - [rmultinom()]
-#' - [stats::distributions].
+#' - [dmultinom()], [rmultinom()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(1, 4, 0),
@@ -1717,7 +1659,7 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
 ## 'nbinom' -------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Negative Binomial Distribution, Using Multiple Draws
+#' Negative Binomial Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -1740,32 +1682,24 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
-#' @section Warning:
-#' 
-#' From version rvec version 0.7.4 onwards,
-#' `rnbinom_rvec()` always returns doubles (not integers).
-#' 
 #' @inheritParams dbeta_rvec
-#' @param mu Mean value. See [stats::dnbinom()].
+#' @param mu Mean value. See [dnbinom()].
 #' Can be an rvec.
 #' @param prob Probability of success in each trial.
-#' See [stats::dnbinom()]. Can be an rvec.
+#' See [dnbinom()]. Can be an rvec.
 #' @param size Number of trials.
-#' See [stats::dnbinom()]. Can be an rvec.
+#' See [dnbinom()]. Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
-#' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
-#' - `rnbinom_rvec()` always returns doubles (not integers).
+#'   or if a value for `n_draw` is supplied,
+#'   then an [rvec][rvec()]; otherwise an ordinary R vector.
+#' - Unlike base `rbinom()`, `rnbinom_rvec()`
+#'   always returns doubles.
 #'
 #' @seealso
-#' - [dnbinom()]
-#' - [pnbinom()]
-#' - [qnbinom()]
-#' - [rnbinom()]
-#' - [stats::distributions].
+#' - [dnbinom()], [pnbinom()], [qnbinom()], [rnbinom()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 5),
@@ -1916,7 +1850,7 @@ rnbinom_rvec <- function(n, size, prob, mu, n_draw = NULL) {
 ## 'norm' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Normal Distribution, Using Multiple Draws
+#' Normal Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -1941,24 +1875,20 @@ rnbinom_rvec <- function(n, size, prob, mu, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param mean Mean of distribution. 
-#' Default is `0`.  See [stats::dnorm()].
+#' Default is `0`.  See [dnorm()].
 #' Can be an rvec.
 #' @param sd Standard deviation. 
-#' Default is `1`. See [stats::dnorm()].
+#' Default is `1`. See [dnorm()].
 #' Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dnorm()]
-#' - [pnorm()]
-#' - [qnorm()]
-#' - [rnorm()]
-#' - [stats::distributions].
+#' - [dnorm()], [pnorm()], [qnorm()], [rnorm()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3.1, -5.4),
@@ -2047,7 +1977,7 @@ rnorm_rvec <- function(n, mean = 0, sd = 1, n_draw = NULL) {
 ## 'pois' ---------------------------------------------------------------------
 
 ## HAS_TESTS
-#' The Poisson Distribution, Using Multiple Draws
+#' Poisson Distribution, Using Multiple Draws
 #'
 #' Density, distribution function,
 #' quantile function and random generation for the
@@ -2070,28 +2000,20 @@ rnorm_rvec <- function(n, mean = 0, sd = 1, n_draw = NULL) {
 #' - Vectors of length 1 are recycled
 #' - All other vectors must have the same size
 #'
-#' @section Warning:
-#' 
-#' From version rvec version 0.7.4 onwards,
-#' `rpois_rvec()` always returns doubles (not integers).
-#' 
 #' @inheritParams dbeta_rvec
 #' @param lambda Vector of means.
-#' See [stats::rpois()]. Can be an rvec.
+#' See [rpois()]. Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
-#' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
-#' - `rpois_rvec()` always returns doubles (not integers).
+#'   or if a value for `n_draw` is supplied,
+#'   then an [rvec][rvec()]; otherwise an ordinary R vector.
+#' - Unlike base `rpois()`, `rpois_rvec()`
+#'   always returns doubles.
 #'
 #' @seealso
-#' - [dpois()]
-#' - [ppois()]
-#' - [qpois()]
-#' - [rpois()]
-#' - [stats::distributions].
+#' - [dpois()], [ppois()], [qpois()], [rpois()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3, 5),
@@ -2195,24 +2117,20 @@ rpois_rvec <- function(n, lambda, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param df Degrees of freedom. 
-#' See [stats::dt()].
+#' See [dt()].
 #' Can be an rvec.
 #' @param ncp Non-centrality parameter. 
-#' Default is `0`. See [stats::dt()].
+#' Default is `0`. See [dt()].
 #' Cannot be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dt()]
-#' - [pt()]
-#' - [qt()]
-#' - [rt()]
-#' - [stats::distributions].
+#' - [dt()], [pt()], [qt()], [rt()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(-3.2, 5.3),
@@ -2357,22 +2275,18 @@ rt_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
 #'
 #' @inheritParams dbeta_rvec
 #' @param min Lower limits. Default is `0`.
-#' See [stats::dunif()]. Can be an rvec.
+#' See [dunif()]. Can be an rvec.
 #' @param max Upper limited. Default is `1`.
-#' See [stats::dunif()]. Can be an rvec.
+#' See [dunif()]. Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
 #' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#' then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dunif()]
-#' - [punif()]
-#' - [qunif()]
-#' - [runif()]
-#' - [stats::distributions].
+#' - [dunif()], [punif()], [qunif()], [runif()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(0.2, 0.5),
@@ -2485,23 +2399,19 @@ runif_rvec <- function(n, min = 0, max = 1, n_draw = NULL) {
 #' - All other vectors must have the same size
 #'
 #' @inheritParams dbeta_rvec
-#' @param scale Scale parameter. See [stats::dweibull()]
+#' @param scale Scale parameter. See [dweibull()]
 #' Default is `1`. Can be an rvec.
-#' @param shape Shape parameter. See [stats::dweibull()].
+#' @param shape Shape parameter. See [dweibull()].
 #' Can be an rvec.
 #'
 #' @returns
 #' - If any of the arguments are rvecs,
-#' or if a value for `n_draw` is supplied,
-#' then an [rvec][rvec()]
-#' - Otherwise an ordinary R vector.
+#'   or if a value for `n_draw` is supplied,
+#'   then an [rvec][rvec()]; otherwise an ordinary R vector.
 #'
 #' @seealso
-#' - [dweibull()]
-#' - [pweibull()]
-#' - [qweibull()]
-#' - [rweibull()]
-#' - [stats::distributions].
+#' - [dweibull()], [pweibull()], [qweibull()], [rweibull()] Base R equivalents
+#' - [distributions][stats::distributions] All base R distributions
 #'
 #' @examples
 #' x <- rvec(list(c(3.2, 4.5),

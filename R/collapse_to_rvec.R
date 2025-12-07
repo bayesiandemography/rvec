@@ -1,16 +1,16 @@
 
 ## User-visible functions -----------------------------------------------------
 
-#' Convert a Data Frame Between 'Database'
-#' and 'Rvec' Formats
+#' Convert a Data Frame Between 'Draws-and-Values' Format
+#' and 'Rvec' Format
 #'
 #' `collapse_to_rvec()` converts a data frame from
-#' a 'database' format to an 'rvec' format.
+#' a 'draws-and-values' format to an 'rvec' format.
 #' `expand_from_rvec()`, does the opposite,
 #' converting a data frame from an rvecs format
-#' to a database format.
+#' to a draws-and-values format.
 #'
-#' In database format, each row represents
+#' In a draws-and-values format, each row represents
 #' one random draw. The data frame contains
 #' a 'draw' variable that distinguishes different
 #' draws within the same combination
@@ -82,18 +82,17 @@
 #' - `expand_from_rvec()` **increases** the number of rows
 #'    by a factor of [n_draw()].
 #' - `collapse_to_rvec()` silently drops all variables
-#'   that are not draw, value or grouping variables
+#'   that are not draw, value, or grouping variables
 #'   if `data` is a
 #'   [grouped](https://dplyr.tidyverse.org/reference/group_data.html)
 #'   data frame.
 #'
 #' @seealso
-#' - [rvec()] to construct a single `rvec`.
-#' - [as_list_col()] to convert an `rvec`
-#'   to a list variable.
+#' - [rvec()] Construct a single `rvec`
+#' - [as_list_col()] Convert an `rvec`
+#'   to a list variable
 #' - [dplyr::group_vars()](https://dplyr.tidyverse.org/reference/group_data.html)
-#'   gives the names of the grouping variables
-#'   in a grouped data frame.
+#'   Names of grouping variables
 #'
 #' `collapse_to_rvec()` and `expand_from_rvec()`
 #' are analogous to
@@ -120,13 +119,13 @@
 #'   "Banker",       3,    420
 #' )
 #'
-#' ## database format to rvec format
+#' ## draws-and-values format to rvec format
 #' data_rv <- data_db |>
 #'   collapse_to_rvec(draw = sim,
 #'                    values = pay)
 #' data_rv
 #'
-#' ## rvec format to database format
+#' ## rvec format to draws-and-values format
 #' data_rv |>
 #'   expand_from_rvec()
 #'

@@ -7,8 +7,8 @@
 \alias{expand_from_rvec}
 \alias{expand_from_rvec.data.frame}
 \alias{expand_from_rvec.grouped_df}
-\title{Convert a Data Frame Between 'Database'
-and 'Rvec' Formats}
+\title{Convert a Data Frame Between 'Draws-and-Values' Format
+and 'Rvec' Format}
 \usage{
 collapse_to_rvec(data, draw = draw, values = value, by = NULL, type = NULL)
 
@@ -51,7 +51,7 @@ by a factor of \code{\link[=n_draw]{n_draw()}}.
 \item \code{expand_from_rvec()} \strong{increases} the number of rows
 by a factor of \code{\link[=n_draw]{n_draw()}}.
 \item \code{collapse_to_rvec()} silently drops all variables
-that are not draw, value or grouping variables
+that are not draw, value, or grouping variables
 if \code{data} is a
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}
 data frame.
@@ -59,13 +59,13 @@ data frame.
 }
 \description{
 \code{collapse_to_rvec()} converts a data frame from
-a 'database' format to an 'rvec' format.
+a 'draws-and-values' format to an 'rvec' format.
 \code{expand_from_rvec()}, does the opposite,
 converting a data frame from an rvecs format
-to a database format.
+to a draws-and-values format.
 }
 \details{
-In database format, each row represents
+In a draws-and-values format, each row represents
 one random draw. The data frame contains
 a 'draw' variable that distinguishes different
 draws within the same combination
@@ -133,13 +133,13 @@ data_db <- tribble(
   "Banker",       3,    420
 )
 
-## database format to rvec format
+## draws-and-values format to rvec format
 data_rv <- data_db |>
   collapse_to_rvec(draw = sim,
                    values = pay)
 data_rv
 
-## rvec format to database format
+## rvec format to draws-and-values format
 data_rv |>
   expand_from_rvec()
 
@@ -171,12 +171,11 @@ data_db |>
 }
 \seealso{
 \itemize{
-\item \code{\link[=rvec]{rvec()}} to construct a single \code{rvec}.
-\item \code{\link[=as_list_col]{as_list_col()}} to convert an \code{rvec}
-to a list variable.
+\item \code{\link[=rvec]{rvec()}} Construct a single \code{rvec}
+\item \code{\link[=as_list_col]{as_list_col()}} Convert an \code{rvec}
+to a list variable
 \item \href{https://dplyr.tidyverse.org/reference/group_data.html}{dplyr::group_vars()}
-gives the names of the grouping variables
-in a grouped data frame.
+Names of grouping variables
 }
 
 \code{collapse_to_rvec()} and \code{expand_from_rvec()}

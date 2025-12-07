@@ -5,7 +5,7 @@
 \alias{pbeta_rvec}
 \alias{qbeta_rvec}
 \alias{rbeta_rvec}
-\title{The Beta Distribution, Using Multiple Draws}
+\title{Beta Distribution, Using Multiple Draws}
 \usage{
 dbeta_rvec(x, shape1, shape2, ncp = 0, log = FALSE)
 
@@ -20,7 +20,7 @@ rbeta_rvec(n, shape1, shape2, ncp = 0, n_draw = NULL)
 
 \item{shape1, shape2}{Parameters
 for beta distribution. Non-negative.
-See \code{\link[stats:Beta]{stats::dbeta()}}. Can be an rvecs.}
+See \code{\link[=dbeta]{dbeta()}}. Can be an rvec.}
 
 \item{ncp}{Non-centrality parameter.
 Default is \code{0}. Cannot be an rvec.}
@@ -49,8 +49,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -91,10 +90,7 @@ rbeta_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dbeta]{dbeta()}}
-\item \code{\link[=pbeta]{pbeta()}}
-\item \code{\link[=qbeta]{qbeta()}}
-\item \code{\link[=rbeta]{rbeta()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dbeta]{dbeta()}}, \code{\link[=pbeta]{pbeta()}}, \code{\link[=qbeta]{qbeta()}}, \code{\link[=rbeta]{rbeta()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

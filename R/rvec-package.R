@@ -22,17 +22,18 @@
 #' - [rvec_int()] Integers
 #' - [rvec_lgl()] Logical
 #' - [rvec_chr()] Character
-#' - [collapse_to_rvec()] Data in data frame
 #' - [new_rvec_dbl()] Empty doubles
 #' - [new_rvec_int()] Empty integers
 #' - [new_rvec_lgl()] Empty logical
 #' - [new_rvec_chr()] Empty character
+#' - [collapse_to_rvec()] Data in data frame
 #'
 #' **Manipulating rvecs**
 #'
 #' - [if_else_rvec()] `if_else()` where `condition` is rvec
 #' - [map_rvec()] `map()` for rvecs
 #' - [extract_draw()] Single draw from rvec
+#' - [pool_draws()] Combine samples
 #'
 #' **Probability distributions**
 #'

@@ -3,7 +3,7 @@
 \name{dmultinom_rvec}
 \alias{dmultinom_rvec}
 \alias{rmultinom_rvec}
-\title{The Multinomial Distribution, Using Multiple Draws}
+\title{Multinomial Distribution, Using Multiple Draws}
 \usage{
 dmultinom_rvec(x, size = NULL, prob, log = FALSE)
 
@@ -39,17 +39,16 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 \item \code{rmultinom()}
 \itemize{
 \item If \code{n} is 1, an rvec or
-ordinary R vector.
-\item If \code{n} is greater than 1, a list
+ordinary R vector; otherwise a list
 of rvecs or ordinary R vectors
 }
-\item \code{rmultinom_rvec()} always returns doubles (not integers).
+\item Unlike base \code{rmultinom()}, \code{rmultinom_rvec()}
+always returns doubles.
 }
 }
 \description{
@@ -71,13 +70,6 @@ Like the base R functions \code{\link[=dmultinom]{dmultinom()}}
 and [rmultinom(), \code{dmultinom_rvec()} and
 \code{rmultinom_rvec()} do not recycle their arguments.
 }
-\section{Warning}{
-
-
-From version rvec version 0.7.4 onwards,
-\code{rmultinom_rvec()} always returns doubles (not integers).
-}
-
 \examples{
 x <- rvec(list(c(1, 4, 0),
                c(1, 0, 0),
@@ -92,8 +84,7 @@ rmultinom_rvec(n = 1,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dmultinom]{dmultinom()}}
-\item \code{\link[=rmultinom]{rmultinom()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dmultinom]{dmultinom()}}, \code{\link[=rmultinom]{rmultinom()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

@@ -5,7 +5,7 @@
 \alias{pcauchy_rvec}
 \alias{qcauchy_rvec}
 \alias{rcauchy_rvec}
-\title{The Cauchy Distribution, Using Multiple Draws}
+\title{Cauchy Distribution, Using Multiple Draws}
 \usage{
 dcauchy_rvec(x, location = 0, scale = 1, log = FALSE)
 
@@ -20,11 +20,11 @@ rcauchy_rvec(n, location = 0, scale = 1, n_draw = NULL)
 
 \item{location}{Center of distribution.
 Default is \code{0}.
-See \code{\link[stats:Cauchy]{stats::dcauchy()}}. Can be an rvec.}
+See \code{\link[=dcauchy]{dcauchy()}}. Can be an rvec.}
 
 \item{scale}{Scale parameter.
 Default is \code{1}.
-See \code{\link[stats:Cauchy]{stats::dcauchy()}}. Can be an rvec.}
+See \code{\link[=dcauchy]{dcauchy()}}. Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
 on a log scale. Default is
@@ -50,8 +50,8 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec};
+otherwise an ordinary R vector.
 }
 }
 \description{
@@ -91,10 +91,7 @@ rcauchy_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dcauchy]{dcauchy()}}
-\item \code{\link[=pcauchy]{pcauchy()}}
-\item \code{\link[=qcauchy]{qcauchy()}}
-\item \code{\link[=rcauchy]{rcauchy()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dcauchy]{dcauchy()}}, \code{\link[=pcauchy]{pcauchy()}}, \code{\link[=qcauchy]{qcauchy()}}, \code{\link[=rcauchy]{rcauchy()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

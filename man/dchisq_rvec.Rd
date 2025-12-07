@@ -5,7 +5,7 @@
 \alias{pchisq_rvec}
 \alias{qchisq_rvec}
 \alias{rchisq_rvec}
-\title{The Chi-Squared Distribution, Using Multiple Draws}
+\title{Chi-Squared Distribution, Using Multiple Draws}
 \usage{
 dchisq_rvec(x, df, ncp = 0, log = FALSE)
 
@@ -19,7 +19,7 @@ rchisq_rvec(n, df, ncp = 0, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{df}{Degrees of freedom.
-See \code{\link[stats:Chisquare]{stats::dchisq()}}.
+See \code{\link[=dchisq]{dchisq()}}.
 Can be an rvec.}
 
 \item{ncp}{Non-centrality parameter.
@@ -49,8 +49,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -90,10 +89,7 @@ rchisq_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dchisq]{dchisq()}}
-\item \code{\link[=pchisq]{pchisq()}}
-\item \code{\link[=qchisq]{qchisq()}}
-\item \code{\link[=rchisq]{rchisq()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dchisq]{dchisq()}}, \code{\link[=pchisq]{pchisq()}}, \code{\link[=qchisq]{qchisq()}}, \code{\link[=rchisq]{rchisq()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

@@ -9,23 +9,20 @@
 #'
 #' @returns A list:
 #' - If `x` is an `rvec`, then the list contains
-#' `length(x)` vectors, each of which has
-#' `n_draw(x)` elements.
+#'   `length(x)` vectors, each of which has
+#'   `n_draw(x)` elements.
 #' - If `x` is a matrix, then the list contains
-#' `nrow(x)` vectors, each of which has
-#' `ncol(x)` elements.
+#'   `nrow(x)` vectors, each of which has
+#'   `ncol(x)` elements.
 #'
 #' @seealso 
-#' - [rvec()] to construct an `rvec`.
-#' - [expand_from_rvec()] to convert a data frame
-#' from using `rvec`s to using `draw` and `value`
-#' columns.
-#' - as_rvar???
-#' - converting `rvec`s to 
+#' - [rvec()] Construct an `rvec`.
+#' - [expand_from_rvec()] Convert a data frame
+#'   from 'rvec' format to 'draw-and-value' format
 #' - Functions for summarising and plotting
-#' distributions in package
-#' [ggdist](https://CRAN.R-project.org/package=ggdist)
-#' understand list columns.
+#'   distributions in package
+#'   [ggdist](https://CRAN.R-project.org/package=ggdist)
+#'   use list columns (among other formats).
 #' 
 #' @examples
 #' l <- list(1:3,

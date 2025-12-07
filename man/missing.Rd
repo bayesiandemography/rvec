@@ -28,13 +28,13 @@ applied recursively to lists. Ignored when
 }
 \value{
 \itemize{
-\item \code{anyNA()} - A logical rvec with length 1.
-\item \code{is.na()}, \code{is.nan()}, \code{is.finite()}, \code{is.infinite()} - A
+\item \code{anyNA()} A logical rvec with length 1.
+\item \code{is.na()}, \code{is.nan()}, \code{is.finite()}, \code{is.infinite()} A
 logical rvec with the same length as the original rvec.
-\item \code{na.omit()}, \code{na.exclude()} - An rvec with the same
+\item \code{na.omit()}, \code{na.exclude()} An rvec with the same
 class as the original rvec, minus any elements that
 have \code{NA}s in any draws.
-\item \code{na.fail()} - The original rvec, or an error.
+\item \code{na.fail()} The original rvec, or an error.
 }
 }
 \description{
@@ -90,16 +90,16 @@ vec_detect_complete(x)
 }
 \seealso{
 \itemize{
-\item \code{\link[=if_else_rvec]{if_else_rvec()}} for modifying individual
-values within draws.
-\item Base R functions \code{\link[=is.na]{is.na()}}, \code{\link[=is.nan]{is.nan()}},
+\item \code{\link[=if_else_rvec]{if_else_rvec()}} Modify individual
+values within draws
+\item \code{\link[=is.na]{is.na()}}, \code{\link[=is.nan]{is.nan()}},
 \code{\link[=is.finite]{is.finite()}}, \code{\link[=is.infinite]{is.infinite()}},
-\code{\link[=anyNA]{anyNA()}}, \code{\link[=na.omit]{na.omit()}}, \code{\link[=na.exclude]{na.exclude()}}
-\item \code{\link[vctrs:missing]{vctrs::vec_detect_missing()}} to test whether
-all draws for an observation are missing.
-\item \code{\link[vctrs:vec_detect_complete]{vctrs::vec_detect_complete()}} to test whether
-any draws for an observation are missing.
-\item \code{\link[=draws_any]{draws_any()}}, \code{\link[=draws_all]{draws_all()}} to summarise
-across draws.
+\code{\link[=anyNA]{anyNA()}}, \code{\link[=na.omit]{na.omit()}}, \code{\link[=na.exclude]{na.exclude()}} Base R functions
+\item \code{\link[vctrs:missing]{vctrs::vec_detect_missing()}} Test whether
+all draws for an observation are missing
+\item \code{\link[vctrs:vec_detect_complete]{vctrs::vec_detect_complete()}} Test whether
+any draws for an observation are missing
+\item \code{\link[=draws_any]{draws_any()}}, \code{\link[=draws_all]{draws_all()}} Summarise
+across draws
 }
 }

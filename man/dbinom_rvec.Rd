@@ -5,7 +5,7 @@
 \alias{pbinom_rvec}
 \alias{qbinom_rvec}
 \alias{rbinom_rvec}
-\title{The Binomial Distribution, Using Multiple Draws}
+\title{Binomial Distribution, Using Multiple Draws}
 \usage{
 dbinom_rvec(x, size, prob, log = FALSE)
 
@@ -19,10 +19,10 @@ rbinom_rvec(n, size, prob, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{size}{Number of trials.
-See \code{\link[stats:Binomial]{stats::dbinom()}}. Can be an rvec.}
+See \code{\link[=dbinom]{dbinom()}}. Can be an rvec.}
 
 \item{prob}{Probability of success in each trial.
-See \code{\link[stats:Binomial]{stats::dbinom()}}. Can be an rvec.}
+See \code{\link[=dbinom]{dbinom()}}. Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
 on a log scale. Default is
@@ -48,9 +48,9 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
-\item Otherwise an ordinary R vector.
-\item \code{rbinom_rvec()} always returns doubles (not integers).
+then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+\item Unlike base \code{rbinom()}, \code{rbinom_rvec()}
+always returns doubles.
 }
 }
 \description{
@@ -78,13 +78,6 @@ vector recycling rules:
 \item All other vectors must have the same size
 }
 }
-\section{Warning}{
-
-
-From version rvec version 0.7.4 onwards,
-\code{rbinom_rvec()} always returns doubles (not integers).
-}
-
 \examples{
 x <- rvec(list(c(3, 8),
                c(0, 2)))
@@ -98,10 +91,7 @@ rbinom_rvec(n = 2,
 }
 \seealso{
 \itemize{
-\item \code{\link[=dbinom]{dbinom()}}
-\item \code{\link[=pbinom]{pbinom()}}
-\item \code{\link[=qbinom]{qbinom()}}
-\item \code{\link[=rbinom]{rbinom()}}
-\item \link[stats:Distributions]{stats::distributions}.
+\item \code{\link[=dbinom]{dbinom()}}, \code{\link[=pbinom]{pbinom()}}, \code{\link[=qbinom]{qbinom()}}, \code{\link[=rbinom]{rbinom()}} Base R equivalents
+\item \link[stats:Distributions]{distributions} All base R distributions
 }
 }

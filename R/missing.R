@@ -14,7 +14,7 @@
 #' [vctrs](https://vctrs.r-lib.org)
 #' behavior, which is to return a logical
 #' vector with length equal to `length(x)`.
-#' With rvecs, the standard **vctrs** behavior
+#' With rvecs, the standard \pkg{vctrs} behavior
 #' would entail summarising across draws,
 #' which is the job of the [draws_*][draws_all()]
 #' functions.
@@ -26,26 +26,26 @@
 #' @param ... Currently ignored.
 #'
 #' @returns
-#' - `anyNA()` - A logical rvec with length 1.
-#' - `is.na()`, `is.nan()`, `is.finite()`, `is.infinite()` - A
+#' - `anyNA()` A logical rvec with length 1.
+#' - `is.na()`, `is.nan()`, `is.finite()`, `is.infinite()` A
 #'    logical rvec with the same length as the original rvec.
-#' - `na.omit()`, `na.exclude()` - An rvec with the same
+#' - `na.omit()`, `na.exclude()` An rvec with the same
 #'    class as the original rvec, minus any elements that
 #'    have `NA`s in any draws.
-#' - `na.fail()` - The original rvec, or an error.
+#' - `na.fail()` The original rvec, or an error.
 #'
 #' @seealso
-#' - [if_else_rvec()] for modifying individual
-#'   values within draws.
-#' - Base R functions [is.na()], [is.nan()],
+#' - [if_else_rvec()] Modify individual
+#'   values within draws
+#' - [is.na()], [is.nan()],
 #'   [is.finite()], [is.infinite()],
-#'   [anyNA()], [na.omit()], [na.exclude()]
-#' - [vctrs::vec_detect_missing()] to test whether
-#'   all draws for an observation are missing.
-#' - [vctrs::vec_detect_complete()] to test whether
-#'   any draws for an observation are missing.
-#' - [draws_any()], [draws_all()] to summarise
-#'   across draws.
+#'   [anyNA()], [na.omit()], [na.exclude()] Base R functions
+#' - [vctrs::vec_detect_missing()] Test whether
+#'   all draws for an observation are missing
+#' - [vctrs::vec_detect_complete()] Test whether
+#'   any draws for an observation are missing
+#' - [draws_any()], [draws_all()] Summarise
+#'   across draws
 #' 
 #' @examples
 #' x <- rvec(list(c(1.2, NA),
