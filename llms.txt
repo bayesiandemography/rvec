@@ -1,0 +1,238 @@
+# rvec [![](data-raw/sticker.png)](https://github.com/bayesiandemography/rvec)
+
+Tools for working with random draws, including draws from a simulation
+or Bayesian analysis. The main data structure is an `rvec`, which holds
+multiple draws but which behaves (mainly) like a standard R vector.
+
+## Installation
+
+``` r
+install.packages("rvec")                            ## CRAN version
+devtools::install_github("bayesiandemography/rvec") ## development version
+```
+
+## Example
+
+``` r
+library(rvec, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
+```
+
+Create an `rvec`.
+
+``` r
+x <- rvec(rbind(c(10, 11),
+                c(100, 101),
+                c(1000, 1001)))
+x
+#> <rvec_dbl<2>[3]>
+#> [1] 10,11     100,101   1000,1001
+```
+
+Perform arithmetic on it.
+
+``` r
+x + 1
+#> <rvec_dbl<2>[3]>
+#> [1] 11,12     101,102   1001,1002
+```
+
+Put it in a tibble.
+
+``` r
+df <- tibble(g = c(1, 2, 1), x)
+df
+#> # A tibble: 3 × 2
+#>       g         x
+#>   <dbl> <rdbl<2>>
+#> 1     1     10,11
+#> 2     2   100,101
+#> 3     1 1000,1001
+```
+
+Manipulate it in a tibble.
+
+``` r
+df %>%
+  group_by(g) %>%
+  count(wt = x)
+#> # A tibble: 2 × 2
+#> # Groups:   g [2]
+#>       g         n
+#>   <dbl> <rdbl<2>>
+#> 1     1 1010,1012
+#> 2     2   100,101
+```
+
+Summarise it.
+
+``` r
+draws_mean(x)
+#> [1]   10.5  100.5 1000.5
+```
+
+## Other packages for working with random draws
+
+- [rv](https://CRAN.R-project.org/package=rv)
+- [posterior](https://CRAN.R-project.org/package=posterior)
+
+# Package index
+
+## All functions
+
+- [`as_list_col()`](https://bayesiandemography.github.io/rvec/reference/as_list_col.md)
+  : Convert to List Column
+- [`collapse_to_rvec()`](https://bayesiandemography.github.io/rvec/reference/collapse_to_rvec.md)
+  [`expand_from_rvec()`](https://bayesiandemography.github.io/rvec/reference/collapse_to_rvec.md)
+  : Convert a Data Frame Between 'Database' and 'Rvec' Formats
+- [`dbeta_rvec()`](https://bayesiandemography.github.io/rvec/reference/dbeta_rvec.md)
+  [`pbeta_rvec()`](https://bayesiandemography.github.io/rvec/reference/dbeta_rvec.md)
+  [`qbeta_rvec()`](https://bayesiandemography.github.io/rvec/reference/dbeta_rvec.md)
+  [`rbeta_rvec()`](https://bayesiandemography.github.io/rvec/reference/dbeta_rvec.md)
+  : The Beta Distribution, Using Multiple Draws
+- [`dbinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dbinom_rvec.md)
+  [`pbinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dbinom_rvec.md)
+  [`qbinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dbinom_rvec.md)
+  [`rbinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dbinom_rvec.md)
+  : The Binomial Distribution, Using Multiple Draws
+- [`dcauchy_rvec()`](https://bayesiandemography.github.io/rvec/reference/dcauchy_rvec.md)
+  [`pcauchy_rvec()`](https://bayesiandemography.github.io/rvec/reference/dcauchy_rvec.md)
+  [`qcauchy_rvec()`](https://bayesiandemography.github.io/rvec/reference/dcauchy_rvec.md)
+  [`rcauchy_rvec()`](https://bayesiandemography.github.io/rvec/reference/dcauchy_rvec.md)
+  : The Cauchy Distribution, Using Multiple Draws
+- [`dchisq_rvec()`](https://bayesiandemography.github.io/rvec/reference/dchisq_rvec.md)
+  [`pchisq_rvec()`](https://bayesiandemography.github.io/rvec/reference/dchisq_rvec.md)
+  [`qchisq_rvec()`](https://bayesiandemography.github.io/rvec/reference/dchisq_rvec.md)
+  [`rchisq_rvec()`](https://bayesiandemography.github.io/rvec/reference/dchisq_rvec.md)
+  : The Chi-Squared Distribution, Using Multiple Draws
+- [`dexp_rvec()`](https://bayesiandemography.github.io/rvec/reference/dexp_rvec.md)
+  [`pexp_rvec()`](https://bayesiandemography.github.io/rvec/reference/dexp_rvec.md)
+  [`qexp_rvec()`](https://bayesiandemography.github.io/rvec/reference/dexp_rvec.md)
+  [`rexp_rvec()`](https://bayesiandemography.github.io/rvec/reference/dexp_rvec.md)
+  : The Exponential Distribution, Using Multiple Draws
+- [`df_rvec()`](https://bayesiandemography.github.io/rvec/reference/df_rvec.md)
+  [`pf_rvec()`](https://bayesiandemography.github.io/rvec/reference/df_rvec.md)
+  [`qf_rvec()`](https://bayesiandemography.github.io/rvec/reference/df_rvec.md)
+  [`rf_rvec()`](https://bayesiandemography.github.io/rvec/reference/df_rvec.md)
+  : The F Distribution, Using Multiple Draws
+- [`dgamma_rvec()`](https://bayesiandemography.github.io/rvec/reference/dgamma_rvec.md)
+  [`pgamma_rvec()`](https://bayesiandemography.github.io/rvec/reference/dgamma_rvec.md)
+  [`qgamma_rvec()`](https://bayesiandemography.github.io/rvec/reference/dgamma_rvec.md)
+  [`rgamma_rvec()`](https://bayesiandemography.github.io/rvec/reference/dgamma_rvec.md)
+  : The Gamma Distribution, Using Multiple Draws
+- [`dgeom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dgeom_rvec.md)
+  [`pgeom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dgeom_rvec.md)
+  [`qgeom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dgeom_rvec.md)
+  [`rgeom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dgeom_rvec.md)
+  : The Geometric Distribution, Using Multiple Draws
+- [`dhyper_rvec()`](https://bayesiandemography.github.io/rvec/reference/dhyper_rvec.md)
+  [`phyper_rvec()`](https://bayesiandemography.github.io/rvec/reference/dhyper_rvec.md)
+  [`qhyper_rvec()`](https://bayesiandemography.github.io/rvec/reference/dhyper_rvec.md)
+  [`rhyper_rvec()`](https://bayesiandemography.github.io/rvec/reference/dhyper_rvec.md)
+  : The Hypergeometric Distribution, Using Multiple Draws
+- [`divorce`](https://bayesiandemography.github.io/rvec/reference/divorce.md)
+  : Divorce Rates in New Zealand
+- [`dlnorm_rvec()`](https://bayesiandemography.github.io/rvec/reference/dlnorm_rvec.md)
+  [`plnorm_rvec()`](https://bayesiandemography.github.io/rvec/reference/dlnorm_rvec.md)
+  [`qlnorm_rvec()`](https://bayesiandemography.github.io/rvec/reference/dlnorm_rvec.md)
+  [`rlnorm_rvec()`](https://bayesiandemography.github.io/rvec/reference/dlnorm_rvec.md)
+  : The Log-Normal Distribution, Using Multiple Draws
+- [`dmultinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dmultinom_rvec.md)
+  [`rmultinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dmultinom_rvec.md)
+  : The Multinomial Distribution, Using Multiple Draws
+- [`dnbinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dnbinom_rvec.md)
+  [`pnbinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dnbinom_rvec.md)
+  [`qnbinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dnbinom_rvec.md)
+  [`rnbinom_rvec()`](https://bayesiandemography.github.io/rvec/reference/dnbinom_rvec.md)
+  : The Negative Binomial Distribution, Using Multiple Draws
+- [`dnorm_rvec()`](https://bayesiandemography.github.io/rvec/reference/dnorm_rvec.md)
+  [`pnorm_rvec()`](https://bayesiandemography.github.io/rvec/reference/dnorm_rvec.md)
+  [`qnorm_rvec()`](https://bayesiandemography.github.io/rvec/reference/dnorm_rvec.md)
+  [`rnorm_rvec()`](https://bayesiandemography.github.io/rvec/reference/dnorm_rvec.md)
+  : The Normal Distribution, Using Multiple Draws
+- [`dpois_rvec()`](https://bayesiandemography.github.io/rvec/reference/dpois_rvec.md)
+  [`ppois_rvec()`](https://bayesiandemography.github.io/rvec/reference/dpois_rvec.md)
+  [`qpois_rvec()`](https://bayesiandemography.github.io/rvec/reference/dpois_rvec.md)
+  [`rpois_rvec()`](https://bayesiandemography.github.io/rvec/reference/dpois_rvec.md)
+  : The Poisson Distribution, Using Multiple Draws
+- [`draws_all()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
+  [`draws_any()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
+  : Logical Operations Across Random Draws
+- [`draws_ci()`](https://bayesiandemography.github.io/rvec/reference/draws_ci.md)
+  : Credible Intervals from Random Draws
+- [`draws_fun()`](https://bayesiandemography.github.io/rvec/reference/draws_fun.md)
+  : Apply Summary Function Across Random Draws
+- [`draws_median()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
+  [`draws_mean()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
+  [`draws_mode()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
+  : Medians, Means, and Modes Across Random Draws
+- [`draws_min()`](https://bayesiandemography.github.io/rvec/reference/draws_min.md)
+  [`draws_max()`](https://bayesiandemography.github.io/rvec/reference/draws_min.md)
+  : Minima and Maxima Across Random Draws
+- [`draws_quantile()`](https://bayesiandemography.github.io/rvec/reference/draws_quantile.md)
+  : Quantiles Across Random Draws
+- [`dt_rvec()`](https://bayesiandemography.github.io/rvec/reference/dt_rvec.md)
+  [`pt_rvec()`](https://bayesiandemography.github.io/rvec/reference/dt_rvec.md)
+  [`qt_rvec()`](https://bayesiandemography.github.io/rvec/reference/dt_rvec.md)
+  [`rt_rvec()`](https://bayesiandemography.github.io/rvec/reference/dt_rvec.md)
+  : Student t Distribution, Using Multiple Draws
+- [`dunif_rvec()`](https://bayesiandemography.github.io/rvec/reference/dunif_rvec.md)
+  [`punif_rvec()`](https://bayesiandemography.github.io/rvec/reference/dunif_rvec.md)
+  [`qunif_rvec()`](https://bayesiandemography.github.io/rvec/reference/dunif_rvec.md)
+  [`runif_rvec()`](https://bayesiandemography.github.io/rvec/reference/dunif_rvec.md)
+  : Uniform Distribution, Using Multiple Draws
+- [`dweibull_rvec()`](https://bayesiandemography.github.io/rvec/reference/dweibull_rvec.md)
+  [`pweibull_rvec()`](https://bayesiandemography.github.io/rvec/reference/dweibull_rvec.md)
+  [`qweibull_rvec()`](https://bayesiandemography.github.io/rvec/reference/dweibull_rvec.md)
+  [`rweibull_rvec()`](https://bayesiandemography.github.io/rvec/reference/dweibull_rvec.md)
+  : Weibull Distribution, Using Multiple Draws
+- [`extract_draw()`](https://bayesiandemography.github.io/rvec/reference/extract_draw.md)
+  : Extract a Single Draw From an Rvec
+- [`if_else_rvec()`](https://bayesiandemography.github.io/rvec/reference/if_else_rvec.md)
+  : Vectorised If-Else, When Condition is an Rvec
+- [`is_rvec()`](https://bayesiandemography.github.io/rvec/reference/is_rvec.md)
+  : Is an Object an Rvec
+- [`map_rvec()`](https://bayesiandemography.github.io/rvec/reference/map_rvec.md)
+  : Apply a Function and Put Results in an Rvec
+- [`matrixOps(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/matrixOps.rvec.md)
+  : Matrix Multiplication with Rvecs
+- [`anyNA(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/missing.md)
+  [`is.na(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/missing.md)
+  [`na.exclude(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/missing.md)
+  [`na.omit(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/missing.md)
+  : Missing, Finite, and Infinite Values in Rvecs
+- [`n_draw()`](https://bayesiandemography.github.io/rvec/reference/n_draw.md)
+  : Query Number of Draws
+- [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec.md)
+  : Create a Blank Rvec
+- [`prob()`](https://bayesiandemography.github.io/rvec/reference/prob.md)
+  : Calculate Probabilities from Random Draws
+- [`rank()`](https://bayesiandemography.github.io/rvec/reference/rank.md)
+  : Sample Ranks, Including Rvecs
+- [`reg_post`](https://bayesiandemography.github.io/rvec/reference/reg_post.md)
+  : Posterior Sample from Linear Regression
+- [`rvec-package`](https://bayesiandemography.github.io/rvec/reference/rvec-package.md)
+  : Package 'rvec'
+- [`rvec()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [`rvec_chr()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [`rvec_dbl()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [`rvec_int()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [`rvec_lgl()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  : Create an Rvec from Data
+- [`sd()`](https://bayesiandemography.github.io/rvec/reference/sd.md) :
+  Standard Deviation, Including Rvecs
+- [`var()`](https://bayesiandemography.github.io/rvec/reference/var.md)
+  : Correlation, Variance and Covariance (Matrices), Including Rvecs
+- [`weighted_mean()`](https://bayesiandemography.github.io/rvec/reference/weighted_mean.md)
+  [`weighted_mad()`](https://bayesiandemography.github.io/rvec/reference/weighted_mean.md)
+  [`weighted_median()`](https://bayesiandemography.github.io/rvec/reference/weighted_mean.md)
+  [`weighted_sd()`](https://bayesiandemography.github.io/rvec/reference/weighted_mean.md)
+  [`weighted_var()`](https://bayesiandemography.github.io/rvec/reference/weighted_mean.md)
+  : Calculate Weighted Summaries
+
+# Articles
+
+### All vignettes
+
+- [Package
+  rvec](https://bayesiandemography.github.io/rvec/articles/vig1_overview.md):
