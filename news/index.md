@@ -14,7 +14,33 @@
   [`draws_var()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md),
   [`draws_cv()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
   for summarising across draws.
+  ([\#37](https://github.com/bayesiandemography/rvec/issues/37))
+- Added function
+  [`pool_draws()`](https://bayesiandemography.github.io/rvec/reference/pool_draws.md),
+  for combining draws across categories.
+  ([\#35](https://github.com/bayesiandemography/rvec/issues/35))
+- Added functions
+  [`new_rvec_chr()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md),
+  [`new_rvec_dbl()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md),
+  [`new_rvec_int()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md),
+  and
+  [`new_rvec_lgl()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md).
+  Deprecated function
+  [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_deprecated.md).
+  The new functions initialise a vector with 0, ““, or `FALSE`, while
+  [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_deprecated.md)
+  initialised it with `NA`, which was awkward.
+  ([\#36](https://github.com/bayesiandemography/rvec/issues/36))
 - Added quotation marks to printed rvec_chr objects.
+- Added `%*%` method for
+  [`Matrix::Matrix`](https://rdrr.io/pkg/Matrix/man/Matrix.html)
+  objects.
+  ([\#31](https://github.com/bayesiandemography/rvec/issues/31))
+
+### Documentation
+
+- Removed warning about r\* functions returning doubles.
+  ([\#28](https://github.com/bayesiandemography/rvec/issues/28))
 
 ## rvec 0.0.8
 

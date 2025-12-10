@@ -50,8 +50,15 @@
 </ul></div>
 <div class="section level3">
 <h3 id="changes-to-interface-1-0-0">Changes to interface<a class="anchor" aria-label="anchor" href="#changes-to-interface-1-0-0"></a></h3>
-<ul><li>Added functions <code><a href="../reference/draws_sd.html">draws_sd()</a></code>, <code><a href="../reference/draws_sd.html">draws_var()</a></code>, <code><a href="../reference/draws_sd.html">draws_cv()</a></code> for summarising across draws.</li>
+<ul><li>Added functions <code><a href="../reference/draws_sd.html">draws_sd()</a></code>, <code><a href="../reference/draws_sd.html">draws_var()</a></code>, <code><a href="../reference/draws_sd.html">draws_cv()</a></code> for summarising across draws. (<a href="https://github.com/bayesiandemography/rvec/issues/37" class="external-link">#37</a>)</li>
+<li>Added function <code><a href="../reference/pool_draws.html">pool_draws()</a></code>, for combining draws across categories. (<a href="https://github.com/bayesiandemography/rvec/issues/35" class="external-link">#35</a>)</li>
+<li>Added functions <code><a href="../reference/new_rvec_blank.html">new_rvec_chr()</a></code>, <code><a href="../reference/new_rvec_blank.html">new_rvec_dbl()</a></code>, <code><a href="../reference/new_rvec_blank.html">new_rvec_int()</a></code>, and <code><a href="../reference/new_rvec_blank.html">new_rvec_lgl()</a></code>. Deprecated function <code><a href="../reference/new_rvec_deprecated.html">new_rvec()</a></code>. The new functions initialise a vector with 0, ““, or <code>FALSE</code>, while <code><a href="../reference/new_rvec_deprecated.html">new_rvec()</a></code> initialised it with <code>NA</code>, which was awkward. (<a href="https://github.com/bayesiandemography/rvec/issues/36" class="external-link">#36</a>)</li>
 <li>Added quotation marks to printed rvec_chr objects.</li>
+<li>Added <code>%*%</code> method for <code><a href="https://rdrr.io/pkg/Matrix/man/Matrix.html" class="external-link">Matrix::Matrix</a></code> objects. (<a href="https://github.com/bayesiandemography/rvec/issues/31" class="external-link">#31</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-1-0-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-1-0-0"></a></h3>
+<ul><li>Removed warning about r* functions returning doubles. (<a href="https://github.com/bayesiandemography/rvec/issues/28" class="external-link">#28</a>)</li>
 </ul></div>
 </div>
     <div class="section level2">

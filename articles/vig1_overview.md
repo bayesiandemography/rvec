@@ -26,7 +26,7 @@ see Kerman and Gelman (2007).
 Package `rvec` provides tools for working with random draws. The draws
 are held in a structure called an rvec, which can, for many purposes, be
 treated like an ordinary R vector, and manipulated using ordinary base R
-and [tidyverse](https://www.tidyverse.org) code. `rvec` also contains
+and [tidyverse](https://tidyverse.org/) code. `rvec` also contains
 functions for summarizing across random draws.
 
 ## 2 Examples
