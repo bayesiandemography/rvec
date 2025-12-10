@@ -12,8 +12,12 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
+<a href="https://github.com/bayesiandemography/rvec">
+  <img src="man/figures/sticker/sticker.png"
+       style="float:right; height:138px;" />
+</a>
 
-# rvec <a href="https://github.com/bayesiandemography/rvec"><img src="data-raw/sticker.png" align="right" height="138" /></a>
+# rvec
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/bayesiandemography/rvec/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bayesiandemography/rvec/actions/workflows/R-CMD-check.yaml)
@@ -27,8 +31,7 @@ Tools for working with random draws, including draws from a simulation or Bayesi
 ## Installation
 
 ``` r
-install.packages("rvec")                            ## CRAN version
-devtools::install_github("bayesiandemography/rvec") ## development version
+install.packages(rvec)
 ```
 
 ## Example
