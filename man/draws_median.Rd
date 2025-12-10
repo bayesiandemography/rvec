@@ -39,7 +39,7 @@ A vector.
 \description{
 Use means, medians, or modes to
 summarise the distribution of random draws
-in an \code{rvec}.
+in an rvec.
 }
 \details{
 When \code{method} is \code{"mode"}, \code{reduce_rvec()}

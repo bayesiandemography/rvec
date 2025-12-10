@@ -33,7 +33,7 @@ with three columns.
 }
 \description{
 Summarise the distribution of random draws
-in an \code{rvec}, using  credible intervals.
+in an rvec, using  credible intervals.
 }
 \section{Warning}{
 

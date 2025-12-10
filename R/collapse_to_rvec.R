@@ -88,8 +88,8 @@
 #'   data frame.
 #'
 #' @seealso
-#' - [rvec()] Construct a single `rvec`
-#' - [as_list_col()] Convert an `rvec`
+#' - [rvec()] Construct a single rvec
+#' - [as_list_col()] Convert an rvec
 #'   to a list variable
 #' - [dplyr::group_vars()](https://dplyr.tidyverse.org/reference/group_data.html)
 #'   Names of grouping variables

@@ -101,7 +101,7 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' Credible Intervals from Random Draws
 #'
 #' Summarise the distribution of random draws
-#' in an `rvec`, using  credible intervals.
+#' in an rvec, using  credible intervals.
 #'
 #' @section Warning:
 #'
@@ -239,7 +239,7 @@ draws_ci.rvec_chr <- function(x,
 #'
 #' Use means, medians, or modes to
 #' summarise the distribution of random draws
-#' in an `rvec`.
+#' in an rvec.
 #'
 #' When `method` is `"mode"`, `reduce_rvec()`
 #' returns the most common value for each
@@ -472,7 +472,7 @@ draws_max.rvec <- function(x, na_rm = FALSE) {
 #' Quantiles Across Random Draws
 #'
 #' Summarise the distribution of random draws
-#' in an `rvec`, using quantiles.
+#' in an rvec, using quantiles.
 #'
 #' The `probs` argument defaults to
 #' `c(0.025, 0.25, 0.5, 0.75, 0.975)`,
@@ -590,7 +590,7 @@ draws_quantile.rvec_chr <- function(x,
 #' Use standard deviations, variances, or
 #' coefficients of variation to
 #' summarise the distribution of random draws
-#' in an `rvec`.
+#' in an rvec.
 #'
 #' The coefficient of variation is the standard
 #' deviation divided by the mean.
@@ -718,7 +718,7 @@ draws_cv.rvec <- function(x, na_rm = FALSE) {
 #' Apply Summary Function Across Random Draws
 #'
 #' Summarise the distribution of random draws
-#' in an `rvec`, using a function.
+#' in an rvec, using a function.
 #'
 #' @inheritParams draws_all
 #' @param fun A function.

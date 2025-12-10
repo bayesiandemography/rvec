@@ -14,11 +14,11 @@ pool_draws(data, by = NULL)
 }
 \arguments{
 \item{data}{A data frame with one or
-more rvecs. Can be a
+more rvecs. Can be
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}.}
 
-\item{by}{The 'by' variables distingishing
-samples after pooling. Used if
+\item{by}{The variables distingishing
+units after combining. Used if
 \code{data} is not
 \href{https://dplyr.tidyverse.org/reference/group_data.html}{grouped}.}
 }
@@ -26,14 +26,11 @@ samples after pooling. Used if
 A data frame.
 }
 \description{
-Combine multiple samples of random draws
-into a single sample.
-}
-\details{
-Combine draws from rvecs within each
+Combine draws within each
 combination of grouping or 'by' variables
 in a data frame.
-
+}
+\details{
 Each combination of grouping or 'by'
 variables must have the same
 number of rows.
@@ -64,6 +61,9 @@ df_big |> pool_draws(by = a)
 }
 \seealso{
 \itemize{
-\item \code{\link[=expand_from_rvec]{expand_from_rvec()}} Separate individual draws
+\item \code{\link[=collapse_to_rvec]{collapse_to_rvec()}} Convert from 'draws-and-value'
+fromat to rvec format
+\item \code{\link[=expand_from_rvec]{expand_from_rvec()}} Convert from rvec format to
+'draws-and-value' format
 }
 }

@@ -22,7 +22,7 @@ combined using \code{\link[vctrs:vec_c]{vctrs::vec_c()}}.
 }
 \description{
 Summarise the distribution of random draws
-in an \code{rvec}, using a function.
+in an rvec, using a function.
 }
 \examples{
 set.seed(0)

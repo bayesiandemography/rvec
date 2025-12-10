@@ -19,10 +19,10 @@
 #' @seealso
 #' - base R function [ifelse()] does not not work
 #'   correctly if any of the inputs are rvecs.
-#' - **dplyr** function
+#' - \pkg{dplyr} function
 #'   [if_else](https://dplyr.tidyverse.org/reference/if_else.html)
 #'   works correctly if arguments `true`, `false` or `missing`
-#'   are rvecs, but not if argument `condition` is an `rvec`.
+#'   are rvecs, but not if argument `condition` is an rvec.
 #'
 #' @examples
 #' x <- rvec(list(c(1, 11),

@@ -47,9 +47,9 @@ if_else(c(TRUE, FALSE, TRUE), x, 100)
 \itemize{
 \item base R function \code{\link[=ifelse]{ifelse()}} does not not work
 correctly if any of the inputs are rvecs.
-\item \strong{dplyr} function
+\item \pkg{dplyr} function
 \href{https://dplyr.tidyverse.org/reference/if_else.html}{if_else}
 works correctly if arguments \code{true}, \code{false} or \code{missing}
-are rvecs, but not if argument \code{condition} is an \code{rvec}.
+are rvecs, but not if argument \code{condition} is an rvec.
 }
 }

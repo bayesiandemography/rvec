@@ -18,7 +18,7 @@ as_list_col(x)
 \value{
 A list:
 \itemize{
-\item If \code{x} is an \code{rvec}, then the list contains
+\item If \code{x} is an rvec, then the list contains
 \code{length(x)} vectors, each of which has
 \code{n_draw(x)} elements.
 \item If \code{x} is a matrix, then the list contains
@@ -39,7 +39,7 @@ as_list_col(r)
 }
 \seealso{
 \itemize{
-\item \code{\link[=rvec]{rvec()}} Construct an \code{rvec}.
+\item \code{\link[=rvec]{rvec()}} Construct an rvec.
 \item \code{\link[=expand_from_rvec]{expand_from_rvec()}} Convert a data frame
 from 'rvec' format to 'draw-and-value' format
 \item Functions for summarising and plotting

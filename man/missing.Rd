@@ -51,7 +51,7 @@ differs from the standard
 \href{https://vctrs.r-lib.org}{vctrs}
 behavior, which is to return a logical
 vector with length equal to \code{length(x)}.
-With rvecs, the standard \strong{vctrs} behavior
+With rvecs, the standard \pkg{vctrs} behavior
 would entail summarising across draws,
 which is the job of the \link[=draws_all]{draws_*}
 functions.

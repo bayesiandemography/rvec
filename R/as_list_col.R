@@ -8,7 +8,7 @@
 #' @param x An [rvecs][rvec()] or matrix.
 #'
 #' @returns A list:
-#' - If `x` is an `rvec`, then the list contains
+#' - If `x` is an rvec, then the list contains
 #'   `length(x)` vectors, each of which has
 #'   `n_draw(x)` elements.
 #' - If `x` is a matrix, then the list contains
@@ -16,7 +16,7 @@
 #'   `ncol(x)` elements.
 #'
 #' @seealso 
-#' - [rvec()] Construct an `rvec`.
+#' - [rvec()] Construct an rvec.
 #' - [expand_from_rvec()] Convert a data frame
 #'   from 'rvec' format to 'draw-and-value' format
 #' - Functions for summarising and plotting

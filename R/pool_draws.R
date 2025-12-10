@@ -1,10 +1,7 @@
 
 #' Pool Draws
 #'
-#' Combine multiple samples of random draws
-#' into a single sample.
-#'
-#' Combine draws from rvecs within each
+#' Combine draws within each
 #' combination of grouping or 'by' variables
 #' in a data frame.
 #'
@@ -15,15 +12,18 @@
 #' @param data A data frame with one or
 #' more rvecs. Can be
 #' [grouped](https://dplyr.tidyverse.org/reference/group_data.html).
-#' @param by The 'by' variables distingishing
-#' samples after pooling. Used if
+#' @param by The variables distingishing
+#' units after combining. Used if
 #' `data` is not
 #' [grouped](https://dplyr.tidyverse.org/reference/group_data.html).
 #'
 #' @returns A data frame.
 #'
 #' @seealso
-#' - [expand_from_rvec()] Separate individual draws
+#' - [collapse_to_rvec()] Convert from 'draws-and-value'
+#'   fromat to rvec format
+#' - [expand_from_rvec()] Convert from rvec format to
+#'   'draws-and-value' format
 #'
 #' @examples
 #' library(dplyr, warn.conflicts = FALSE)

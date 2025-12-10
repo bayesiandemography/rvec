@@ -44,7 +44,7 @@ though the internal implementation is different.
 
 Base R functions \code{\link[=sapply]{sapply()}} and \code{\link[=vapply]{vapply()}}
 do not work properly with rvecs.
-[lapply() works, but to combine the
+\code{\link[=lapply]{lapply()}} works, but to combine the
 results into a single rvec, functions such
-as \code{\link[=c]{c()}} or \code{\link[vctrs:vec_c]{vctrs::vec_c()}} are needed.
+as \code{\link[=c]{c()}} or \link[vctrs:vec_c]{vec_c()} are needed.
 }

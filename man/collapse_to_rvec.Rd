@@ -171,8 +171,8 @@ data_db |>
 }
 \seealso{
 \itemize{
-\item \code{\link[=rvec]{rvec()}} Construct a single \code{rvec}
-\item \code{\link[=as_list_col]{as_list_col()}} Convert an \code{rvec}
+\item \code{\link[=rvec]{rvec()}} Construct a single rvec
+\item \code{\link[=as_list_col]{as_list_col()}} Convert an rvec
 to a list variable
 \item \href{https://dplyr.tidyverse.org/reference/group_data.html}{dplyr::group_vars()}
 Names of grouping variables

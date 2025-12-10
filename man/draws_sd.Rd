@@ -44,7 +44,7 @@ A vector.
 Use standard deviations, variances, or
 coefficients of variation to
 summarise the distribution of random draws
-in an \code{rvec}.
+in an rvec.
 }
 \details{
 The coefficient of variation is the standard
