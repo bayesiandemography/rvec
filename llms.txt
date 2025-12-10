@@ -1,4 +1,6 @@
-# rvec [![](data-raw/sticker.png)](https://github.com/bayesiandemography/rvec)
+# rvec
+
+[![](reference/figures/sticker/sticker.png)](https://github.com/bayesiandemography/rvec)
 
 Tools for working with random draws, including draws from a simulation
 or Bayesian analysis. The main data structure is an `rvec`, which holds
@@ -7,8 +9,7 @@ multiple draws but which behaves (mainly) like a standard R vector.
 ## Installation
 
 ``` r
-install.packages("rvec")                            ## CRAN version
-devtools::install_github("bayesiandemography/rvec") ## development version
+install.packages(rvec)
 ```
 
 ## Example

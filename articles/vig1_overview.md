@@ -2,17 +2,18 @@
 
 ## 1 Aims of **rvec**
 
-Many statistical models – espeicially if they are Bayesian statistical
-models – produce random draws from a distribution. A useful feature of
-these draws is that they can be used to make inferences about derived
-quantities. The procedure is:
+Statistical models – particularly Bayesian statistical models – often
+produce outputs consisting of random draws from a distribution. A useful
+feature of these draws is that they can be used to make inferences about
+derived quantities. The procedure is:
 
 - Step 1. Calculate the derived quantity for each of the random draws.
 - Step 2. Summaries the distribution of these derived quantities.
 
-If, for instance, we have randoms draws of age-specific mortality rates,
-and we want make inferences about life expectancy (a summary indicator
-for mortality rates), then we proceed as follows:
+If, for instance, we have randoms draws from a posterior distribution
+for age-specific mortality rates, and we want make inferences about life
+expectancy (a summary indicator for mortality rates), then we proceed as
+follows:
 
 - Step 1. Derive life expectancy for each set of age-specific mortality
   rates.
