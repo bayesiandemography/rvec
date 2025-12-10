@@ -9,11 +9,20 @@
 ## Changes to interface
 
 - Added functions `draws_sd()`, `draws_var()`, `draws_cv()` for
-  summarising across draws.
+  summarising across draws. (#37)
+- Added function `pool_draws()`, for combining draws across
+  categories. (#35)
+- Added functions `new_rvec_chr()`, `new_rvec_dbl()`,
+  `new_rvec_int()`, and `new_rvec_lgl()`. Deprecated function
+  `new_rvec()`. The new functions initialise a vector with 0, "", or
+  `FALSE`, while `new_rvec()` initialised it with `NA`, which was
+  awkward. (#36)
 - Added quotation marks to printed rvec_chr objects.
+- Added `%*%` method for `Matrix::Matrix` objects. (#31)
 
+## Documentation
 
-
+- Removed warning about r* functions returning doubles. (#28)
 
 # rvec 0.0.8
 
