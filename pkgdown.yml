@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   vig1_overview: vig1_overview.html
-last_built: 2025-12-10T13:12Z
+last_built: 2025-12-10T13:28Z
 urls:
   reference: https://bayesiandemography.github.io/rvec/reference
   article: https://bayesiandemography.github.io/rvec/articles
