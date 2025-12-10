@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
 <h2 id="sec:aims">
 <span class="header-section-number">1</span> Aims of <strong>rvec</strong><a class="anchor" aria-label="anchor" href="#sec:aims"></a>
 </h2>
-<p>Many statistical methods, particularly Bayesian methods, produce random draws from a distribution. A useful feature of these draws is that they can be used to make inferences about derived quantities. The procedure is:</p>
+<p>Many statistical models – espeicially if they are Bayesian statistical models – produce random draws from a distribution. A useful feature of these draws is that they can be used to make inferences about derived quantities. The procedure is:</p>
 <ul>
 <li>Step 1. Calculate the derived quantity for each of the random draws.</li>
 <li>Step 2. Summaries the distribution of these derived quantities.</li>
@@ -85,7 +85,7 @@
 <li>Step 2. Calculate means, medians, or other statistics for these life expectancies.</li>
 </ul>
 <p>For more on the theory behind manipulating random draws, and for an argument that R needs high-level tools to help with this manipulation, see <span class="citation">Kerman and Gelman (2007)</span>.</p>
-<p>Package <strong>rvec</strong> provides tools for working with random draws. The draws are held in a structure called an rvec, which can, for many purposes, be treated like an ordinary R vector, and manipulated using ordinary base R and <a href="https://www.tidyverse.org" class="external-link">tidyverse</a> code. <strong>rvec</strong> also contains functions for summarizing across random draws.</p>
+<p>Package <code>rvec</code> provides tools for working with random draws. The draws are held in a structure called an rvec, which can, for many purposes, be treated like an ordinary R vector, and manipulated using ordinary base R and <a href="https://www.tidyverse.org" class="external-link">tidyverse</a> code. <code>rvec</code> also contains functions for summarizing across random draws.</p>
 </div>
 <div class="section level2" number="2">
 <h2 id="examples">
@@ -95,7 +95,7 @@
 <h3 id="toy-example">
 <span class="header-section-number">2.1</span> Toy example<a class="anchor" aria-label="anchor" href="#toy-example"></a>
 </h3>
-<p>We begin with a toy example, to illustrate basic functionality.</p>
+<p>We begin with a toy example to illustrate basic functionality.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bayesiandemography.github.io/rvec/">rvec</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -152,7 +152,7 @@
 </h3>
 <p>Our next example is more involved, and includes the use of some standard tidyverse packages.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <p>We analyse a posterior sample from a Bayesian model of divorce rates in New Zealand. The rates are divorces per thousand people per year, disaggregated by age and sex. The rates are not stored as an rvec, but instead in a ‘data base’ format, where each row describes a single draw.</p>
@@ -191,7 +191,7 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 55-59 Female       4.4 (4.2, 4.7)</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 60-64 Female         2.7 (2.5, 3)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more rows</span></span></span></code></pre></div>
-<p>When the number of draws is large, the print method displays <code>&lt;median&gt; (&lt;2.5% quantile&gt;, &lt;97.5% quantile&gt;)</code> for the distribution, rather than the individual draws.</p>
+<p>When the number of draws is large, the print method for rvecs of doubles displays <code>&lt;median&gt; (&lt;2.5% quantile&gt;, &lt;97.5% quantile&gt;)</code>, rather than the individual draws.</p>
 <p>We define the ‘total divorce rate’ to be the number of divorces that a person would expect to experience over their lifetime under prevailing divorce rates. The total divorce rate can be calculated as</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">divorce_rv</span> <span class="op">|&gt;</span></span>
@@ -237,16 +237,17 @@
 <p>The class <code>"rvec"</code> has four subclasses:</p>
 <ul>
 <li>
-<code>"rvec_dbl"</code>, which holds doubles, e.g. <code>3.142</code>, <code>-1.01</code>.</li>
+<code>"rvec_dbl"</code>, which holds doubles, e.g. <code>3.142</code>, <code>-1.01</code>;</li>
 <li>
-<code>"rvec_int"</code>, which holds integers, e.g. <code>42</code>, <code>-1</code>.</li>
+<code>"rvec_int"</code>, which holds integers, e.g. <code>42</code>, <code>-1</code>;</li>
 <li>
-<code>"rvec_lgl"</code>, which holds <code>TRUE</code>, <code>FALSE</code>, and <code>NA</code>.</li>
+<code>"rvec_lgl"</code>, which holds <code>TRUE</code>, <code>FALSE</code>, and <code>NA</code>; and</li>
 <li>
 <code>"rvec_chr"</code>, which hold characters, e.g. <code>"a"</code>, <code>"Thomas Bayes"</code>.</li>
 </ul>
 <p>Internally, an rvec is a matrix, with each row representing one unknown quantity, and each column representing one draw from the joint distribution of the unknown quantities,</p>
 <table style="width:100%;" class="table">
+<caption><strong>The internal structure of an rvec</strong></caption>
 <colgroup>
 <col width="20%">
 <col width="21%">
@@ -295,6 +296,7 @@
 </tbody>
 </table>
 <p>Ordinary functions are applied independently to each column. For instance, calling <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code> on an rvec creates a new rvec with structure</p>
+<p>Table : <strong>The result of summing along the vector</strong></p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="13%">
@@ -321,6 +323,7 @@
 </table>
 <p>Functions with a <code>draws_</code> prefix are applied independently to each row. For instance, calling <code><a href="../reference/draws_median.html">draws_mean()</a></code> on an rvec creates a new numeric vector with structure</p>
 <table class="table">
+<caption><strong>The result of taking means across draws</strong></caption>
 <thead><tr class="header">
 <th></th>
 <th align="center">Value</th>
@@ -360,7 +363,7 @@
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">LETTERS</span>, <span class="va">letters</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_chr&lt;26&gt;[2]&gt;</span></span>
-<span><span class="co">#&gt; [1] ..A.. ..a..</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] .."A".. .."a"..</span></span></code></pre></div>
 <p>a matrix,</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -373,7 +376,7 @@
 <span><span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_lgl&lt;1&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] T F</span></span></code></pre></div>
-<p>Function <code><a href="../reference/rvec.html">rvec()</a></code> chooses from classes <code>"rvec_dbl"</code>, <code>"rvec_int"</code>, <code>"rvec_lgl"</code>, and <code>"rvec_chr"</code>, based on the input. To enforce a particular class, use function <code><a href="../reference/rvec.html">rvec_dbl()</a></code>, <code><a href="../reference/rvec.html">rvec_int()</a></code>, <code><a href="../reference/rvec.html">rvec_lgl()</a></code>, or <code><a href="../reference/rvec.html">rvec_chr()</a></code>,</p>
+<p>Function <code><a href="../reference/rvec.html">rvec()</a></code> chooses from classes <code>"rvec_dbl"</code>, <code>"rvec_int"</code>, <code>"rvec_lgl"</code>, and <code>"rvec_chr"</code>, based on the input. To enforce a particular choice of class, use function <code><a href="../reference/rvec.html">rvec_dbl()</a></code>, <code><a href="../reference/rvec.html">rvec_int()</a></code>, <code><a href="../reference/rvec.html">rvec_lgl()</a></code>, or <code><a href="../reference/rvec.html">rvec_chr()</a></code>,</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -396,6 +399,9 @@
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">x</span>          </span>
+<span><span class="co">#&gt; &lt;rvec_lgl&lt;2&gt;[2]&gt;</span></span>
+<span><span class="co">#&gt; [1] T,F T,T</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_lgl&lt;2&gt;[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] T,F</span></span>
@@ -424,7 +430,7 @@
 <span><span class="va">m</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">x</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 4,6 3,4</span></span></code></pre></div>
-<p><strong>rvec</strong> contains a suite of functions for summarising weighted data:</p>
+<p><code>rvec</code> contains a suite of functions for summarising weighted data:</p>
 <ul>
 <li><code><a href="../reference/weighted_mean.html">weighted_mad()</a></code></li>
 <li><code><a href="../reference/weighted_mean.html">weighted_mean()</a></code></li>
@@ -453,13 +459,13 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 55-59 0.79 (0.74, 0.85)     3 (2, 4)</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 60-64 0.73 (0.65, 0.82)     2 (2, 3)</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 65+   0.51 (0.45, 0.57)     1 (1, 1)</span></span></code></pre></div>
-<p>The rank of the 15-19 age group is uncertain, while the rank of the 65+ age group is estimated precisely.</p>
+<p>In the example above, the rank of the 15-19 age group is uncertain, while the rank of the 65+ age group is estimated precisely.</p>
 </div>
 <div class="section level2" number="6">
 <h2 id="sec:prob">
 <span class="header-section-number">6</span> Probability distributions<a class="anchor" aria-label="anchor" href="#sec:prob"></a>
 </h2>
-<p>Standard R probability functions such as <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm()</a></code> or <code><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom()</a></code> do not allow rvec arguments. Package <strong>rvec</strong> provides modified functions that do. For instance,</p>
+<p>Standard R probability functions such as <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm()</a></code> or <code><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom()</a></code> do not allow rvec arguments. Package <code>rvec</code> provides modified functions that do. For instance,</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
 <span>               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="op">-</span><span class="fl">7</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -471,7 +477,7 @@
 <span><span class="fu"><a href="../reference/dbinom_rvec.html">rbinom_rvec</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">y</span><span class="op">+</span><span class="fl">10</span><span class="op">)</span>, prob <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 8,8  11,2</span></span></code></pre></div>
-<p>The return value from an <strong>rvec</strong> probability function is an rvec if and only if at least one argument to the function is an rvec – with one exception. The exception is random variate functions, where a value can be supplied for a special argument called <code>n_draw</code>. When a value for <code>n_draw</code> is supplied, the return value is an rvec with <code>n_draw</code> draws,</p>
+<p>The return value from an <code>rvec</code> probability function is an rvec if and only if at least one argument to the function is an rvec, with one exception. The exception is random variate functions, where a value can be supplied for a special argument called <code>n_draw</code>. When a value for <code>n_draw</code> is supplied, the return value is an rvec with <code>n_draw</code> draws,</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dnorm_rvec.html">rnorm_rvec</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">10</span>, n_draw <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[3]&gt;</span></span>
@@ -518,8 +524,7 @@
 <span>        false <span class="op">=</span> <span class="op">-</span><span class="va">x</span><span class="op">)</span>        </span>
 <span><span class="co">#&gt; &lt;rvec_int&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 1,2   -3,-4</span></span></code></pre></div>
-<p><code><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else()</a></code>does not work, however, when the <code>condition</code> argument is an rvec.</p>
-<p>When the <code>condition</code> argument is an rvec, we need the <strong>rvec</strong> function <code><a href="../reference/if_else_rvec.html">if_else_rvec()</a></code>,</p>
+<p>However, <code><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else()</a></code> does not work when the <code>condition</code> argument is an rvec. For this we need <code>rvec</code> function <code><a href="../reference/if_else_rvec.html">if_else_rvec()</a></code>,</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/if_else_rvec.html">if_else_rvec</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">2</span>, <span class="va">x</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
@@ -573,7 +578,7 @@
 <span><span class="co">#&gt;         a       b</span></span>
 <span><span class="co">#&gt; 1 0.1,0.2 0.5,0.6</span></span>
 <span><span class="co">#&gt; 2 0.3,0.4 0.7,0.8</span></span></code></pre></div>
-<p>Base R function <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply()</a></code> does not work with rvecs (unless <code>simplify</code> is set to <code>FALSE</code>). <strong>rvec</strong> supplies a function called <code><a href="../reference/map_rvec.html">map_rvec()</a></code> (based on map functions in package <a href="https://purrr.tidyverse.org" class="external-link">purrr</a>) that does the same job:</p>
+<p>Base R function <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply()</a></code> does not work with rvecs (unless <code>simplify</code> is set to <code>FALSE</code>). <code>rvec</code> supplies a function called <code><a href="../reference/map_rvec.html">map_rvec()</a></code> (based on map functions in package <a href="https://purrr.tidyverse.org" class="external-link">purrr</a>) that does the same job:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>          b <span class="op">=</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">16</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -617,7 +622,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; [1] 2 4 6</span></span></code></pre></div>
-<p>Functions such as <a href="https://mjskay.github.io/ggdist/reference/point_interval.html" class="external-link">point_interval</a> in package <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> accept lists of vector. A good way to access the sophisticated plotting facilities in <strong>ggdist</strong>, or in packages such as <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> and <a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a>, is to use <code><a href="../reference/as_list_col.html">as_list_col()</a></code> to convert an rvec to a list column.</p>
+<p>Functions such as <a href="https://mjskay.github.io/ggdist/reference/point_interval.html" class="external-link">point_interval</a> in package <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> accept lists of vector. A good way to access the facilities for working with random draws in <code>ggdist</code>, or in packages such as <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> and <a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a>, is to use <code><a href="../reference/as_list_col.html">as_list_col()</a></code> to convert an rvec to a list column.</p>
 <p>Function <code><a href="../reference/collapse_to_rvec.html">expand_from_rvec()</a></code> is the inverse of function <code><a href="../reference/collapse_to_rvec.html">collapse_to_rvec()</a></code>, introduced in Section <a href="#sec:divorce">2.2</a>.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">divorce</span> <span class="op">|&gt;</span></span>
@@ -650,7 +655,7 @@
 <h2 id="summarising-distributions">
 <span class="header-section-number">8</span> Summarising distributions<a class="anchor" aria-label="anchor" href="#summarising-distributions"></a>
 </h2>
-<p>Most functions in <strong>rvec</strong> are concerned with deriving random vectors from other random vectors: that is, with the column-wise calculations described in Section <a href="#sec:structure">3</a>. But once we have derived the random vectors, we typically want to summarise them, using statistics such as means or quantiles: that is, we want to carry out row-wise calculations.</p>
+<p>Most functions in <code>rvec</code> are concerned with deriving random vectors from other random vectors: that is, with the column-wise calculations described in Section <a href="#sec:structure">3</a>. But once we have derived the random vectors, we typically want to summarise them, using statistics such as means or quantiles: that is, we want to carry out row-wise calculations.</p>
 <p>The functions for carrying out row-wise calculations on rvecs are:</p>
 <ul>
 <li><code><a href="../reference/draws_all.html">draws_all()</a></code></li>
@@ -658,11 +663,14 @@
 <li><code><a href="../reference/draws_median.html">draws_median()</a></code></li>
 <li><code><a href="../reference/draws_median.html">draws_mean()</a></code></li>
 <li><code><a href="../reference/draws_median.html">draws_mode()</a></code></li>
+<li><code><a href="../reference/draws_sd.html">draws_sd()</a></code></li>
+<li><code><a href="../reference/draws_sd.html">draws_var()</a></code></li>
+<li><code><a href="../reference/draws_sd.html">draws_cv()</a></code></li>
 <li><code><a href="../reference/draws_ci.html">draws_ci()</a></code></li>
 <li><code><a href="../reference/draws_quantile.html">draws_quantile()</a></code></li>
 <li><code><a href="../reference/draws_fun.html">draws_fun()</a></code></li>
 </ul>
-<p>Internally, most of these functions call functions from <a href="https://CRAN.R-project.org/package=matrixStats" class="external-link">matrixStats</a>, which means they are fast.</p>
+<p>Internally, most of these functions call functions from <a href="https://CRAN.R-project.org/package=matrixStats" class="external-link">matrixStats</a>, and are therefore fast.</p>
 <p><code><a href="../reference/draws_ci.html">draws_ci()</a></code>, which calculates credible intervals, is the draws function that is used most often,</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">divorce_rv</span> <span class="op">&lt;-</span> <span class="va">divorce</span> <span class="op">|&gt;</span></span>
@@ -700,12 +708,37 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level2" number="9">
+<h2 id="pooling-distributions">
+<span class="header-section-number">9</span> Pooling distributions<a class="anchor" aria-label="anchor" href="#pooling-distributions"></a>
+</h2>
+<p>Sometimes when working with simulation draws, we want to combine multiple samples of draws into a single overall sample. When using multiple imputation, for instance, we might want to combine posterior samples constructed from each of the <span class="math inline">\(m = 1, \cdots, M\)</span> imputed datasets into a single pooled posterior sample.</p>
+<p>To combine samples, we use function <code><a href="../reference/pool_draws.html">pool_draws()</a></code>:</p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mi_data</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">#&gt;   sex    imputed_dataset             value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Female               1   0.9 (0.52, 1.3)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Female               2   1.2 (0.79, 1.6)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Female               3   1.1 (0.69, 1.5)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Male                 1  0.81 (0.43, 1.2)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Male                 2   0.7 (0.32, 1.1)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Male                 3 0.48 (0.12, 0.88)</span></span>
+<span><span class="va">mi_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/pool_draws.html">pool_draws</a></span><span class="op">(</span>by <span class="op">=</span> <span class="va">sex</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 2</span></span></span>
+<span><span class="co">#&gt;   sex               value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;3000&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Female  1.1 (0.61, 1.5)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Male   0.67 (0.19, 1.1)</span></span></code></pre></div>
+</div>
+<div class="section level2" number="10">
 <h2 id="other-packages">
-<span class="header-section-number">9</span> Other packages<a class="anchor" aria-label="anchor" href="#other-packages"></a>
+<span class="header-section-number">10</span> Other packages<a class="anchor" aria-label="anchor" href="#other-packages"></a>
 </h2>
 <p>The first R package to provide a specialized object for handling multiple draws was <a href="https://CRAN.R-project.org/package=rv" class="external-link">rv</a>. The specialized object, called an rv, can be manipulated and summarized much like an rvec. However, in software terms, an rv is not strictly a vector (calling <code><a href="https://rdrr.io/r/base/vector.html" class="external-link">is.vector()</a></code> on one returns <code>FALSE</code>) and an rv does not always behave as expected inside a data frame. It is therefore not well suited to tidyverse-style work flows.</p>
-<p>R package <a href="https://CRAN.R-project.org/package=posterior" class="external-link">posterior</a> provides several data structures for handling multiple draws, including one, called a rvar, that is similar to an rvec. An rvar is, however, is not limited to a single dimension, and has special facilities for dealing with multiple chains (as produced by Markov chain Monte Carlo methods.) These features are essential for some analyses, but they can make rvars harder to master, and they are not needed for most tidyverse-style work flows.</p>
-<p>Whereas rvecs interpret summary functions such as <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> and <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code> as operations to be applied independently on each draw, rvars interpret them as operations to be applied across draws. The result is that code written for ordinary R vectors will often work on rvecs, but need modification to work on rvars. The tidyverse function <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code>, for instance, works with rvecs but not rvars.</p>
+<p>R package <a href="https://CRAN.R-project.org/package=posterior" class="external-link">posterior</a> provides several data structures for handling multiple draws. One of these – the rvar – is similar to an rvec. An rvar is, however, is not limited to a single dimension, and has special facilities for dealing with multiple chains (as produced by Markov chain Monte Carlo methods.) These features are essential for some analyses, but they can make rvars harder to master, and they are not needed for most tidyverse-style work flows.</p>
+<p>Another impportant different between rvers and rvecs is that, whereas rvecs interpret summary functions such as <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> and <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code> as operations to be applied independently on each draw, rvars interpret them as operations to be applied across draws. The result is that code written for ordinary R vectors will often work on rvecs, but need modification to work on rvars. The tidyverse function <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code>, for instance, works with rvecs but not rvars. This again makes rvecs easier to work with for many tasks.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

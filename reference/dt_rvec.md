@@ -23,14 +23,13 @@ rt_rvec(n, df, ncp = 0, n_draw = NULL)
 
 - df:
 
-  Degrees of freedom. See
-  [`stats::dt()`](https://rdrr.io/r/stats/TDist.html). Can be an rvec.
+  Degrees of freedom. See [`dt()`](https://rdrr.io/r/stats/TDist.html).
+  Can be an rvec.
 
 - ncp:
 
   Non-centrality parameter. Default is `0`. See
-  [`stats::dt()`](https://rdrr.io/r/stats/TDist.html). Cannot be an
-  rvec.
+  [`dt()`](https://rdrr.io/r/stats/TDist.html). Cannot be an rvec.
 
 - log, log.p:
 
@@ -63,9 +62,8 @@ rt_rvec(n, df, ncp = 0, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -88,15 +86,13 @@ vector recycling rules:
 
 ## See also
 
-- [`dt()`](https://rdrr.io/r/stats/TDist.html)
+- [`dt()`](https://rdrr.io/r/stats/TDist.html),
+  [`pt()`](https://rdrr.io/r/stats/TDist.html),
+  [`qt()`](https://rdrr.io/r/stats/TDist.html),
+  [`rt()`](https://rdrr.io/r/stats/TDist.html) Base R equivalents
 
-- [`pt()`](https://rdrr.io/r/stats/TDist.html)
-
-- [`qt()`](https://rdrr.io/r/stats/TDist.html)
-
-- [`rt()`](https://rdrr.io/r/stats/TDist.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 
@@ -114,5 +110,5 @@ rt_rvec(n = 2,
         df = c(3, 5),
         n_draw = 1000)
 #> <rvec_dbl<1000>[2]>
-#> [1] 0.039 (-3.3, 2.7) 0.065 (-2.7, 2.6)
+#> [1] 0.044 (-3.3, 2.7) 0.056 (-2.7, 2.6)
 ```

@@ -24,14 +24,13 @@ rweibull_rvec(n, shape, scale = 1, n_draw = NULL)
 - shape:
 
   Shape parameter. See
-  [`stats::dweibull()`](https://rdrr.io/r/stats/Weibull.html). Can be an
-  rvec.
+  [`dweibull()`](https://rdrr.io/r/stats/Weibull.html). Can be an rvec.
 
 - scale:
 
   Scale parameter. See
-  [`stats::dweibull()`](https://rdrr.io/r/stats/Weibull.html) Default is
-  `1`. Can be an rvec.
+  [`dweibull()`](https://rdrr.io/r/stats/Weibull.html) Default is `1`.
+  Can be an rvec.
 
 - log, log.p:
 
@@ -64,9 +63,8 @@ rweibull_rvec(n, shape, scale = 1, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -91,15 +89,14 @@ vector recycling rules:
 
 ## See also
 
-- [`dweibull()`](https://rdrr.io/r/stats/Weibull.html)
+- [`dweibull()`](https://rdrr.io/r/stats/Weibull.html),
+  [`pweibull()`](https://rdrr.io/r/stats/Weibull.html),
+  [`qweibull()`](https://rdrr.io/r/stats/Weibull.html),
+  [`rweibull()`](https://rdrr.io/r/stats/Weibull.html) Base R
+  equivalents
 
-- [`pweibull()`](https://rdrr.io/r/stats/Weibull.html)
-
-- [`qweibull()`](https://rdrr.io/r/stats/Weibull.html)
-
-- [`rweibull()`](https://rdrr.io/r/stats/Weibull.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

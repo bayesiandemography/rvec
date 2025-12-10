@@ -1,4 +1,4 @@
-# The F Distribution, Using Multiple Draws
+# F Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the F distribution, modified to work with rvecs.
@@ -23,8 +23,8 @@ rf_rvec(n, df1, df2, ncp = 0, n_draw = NULL)
 
 - df1, df2:
 
-  Degrees of freedom. See
-  [`stats::df()`](https://rdrr.io/r/stats/Fdist.html). Can be rvecs.
+  Degrees of freedom. See [`df()`](https://rdrr.io/r/stats/Fdist.html).
+  Can be rvecs.
 
 - ncp:
 
@@ -86,15 +86,13 @@ vector recycling rules:
 
 ## See also
 
-- [`df()`](https://rdrr.io/r/stats/Fdist.html)
+- [`df()`](https://rdrr.io/r/stats/Fdist.html),
+  [`pf()`](https://rdrr.io/r/stats/Fdist.html),
+  [`qf()`](https://rdrr.io/r/stats/Fdist.html),
+  [`rf()`](https://rdrr.io/r/stats/Fdist.html) Base R equivalents
 
-- [`pf()`](https://rdrr.io/r/stats/Fdist.html)
-
-- [`qf()`](https://rdrr.io/r/stats/Fdist.html)
-
-- [`rf()`](https://rdrr.io/r/stats/Fdist.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

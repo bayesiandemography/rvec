@@ -1,4 +1,4 @@
-# The Log-Normal Distribution, Using Multiple Draws
+# Log-Normal Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the log-normal distribution, modified to work with rvecs.
@@ -24,14 +24,12 @@ rlnorm_rvec(n, meanlog = 0, sdlog = 1, n_draw = NULL)
 - meanlog:
 
   Mean of distribution, on log scale. Default is `0`. See
-  [`stats::dlnorm()`](https://rdrr.io/r/stats/Lognormal.html). Can be an
-  rvec.
+  [`dlnorm()`](https://rdrr.io/r/stats/Lognormal.html). Can be an rvec.
 
 - sdlog:
 
   Standard deviation of distribution, on log scale. Default is `1`. See
-  [`stats::dlnorm()`](https://rdrr.io/r/stats/Lognormal.html). Can be an
-  rvec.
+  [`dlnorm()`](https://rdrr.io/r/stats/Lognormal.html). Can be an rvec.
 
 - log, log.p:
 
@@ -64,9 +62,8 @@ rlnorm_rvec(n, meanlog = 0, sdlog = 1, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -91,15 +88,14 @@ vector recycling rules:
 
 ## See also
 
-- [`dlnorm()`](https://rdrr.io/r/stats/Lognormal.html)
+- [`dlnorm()`](https://rdrr.io/r/stats/Lognormal.html),
+  [`plnorm()`](https://rdrr.io/r/stats/Lognormal.html),
+  [`qlnorm()`](https://rdrr.io/r/stats/Lognormal.html),
+  [`rlnorm()`](https://rdrr.io/r/stats/Lognormal.html) Base R
+  equivalents
 
-- [`plnorm()`](https://rdrr.io/r/stats/Lognormal.html)
-
-- [`qlnorm()`](https://rdrr.io/r/stats/Lognormal.html)
-
-- [`rlnorm()`](https://rdrr.io/r/stats/Lognormal.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

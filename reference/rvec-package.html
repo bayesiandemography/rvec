@@ -15,7 +15,7 @@ draws from a posterior distribution in a Bayesian analysis."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,11 +71,15 @@ For instance, to calculate a credible interval, use <code><a href="draws_ci.html
 <li><p><code><a href="rvec.html">rvec_int()</a></code> Integers</p></li>
 <li><p><code><a href="rvec.html">rvec_lgl()</a></code> Logical</p></li>
 <li><p><code><a href="rvec.html">rvec_chr()</a></code> Character</p></li>
+<li><p><code><a href="new_rvec_blank.html">new_rvec_dbl()</a></code> Empty doubles</p></li>
+<li><p><code><a href="new_rvec_blank.html">new_rvec_int()</a></code> Empty integers</p></li>
+<li><p><code><a href="new_rvec_blank.html">new_rvec_lgl()</a></code> Empty logical</p></li>
+<li><p><code><a href="new_rvec_blank.html">new_rvec_chr()</a></code> Empty character</p></li>
 <li><p><code><a href="collapse_to_rvec.html">collapse_to_rvec()</a></code> Data in data frame</p></li>
-<li><p><code><a href="new_rvec.html">new_rvec()</a></code> Blanks</p></li>
 </ul><p><strong>Manipulating rvecs</strong></p><ul><li><p><code><a href="if_else_rvec.html">if_else_rvec()</a></code> <code><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else()</a></code> where <code>condition</code> is rvec</p></li>
 <li><p><code><a href="map_rvec.html">map_rvec()</a></code> <code>map()</code> for rvecs</p></li>
 <li><p><code><a href="extract_draw.html">extract_draw()</a></code> Single draw from rvec</p></li>
+<li><p><code><a href="pool_draws.html">pool_draws()</a></code> Combine samples</p></li>
 </ul><p><strong>Probability distributions</strong></p><ul><li><p><code><a href="dbeta_rvec.html">dbeta_rvec()</a></code> Beta</p></li>
 <li><p><code><a href="dbinom_rvec.html">dbinom_rvec()</a></code> Binomial</p></li>
 <li><p><code><a href="dcauchy_rvec.html">dcauchy_rvec()</a></code> Cauchy</p></li>
@@ -93,17 +97,20 @@ For instance, to calculate a credible interval, use <code><a href="draws_ci.html
 <li><p><code><a href="dt_rvec.html">dt_rvec()</a></code> Student's T</p></li>
 <li><p><code><a href="dunif_rvec.html">dunif_rvec()</a></code> Uniform</p></li>
 <li><p><code><a href="dweibull_rvec.html">dweibull_rvec()</a></code> Weibull</p></li>
-</ul><p><strong>Summarizing across draws</strong></p><ul><li><p><code><a href="draws_all.html">draws_all()</a></code> All draws</p></li>
-<li><p><code><a href="draws_all.html">draws_any()</a></code> Any draws</p></li>
-<li><p><code><a href="draws_min.html">draws_min()</a></code> Minimum draw</p></li>
-<li><p><code><a href="draws_min.html">draws_max()</a></code> Maximum draw</p></li>
-<li><p><code><a href="draws_median.html">draws_median()</a></code> Median draw</p></li>
-<li><p><code><a href="draws_median.html">draws_mean()</a></code> Mean draw</p></li>
-<li><p><code><a href="draws_median.html">draws_mode()</a></code> Modal draw</p></li>
+</ul><p><strong>Summarizing across draws</strong></p><ul><li><p><code><a href="draws_all.html">draws_all()</a></code> All</p></li>
+<li><p><code><a href="draws_all.html">draws_any()</a></code> Any</p></li>
+<li><p><code><a href="draws_min.html">draws_min()</a></code> Minimum</p></li>
+<li><p><code><a href="draws_min.html">draws_max()</a></code> Maximum</p></li>
+<li><p><code><a href="draws_median.html">draws_median()</a></code> Median</p></li>
+<li><p><code><a href="draws_median.html">draws_mean()</a></code> Mean</p></li>
+<li><p><code><a href="draws_median.html">draws_mode()</a></code> Modal</p></li>
+<li><p><code><a href="draws_sd.html">draws_sd()</a></code> Standard deviation</p></li>
+<li><p><code><a href="draws_sd.html">draws_var()</a></code> Variances</p></li>
+<li><p><code><a href="draws_sd.html">draws_cv()</a></code> Coefficients of variation</p></li>
 <li><p><code><a href="draws_ci.html">draws_ci()</a></code> Credible intervals</p></li>
 <li><p><code><a href="draws_quantile.html">draws_quantile()</a></code> Quantiles</p></li>
 <li><p><code><a href="draws_fun.html">draws_fun()</a></code> Arbitrary function</p></li>
-<li><p><code><a href="n_draw.html">n_draw()</a></code> Number of draws</p></li>
+<li><p><code><a href="n_draw.html">n_draw()</a></code> Number</p></li>
 </ul><p><strong>Coercion, classes</strong></p><ul><li><p><code><a href="as_list_col.html">as_list_col()</a></code> Rvec or matrix to list</p></li>
 <li><p><code><a href="collapse_to_rvec.html">expand_from_rvec()</a></code> Inverse of <code><a href="collapse_to_rvec.html">collapse_to_rvec()</a></code></p></li>
 <li><p><code><a href="is_rvec.html">is_rvec()</a></code> Object an rvec?</p></li>

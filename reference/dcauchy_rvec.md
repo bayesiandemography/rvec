@@ -1,4 +1,4 @@
-# The Cauchy Distribution, Using Multiple Draws
+# Cauchy Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the Cauchy distribution, modified to work with rvecs.
@@ -24,14 +24,12 @@ rcauchy_rvec(n, location = 0, scale = 1, n_draw = NULL)
 - location:
 
   Center of distribution. Default is `0`. See
-  [`stats::dcauchy()`](https://rdrr.io/r/stats/Cauchy.html). Can be an
-  rvec.
+  [`dcauchy()`](https://rdrr.io/r/stats/Cauchy.html). Can be an rvec.
 
 - scale:
 
   Scale parameter. Default is `1`. See
-  [`stats::dcauchy()`](https://rdrr.io/r/stats/Cauchy.html). Can be an
-  rvec.
+  [`dcauchy()`](https://rdrr.io/r/stats/Cauchy.html). Can be an rvec.
 
 - log, log.p:
 
@@ -64,9 +62,8 @@ rcauchy_rvec(n, location = 0, scale = 1, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -91,15 +88,13 @@ vector recycling rules:
 
 ## See also
 
-- [`dcauchy()`](https://rdrr.io/r/stats/Cauchy.html)
+- [`dcauchy()`](https://rdrr.io/r/stats/Cauchy.html),
+  [`pcauchy()`](https://rdrr.io/r/stats/Cauchy.html),
+  [`qcauchy()`](https://rdrr.io/r/stats/Cauchy.html),
+  [`rcauchy()`](https://rdrr.io/r/stats/Cauchy.html) Base R equivalents
 
-- [`pcauchy()`](https://rdrr.io/r/stats/Cauchy.html)
-
-- [`qcauchy()`](https://rdrr.io/r/stats/Cauchy.html)
-
-- [`rcauchy()`](https://rdrr.io/r/stats/Cauchy.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

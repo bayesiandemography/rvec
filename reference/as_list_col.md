@@ -28,8 +28,8 @@ as_list_col(x)
 
 A list:
 
-- If `x` is an `rvec`, then the list contains `length(x)` vectors, each
-  of which has `n_draw(x)` elements.
+- If `x` is an rvec, then the list contains `length(x)` vectors, each of
+  which has `n_draw(x)` elements.
 
 - If `x` is a matrix, then the list contains `nrow(x)` vectors, each of
   which has `ncol(x)` elements.
@@ -37,19 +37,14 @@ A list:
 ## See also
 
 - [`rvec()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-  to construct an `rvec`.
+  Construct an rvec.
 
 - [`expand_from_rvec()`](https://bayesiandemography.github.io/rvec/reference/collapse_to_rvec.md)
-  to convert a data frame from using `rvec`s to using `draw` and `value`
-  columns.
-
-- as_rvar???
-
-- converting `rvec`s to
+  Convert a data frame from 'rvec' format to 'draw-and-value' format
 
 - Functions for summarising and plotting distributions in package
-  [ggdist](https://CRAN.R-project.org/package=ggdist) understand list
-  columns.
+  [ggdist](https://CRAN.R-project.org/package=ggdist) use list columns
+  (among other formats).
 
 ## Examples
 

@@ -1,4 +1,4 @@
-# The Geometric Distribution, Using Multiple Draws
+# Geometric Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the geometric distribution, modified to work with rvecs.
@@ -24,8 +24,7 @@ rgeom_rvec(n, prob, n_draw = NULL)
 - prob:
 
   Probability of success in each trial. See
-  [`stats::dgeom()`](https://rdrr.io/r/stats/Geometric.html). Can be an
-  rvec.
+  [`dgeom()`](https://rdrr.io/r/stats/Geometric.html). Can be an rvec.
 
 - log, log.p:
 
@@ -58,11 +57,11 @@ rgeom_rvec(n, prob, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
-- Otherwise an ordinary R vector.
-
-- `rgeom_rvec()` always returns doubles (not integers).
+- Unlike base [`rgeom()`](https://rdrr.io/r/stats/Geometric.html),
+  `rgeom_rvec()` always returns doubles.
 
 ## Details
 
@@ -84,22 +83,15 @@ vector recycling rules:
 
 - All other vectors must have the same size
 
-## Warning
-
-From version rvec version 0.7.4 onwards, `rgeom_rvec()` always returns
-doubles (not integers).
-
 ## See also
 
-- [`dgeom()`](https://rdrr.io/r/stats/Geometric.html)
+- [`dgeom()`](https://rdrr.io/r/stats/Geometric.html),
+  [`pgeom()`](https://rdrr.io/r/stats/Geometric.html),
+  [`qgeom()`](https://rdrr.io/r/stats/Geometric.html),
+  [`rgeom()`](https://rdrr.io/r/stats/Geometric.html) Base R equivalents
 
-- [`pgeom()`](https://rdrr.io/r/stats/Geometric.html)
-
-- [`qgeom()`](https://rdrr.io/r/stats/Geometric.html)
-
-- [`rgeom()`](https://rdrr.io/r/stats/Geometric.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

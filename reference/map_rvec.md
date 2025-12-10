@@ -42,10 +42,10 @@ internal implementation is different.
 
 Base R functions [`sapply()`](https://rdrr.io/r/base/lapply.html) and
 [`vapply()`](https://rdrr.io/r/base/lapply.html) do not work properly
-with rvecs. \[lapply() works, but to combine the results into a single
-rvec, functions such as [`c()`](https://rdrr.io/r/base/c.html) or
-[`vctrs::vec_c()`](https://vctrs.r-lib.org/reference/vec_c.html) are
-needed.
+with rvecs. [`lapply()`](https://rdrr.io/r/base/lapply.html) works, but
+to combine the results into a single rvec, functions such as
+[`c()`](https://rdrr.io/r/base/c.html) or
+[vec_c()](https://vctrs.r-lib.org/reference/vec_c.html) are needed.
 
 ## Examples
 

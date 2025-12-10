@@ -1,4 +1,4 @@
-# The Negative Binomial Distribution, Using Multiple Draws
+# Negative Binomial Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the negative binomial distribution, modified to work with rvecs.
@@ -24,20 +24,20 @@ rnbinom_rvec(n, size, prob, mu, n_draw = NULL)
 - size:
 
   Number of trials. See
-  [`stats::dnbinom()`](https://rdrr.io/r/stats/NegBinomial.html). Can be
-  an rvec.
+  [`dnbinom()`](https://rdrr.io/r/stats/NegBinomial.html). Can be an
+  rvec.
 
 - prob:
 
   Probability of success in each trial. See
-  [`stats::dnbinom()`](https://rdrr.io/r/stats/NegBinomial.html). Can be
-  an rvec.
+  [`dnbinom()`](https://rdrr.io/r/stats/NegBinomial.html). Can be an
+  rvec.
 
 - mu:
 
   Mean value. See
-  [`stats::dnbinom()`](https://rdrr.io/r/stats/NegBinomial.html). Can be
-  an rvec.
+  [`dnbinom()`](https://rdrr.io/r/stats/NegBinomial.html). Can be an
+  rvec.
 
 - log, log.p:
 
@@ -70,11 +70,11 @@ rnbinom_rvec(n, size, prob, mu, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
-- Otherwise an ordinary R vector.
-
-- `rnbinom_rvec()` always returns doubles (not integers).
+- Unlike base [`rbinom()`](https://rdrr.io/r/stats/Binomial.html),
+  `rnbinom_rvec()` always returns doubles.
 
 ## Details
 
@@ -97,22 +97,16 @@ vector recycling rules:
 
 - All other vectors must have the same size
 
-## Warning
-
-From version rvec version 0.7.4 onwards, `rnbinom_rvec()` always returns
-doubles (not integers).
-
 ## See also
 
-- [`dnbinom()`](https://rdrr.io/r/stats/NegBinomial.html)
+- [`dnbinom()`](https://rdrr.io/r/stats/NegBinomial.html),
+  [`pnbinom()`](https://rdrr.io/r/stats/NegBinomial.html),
+  [`qnbinom()`](https://rdrr.io/r/stats/NegBinomial.html),
+  [`rnbinom()`](https://rdrr.io/r/stats/NegBinomial.html) Base R
+  equivalents
 
-- [`pnbinom()`](https://rdrr.io/r/stats/NegBinomial.html)
-
-- [`qnbinom()`](https://rdrr.io/r/stats/NegBinomial.html)
-
-- [`rnbinom()`](https://rdrr.io/r/stats/NegBinomial.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

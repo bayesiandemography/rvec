@@ -70,7 +70,7 @@ objects of a particular subclass.
 
 ## See also
 
-- [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec.md)
+- [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_deprecated.md)
   Create a blank rvec.
 
 - [`collapse_to_rvec()`](https://bayesiandemography.github.io/rvec/reference/collapse_to_rvec.md)
@@ -93,7 +93,7 @@ l <- list(rpois(100, lambda = 10.2),
           rpois(100, lambda = 5.5))
 rvec(l)
 #> <rvec_int<100>[2]>
-#> [1] 10 (6, 17) 6 (2, 11) 
+#> [1] 10 (4.5, 17) 5 (1, 11)   
 
 rvec(letters[1:5])
 #> <rvec_chr<1>[5]>

@@ -1,4 +1,4 @@
-# The Poisson Distribution, Using Multiple Draws
+# Poisson Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the Poisson distribution, modified to work with rvecs.
@@ -24,8 +24,7 @@ rpois_rvec(n, lambda, n_draw = NULL)
 - lambda:
 
   Vector of means. See
-  [`stats::rpois()`](https://rdrr.io/r/stats/Poisson.html). Can be an
-  rvec.
+  [`rpois()`](https://rdrr.io/r/stats/Poisson.html). Can be an rvec.
 
 - log, log.p:
 
@@ -58,11 +57,11 @@ rpois_rvec(n, lambda, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
-- Otherwise an ordinary R vector.
-
-- `rpois_rvec()` always returns doubles (not integers).
+- Unlike base [`rpois()`](https://rdrr.io/r/stats/Poisson.html),
+  `rpois_rvec()` always returns doubles.
 
 ## Details
 
@@ -84,22 +83,15 @@ vector recycling rules:
 
 - All other vectors must have the same size
 
-## Warning
-
-From version rvec version 0.7.4 onwards, `rpois_rvec()` always returns
-doubles (not integers).
-
 ## See also
 
-- [`dpois()`](https://rdrr.io/r/stats/Poisson.html)
+- [`dpois()`](https://rdrr.io/r/stats/Poisson.html),
+  [`ppois()`](https://rdrr.io/r/stats/Poisson.html),
+  [`qpois()`](https://rdrr.io/r/stats/Poisson.html),
+  [`rpois()`](https://rdrr.io/r/stats/Poisson.html) Base R equivalents
 
-- [`ppois()`](https://rdrr.io/r/stats/Poisson.html)
-
-- [`qpois()`](https://rdrr.io/r/stats/Poisson.html)
-
-- [`rpois()`](https://rdrr.io/r/stats/Poisson.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

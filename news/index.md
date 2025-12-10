@@ -1,5 +1,21 @@
 # Changelog
 
+## rvec 1.0.0
+
+### Change to lifecycle status
+
+- Interface is now sufficiently stable that the “experimental” lifecycle
+  badge has been removed.
+
+### Changes to interface
+
+- Added functions
+  [`draws_sd()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md),
+  [`draws_var()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md),
+  [`draws_cv()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+  for summarising across draws.
+- Added quotation marks to printed rvec_chr objects.
+
 ## rvec 0.0.8
 
 CRAN release: 2025-07-13
@@ -57,7 +73,7 @@ CRAN release: 2024-09-15
 ### New functions
 
 - Added function
-  [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec.md),
+  [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_deprecated.md),
   which creates rvecs with specified values for type, length, and
   `n_draw`, consisting entirely of NAs.
 - Added function

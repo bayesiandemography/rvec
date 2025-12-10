@@ -1,4 +1,4 @@
-# The Normal Distribution, Using Multiple Draws
+# Normal Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the normal distribution, modified to work with rvecs.
@@ -24,14 +24,12 @@ rnorm_rvec(n, mean = 0, sd = 1, n_draw = NULL)
 - mean:
 
   Mean of distribution. Default is `0`. See
-  [`stats::dnorm()`](https://rdrr.io/r/stats/Normal.html). Can be an
-  rvec.
+  [`dnorm()`](https://rdrr.io/r/stats/Normal.html). Can be an rvec.
 
 - sd:
 
   Standard deviation. Default is `1`. See
-  [`stats::dnorm()`](https://rdrr.io/r/stats/Normal.html). Can be an
-  rvec.
+  [`dnorm()`](https://rdrr.io/r/stats/Normal.html). Can be an rvec.
 
 - log, log.p:
 
@@ -64,9 +62,8 @@ rnorm_rvec(n, mean = 0, sd = 1, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -90,15 +87,13 @@ vector recycling rules:
 
 ## See also
 
-- [`dnorm()`](https://rdrr.io/r/stats/Normal.html)
+- [`dnorm()`](https://rdrr.io/r/stats/Normal.html),
+  [`pnorm()`](https://rdrr.io/r/stats/Normal.html),
+  [`qnorm()`](https://rdrr.io/r/stats/Normal.html),
+  [`rnorm()`](https://rdrr.io/r/stats/Normal.html) Base R equivalents
 
-- [`pnorm()`](https://rdrr.io/r/stats/Normal.html)
-
-- [`qnorm()`](https://rdrr.io/r/stats/Normal.html)
-
-- [`rnorm()`](https://rdrr.io/r/stats/Normal.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

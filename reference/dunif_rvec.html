@@ -19,7 +19,7 @@ rvecs."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,12 +77,12 @@ rvecs.</p>
 
 <dt id="arg-min">min<a class="anchor" aria-label="anchor" href="#arg-min"></a></dt>
 <dd><p>Lower limits. Default is <code>0</code>.
-See <code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">stats::dunif()</a></code>. Can be an rvec.</p></dd>
+See <code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">dunif()</a></code>. Can be an rvec.</p></dd>
 
 
 <dt id="arg-max">max<a class="anchor" aria-label="anchor" href="#arg-max"></a></dt>
 <dd><p>Upper limited. Default is <code>1</code>.
-See <code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">stats::dunif()</a></code>. Can be an rvec.</p></dd>
+See <code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">dunif()</a></code>. Can be an rvec.</p></dd>
 
 
 <dt id="arg-log-log-p">log, log.p<a class="anchor" aria-label="anchor" href="#arg-log-log-p"></a></dt>
@@ -122,8 +122,7 @@ created. Cannot be an rvec.</p></dd>
 
 <ul><li><p>If any of the arguments are rvecs,
 or if a value for <code>n_draw</code> is supplied,
-then an <a href="rvec.html">rvec</a></p></li>
-<li><p>Otherwise an ordinary R vector.</p></li>
+then an <a href="rvec.html">rvec</a>; otherwise an ordinary R vector.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -144,11 +143,8 @@ vector recycling rules:</p><ul><li><p>Vectors of length 1 are recycled</p></li>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">dunif()</a></code></p></li>
-<li><p><code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">punif()</a></code></p></li>
-<li><p><code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">qunif()</a></code></p></li>
-<li><p><code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif()</a></code></p></li>
-<li><p><a href="https://rdrr.io/r/stats/Distributions.html" class="external-link">stats::distributions</a>.</p></li>
+<ul><li><p><code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">dunif()</a></code>, <code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">punif()</a></code>, <code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">qunif()</a></code>, <code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif()</a></code> Base R equivalents</p></li>
+<li><p><a href="https://rdrr.io/r/stats/Distributions.html" class="external-link">distributions</a> All base R distributions</p></li>
 </ul></div>
     </div>
 

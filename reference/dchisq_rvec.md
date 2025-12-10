@@ -1,4 +1,4 @@
-# The Chi-Squared Distribution, Using Multiple Draws
+# Chi-Squared Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the chi-squared distribution, modified to work with rvecs.
@@ -24,8 +24,7 @@ rchisq_rvec(n, df, ncp = 0, n_draw = NULL)
 - df:
 
   Degrees of freedom. See
-  [`stats::dchisq()`](https://rdrr.io/r/stats/Chisquare.html). Can be an
-  rvec.
+  [`dchisq()`](https://rdrr.io/r/stats/Chisquare.html). Can be an rvec.
 
 - ncp:
 
@@ -62,9 +61,8 @@ rchisq_rvec(n, df, ncp = 0, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -89,15 +87,14 @@ vector recycling rules:
 
 ## See also
 
-- [`dchisq()`](https://rdrr.io/r/stats/Chisquare.html)
+- [`dchisq()`](https://rdrr.io/r/stats/Chisquare.html),
+  [`pchisq()`](https://rdrr.io/r/stats/Chisquare.html),
+  [`qchisq()`](https://rdrr.io/r/stats/Chisquare.html),
+  [`rchisq()`](https://rdrr.io/r/stats/Chisquare.html) Base R
+  equivalents
 
-- [`pchisq()`](https://rdrr.io/r/stats/Chisquare.html)
-
-- [`qchisq()`](https://rdrr.io/r/stats/Chisquare.html)
-
-- [`rchisq()`](https://rdrr.io/r/stats/Chisquare.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

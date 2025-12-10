@@ -30,6 +30,7 @@
 <url><loc>https://bayesiandemography.github.io/rvec/reference/draws_median.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/draws_min.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/draws_quantile.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/draws_sd.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/dt_rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/dunif_rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/dweibull_rvec.html</loc></url>
@@ -41,10 +42,13 @@
 <url><loc>https://bayesiandemography.github.io/rvec/reference/matrixOps.rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/missing.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/n_draw.html</loc></url>
-<url><loc>https://bayesiandemography.github.io/rvec/reference/new_rvec.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/new_rvec_deprecated.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/pool_draws.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/prob.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/rank.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/reg_post.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/rvec-matrix-mult.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/rvec-package.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/sd.html</loc></url>

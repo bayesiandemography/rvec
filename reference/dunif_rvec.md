@@ -24,14 +24,12 @@ runif_rvec(n, min = 0, max = 1, n_draw = NULL)
 - min:
 
   Lower limits. Default is `0`. See
-  [`stats::dunif()`](https://rdrr.io/r/stats/Uniform.html). Can be an
-  rvec.
+  [`dunif()`](https://rdrr.io/r/stats/Uniform.html). Can be an rvec.
 
 - max:
 
   Upper limited. Default is `1`. See
-  [`stats::dunif()`](https://rdrr.io/r/stats/Uniform.html). Can be an
-  rvec.
+  [`dunif()`](https://rdrr.io/r/stats/Uniform.html). Can be an rvec.
 
 - log, log.p:
 
@@ -64,9 +62,8 @@ runif_rvec(n, min = 0, max = 1, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -90,15 +87,13 @@ vector recycling rules:
 
 ## See also
 
-- [`dunif()`](https://rdrr.io/r/stats/Uniform.html)
+- [`dunif()`](https://rdrr.io/r/stats/Uniform.html),
+  [`punif()`](https://rdrr.io/r/stats/Uniform.html),
+  [`qunif()`](https://rdrr.io/r/stats/Uniform.html),
+  [`runif()`](https://rdrr.io/r/stats/Uniform.html) Base R equivalents
 
-- [`punif()`](https://rdrr.io/r/stats/Uniform.html)
-
-- [`qunif()`](https://rdrr.io/r/stats/Uniform.html)
-
-- [`runif()`](https://rdrr.io/r/stats/Uniform.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

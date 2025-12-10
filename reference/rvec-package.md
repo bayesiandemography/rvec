@@ -33,11 +33,20 @@ instance, to calculate a credible interval, use
 - [`rvec_chr()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
   Character
 
+- [`new_rvec_dbl()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md)
+  Empty doubles
+
+- [`new_rvec_int()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md)
+  Empty integers
+
+- [`new_rvec_lgl()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md)
+  Empty logical
+
+- [`new_rvec_chr()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md)
+  Empty character
+
 - [`collapse_to_rvec()`](https://bayesiandemography.github.io/rvec/reference/collapse_to_rvec.md)
   Data in data frame
-
-- [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec.md)
-  Blanks
 
 **Manipulating rvecs**
 
@@ -50,6 +59,9 @@ instance, to calculate a credible interval, use
 
 - [`extract_draw()`](https://bayesiandemography.github.io/rvec/reference/extract_draw.md)
   Single draw from rvec
+
+- [`pool_draws()`](https://bayesiandemography.github.io/rvec/reference/pool_draws.md)
+  Combine samples
 
 **Probability distributions**
 
@@ -106,25 +118,34 @@ instance, to calculate a credible interval, use
 **Summarizing across draws**
 
 - [`draws_all()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
-  All draws
+  All
 
 - [`draws_any()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
-  Any draws
+  Any
 
 - [`draws_min()`](https://bayesiandemography.github.io/rvec/reference/draws_min.md)
-  Minimum draw
+  Minimum
 
 - [`draws_max()`](https://bayesiandemography.github.io/rvec/reference/draws_min.md)
-  Maximum draw
+  Maximum
 
 - [`draws_median()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
-  Median draw
+  Median
 
 - [`draws_mean()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
-  Mean draw
+  Mean
 
 - [`draws_mode()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
-  Modal draw
+  Modal
+
+- [`draws_sd()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+  Standard deviation
+
+- [`draws_var()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+  Variances
+
+- [`draws_cv()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+  Coefficients of variation
 
 - [`draws_ci()`](https://bayesiandemography.github.io/rvec/reference/draws_ci.md)
   Credible intervals
@@ -136,7 +157,7 @@ instance, to calculate a credible interval, use
   Arbitrary function
 
 - [`n_draw()`](https://bayesiandemography.github.io/rvec/reference/n_draw.md)
-  Number of draws
+  Number
 
 **Coercion, classes**
 

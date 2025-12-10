@@ -41,10 +41,10 @@ as `condition`.
 - base R function [`ifelse()`](https://rdrr.io/r/base/ifelse.html) does
   not not work correctly if any of the inputs are rvecs.
 
-- **dplyr** function
+- dplyr function
   [if_else](https://dplyr.tidyverse.org/reference/if_else.html) works
   correctly if arguments `true`, `false` or `missing` are rvecs, but not
-  if argument `condition` is an `rvec`.
+  if argument `condition` is an rvec.
 
 ## Examples
 

@@ -1,7 +1,6 @@
 # Apply Summary Function Across Random Draws
 
-Summarise the distribution of random draws in an `rvec`, using a
-function.
+Summarise the distribution of random draws in an rvec, using a function.
 
 ## Usage
 
@@ -40,8 +39,6 @@ Apply pre-specified functions across draws:
 
 - [`draws_any()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
 
-- [`draws_ci()`](https://bayesiandemography.github.io/rvec/reference/draws_ci.md)
-
 - [`draws_min()`](https://bayesiandemography.github.io/rvec/reference/draws_min.md)
 
 - [`draws_max()`](https://bayesiandemography.github.io/rvec/reference/draws_min.md)
@@ -51,6 +48,14 @@ Apply pre-specified functions across draws:
 - [`draws_mean()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
 
 - [`draws_mode()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
+
+- [`draws_sd()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+
+- [`draws_var()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+
+- [`draws_cv()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+
+- [`draws_ci()`](https://bayesiandemography.github.io/rvec/reference/draws_ci.md)
 
 - [`draws_quantile()`](https://bayesiandemography.github.io/rvec/reference/draws_quantile.md)
 

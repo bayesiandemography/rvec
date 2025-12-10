@@ -1,4 +1,4 @@
-# The Exponential Distribution, Using Multiple Draws
+# Exponential Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the exponential distribution, modified to work with rvecs.
@@ -24,8 +24,7 @@ rexp_rvec(n, rate = 1, n_draw = NULL)
 - rate:
 
   Vector of rates. See
-  [`stats::dexp()`](https://rdrr.io/r/stats/Exponential.html). Can be an
-  rvec.
+  [`dexp()`](https://rdrr.io/r/stats/Exponential.html). Can be an rvec.
 
 - log, log.p:
 
@@ -58,9 +57,8 @@ rexp_rvec(n, rate = 1, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -84,15 +82,14 @@ vector recycling rules:
 
 ## See also
 
-- [`dexp()`](https://rdrr.io/r/stats/Exponential.html)
+- [`dexp()`](https://rdrr.io/r/stats/Exponential.html),
+  [`pexp()`](https://rdrr.io/r/stats/Exponential.html),
+  [`qexp()`](https://rdrr.io/r/stats/Exponential.html),
+  [`rexp()`](https://rdrr.io/r/stats/Exponential.html) Base R
+  equivalents
 
-- [`pexp()`](https://rdrr.io/r/stats/Exponential.html)
-
-- [`qexp()`](https://rdrr.io/r/stats/Exponential.html)
-
-- [`rexp()`](https://rdrr.io/r/stats/Exponential.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

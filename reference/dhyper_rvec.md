@@ -1,4 +1,4 @@
-# The Hypergeometric Distribution, Using Multiple Draws
+# Hypergeometric Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the hypergeometric distribution, modified to work with rvecs.
@@ -73,11 +73,11 @@ rhyper_rvec(nn, m, n, k, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
-- Otherwise an ordinary R vector.
-
-- `rhyper_rvec()` always returns doubles (not integers).
+- Unlike base [`rhyper()`](https://rdrr.io/r/stats/Hypergeometric.html),
+  `rhyper_rvec()` always returns doubles.
 
 ## Details
 
@@ -100,22 +100,16 @@ vector recycling rules:
 
 - All other vectors must have the same size
 
-## Warning
-
-From version rvec version 0.7.4 onwards, `rhyper_rvec()` always returns
-doubles (not integers).
-
 ## See also
 
-- [`dhyper()`](https://rdrr.io/r/stats/Hypergeometric.html)
+- [`dhyper()`](https://rdrr.io/r/stats/Hypergeometric.html),
+  [`phyper()`](https://rdrr.io/r/stats/Hypergeometric.html),
+  [`qhyper()`](https://rdrr.io/r/stats/Hypergeometric.html),
+  [`rhyper()`](https://rdrr.io/r/stats/Hypergeometric.html) Base R
+  equivalents
 
-- [`phyper()`](https://rdrr.io/r/stats/Hypergeometric.html)
-
-- [`qhyper()`](https://rdrr.io/r/stats/Hypergeometric.html)
-
-- [`rhyper()`](https://rdrr.io/r/stats/Hypergeometric.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

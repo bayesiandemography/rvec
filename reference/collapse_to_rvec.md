@@ -1,8 +1,9 @@
-# Convert a Data Frame Between 'Database' and 'Rvec' Formats
+# Convert a Data Frame Between 'Draws-and-Values' Format and 'Rvec' Format
 
-`collapse_to_rvec()` converts a data frame from a 'database' format to
-an 'rvec' format. `expand_from_rvec()`, does the opposite, converting a
-data frame from an rvecs format to a database format.
+`collapse_to_rvec()` converts a data frame from a 'draws-and-values'
+format to an 'rvec' format. `expand_from_rvec()`, does the opposite,
+converting a data frame from an rvecs format to a draws-and-values
+format.
 
 ## Usage
 
@@ -64,16 +65,17 @@ A data frame.
   [`n_draw()`](https://bayesiandemography.github.io/rvec/reference/n_draw.md).
 
 - `collapse_to_rvec()` silently drops all variables that are not draw,
-  value or grouping variables if `data` is a
+  value, or grouping variables if `data` is a
   [grouped](https://dplyr.tidyverse.org/reference/group_data.html) data
   frame.
 
 ## Details
 
-In database format, each row represents one random draw. The data frame
-contains a 'draw' variable that distinguishes different draws within the
-same combination of 'by' variables. In rvec format, each row represents
-one combination of 'by' variables, and multiple draws are stored in an
+In a draws-and-values format, each row represents one random draw. The
+data frame contains a 'draw' variable that distinguishes different draws
+within the same combination of 'by' variables. In rvec format, each row
+represents one combination of 'by' variables, and multiple draws are
+stored in an
 [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md). See
 below for examples.
 
@@ -120,13 +122,13 @@ The codes for `type` are modified from ones used by the
 ## See also
 
 - [`rvec()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-  to construct a single `rvec`.
+  Construct a single rvec
 
 - [`as_list_col()`](https://bayesiandemography.github.io/rvec/reference/as_list_col.md)
-  to convert an `rvec` to a list variable.
+  Convert an rvec to a list variable
 
 - [dplyr::group_vars()](https://dplyr.tidyverse.org/reference/group_data.html)
-  gives the names of the grouping variables in a grouped data frame.
+  Names of grouping variables
 
 `collapse_to_rvec()` and `expand_from_rvec()` are analogous to
 [tidyr::nest()](https://tidyr.tidyverse.org/reference/nest.html) and
@@ -162,7 +164,7 @@ data_db <- tribble(
   "Banker",       3,    420
 )
 
-## database format to rvec format
+## draws-and-values format to rvec format
 data_rv <- data_db |>
   collapse_to_rvec(draw = sim,
                    values = pay)
@@ -173,7 +175,7 @@ data_rv
 #> 1 Statistician  100,80,105
 #> 2 Banker       400,350,420
 
-## rvec format to database format
+## rvec format to draws-and-values format
 data_rv |>
   expand_from_rvec()
 #> # A tibble: 6 × 3

@@ -1,7 +1,7 @@
 # Medians, Means, and Modes Across Random Draws
 
-Summarise the distribution of random draws in an `rvec`, using means,
-medians, or modes.
+Use means, medians, or modes to summarise the distribution of random
+draws in an rvec.
 
 ## Usage
 
@@ -61,6 +61,12 @@ Apply pre-specified functions across draws:
 
 - [`draws_max()`](https://bayesiandemography.github.io/rvec/reference/draws_min.md)
 
+- [`draws_sd()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+
+- [`draws_var()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+
+- [`draws_cv()`](https://bayesiandemography.github.io/rvec/reference/draws_sd.md)
+
 - [`draws_ci()`](https://bayesiandemography.github.io/rvec/reference/draws_ci.md)
 
 - [`draws_quantile()`](https://bayesiandemography.github.io/rvec/reference/draws_quantile.md)
@@ -68,13 +74,6 @@ Apply pre-specified functions across draws:
 Apply arbitrary function across draws:
 
 - [`draws_fun()`](https://bayesiandemography.github.io/rvec/reference/draws_fun.md)
-
-For additional functions for summarising random draws, see
-[tidybayes](https://CRAN.R-project.org/package=tidybayes) and
-[ggdist](https://CRAN.R-project.org/package=ggdist). Function
-[`as_list_col()`](https://bayesiandemography.github.io/rvec/reference/as_list_col.md)
-converts rvecs into a format that `tidybayes` and `ggdist` can work
-with.
 
 ## Examples
 

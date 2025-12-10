@@ -1,4 +1,4 @@
-# The Gamma Distribution, Using Multiple Draws
+# Gamma Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the gamma distribution, modified to work with rvecs.
@@ -38,8 +38,7 @@ rgamma_rvec(n, shape, rate = 1, scale = 1/rate, n_draw = NULL)
 - shape:
 
   Shape parameter. See
-  [`stats::dgamma()`](https://rdrr.io/r/stats/GammaDist.html). Can be an
-  rvec.
+  [`dgamma()`](https://rdrr.io/r/stats/GammaDist.html). Can be an rvec.
 
 - rate:
 
@@ -50,8 +49,7 @@ rgamma_rvec(n, shape, rate = 1, scale = 1/rate, n_draw = NULL)
 - scale:
 
   Scale parameter. An alterative to `rate`. See
-  [`stats::dgamma()`](https://rdrr.io/r/stats/GammaDist.html). Can be an
-  rvec.
+  [`dgamma()`](https://rdrr.io/r/stats/GammaDist.html). Can be an rvec.
 
 - log, log.p:
 
@@ -84,9 +82,8 @@ rgamma_rvec(n, shape, rate = 1, scale = 1/rate, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -111,15 +108,14 @@ vector recycling rules:
 
 ## See also
 
-- [`dgamma()`](https://rdrr.io/r/stats/GammaDist.html)
+- [`dgamma()`](https://rdrr.io/r/stats/GammaDist.html),
+  [`pgamma()`](https://rdrr.io/r/stats/GammaDist.html),
+  [`qgamma()`](https://rdrr.io/r/stats/GammaDist.html),
+  [`rgamma()`](https://rdrr.io/r/stats/GammaDist.html) Base R
+  equivalents
 
-- [`pgamma()`](https://rdrr.io/r/stats/GammaDist.html)
-
-- [`qgamma()`](https://rdrr.io/r/stats/GammaDist.html)
-
-- [`rgamma()`](https://rdrr.io/r/stats/GammaDist.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

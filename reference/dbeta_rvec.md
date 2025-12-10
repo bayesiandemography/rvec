@@ -1,4 +1,4 @@
-# The Beta Distribution, Using Multiple Draws
+# Beta Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the Beta distribution, modified to work with rvecs.
@@ -24,8 +24,7 @@ rbeta_rvec(n, shape1, shape2, ncp = 0, n_draw = NULL)
 - shape1, shape2:
 
   Parameters for beta distribution. Non-negative. See
-  [`stats::dbeta()`](https://rdrr.io/r/stats/Beta.html). Can be an
-  rvecs.
+  [`dbeta()`](https://rdrr.io/r/stats/Beta.html). Can be an rvec.
 
 - ncp:
 
@@ -62,9 +61,8 @@ rbeta_rvec(n, shape1, shape2, ncp = 0, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-- Otherwise an ordinary R vector.
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
 ## Details
 
@@ -88,15 +86,13 @@ vector recycling rules:
 
 ## See also
 
-- [`dbeta()`](https://rdrr.io/r/stats/Beta.html)
+- [`dbeta()`](https://rdrr.io/r/stats/Beta.html),
+  [`pbeta()`](https://rdrr.io/r/stats/Beta.html),
+  [`qbeta()`](https://rdrr.io/r/stats/Beta.html),
+  [`rbeta()`](https://rdrr.io/r/stats/Beta.html) Base R equivalents
 
-- [`pbeta()`](https://rdrr.io/r/stats/Beta.html)
-
-- [`qbeta()`](https://rdrr.io/r/stats/Beta.html)
-
-- [`rbeta()`](https://rdrr.io/r/stats/Beta.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

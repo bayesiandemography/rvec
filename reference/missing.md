@@ -41,22 +41,22 @@ na.omit(object, ...)
 
 ## Value
 
-- [`anyNA()`](https://rdrr.io/r/base/NA.html) - A logical rvec with
-  length 1.
+- [`anyNA()`](https://rdrr.io/r/base/NA.html) A logical rvec with length
+  1.
 
 - [`is.na()`](https://rdrr.io/r/base/NA.html),
   [`is.nan()`](https://rdrr.io/r/base/is.finite.html),
   [`is.finite()`](https://rdrr.io/r/base/is.finite.html),
-  [`is.infinite()`](https://rdrr.io/r/base/is.finite.html) - A logical
+  [`is.infinite()`](https://rdrr.io/r/base/is.finite.html) A logical
   rvec with the same length as the original rvec.
 
 - [`na.omit()`](https://rdrr.io/r/stats/na.fail.html),
-  [`na.exclude()`](https://rdrr.io/r/stats/na.fail.html) - An rvec with
+  [`na.exclude()`](https://rdrr.io/r/stats/na.fail.html) An rvec with
   the same class as the original rvec, minus any elements that have
   `NA`s in any draws.
 
-- [`na.fail()`](https://rdrr.io/r/stats/na.fail.html) - The original
-  rvec, or an error.
+- [`na.fail()`](https://rdrr.io/r/stats/na.fail.html) The original rvec,
+  or an error.
 
 ## Details
 
@@ -67,33 +67,34 @@ The behavior of the rvec methods for
 [`is.infinite()`](https://rdrr.io/r/base/is.finite.html) differs from
 the standard [vctrs](https://vctrs.r-lib.org) behavior, which is to
 return a logical vector with length equal to `length(x)`. With rvecs,
-the standard **vctrs** behavior would entail summarising across draws,
-which is the job of the
+the standard vctrs behavior would entail summarising across draws, which
+is the job of the
 [draws\_\*](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
 functions.
 
 ## See also
 
 - [`if_else_rvec()`](https://bayesiandemography.github.io/rvec/reference/if_else_rvec.md)
-  for modifying individual values within draws.
+  Modify individual values within draws
 
-- Base R functions [`is.na()`](https://rdrr.io/r/base/NA.html),
+- [`is.na()`](https://rdrr.io/r/base/NA.html),
   [`is.nan()`](https://rdrr.io/r/base/is.finite.html),
   [`is.finite()`](https://rdrr.io/r/base/is.finite.html),
   [`is.infinite()`](https://rdrr.io/r/base/is.finite.html),
   [`anyNA()`](https://rdrr.io/r/base/NA.html),
   [`na.omit()`](https://rdrr.io/r/stats/na.fail.html),
-  [`na.exclude()`](https://rdrr.io/r/stats/na.fail.html)
+  [`na.exclude()`](https://rdrr.io/r/stats/na.fail.html) Base R
+  functions
 
 - [`vctrs::vec_detect_missing()`](https://vctrs.r-lib.org/reference/missing.html)
-  to test whether all draws for an observation are missing.
+  Test whether all draws for an observation are missing
 
 - [`vctrs::vec_detect_complete()`](https://vctrs.r-lib.org/reference/vec_detect_complete.html)
-  to test whether any draws for an observation are missing.
+  Test whether any draws for an observation are missing
 
 - [`draws_any()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md),
   [`draws_all()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
-  to summarise across draws.
+  Summarise across draws
 
 ## Examples
 

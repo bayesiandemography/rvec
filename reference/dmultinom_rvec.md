@@ -1,4 +1,4 @@
-# The Multinomial Distribution, Using Multiple Draws
+# Multinomial Distribution, Using Multiple Draws
 
 Density function random generation for the multinomial distribution,
 modified to work with rvecs.
@@ -50,17 +50,16 @@ rmultinom_rvec(n, size, prob, n_draw = NULL)
 
   - If any of the arguments are rvecs, or if a value for `n_draw` is
     supplied, then an
-    [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-
-  - Otherwise an ordinary R vector.
+    [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+    otherwise an ordinary R vector.
 
 - [`rmultinom()`](https://rdrr.io/r/stats/Multinom.html)
 
-  - If `n` is 1, an rvec or ordinary R vector.
+  - If `n` is 1, an rvec or ordinary R vector; otherwise a list of rvecs
+    or ordinary R vectors
 
-  - If `n` is greater than 1, a list of rvecs or ordinary R vectors
-
-- `rmultinom_rvec()` always returns doubles (not integers).
+- Unlike base [`rmultinom()`](https://rdrr.io/r/stats/Multinom.html),
+  `rmultinom_rvec()` always returns doubles.
 
 ## Details
 
@@ -76,18 +75,14 @@ Like the base R functions
 \[rmultinom(), `dmultinom_rvec()` and `rmultinom_rvec()` do not recycle
 their arguments.
 
-## Warning
-
-From version rvec version 0.7.4 onwards, `rmultinom_rvec()` always
-returns doubles (not integers).
-
 ## See also
 
-- [`dmultinom()`](https://rdrr.io/r/stats/Multinom.html)
+- [`dmultinom()`](https://rdrr.io/r/stats/Multinom.html),
+  [`rmultinom()`](https://rdrr.io/r/stats/Multinom.html) Base R
+  equivalents
 
-- [`rmultinom()`](https://rdrr.io/r/stats/Multinom.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 

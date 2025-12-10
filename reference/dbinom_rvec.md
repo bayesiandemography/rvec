@@ -1,4 +1,4 @@
-# The Binomial Distribution, Using Multiple Draws
+# Binomial Distribution, Using Multiple Draws
 
 Density, distribution function, quantile function and random generation
 for the binomial distribution, modified to work with rvecs.
@@ -24,14 +24,12 @@ rbinom_rvec(n, size, prob, n_draw = NULL)
 - size:
 
   Number of trials. See
-  [`stats::dbinom()`](https://rdrr.io/r/stats/Binomial.html). Can be an
-  rvec.
+  [`dbinom()`](https://rdrr.io/r/stats/Binomial.html). Can be an rvec.
 
 - prob:
 
   Probability of success in each trial. See
-  [`stats::dbinom()`](https://rdrr.io/r/stats/Binomial.html). Can be an
-  rvec.
+  [`dbinom()`](https://rdrr.io/r/stats/Binomial.html). Can be an rvec.
 
 - log, log.p:
 
@@ -64,11 +62,11 @@ rbinom_rvec(n, size, prob, n_draw = NULL)
 
 - If any of the arguments are rvecs, or if a value for `n_draw` is
   supplied, then an
-  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md)
+  [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md);
+  otherwise an ordinary R vector.
 
-- Otherwise an ordinary R vector.
-
-- `rbinom_rvec()` always returns doubles (not integers).
+- Unlike base [`rbinom()`](https://rdrr.io/r/stats/Binomial.html),
+  `rbinom_rvec()` always returns doubles.
 
 ## Details
 
@@ -91,22 +89,15 @@ vector recycling rules:
 
 - All other vectors must have the same size
 
-## Warning
-
-From version rvec version 0.7.4 onwards, `rbinom_rvec()` always returns
-doubles (not integers).
-
 ## See also
 
-- [`dbinom()`](https://rdrr.io/r/stats/Binomial.html)
+- [`dbinom()`](https://rdrr.io/r/stats/Binomial.html),
+  [`pbinom()`](https://rdrr.io/r/stats/Binomial.html),
+  [`qbinom()`](https://rdrr.io/r/stats/Binomial.html),
+  [`rbinom()`](https://rdrr.io/r/stats/Binomial.html) Base R equivalents
 
-- [`pbinom()`](https://rdrr.io/r/stats/Binomial.html)
-
-- [`qbinom()`](https://rdrr.io/r/stats/Binomial.html)
-
-- [`rbinom()`](https://rdrr.io/r/stats/Binomial.html)
-
-- [stats::distributions](https://rdrr.io/r/stats/Distributions.html).
+- [distributions](https://rdrr.io/r/stats/Distributions.html) All base R
+  distributions
 
 ## Examples
 
