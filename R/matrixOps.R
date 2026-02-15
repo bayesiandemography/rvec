@@ -1,39 +1,44 @@
 
 ## Matrix multiplication
 
-## requires R(>= 4.30), since matrixOps introduced in v4.3
+## requires R >= 4.3.0, since matrixOps introduced in 4.3.0
 
 #' Matrix Multiplication with Rvecs
 #'
 #' Matrix multiplication `%*%` can be used
-#' with [rvecs][rvec()]. However, in constrast to
-#' standard R vectors, multiplying an rvec
-#' by a matrix does not produce a row or
-#' column vector. Instead it produces an
-#' ordinary rvec, with no dimensions.
+#' with [rvecs][rvec()], provided that the
+#' version of R in use is version 4.3.0 or higher.
 #'
-#' @param x,y Vectors, matrices, or rvecs.
+#' Multiplying an rvec by a matrix produces
+#' an rvec, with no dimensions. This is
+#' different from an ordinary R vector:
+#' multiplying an ordinary vector by a
+#' matrix produces a row or column matrix.
 #'
-#' @returns An rvec, if `x` or `y`
-#' is an rvec.
+#' @param x,y Vectors, matrices, or rvecs
+#' 
+#' @returns An rvec if one or both
+#' of the inputs is an rvec;
+#' otherwise the default
+#' `%*%` result.
 #'
 #' @examples
-#' A <- matrix(c(10, 10, 10,
-#'               11, 11, 11),
-#'             nrow = 2, byrow = TRUE)
-#' x <- rvec(list(c(1, 2),
-#'                c(3, 4),
-#'                c(5, 6)))
-#' A %*% x
-#'
-#' ## matrix multiplication with an
-#' ## ordinary R matrix produces
-#' ## a row or column vector
-#' y <- c(1, 3, 5)
-#' A %*% y
-#' @method matrixOps rvec
-#' @export
+#' if (getRversion() >= "4.3.0") {
+#'   A <- matrix(c(10, 10, 10,
+#'                 11, 11, 11),
+#'               nrow = 2, byrow = TRUE)
+#'   x <- rvec(list(c(1, 2),
+#'                  c(3, 4),
+#'                  c(5, 6)))
+#'   A %*% x
+#' }
+#' @name rvec-matrix-mult
+NULL
+
+#' @noRd
 matrixOps.rvec <- function(x, y) {
+  if (getRversion() < "4.3.0")
+    cli::cli_abort("rvec %*% requires R >= 4.30") # nocov
   is_rvec_x <- is_rvec(x)
   is_rvec_y <- is_rvec(y)
   if (is_rvec_x && is_rvec_y) 
@@ -51,35 +56,22 @@ matrixOps.rvec <- function(x, y) {
   ans
 }
 
-#' Internal Methods for Matrix Multiplication with rvec
-#'
-#' These methods support `%*%` between Matrix and rvec objects.
-#'
-#' @name rvec-matrix-mult
-#' @docType methods
-#' @keywords internal
-NULL
+#' @rdname rvec-matrix-mult
+methods::setMethod("%*%",
+                   methods::signature(x = "Matrix", y = "rvec"),
+                   function(x, y) {
+                     mx <- as.matrix(x)
+                     my <- vctrs::field(y, "data")
+                     ans <- mx %*% my
+                     rvec(ans)
+                   })
 
 #' @rdname rvec-matrix-mult
-setMethod("%*%",
-          signature(x = "Matrix", y = "rvec"),
-          function(x, y) {
-            my <- field(y, "data")
-            out <- x %*% my
-            rvec(out)
-          })
-
-#' @rdname rvec-matrix-mult
-setMethod("%*%",
-          signature(x = "rvec", y = "Matrix"),
-          function(x, y) {
-            mx <- field(x, "data")
-            my <- as.matrix(y)
-            ans <- t(crossprod(mx, my))
-            rvec(ans)
-          })
-
-
-
-
-
+methods::setMethod("%*%",
+                   methods::signature(x = "rvec", y = "Matrix"),
+                   function(x, y) {
+                     mx <- vctrs::field(x, "data")
+                     my <- as.matrix(y)
+                     ans <- t(crossprod(mx, my))
+                     rvec(ans)
+                   })

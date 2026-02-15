@@ -1,4 +1,15 @@
 
+# rvec 1.0.1
+
+## Replacing minimum R version
+
+- The minimum R version has now reduced from 4.3.0 to 4.2.2. However,
+  it does not appear to be possible to safely implement matrix
+  multiplication without `matrixOps`, which was introduced in 4.3.0. 
+  Methods for matrix multiplication are therefore only implemented if
+  R >= 4.3.0.
+
+
 # rvec 1.0.0
 
 ## Change to lifecycle status

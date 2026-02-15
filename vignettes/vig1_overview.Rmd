@@ -252,13 +252,15 @@ tibble(
 )
 ```
 
-Multiplying an rvec by a matrix produces an rvec,
+Multiplying an rvec by a matrix produces an rvec (though only with R version 4.3.0 and higher)
 ```{r}
-m <- rbind(c(1, 1),
-           c(0, 1))
-x <- rvec(list(1:2,
-               3:4))
-m %*% x
+if (getRversion() >= "4.3.0") {
+  m <- rbind(c(1, 1),
+             c(0, 1))
+  x <- rvec(list(1:2,
+                 3:4))
+  m %*% x
+}
 ```
 
 

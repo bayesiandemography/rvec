@@ -1,10 +1,12 @@
 
+testthat::skip_if(getRversion() < "4.3.0", "matrixOps requires R >= 4.3.0")
+
 test_that("'%*%' works when x is an rvec and y is an rvec", {
-    x <- rvec(matrix(1:9, nr = 3))
-    y <- rvec(matrix(11:19, nr = 3))
-    ans_obtained <- x %*% y
-    ans_expected <- rvec(sum(x * y))
-    expect_identical(ans_obtained, ans_expected)
+  x <- rvec(matrix(1:9, nr = 3))
+  y <- rvec(matrix(11:19, nr = 3))
+  ans_obtained <- x %*% y
+  ans_expected <- rvec(sum(x * y))
+  expect_identical(ans_obtained, ans_expected)
 })
 
 test_that("'%*%' works when x is a matrix and y is an rvec", {
