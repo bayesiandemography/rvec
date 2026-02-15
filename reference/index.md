@@ -122,8 +122,6 @@
   : Is an Object an Rvec
 - [`map_rvec()`](https://bayesiandemography.github.io/rvec/reference/map_rvec.md)
   : Apply a Function and Put Results in an Rvec
-- [`matrixOps(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/matrixOps.rvec.md)
-  : Matrix Multiplication with Rvecs
 - [`anyNA(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/missing.md)
   [`is.na(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/missing.md)
   [`na.exclude(`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/missing.md)
@@ -146,6 +144,9 @@
   : Sample Ranks, Including Rvecs
 - [`reg_post`](https://bayesiandemography.github.io/rvec/reference/reg_post.md)
   : Posterior Sample from Linear Regression
+- [`` `%*%`( ``*`<Matrix>`*`,`*`<rvec>`*`)`](https://bayesiandemography.github.io/rvec/reference/rvec-matrix-mult.md)
+  [`` `%*%`( ``*`<rvec>`*`,`*`<Matrix>`*`)`](https://bayesiandemography.github.io/rvec/reference/rvec-matrix-mult.md)
+  : Matrix Multiplication with Rvecs
 - [`rvec-package`](https://bayesiandemography.github.io/rvec/reference/rvec-package.md)
   : Package 'rvec'
 - [`rvec()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)

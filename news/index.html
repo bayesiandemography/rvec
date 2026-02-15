@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,14 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.0" id="rvec-100">rvec 1.0.0<a class="anchor" aria-label="anchor" href="#rvec-100"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.1" id="rvec-101">rvec 1.0.1<a class="anchor" aria-label="anchor" href="#rvec-101"></a></h2>
+<div class="section level3">
+<h3 id="reducing-minimum-r-version-1-0-1">Reducing minimum R version<a class="anchor" aria-label="anchor" href="#reducing-minimum-r-version-1-0-1"></a></h3>
+<ul><li>The minimum R version has been reduced from 4.3.0 to 4.2.0. However, it does not appear to be possible to safely implement matrix multiplication without <code>matrixOps</code>, which was introduced in 4.3.0. Methods for matrix multiplication are therefore only implemented if R &gt;= 4.3.0.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.0" id="rvec-100">rvec 1.0.0<a class="anchor" aria-label="anchor" href="#rvec-100"></a></h2><p class="text-muted">CRAN release: 2025-12-10</p>
 <div class="section level3">
 <h3 id="change-to-lifecycle-status-1-0-0">Change to lifecycle status<a class="anchor" aria-label="anchor" href="#change-to-lifecycle-status-1-0-0"></a></h3>
 <ul><li>Interface is now sufficiently stable that the “experimental” lifecycle badge has been removed.</li>

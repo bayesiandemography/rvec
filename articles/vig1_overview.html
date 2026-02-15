@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -421,13 +421,15 @@
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;2&gt;&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;2&gt;&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>   0.2,0.4 -1.386,-0.4055</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>   0.6,0.9   0.4055,2.197</span></span></code></pre></div>
-<p>Multiplying an rvec by a matrix produces an rvec,</p>
+<p>Multiplying an rvec by a matrix produces an rvec (though only with R version 4.3.0 and higher)</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>           <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span>
-<span>               <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">m</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">x</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric_version.html" class="external-link">getRversion</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="st">"4.3.0"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span>
+<span>                 <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">m</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">x</span></span>
+<span><span class="op">}</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 4,6 3,4</span></span></code></pre></div>
 <p><code>rvec</code> contains a suite of functions for summarising weighted data:</p>
