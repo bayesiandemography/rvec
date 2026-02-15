@@ -1,3 +1,12 @@
+# Submission of version 1.0.01 on 15 February 2026
+
+## Summary of changes from previous version (1.0.0)
+
+* The only change compared with version 1.0.0 is that the minimum
+  version of R required has been reduced from 4.3.0 to 4.2.0. The
+  reduction has been achieved by making the use of `matrixOps`
+  conditional on the R version number.
+
 
 # Submission of version 0.0.8 on 13 July 2025
 
