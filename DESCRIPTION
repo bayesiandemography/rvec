@@ -1,7 +1,7 @@
 Package: rvec
 Type: Package
 Title: Vectors Representing Random Variables
-Version: 1.0.1
+Version: 1.0.2
 Maintainer: John Bryant <john@bayesiandemography.com>
 Author: John Bryant [aut, cre], Bayesian Demography Limited [cph]
 Authors@R: 
