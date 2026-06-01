@@ -93,7 +93,7 @@ l <- list(rpois(100, lambda = 10.2),
           rpois(100, lambda = 5.5))
 rvec(l)
 #> <rvec_int<100>[2]>
-#> [1] 10 (4.5, 17) 5 (1, 11)   
+#> [1] 10 (5, 17) 4 (1, 9)  
 
 rvec(letters[1:5])
 #> <rvec_chr<1>[5]>

@@ -1,6 +1,15 @@
 # Changelog
 
+## rvec 1.0.2
+
+### covr
+
+- Results from coverage tests not being uploaded to covr site, so
+  updating yaml.
+
 ## rvec 1.0.1
+
+CRAN release: 2026-02-15
 
 ### Reducing minimum R version
 

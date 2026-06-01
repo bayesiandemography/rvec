@@ -37,6 +37,7 @@ functions for summarizing across random draws.
 We begin with a toy example to illustrate basic functionality.
 
 ``` r
+
 library(rvec)
 #> 
 #> Attaching package: 'rvec'
@@ -63,6 +64,7 @@ The header `<rvec_dbl<3>[1]>` describe the structure of `theta`:
 We can perform standard mathematical operations:
 
 ``` r
+
 theta^2 + 1
 #> <rvec_dbl<3>[1]>
 #> [1] 10,2,1
@@ -71,6 +73,7 @@ theta^2 + 1
 `theta` recycles to match the length of other vectors,
 
 ``` r
+
 beta <- theta + c(1, -1)
 beta
 #> <rvec_dbl<3>[2]>
@@ -86,6 +89,7 @@ beta
 To summarize across random draws, we use `draws_*` functions, e.g.
 
 ``` r
+
 draws_mean(beta)
 #> [1] 2.3333333 0.3333333
 ```
@@ -96,6 +100,7 @@ Our next example is more involved, and includes the use of some standard
 tidyverse packages.
 
 ``` r
+
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -107,6 +112,7 @@ disaggregated by age and sex. The rates are not stored as an rvec, but
 instead in a ‘data base’ format, where each row describes a single draw.
 
 ``` r
+
 divorce
 #> # A tibble: 22,000 × 4
 #>    age   sex     draw   rate
@@ -127,6 +133,7 @@ divorce
 First we convert from database format to rvec format.
 
 ``` r
+
 divorce_rv <- divorce |>
   collapse_to_rvec(value = rate)
 divorce_rv
@@ -155,6 +162,7 @@ person would expect to experience over their lifetime under prevailing
 divorce rates. The total divorce rate can be calculated as
 
 ``` r
+
 divorce_rv |>
   group_by(sex) |>
   summarise(TDR = sum(rate) * 5 / 1000)
@@ -174,6 +182,7 @@ returns a tibble rather than a vector, so, following standard `mutate`
 rules, we do not explicitly create new columns.
 
 ``` r
+
 divorce_rv |>
   group_by(sex) |>
   summarise(tdr = sum(rate) * 5 / 1000) |>
@@ -188,6 +197,7 @@ divorce_rv |>
 Next we calculate the ratio between female and male divorce rates,
 
 ``` r
+
 divorce_ratio <- divorce_rv |>
   pivot_wider(names_from = sex, values_from = rate) |>
   mutate(ratio = Female / Male) |>
@@ -197,6 +207,7 @@ divorce_ratio <- divorce_rv |>
 and graph the result
 
 ``` r
+
 ggplot(divorce_ratio,
        aes(x = age, 
            ymin = ratio.lower, 
@@ -227,7 +238,7 @@ distribution of the unknown quantities,
 | \\\vdots\\     |    \\\vdots\\    |    \\\vdots\\    | \\\ddots\\ |    \\\vdots\\    |
 | Quantity \\m\\ | \\\theta\_{m1}\\ | \\\theta\_{m2}\\ | \\\dots\\  | \\\theta\_{mn}\\ |
 
-**The internal structure of an rvec**
+**The internal structure of an rvec** {.table style="width:100%;"}
 
 Ordinary functions are applied independently to each column. For
 instance, calling [`sum()`](https://rdrr.io/r/base/sum.html) on an rvec
@@ -235,8 +246,8 @@ creates a new rvec with structure
 
 Table : **The result of summing along the vector**
 
-|            |            Draw 1             |            Draw 2             | \\\dots\\ |          Draw \\n\\           |
-|------------|:-----------------------------:|:-----------------------------:|:---------:|:-----------------------------:|
+|  | Draw 1 | Draw 2 | \\\dots\\ | Draw \\n\\ |
+|----|:--:|:--:|:--:|:--:|
 | Quantity 1 | \\\sum\_{i=1}^m\theta\_{i1}\\ | \\\sum\_{i=1}^m\theta\_{i2}\\ | \\\dots\\ | \\\sum\_{i=1}^m\theta\_{in}\\ |
 
 Functions with a `draws_` prefix are applied independently to each row.
@@ -251,7 +262,7 @@ on an rvec creates a new numeric vector with structure
 | \\\vdots\\     |                \\\vdots\\                |
 | Quantity \\m\\ | \\\frac{1}{n}\sum\_{j=1}^n\theta\_{mj}\\ |
 
-**The result of taking means across draws**
+**The result of taking means across draws** {.table}
 
 Each rvec holds a fixed number of draws. Two rvecs can only be used
 together in a function if
@@ -264,6 +275,7 @@ together in a function if
 An individual rvec can be created from a list of vectors,
 
 ``` r
+
 x <- list(LETTERS, letters)
 rvec(x)
 #> <rvec_chr<26>[2]>
@@ -273,6 +285,7 @@ rvec(x)
 a matrix,
 
 ``` r
+
 x <- matrix(rnorm(2000), nrow = 2)
 rvec(x)
 #> <rvec_dbl<1000>[2]>
@@ -282,6 +295,7 @@ rvec(x)
 or an atomic vector
 
 ``` r
+
 x <- c(TRUE, FALSE)
 rvec(x)
 #> <rvec_lgl<1>[2]>
@@ -300,6 +314,7 @@ or
 [`rvec_chr()`](https://bayesiandemography.github.io/rvec/reference/rvec.md),
 
 ``` r
+
 x <- list(1:3)
 rvec(x)
 #> <rvec_int<3>[1]>
@@ -326,6 +341,7 @@ Mathematical and logical operations are applied independently to each
 draw.
 
 ``` r
+
 x <- rvec(list(c(TRUE, FALSE),
                c(TRUE, TRUE)))
 x          
@@ -343,6 +359,7 @@ User-defined functions that consist entirely of standard mathematical
 and logical operations should work with no modifications.
 
 ``` r
+
 logit <- function(p) log(p / (1-p))
 tibble(
   x = rvec(list(c(0.2, 0.4),
@@ -360,6 +377,7 @@ Multiplying an rvec by a matrix produces an rvec (though only with R
 version 4.3.0 and higher)
 
 ``` r
+
 if (getRversion() >= "4.3.0") {
   m <- rbind(c(1, 1),
              c(0, 1))
@@ -393,6 +411,7 @@ ranking operation independently to each draw, and return the results as
 an integer rvec.
 
 ``` r
+
 divorce_ratio |> 
   select(age, ratio) |>
   mutate(rank = rank(ratio))
@@ -424,6 +443,7 @@ arguments. Package `rvec` provides modified functions that do. For
 instance,
 
 ``` r
+
 y <- rvec(list(c(-1, 0.2),
                c(3, -7)))
 mu <- rvec(list(c(0, 1),
@@ -443,6 +463,7 @@ be supplied for a special argument called `n_draw`. When a value for
 `n_draw` is supplied, the return value is an rvec with `n_draw` draws,
 
 ``` r
+
 rnorm_rvec(n = 3, mean = 100, sd = 10, n_draw = 2)
 #> <rvec_dbl<2>[3]>
 #> [1] 93.38,93.98 94.69,96.82 96.99,103.1
@@ -457,6 +478,7 @@ This is a convenient way to create inputs to a simulation.
 Standard R ways of selecting elements from vectors work with rvecs.
 
 ``` r
+
 x <- rvec(list(a = 1:2,
                b = 3:4,
                c = 5:6))
@@ -484,6 +506,7 @@ The tidyverse function
 when the `true`, `false`, or `missing` arguments are rvecs,
 
 ``` r
+
 x <- rvec(list(1:2,
                3:4))
 if_else(condition = c(TRUE, FALSE), 
@@ -500,6 +523,7 @@ not work when the `condition` argument is an rvec. For this we need
 [`if_else_rvec()`](https://bayesiandemography.github.io/rvec/reference/if_else_rvec.md),
 
 ``` r
+
 if_else_rvec(x <= 2, x, 2)
 #> <rvec_dbl<2>[2]>
 #> [1] 1,2 2,2
@@ -511,6 +535,7 @@ can be used to independently transform or recode values across different
 draws,
 
 ``` r
+
 x <- rvec(list(c(1, 3.3),
                c(NA, -2)))
 x
@@ -528,6 +553,7 @@ The standard R concatenation function
 [`c()`](https://rdrr.io/r/base/c.html) works with rvecs,
 
 ``` r
+
 x1 <- rvec(list(c(0.1, 0.2),
                 c(0.3, 0.4)))
 x2 <- rvec(list(c(0.5, 0.6),
@@ -542,6 +568,7 @@ Unfortunately, [`cbind()`](https://rdrr.io/r/base/cbind.html) and
 properly on raw rvecs,
 
 ``` r
+
 rbind(x1, x2)
 #>    data     
 #> x1 numeric,4
@@ -555,6 +582,7 @@ though [`cbind()`](https://rdrr.io/r/base/cbind.html) does work if the
 rvecs are contained in data frames
 
 ``` r
+
 df1 <- data.frame(x1)
 df2 <- data.frame(x2)
 cbind(df1, df2)
@@ -572,6 +600,7 @@ and
 *do* work with rvecs,
 
 ``` r
+
 library(vctrs, warn.conflicts = FALSE)
 vec_cbind(a = x1, b = x2)
 #>         a       b
@@ -587,6 +616,7 @@ supplies a function called
 that does the same job:
 
 ``` r
+
 l <- list(a = rvec(list(c(1, 4))),
           b = rvec(list(c(9, 16))))
 l
@@ -609,6 +639,7 @@ Function [`as.matrix()`](https://rdrr.io/r/base/matrix.html) returns the
 data underlying an rvec.
 
 ``` r
+
 m <- matrix(1:6, nr = 2)
 m
 #>      [,1] [,2] [,3]
@@ -629,6 +660,7 @@ Function
 returns a list of vectors
 
 ``` r
+
 as_list_col(x)
 #> [[1]]
 #> [1] 1 3 5
@@ -654,6 +686,7 @@ is the inverse of function
 introduced in Section [2.2](#sec:divorce).
 
 ``` r
+
 divorce |>
   head(2)
 #> # A tibble: 2 × 4
@@ -712,6 +745,7 @@ which calculates credible intervals, is the draws function that is used
 most often,
 
 ``` r
+
 divorce_rv <- divorce |>
   collapse_to_rvec(value = rate)
 divorce_rv
@@ -759,6 +793,7 @@ To combine samples, we use function
 [`pool_draws()`](https://bayesiandemography.github.io/rvec/reference/pool_draws.md):
 
 ``` r
+
 mi_data
 #> # A tibble: 6 × 3
 #>   sex    imputed_dataset             value

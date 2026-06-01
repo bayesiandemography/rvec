@@ -9,12 +9,14 @@ multiple draws but which behaves (mainly) like a standard R vector.
 ## Installation
 
 ``` r
+
 install.packages(rvec)
 ```
 
 ## Example
 
 ``` r
+
 library(rvec, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 ```
@@ -22,6 +24,7 @@ library(dplyr, warn.conflicts = FALSE)
 Create an `rvec`.
 
 ``` r
+
 x <- rvec(rbind(c(10, 11),
                 c(100, 101),
                 c(1000, 1001)))
@@ -33,6 +36,7 @@ x
 Perform arithmetic on it.
 
 ``` r
+
 x + 1
 #> <rvec_dbl<2>[3]>
 #> [1] 11,12     101,102   1001,1002
@@ -41,6 +45,7 @@ x + 1
 Put it in a tibble.
 
 ``` r
+
 df <- tibble(g = c(1, 2, 1), x)
 df
 #> # A tibble: 3 × 2
@@ -54,6 +59,7 @@ df
 Manipulate it in a tibble.
 
 ``` r
+
 df %>%
   group_by(g) %>%
   count(wt = x)
@@ -68,6 +74,7 @@ df %>%
 Summarise it.
 
 ``` r
+
 draws_mean(x)
 #> [1]   10.5  100.5 1000.5
 ```
