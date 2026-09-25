@@ -290,6 +290,15 @@ test_that("'n_rdist' works with an rvec arg", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'n_rdist' uses all rvec draw counts regardless of order", {
+    one <- rvec(matrix(c(2, 3), ncol = 1))
+    three <- rvec(matrix(1:6, nrow = 2))
+    expect_identical(n_rdist(2L, list(one, three)), 6L)
+    expect_identical(n_rdist(2L, list(three, one)), 6L)
+    expect_identical(n_rdist(2L, list(one, 2, one, three)), 6L)
+    expect_identical(n_rdist(2L, list(three, three)), 6L)
+})
+
 test_that("'n_rdist' works with no rvec arg", {
     ans_obtained <- n_rdist(n = 2L, args = list(2, 2))
     ans_expected <- 2L

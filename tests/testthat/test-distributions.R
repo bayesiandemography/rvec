@@ -538,6 +538,40 @@ test_that("'rgamma_rvec' works with valid input - n_draw is NULL", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'rgamma_rvec' recycles a single draw in either parameter", {
+    one <- matrix(c(2, 3), ncol = 1)
+    three <- matrix(1:6, nrow = 2)
+    for (parameters in list(list(one, three), list(three, one))) {
+        shape <- parameters[[1L]]
+        rate <- parameters[[2L]]
+        set.seed(42)
+        obtained <- rgamma_rvec(n = 2, shape = rvec(shape), rate = rvec(rate))
+        state_obtained <- .Random.seed
+        set.seed(42)
+        expected <- rvec(matrix(rgamma(n = 6, shape = shape, rate = rate),
+                                 nrow = 2))
+        expect_identical(obtained, expected)
+        expect_identical(state_obtained, .Random.seed)
+    }
+})
+
+test_that("'rgamma_rvec' rejects incompatible draw counts before drawing", {
+    shape <- rvec(matrix(1:4, nrow = 2))
+    rate <- rvec(matrix(1:6, nrow = 2))
+    set.seed(42)
+    state_before <- .Random.seed
+    expect_error(rgamma_rvec(n = 2, shape = shape, rate = rate),
+                 "Can't align rvec")
+    expect_identical(.Random.seed, state_before)
+})
+
+test_that("'rgamma_rvec' retains strict checking of explicit n_draw", {
+    shape <- rvec(matrix(c(2, 3), ncol = 1))
+    rate <- rvec(matrix(1:6, nrow = 2))
+    expect_error(rgamma_rvec(n = 2, shape = shape, rate = rate, n_draw = 3),
+                 "`n_draw` is 3 but `shape` has 1 draws", fixed = TRUE)
+})
+
 test_that("'rgamma_rvec' works with valid input - n_draw is supplied", {
     m <- matrix(1:6, nr = 2)
     shape <- rvec(m)
@@ -1844,4 +1878,3 @@ test_that("'dist_rvec_4' warns about NAs", {
                              arg3 = n, arg4 = k),
                  "NAs produced")
 })
-

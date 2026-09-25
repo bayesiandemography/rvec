@@ -380,7 +380,8 @@ n_draw_df <- function(df) {
 #' The elements of 'args' should all have the same
 #' length. None, some, or all could be rvecs.
 #' If any are rvecs, then 'n' is multiplied
-#' by 'n_draw'.
+#' by the largest 'n_draw' among them. Compatibility
+#' of draw counts is checked by the distribution helpers.
 #' 
 #' @param n The value of 'n' supplied by the user
 #' @param args A list of arguments.
@@ -389,15 +390,13 @@ n_draw_df <- function(df) {
 #'
 #' @noRd
 n_rdist <- function(n, args) {
-    ans <- n
+    n_draw_max <- 1L
     for (arg in args) {
-        if (is_rvec(arg)) {
-            ans <- n_draw(arg) * ans
-            break
-        }
+        if (is_rvec(arg))
+            n_draw_max <- max(n_draw_max, n_draw(arg))
     }
-    ans
-}    
+    n * n_draw_max
+}
 
 
 ## HAS_TESTS

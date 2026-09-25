@@ -1,4 +1,15 @@
 
+# rvec 1.0.3
+
+## Bug fixes
+
+- Random-generation functions such as `rgamma_rvec()` now correctly recycle
+  single-draw rvec parameters when another parameter has multiple draws and
+  `n_draw` is omitted. Previously, if the first rvec parameter had a single
+  draw, the call failed with an internal length error after advancing the
+  random-number generator state.
+
+
 # rvec 1.0.2
 
 ## covr
@@ -147,5 +158,4 @@
 - Added method for `is.numeric()`. (Can't add methods for 
 `is.character()`, `is.double()`, `is.integer()`, `is.logical()`, 
 since these are non-generic primitives.
-
 
