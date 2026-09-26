@@ -1024,16 +1024,37 @@ rgamma_rvec <- function(n, shape, rate = 1, scale = 1/rate, n_draw = NULL) {
     shape <- vec_recycle(shape, size = n)
     rate <- vec_recycle(rate, size = n)
     args <- list(shape = shape, rate = rate)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    shape <- args[["shape"]]
-    rate <- args[["rate"]]
-    dist_rvec_2(fun = rgamma,
-                arg1 = shape,
-                arg2 = rate,
-                n = n)
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else if (all(is_rv))
+        n_draw <- n_draw_common(shape, rate, x_arg = "shape", y_arg = "rate")
+    else if (is_rv[["shape"]])
+        n_draw <- n_draw(shape)
+    else if (is_rv[["rate"]])
+        n_draw <- n_draw(rate)
+    rdist_rvec_2(fun = rgamma,
+                 arg1 = shape,
+                 arg2 = rate,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 
@@ -2499,6 +2520,53 @@ rweibull_rvec <- function(n, shape, scale = 1, n_draw = NULL) {
 ## Helper functions -----------------------------------------------------------
 
 ## HAS_TESTS
+#' Generate random values with two parameters without expanding draws
+#'
+#' Parameters have already been recycled to the required observation count.
+#' A NULL n_draw requests an ordinary vector; otherwise it specifies the
+#' validated output draw count. Single-column parameters recycle in base R.
+#'
+#' @noRd
+rdist_rvec_2 <- function(fun, arg1, arg2, n, n_draw) {
+    nm_fun <- rlang::as_name(rlang::enquo(fun))
+    nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+    nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+    if (is_rvec(arg1)) {
+        check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+        arg1 <- as.matrix(arg1)
+    }
+    if (is_rvec(arg2)) {
+        check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+        arg2 <- as.matrix(arg2)
+    }
+    n_values <- if (is.null(n_draw)) n else n * n_draw
+    ans <- tryCatch(
+        withCallingHandlers({
+                                ans <- as.double(fun(n = n_values, arg1, arg2))
+                                if (length(ans) != n_values)
+                                    cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+                                ## Set dimensions before tryCatch returns and shares the result.
+                                if (!is.null(n_draw))
+                                    dim(ans) <- c(n, n_draw)
+                                ans
+                            },
+                            warning = function(w) {
+                                if (grepl("NAs produced|NaNs produced", w$message))
+                                    invokeRestart("muffleWarning")
+                            }),
+        error = function(e) e
+    )
+    if (inherits(ans, "error"))
+        cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                         i = ans$message))
+    if (anyNA(ans))
+        cli::cli_warn("NAs produced")
+    if (!is.null(n_draw))
+        ans <- rvec(ans)
+    ans
+}
+
+## HAS_TESTS
 #' Apply random-distribution function to an rvec:
 #' function has one parameter
 #'
@@ -2899,5 +2967,3 @@ dist_rvec_4 <- function(fun, arg1, arg2, arg3, arg4, ...) {
   }
   ans
 }
-
-

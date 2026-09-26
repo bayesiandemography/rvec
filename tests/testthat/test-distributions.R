@@ -572,6 +572,92 @@ test_that("'rgamma_rvec' retains strict checking of explicit n_draw", {
                  "`n_draw` is 3 but `shape` has 1 draws", fixed = TRUE)
 })
 
+test_that("'rgamma_rvec' aligns rvec observations and draws", {
+    cases <- expand.grid(shape_rows = c(1L, 2L), shape_draws = c(1L, 3L),
+                         rate_rows = c(1L, 2L), rate_draws = c(1L, 3L))
+    for (i in seq_len(nrow(cases))) {
+        case <- cases[i, ]
+        shape <- matrix(seq_len(case$shape_rows * case$shape_draws) / 2,
+                         nrow = case$shape_rows)
+        rate <- matrix(seq_len(case$rate_rows * case$rate_draws),
+                        nrow = case$rate_rows)
+        draws <- max(ncol(shape), ncol(rate))
+        shape_full <- shape[rep(seq_len(nrow(shape)), length.out = 2L),
+                            rep(seq_len(ncol(shape)), length.out = draws), drop = FALSE]
+        rate_full <- rate[rep(seq_len(nrow(rate)), length.out = 2L),
+                          rep(seq_len(ncol(rate)), length.out = draws), drop = FALSE]
+        set.seed(42)
+        expected <- rvec(matrix(rgamma(2L * draws, shape_full, rate_full), nrow = 2L))
+        state_expected <- .Random.seed
+        set.seed(42)
+        obtained <- rgamma_rvec(2L, rvec(shape), rvec(rate))
+        expect_identical(obtained, expected)
+        expect_identical(.Random.seed, state_expected)
+    }
+})
+
+test_that("'rgamma_rvec' preserves ordinary, integer, and logical inputs", {
+    for (shape in list(c(0.5, 2), 1:2, c(TRUE, FALSE))) {
+        set.seed(42)
+        expected <- rgamma(6L, shape, rate = 3)
+        state_expected <- .Random.seed
+        set.seed(42)
+        obtained <- rgamma_rvec(2L, shape, rate = 3, n_draw = 3L)
+        expect_identical(obtained, rvec(matrix(expected, nrow = 2L)))
+        expect_identical(.Random.seed, state_expected)
+        set.seed(42)
+        obtained <- rgamma_rvec(2L, rvec(matrix(shape, nrow = 2L, ncol = 3L)), rate = 3)
+        expect_identical(obtained, rvec(matrix(expected, nrow = 2L)))
+        expect_identical(.Random.seed, state_expected)
+    }
+    set.seed(42)
+    expected <- rgamma(2L, c(0.5, 2), rate = 3)
+    set.seed(42)
+    expect_identical(rgamma_rvec(2L, c(0.5, 2), rate = 3), expected)
+})
+
+test_that("'rgamma_rvec' preserves empty output dimensions without drawing", {
+    set.seed(42)
+    state_before <- .Random.seed
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    expect_identical(rgamma_rvec(0L, shape = 2), numeric())
+    expect_identical(rgamma_rvec(0L, shape = 2, n_draw = 3L), empty)
+    expect_identical(rgamma_rvec(0L, shape = empty), empty)
+    expect_identical(.Random.seed, state_before)
+})
+
+test_that("'rgamma_rvec' preserves warnings and rejects invalid inputs", {
+    shape <- c(NA_real_, NaN, -1, 0, 2)
+    set.seed(42)
+    expected <- suppressWarnings(rgamma(10L, shape, rate = 3))
+    state_expected <- .Random.seed
+    set.seed(42)
+    expect_warning(obtained <- rgamma_rvec(5L, shape, rate = 3, n_draw = 2L),
+                   "NAs produced")
+    expect_identical(obtained, rvec(matrix(expected, nrow = 5L)))
+    expect_identical(.Random.seed, state_expected)
+    expect_error(rgamma_rvec(2L, shape = 1:3), "Can't recycle")
+    expect_error(rgamma_rvec(2L, shape = 2, n_draw = 0L), "equals 0")
+    expect_error(rgamma_rvec(2L, shape = rvec(c("a", "b"))), "`shape` has class")
+    expect_error(rgamma_rvec(2L, shape = "a", n_draw = 3L),
+                 "`shape` must not be a character vector.", fixed = TRUE)
+    expect_error(rgamma_rvec(2L, shape = 2, rate = "a", n_draw = 3L),
+                 "`rate` must not be a character vector.", fixed = TRUE)
+    expect_error(rgamma_rvec(2L, shape = "a"), "Problem with call to function")
+})
+
+test_that("'rgamma_rvec' preserves the scale-to-rate conversion", {
+    shape <- c(0.5, 2)
+    scale <- rvec(matrix(c(0.3, 0.7, 1.1, 2.3, 0.9, 4.1), nrow = 2L))
+    set.seed(42)
+    expected <- rvec(matrix(rgamma(6L, shape, rate = as.matrix(1 / scale)), nrow = 2L))
+    state_expected <- .Random.seed
+    set.seed(42)
+    obtained <- rgamma_rvec(2L, shape, scale = scale)
+    expect_identical(obtained, expected)
+    expect_identical(.Random.seed, state_expected)
+})
+
 test_that("'rgamma_rvec' works with valid input - n_draw is supplied", {
     m <- matrix(1:6, nr = 2)
     shape <- rvec(m)

@@ -1,6 +1,15 @@
 
 # rvec 1.0.3
 
+## Memory use
+
+- `rgamma_rvec()` uses less temporary memory without processing draws in
+  chunks. After checking rvec alignment rules, it lets base R recycle
+  parameters across draws instead of constructing full-sized repeated
+  copies. It also avoids unnecessary copies of parameter matrices and
+  assigns output dimensions directly to the generated values. It continues
+  to use base R's `rgamma()`, preserving results for a given random seed.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle
@@ -158,4 +167,3 @@
 - Added method for `is.numeric()`. (Can't add methods for 
 `is.character()`, `is.double()`, `is.integer()`, `is.logical()`, 
 since these are non-generic primitives.
-
