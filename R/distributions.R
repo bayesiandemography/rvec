@@ -977,7 +977,7 @@ pgamma_rvec <- function(q, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, l
     q <- args[[1]]
     shape <- args[[2]]
     rate <- args[[3]]
-    dist_rvec_3(fun = pgamma,
+    dist_rvec_3_compact(fun = pgamma,
                 arg1 = q,
                 arg2 = shape,
                 arg3 = rate,
@@ -1002,7 +1002,7 @@ qgamma_rvec <- function(p, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, l
     p <- args[[1L]]
     shape <- args[[2L]]
     rate <- args[[3L]]
-    dist_rvec_3(fun = qgamma,
+    dist_rvec_3_compact(fun = qgamma,
                 arg1 = p,
                 arg2 = shape,
                 arg3 = rate,

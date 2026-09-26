@@ -18,9 +18,9 @@
   arguments across draws and copying parameter and output matrices, while
   preserving input alignment and results.
 
-- `dgamma_rvec()` uses compact arguments and avoids unnecessary matrix
-  copies, preserving alignment across its three arguments and the existing
-  handling of rate and scale.
+- `dgamma_rvec()`, `pgamma_rvec()`, and `qgamma_rvec()` use compact arguments
+  and avoid unnecessary matrix copies, preserving alignment across their
+  three arguments and the existing handling of rate and scale.
 
 ## Bug fixes
 

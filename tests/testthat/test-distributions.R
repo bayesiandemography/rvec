@@ -586,6 +586,64 @@ test_that("'qgamma_rvec' throws error when rate and scale both supplied", {
                  "Value supplied for `rate` and for `scale`.")
 })
 
+test_that("'pgamma_rvec' and 'qgamma_rvec' preserve tails, log probabilities, and scale", {
+    for (kind in c("p", "q")) {
+        fun <- if (kind == "p") pgamma_rvec else qgamma_rvec
+        base_fun <- if (kind == "p") pgamma else qgamma
+        values <- if (kind == "p") c(0, 0.1, 1, 2, 10, Inf) else c(0, 0.1, 0.3, 0.7, 0.9, 1)
+        for (lower in c(FALSE, TRUE)) {
+            for (log in c(FALSE, TRUE)) {
+                input <- if (kind == "q" && log) log(values) else values
+                m <- matrix(input, nrow = 2L)
+                shape <- matrix(c(0.5, 2), ncol = 1L)
+                rate <- matrix(c(0.3, 0.7, 1.1), nrow = 1L)
+                cases <- list(list(m, shape, rate),
+                              list(m[, 1L, drop = FALSE], matrix(1:6, nrow = 2L), rate),
+                              list(m[1L, , drop = FALSE], shape, matrix(1:6 / 7, nrow = 2L)))
+                for (args in cases) {
+                    full <- lapply(args, function(x)
+                        x[rep(seq_len(nrow(x)), length.out = 2L),
+                          rep(seq_len(ncol(x)), length.out = 3L), drop = FALSE])
+                    for (parameter in c("rate", "scale")) {
+                        expected_rate <- if (parameter == "rate") full[[3L]] else 1 / full[[3L]]
+                        expected <- rvec(base_fun(full[[1L]], full[[2L]], rate = expected_rate,
+                                                   lower.tail = lower, log.p = log))
+                        call_args <- list(rvec(args[[1L]]), shape = rvec(args[[2L]]),
+                                          lower.tail = lower, log.p = log)
+                        call_args[[parameter]] <- rvec(args[[3L]])
+                        expect_identical(do.call(fun, call_args), expected)
+                    }
+                }
+                expect_identical(fun(input, 2, rate = 3, lower.tail = lower, log.p = log),
+                                 as.double(base_fun(input, 2, rate = 3, lower.tail = lower, log.p = log)))
+            }
+        }
+    }
+})
+
+test_that("'pgamma_rvec' and 'qgamma_rvec' preserve empty outputs and validation", {
+    set.seed(42)
+    state_before <- .Random.seed
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    for (fun in list(pgamma_rvec, qgamma_rvec)) {
+        expect_identical(fun(numeric(), 2), numeric())
+        expect_identical(fun(empty, 2), empty)
+        expect_identical(fun(0.5, empty), empty)
+        expect_identical(fun(0.5, 2, rate = empty), empty)
+        expect_warning(fun(rvec(NA_real_), 2), "NAs produced")
+        expect_warning(fun(0.5, -1), "NAs produced")
+        expect_error(fun(c(0.1, 0.9), 1:3), "Can't recycle")
+        expect_error(fun(rvec(c(0.1, 0.9)), rvec(matrix(1:4, 2)), rate = rvec(matrix(1:6, 2))),
+                     "Can't align rvec `shape`")
+        expect_error(fun(0.5, rvec("a")), "`shape` has class")
+        expect_error(fun(0.5, 2, rate = rvec("a")), "`rate` has class")
+        expect_error(fun(0.5, 2, lower.tail = NA))
+        expect_error(fun(0.5, 2, log.p = NA))
+    }
+    expect_warning(qgamma_rvec(1.1, 2), "NAs produced")
+    expect_identical(.Random.seed, state_before)
+})
+
 test_that("'rgamma_rvec' works with valid input - n_draw is NULL", {
     m <- matrix(1:6, nr = 2)
     shape <- rvec(m)
