@@ -48,6 +48,10 @@
   compact arguments and avoid unnecessary matrix copies, preserving
   results and random-number generator state.
 
+- `dweibull_rvec()`, `pweibull_rvec()`, `qweibull_rvec()`, and `rweibull_rvec()`
+  use compact arguments and avoid unnecessary matrix copies, preserving
+  results and random-number generator state.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

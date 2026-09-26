@@ -2417,6 +2417,90 @@ test_that("'rweibull_rvec' works with valid input - n_draw is supplied", {
 })
 
 
+test_that("Weibull density, probability, and quantile functions preserve alignment", {
+    for (kind in c("d", "p", "q")) {
+        fun <- get(paste0(kind, "weibull_rvec"))
+        base_fun <- get(paste0(kind, "weibull"), envir = asNamespace("stats"))
+        for (log in c(FALSE, TRUE)) {
+            values <- if (kind == "q") c(0, 0.1, 0.3, 0.7, 0.9, 1) else c(-Inf, -2, 0, 1, 3, Inf)
+            if (kind == "q" && log)
+                values <- log(values)
+            x <- matrix(values, nrow = 2L)
+            shape <- matrix(c(0.5, 2), ncol = 1L)
+            scale <- matrix(c(0.5, 1, 2), nrow = 1L)
+            cases <- list(list(x, shape, scale),
+                          list(x[, 1L, drop = FALSE], matrix(1:6, 2L), scale),
+                          list(x[1L, , drop = FALSE], shape, matrix(1:6 / 3, 2L)))
+            for (args in cases) {
+                full <- lapply(args, function(m)
+                    m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = 3L), drop = FALSE])
+                for (lower in c(FALSE, TRUE)) {
+                    flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                    expected <- rvec(do.call(base_fun, c(full, flags)))
+                    expect_identical(do.call(fun, c(lapply(args, rvec), flags)), expected)
+                }
+            }
+        }
+    }
+})
+
+test_that("'rweibull_rvec' preserves draw order, degenerate values, and RNG state", {
+    parameters <- list(c(0.5, 2), rvec(c(0.5, 2)), rvec(matrix(c(0.5, 1, 2), nrow = 1L)),
+                       rvec(matrix(c(0.5, 1, 2, 1, 3, 4), nrow = 2L)))
+    for (shape in parameters) {
+        for (scale in list(1, c(0, 2), rvec(matrix(c(0, 1, 2, 0, 3, 4), 2L)))) {
+            draws <- max(if (is_rvec(shape)) n_draw(shape) else 1L,
+                         if (is_rvec(scale)) n_draw(scale) else 1L)
+            full <- lapply(list(shape, scale), function(x) {
+                m <- if (is_rvec(x)) as.matrix(x) else matrix(x, ncol = 1L)
+                m[rep(seq_len(nrow(m)), length.out = 2L),
+                  rep(seq_len(ncol(m)), length.out = draws), drop = FALSE]
+            })
+            set.seed(42)
+            expected <- rweibull(2L * draws, full[[1L]], full[[2L]])
+            if (is_rvec(shape) || is_rvec(scale))
+                expected <- rvec(matrix(expected, nrow = 2L))
+            state_expected <- .Random.seed
+            next_expected <- rweibull(5L, shape = 2)
+            set.seed(42)
+            expect_identical(rweibull_rvec(2L, shape, scale), expected)
+            expect_identical(.Random.seed, state_expected)
+            expect_identical(rweibull(5L, shape = 2), next_expected)
+        }
+    }
+    set.seed(42)
+    expected <- rvec(matrix(rweibull(6L, c(0.5, 2), 1), nrow = 2L))
+    state_expected <- .Random.seed
+    set.seed(42)
+    expect_identical(rweibull_rvec(2L, c(0.5, 2), 1, n_draw = 3L), expected)
+    expect_identical(.Random.seed, state_expected)
+})
+
+test_that("Weibull functions preserve empty outputs and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    set.seed(42)
+    state_before <- .Random.seed
+    for (fun in list(dweibull_rvec, pweibull_rvec, qweibull_rvec)) {
+        expect_identical(fun(numeric(), shape = 2), numeric())
+        expect_identical(fun(empty, shape = 2), empty)
+        expect_identical(fun(0.5, shape = empty), empty)
+        expect_identical(fun(0.5, shape = 2, scale = empty), empty)
+        expect_warning(fun(NA_real_, shape = 2), "NAs produced")
+        expect_warning(fun(0.5, shape = 2, scale = -1), "NAs produced")
+        expect_error(fun(1:2, shape = 1:3), "Can't recycle")
+    }
+    expect_identical(rweibull_rvec(0L, shape = 2), numeric())
+    expect_identical(rweibull_rvec(0L, shape = 2, n_draw = 3L), empty)
+    expect_identical(rweibull_rvec(0L, shape = empty), empty)
+    expect_error(rweibull_rvec(2L, shape = rvec(1:2), n_draw = 3L), "has 1 draws")
+    expect_error(rweibull_rvec(2L, shape = rvec(matrix(1:4, 2L)), scale = rvec(matrix(1:6, 2L))), "Can't align")
+    expect_error(rweibull_rvec(2L, shape = "a", n_draw = 3L), "must not be a character vector")
+    expect_error(rweibull_rvec(2L, shape = 2, scale = "a", n_draw = 3L), "must not be a character vector")
+    expect_identical(.Random.seed, state_before)
+})
+
+
 ## 'dist_rvec_1' --------------------------------------------------------------
 
 test_that("'dist_rvec_1' works with valid rvec input", {

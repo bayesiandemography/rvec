@@ -2582,7 +2582,7 @@ dweibull_rvec <- function(x, shape, scale = 1, log = FALSE) {
     x <- args[[1]]
     shape <- args[[2]]
     scale <- args[[3]]
-    dist_rvec_3(fun = dweibull,
+    dist_rvec_3_compact(fun = dweibull,
                 arg1 = x,
                 arg2 = shape,
                 arg3 = scale,
@@ -2600,7 +2600,7 @@ pweibull_rvec <- function(q, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
     q <- args[[1]]
     shape <- args[[2]]
     scale <- args[[3]]
-    dist_rvec_3(fun = pweibull,
+    dist_rvec_3_compact(fun = pweibull,
                 arg1 = q,
                 arg2 = shape,
                 arg3 = scale,
@@ -2619,7 +2619,7 @@ qweibull_rvec <- function(p, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
     p <- args[[1L]]
     shape <- args[[2L]]
     scale <- args[[3L]]
-    dist_rvec_3(fun = qweibull,
+    dist_rvec_3_compact(fun = qweibull,
                 arg1 = p,
                 arg2 = shape,
                 arg3 = scale,
@@ -2635,16 +2635,37 @@ rweibull_rvec <- function(n, shape, scale = 1, n_draw = NULL) {
     shape <- vec_recycle(shape, size = n)
     scale <- vec_recycle(scale, size = n)
     args <- list(shape = shape, scale = scale)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    shape <- args[["shape"]]
-    scale <- args[["scale"]]
-    dist_rvec_2(fun = rweibull,
-                arg1 = shape,
-                arg2 = scale,
-                n = n)
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else if (all(is_rv))
+        n_draw <- n_draw_common(shape, scale, x_arg = "shape", y_arg = "scale")
+    else if (is_rv[["shape"]])
+        n_draw <- n_draw(shape)
+    else if (is_rv[["scale"]])
+        n_draw <- n_draw(scale)
+    rdist_rvec_2(fun = rweibull,
+                 arg1 = shape,
+                 arg2 = scale,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 
