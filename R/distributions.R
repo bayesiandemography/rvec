@@ -2068,7 +2068,7 @@ ppois_rvec <- function(q, lambda, lower.tail = TRUE, log.p = FALSE) {
     args <- vec_recycle_common(q, lambda)
     q <- args[[1L]]
     lambda <- args[[2L]]
-    dist_rvec_2(fun = ppois,
+    dist_rvec_2_compact(fun = ppois,
                 arg1 = q,
                 arg2 = lambda,
                 lower.tail = lower.tail,
@@ -2085,7 +2085,7 @@ qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
     args <- vec_recycle_common(p, lambda)
     p <- args[[1L]]
     lambda <- args[[2L]]
-    dist_rvec_2(fun = qpois,
+    dist_rvec_2_compact(fun = qpois,
                 arg1 = p,
                 arg2 = lambda,
                 lower.tail = lower.tail,

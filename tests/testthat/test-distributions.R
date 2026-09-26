@@ -1430,6 +1430,57 @@ test_that("'qpois_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'ppois_rvec' and 'qpois_rvec' preserve tails, log probabilities, and alignment", {
+    for (kind in c("p", "q")) {
+        fun <- if (kind == "p") ppois_rvec else qpois_rvec
+        base_fun <- if (kind == "p") ppois else qpois
+        values <- if (kind == "p") c(0, 1, 2, 3, 10, Inf) else c(0, 0.1, 0.3, 0.7, 0.9, 1)
+        for (lower in c(FALSE, TRUE)) {
+            for (log in c(FALSE, TRUE)) {
+                input <- if (kind == "q" && log) log(values) else values
+                m <- matrix(input, nrow = 2L)
+                cases <- list(
+                    list(m, matrix(c(0.5, 3), ncol = 1L)),
+                    list(m[, 1L, drop = FALSE], matrix(1:6, nrow = 2L)),
+                    list(m[1L, , drop = FALSE], matrix(c(0.5, 3), ncol = 1L))
+                )
+                for (args in cases) {
+                    x <- args[[1L]]
+                    lambda <- args[[2L]]
+                    x_full <- x[rep(seq_len(nrow(x)), length.out = 2L),
+                                rep(seq_len(ncol(x)), length.out = 3L), drop = FALSE]
+                    lambda_full <- lambda[rep(seq_len(nrow(lambda)), length.out = 2L),
+                                          rep(seq_len(ncol(lambda)), length.out = 3L), drop = FALSE]
+                    expected <- rvec(base_fun(x_full, lambda_full, lower.tail = lower, log.p = log))
+                    expect_identical(fun(rvec(x), rvec(lambda), lower.tail = lower, log.p = log), expected)
+                }
+                expect_identical(fun(input, 3, lower.tail = lower, log.p = log),
+                                 as.double(base_fun(input, 3, lower.tail = lower, log.p = log)))
+            }
+        }
+    }
+})
+
+test_that("'ppois_rvec' and 'qpois_rvec' preserve empty outputs and validation", {
+    set.seed(42)
+    state_before <- .Random.seed
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    for (fun in list(ppois_rvec, qpois_rvec)) {
+        expect_identical(fun(numeric(), 3), numeric())
+        expect_identical(fun(empty, 3), empty)
+        expect_identical(fun(0.5, empty), empty)
+        expect_warning(fun(rvec(NA_real_), 3), "NAs produced")
+        expect_warning(fun(0.5, -1), "NAs produced")
+        expect_error(fun(c(0, 1), 1:3), "Can't recycle")
+        expect_error(fun(rvec(matrix(rep(0.5, 4), 2)), rvec(matrix(1:6, 2))), "Can't align")
+        expect_error(fun(0.5, rvec("a")), "`lambda` has class")
+        expect_error(fun(0.5, 3, lower.tail = NA))
+        expect_error(fun(0.5, 3, log.p = NA))
+    }
+    expect_warning(qpois_rvec(1.1, 3), "NAs produced")
+    expect_identical(.Random.seed, state_before)
+})
+
 test_that("'rpois_rvec' works with valid input - no n_draw", {
     m <- matrix(seq(2.1, 2.6, 0.1), nr = 2)
     lambda <- rvec(m)
