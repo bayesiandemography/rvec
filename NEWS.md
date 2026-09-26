@@ -26,6 +26,10 @@
   compact arguments and avoid unnecessary matrix copies. Results and
   random-number generator state are preserved.
 
+- `dlnorm_rvec()`, `plnorm_rvec()`, `qlnorm_rvec()`, and `rlnorm_rvec()` use
+  the same compact-argument approach, reducing temporary memory while
+  preserving results and random-number generator state.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle
