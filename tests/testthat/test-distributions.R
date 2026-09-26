@@ -941,6 +941,101 @@ test_that("'rgeom_rvec' works with valid input - n_draw, rvec input", {
 })
 
 
+test_that("exponential and geometric distribution functions preserve alignment", {
+    for (family in c("exp", "geom")) {
+        for (kind in c("d", "p", "q")) {
+            fun <- get(paste0(kind, family, "_rvec"))
+            base_fun <- get(paste0(kind, family), envir = asNamespace("stats"))
+            for (log in c(FALSE, TRUE)) {
+                values <- if (kind == "q") c(0, 0.1, 0.3, 0.7, 0.9, 1) else c(0, 1, 2, 3, 10, Inf)
+                if (kind == "q" && log)
+                    values <- log(values)
+                m <- matrix(values, nrow = 2L)
+                cases <- list(list(m, matrix(c(0.3, 1), ncol = 1L)),
+                              list(m[, 1L, drop = FALSE], matrix(seq(0.1, 0.6, 0.1), 2L)),
+                              list(m[1L, , drop = FALSE], matrix(c(0.3, 1), ncol = 1L)))
+                for (args in cases) {
+                    full <- lapply(args, function(x)
+                        x[rep(seq_len(nrow(x)), length.out = 2L),
+                          rep(seq_len(ncol(x)), length.out = 3L), drop = FALSE])
+                    for (lower in c(FALSE, TRUE)) {
+                        flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                        expected <- rvec(do.call(base_fun, c(full, flags)))
+                        expect_identical(do.call(fun, c(lapply(args, rvec), flags)), expected)
+                        expect_identical(do.call(fun, c(list(values, 0.3), flags)),
+                                         as.double(do.call(base_fun, c(list(values, 0.3), flags))))
+                    }
+                }
+            }
+        }
+    }
+})
+
+test_that("exponential and geometric generation preserve output and RNG state", {
+    parameters <- list(1, c(0.3, 1), rvec(c(0.3, 1)),
+                       rvec(matrix(c(0.1, 0.3, 1), nrow = 1L)),
+                       rvec(matrix(seq(0.1, 0.6, 0.1), nrow = 2L)))
+    for (family in c("exp", "geom")) {
+        fun <- get(paste0("r", family, "_rvec"))
+        base_fun <- get(paste0("r", family), envir = asNamespace("stats"))
+        for (parameter in parameters) {
+            for (explicit in c(FALSE, TRUE)) {
+                draws <- if (is_rvec(parameter)) n_draw(parameter) else if (explicit) 3L else 1L
+                m <- if (is_rvec(parameter)) as.matrix(parameter) else matrix(parameter, ncol = 1L)
+                full <- m[rep(seq_len(nrow(m)), length.out = 2L),
+                          rep(seq_len(ncol(m)), length.out = draws), drop = FALSE]
+                set.seed(42)
+                expected <- as.double(base_fun(2L * draws, full))
+                if (explicit || is_rvec(parameter))
+                    expected <- rvec(matrix(expected, nrow = 2L))
+                state_expected <- .Random.seed
+                next_expected <- rnorm(5L)
+                set.seed(42)
+                obtained <- fun(2L, parameter, n_draw = if (explicit) draws else NULL)
+                expect_identical(obtained, expected)
+                expect_identical(.Random.seed, state_expected)
+                expect_identical(rnorm(5L), next_expected)
+            }
+        }
+    }
+})
+
+test_that("exponential and geometric functions preserve empty outputs and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    for (family in c("exp", "geom")) {
+        for (kind in c("d", "p", "q")) {
+            fun <- get(paste0(kind, family, "_rvec"))
+            expect_identical(fun(numeric(), 0.3), numeric())
+            expect_identical(fun(empty, 0.3), empty)
+            expect_identical(fun(0, empty), empty)
+            expect_warning(fun(NA_real_, 0.3), "NAs produced")
+            expect_warning(fun(0, -1), "NAs produced")
+            expect_error(fun(1:2, 1:3), "Can't recycle")
+        }
+        fun <- get(paste0("r", family, "_rvec"))
+        base_fun <- get(paste0("r", family), envir = asNamespace("stats"))
+        set.seed(42)
+        state_before <- .Random.seed
+        expect_identical(fun(0L, 0.3), numeric())
+        expect_identical(fun(0L, 0.3, n_draw = 3L), empty)
+        expect_identical(fun(0L, empty), empty)
+        expect_error(fun(2L, rvec(c(0.3, 1)), n_draw = 3L), "has 1 draws")
+        expect_error(fun(2L, 0.3, n_draw = 0L), "equals 0")
+        expect_error(fun(2L, 1:3), "Can't recycle")
+        expect_error(fun(2L, "a"), "Problem with call to function")
+        expect_identical(.Random.seed, state_before)
+        parameters <- c(0, -1, NA_real_, Inf)
+        set.seed(42)
+        expected <- as.double(suppressWarnings(base_fun(4L, parameters)))
+        state_expected <- .Random.seed
+        set.seed(42)
+        expect_warning(obtained <- fun(4L, parameters), "NAs produced")
+        expect_identical(obtained, expected)
+        expect_identical(.Random.seed, state_expected)
+    }
+})
+
+
 ## 'hyper' --------------------------------------------------------------------
 
 test_that("'dhyper_rvec' works with valid input", {

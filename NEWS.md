@@ -35,6 +35,11 @@
   random-number generator state are preserved, including double-valued
   output from `rbinom_rvec()`.
 
+- The exponential and geometric distribution functions also use compact
+  arguments and avoid unnecessary matrix copies. Results, warnings, and
+  random-number generator state are preserved; `rgeom_rvec()` continues
+  to return doubles.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

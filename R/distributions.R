@@ -675,7 +675,7 @@ dexp_rvec <- function(x, rate = 1, log = FALSE) {
     args <- vec_recycle_common(x, rate)
     x <- args[[1L]]
     rate <- args[[2L]]
-    dist_rvec_2(fun = dexp,
+    dist_rvec_2_compact(fun = dexp,
                 arg1 = x,
                 arg2 = rate,
                 log = log)
@@ -691,7 +691,7 @@ pexp_rvec <- function(q, rate = 1, lower.tail = TRUE, log.p = FALSE) {
     args <- vec_recycle_common(q, rate)
     q <- args[[1L]]
     rate <- args[[2L]]
-    dist_rvec_2(fun = pexp,
+    dist_rvec_2_compact(fun = pexp,
                 arg1 = q,
                 arg2 = rate,
                 lower.tail = lower.tail,
@@ -708,7 +708,7 @@ qexp_rvec <- function(p, rate = 1, lower.tail = TRUE, log.p = FALSE) {
     args <- vec_recycle_common(p, rate)
     p <- args[[1L]]
     rate <- args[[2L]]
-    dist_rvec_2(fun = qexp,
+    dist_rvec_2_compact(fun = qexp,
                 arg1 = p,
                 arg2 = rate,
                 lower.tail = lower.tail,
@@ -721,15 +721,24 @@ qexp_rvec <- function(p, rate = 1, lower.tail = TRUE, log.p = FALSE) {
 rexp_rvec <- function(n, rate = 1, n_draw = NULL) {
     rexp <- stats::rexp
     rate <- vec_recycle(rate, size = n)
-    args <- list(rate = rate)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    rate <- args[["rate"]]
-    dist_rvec_1(fun = rexp,
-                arg = rate,
-                n = n)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        if (is_rvec(rate)) {
+            n_draw_arg <- n_draw(rate)
+            if (n_draw_arg != n_draw)
+                cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg rate}",
+                                     "has {n_draw_arg} draws."))
+        }
+        else if (!is.atomic(rate) || !is.vector(rate))
+            cli::cli_abort(c("{.arg rate} is not a vector or rvec.",
+                             i = "{.arg rate} has class {.cls {class(rate)}}."))
+    }
+    else if (is_rvec(rate))
+        n_draw <- n_draw(rate)
+    rdist_rvec_1(fun = rexp,
+                 arg = rate,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 
@@ -1137,7 +1146,7 @@ dgeom_rvec <- function(x, prob, log = FALSE) {
     args <- vec_recycle_common(x, prob)
     x <- args[[1L]]
     prob <- args[[2L]]
-    dist_rvec_2(fun = dgeom,
+    dist_rvec_2_compact(fun = dgeom,
                 arg1 = x,
                 arg2 = prob,
                 log = log)
@@ -1153,7 +1162,7 @@ pgeom_rvec <- function(q, prob, lower.tail = TRUE, log.p = FALSE) {
     args <- vec_recycle_common(q, prob)
     q <- args[[1L]]
     prob <- args[[2L]]
-    dist_rvec_2(fun = pgeom,
+    dist_rvec_2_compact(fun = pgeom,
                 arg1 = q,
                 arg2 = prob,
                 lower.tail = lower.tail,
@@ -1170,7 +1179,7 @@ qgeom_rvec <- function(p, prob, lower.tail = TRUE, log.p = FALSE) {
     args <- vec_recycle_common(p, prob)
     p <- args[[1L]]
     prob <- args[[2L]]
-    dist_rvec_2(fun = qgeom,
+    dist_rvec_2_compact(fun = qgeom,
                 arg1 = p,
                 arg2 = prob,
                 lower.tail = lower.tail,
@@ -1183,15 +1192,24 @@ qgeom_rvec <- function(p, prob, lower.tail = TRUE, log.p = FALSE) {
 rgeom_rvec <- function(n, prob, n_draw = NULL) {
     rgeom <- stats::rgeom
     prob <- vec_recycle(prob, size = n)
-    args <- list(prob = prob)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    prob <- args[["prob"]]
-    dist_rvec_1(fun = rgeom,
-                arg = prob,
-                n = n)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        if (is_rvec(prob)) {
+            n_draw_arg <- n_draw(prob)
+            if (n_draw_arg != n_draw)
+                cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg prob}",
+                                     "has {n_draw_arg} draws."))
+        }
+        else if (!is.atomic(prob) || !is.vector(prob))
+            cli::cli_abort(c("{.arg prob} is not a vector or rvec.",
+                             i = "{.arg prob} has class {.cls {class(prob)}}."))
+    }
+    else if (is_rvec(prob))
+        n_draw <- n_draw(prob)
+    rdist_rvec_1(fun = rgeom,
+                 arg = prob,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 
