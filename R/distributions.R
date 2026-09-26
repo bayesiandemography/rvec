@@ -397,7 +397,7 @@ dcauchy_rvec <- function(x, location = 0, scale = 1, log = FALSE) {
     x <- args[[1]]
     location <- args[[2]]
     scale <- args[[3]]
-    dist_rvec_3(fun = dcauchy,
+    dist_rvec_3_compact(fun = dcauchy,
                 arg1 = x,
                 arg2 = location,
                 arg3 = scale,
@@ -415,7 +415,7 @@ pcauchy_rvec <- function(q, location = 0, scale = 1, lower.tail = TRUE, log.p = 
     q <- args[[1]]
     location <- args[[2]]
     scale <- args[[3]]
-    dist_rvec_3(fun = pcauchy,
+    dist_rvec_3_compact(fun = pcauchy,
                 arg1 = q,
                 arg2 = location,
                 arg3 = scale,
@@ -434,7 +434,7 @@ qcauchy_rvec <- function(p, location = 0, scale = 1, lower.tail = TRUE, log.p = 
     p <- args[[1L]]
     location <- args[[2L]]
     scale <- args[[3L]]
-    dist_rvec_3(fun = qcauchy,
+    dist_rvec_3_compact(fun = qcauchy,
                 arg1 = p,
                 arg2 = location,
                 arg3 = scale,
@@ -449,18 +449,38 @@ rcauchy_rvec <- function(n, location = 0, scale = 1, n_draw = NULL) {
     rcauchy <- stats::rcauchy
     location <- vec_recycle(location, size = n)
     scale <- vec_recycle(scale, size = n)
-    args <- list(location = location,
-                 scale = scale)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    location <- args[["location"]]
-    scale <- args[["scale"]]
-    dist_rvec_2(fun = rcauchy,
-                arg1 = location,
-                arg2 = scale,
-                n = n)
+    args <- list(location = location, scale = scale)
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else if (all(is_rv))
+        n_draw <- n_draw_common(location, scale, x_arg = "location", y_arg = "scale")
+    else if (is_rv[["location"]])
+        n_draw <- n_draw(location)
+    else if (is_rv[["scale"]])
+        n_draw <- n_draw(scale)
+    rdist_rvec_2(fun = rcauchy,
+                 arg1 = location,
+                 arg2 = scale,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 

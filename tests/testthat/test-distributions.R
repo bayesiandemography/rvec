@@ -294,6 +294,90 @@ test_that("'rcauchy_rvec' works with valid input - n_draw is non-NULL", {
 })
 
 
+test_that("Cauchy density, probability, and quantile functions preserve alignment", {
+    for (kind in c("d", "p", "q")) {
+        fun <- get(paste0(kind, "cauchy_rvec"))
+        base_fun <- get(paste0(kind, "cauchy"), envir = asNamespace("stats"))
+        for (log in c(FALSE, TRUE)) {
+            values <- if (kind == "q") c(0, 0.1, 0.3, 0.7, 0.9, 1) else c(-Inf, -2, 0, 1, 3, Inf)
+            if (kind == "q" && log)
+                values <- log(values)
+            x <- matrix(values, nrow = 2L)
+            location <- matrix(c(-1, 2), ncol = 1L)
+            scale <- matrix(c(0.5, 1, 2), nrow = 1L)
+            cases <- list(list(x, location, scale),
+                          list(x[, 1L, drop = FALSE], matrix(1:6, 2L), scale),
+                          list(x[1L, , drop = FALSE], location, matrix(1:6 / 3, 2L)))
+            for (args in cases) {
+                full <- lapply(args, function(m)
+                    m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = 3L), drop = FALSE])
+                for (lower in c(FALSE, TRUE)) {
+                    flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                    expected <- rvec(do.call(base_fun, c(full, flags)))
+                    expect_identical(do.call(fun, c(lapply(args, rvec), flags)), expected)
+                }
+            }
+        }
+    }
+})
+
+test_that("'rcauchy_rvec' preserves draw order, degenerate values, and RNG state", {
+    parameters <- list(c(-1, 2), rvec(c(-1, 2)), rvec(matrix(c(-1, 0, 2), nrow = 1L)),
+                       rvec(matrix(c(-1, 0, 2, 1, 3, 4), nrow = 2L)))
+    for (location in parameters) {
+        for (scale in list(1, c(0, 2), rvec(matrix(c(0, 1, 2, 0, 3, 4), 2L)))) {
+            draws <- max(if (is_rvec(location)) n_draw(location) else 1L,
+                         if (is_rvec(scale)) n_draw(scale) else 1L)
+            full <- lapply(list(location, scale), function(x) {
+                m <- if (is_rvec(x)) as.matrix(x) else matrix(x, ncol = 1L)
+                m[rep(seq_len(nrow(m)), length.out = 2L),
+                  rep(seq_len(ncol(m)), length.out = draws), drop = FALSE]
+            })
+            set.seed(42)
+            expected <- rcauchy(2L * draws, full[[1L]], full[[2L]])
+            if (is_rvec(location) || is_rvec(scale))
+                expected <- rvec(matrix(expected, nrow = 2L))
+            state_expected <- .Random.seed
+            next_expected <- rcauchy(5L)
+            set.seed(42)
+            expect_identical(rcauchy_rvec(2L, location, scale), expected)
+            expect_identical(.Random.seed, state_expected)
+            expect_identical(rcauchy(5L), next_expected)
+        }
+    }
+    set.seed(42)
+    expected <- rvec(matrix(rcauchy(6L, c(-1, 2), 1), nrow = 2L))
+    state_expected <- .Random.seed
+    set.seed(42)
+    expect_identical(rcauchy_rvec(2L, c(-1, 2), 1, n_draw = 3L), expected)
+    expect_identical(.Random.seed, state_expected)
+})
+
+test_that("Cauchy functions preserve empty outputs and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    set.seed(42)
+    state_before <- .Random.seed
+    for (fun in list(dcauchy_rvec, pcauchy_rvec, qcauchy_rvec)) {
+        expect_identical(fun(numeric()), numeric())
+        expect_identical(fun(empty), empty)
+        expect_identical(fun(0.5, location = empty), empty)
+        expect_identical(fun(0.5, scale = empty), empty)
+        expect_warning(fun(NA_real_), "NAs produced")
+        expect_warning(fun(0.5, scale = -1), "NAs produced")
+        expect_error(fun(1:2, location = 1:3), "Can't recycle")
+    }
+    expect_identical(rcauchy_rvec(0L), numeric())
+    expect_identical(rcauchy_rvec(0L, n_draw = 3L), empty)
+    expect_identical(rcauchy_rvec(0L, location = empty), empty)
+    expect_error(rcauchy_rvec(2L, location = rvec(1:2), n_draw = 3L), "has 1 draws")
+    expect_error(rcauchy_rvec(2L, location = rvec(matrix(1:4, 2L)), scale = rvec(matrix(1:6, 2L))), "Can't align")
+    expect_error(rcauchy_rvec(2L, location = "a", n_draw = 3L), "must not be a character vector")
+    expect_error(rcauchy_rvec(2L, scale = "a", n_draw = 3L), "must not be a character vector")
+    expect_identical(.Random.seed, state_before)
+})
+
+
 ## 'chisq' ---------------------------------------------------------------------
 
 test_that("'dchisq_rvec' works with valid input", {
