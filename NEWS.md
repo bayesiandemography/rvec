@@ -18,6 +18,10 @@
   arguments across draws and copying parameter and output matrices, while
   preserving input alignment and results.
 
+- `dgamma_rvec()` uses compact arguments and avoids unnecessary matrix
+  copies, preserving alignment across its three arguments and the existing
+  handling of rate and scale.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

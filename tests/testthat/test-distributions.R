@@ -469,6 +469,65 @@ test_that("'dgamma_rvec' throws correct error when rate and scale both supplied"
                  "Value supplied for `rate` and for `scale`.")
 })
 
+test_that("'dgamma_rvec' aligns all three arguments with rate or scale", {
+    cases <- expand.grid(x_rows = c(1L, 2L), x_draws = c(1L, 3L),
+                         shape_rows = c(1L, 2L), shape_draws = c(1L, 3L),
+                         rate_rows = c(1L, 2L), rate_draws = c(1L, 3L))
+    for (i in seq_len(nrow(cases))) {
+        case <- cases[i, ]
+        x <- matrix(seq_len(case$x_rows * case$x_draws) / 2, nrow = case$x_rows)
+        shape <- matrix(seq_len(case$shape_rows * case$shape_draws) / 3,
+                         nrow = case$shape_rows)
+        rate <- matrix(seq_len(case$rate_rows * case$rate_draws) / 7,
+                        nrow = case$rate_rows)
+        n <- max(nrow(x), nrow(shape), nrow(rate))
+        draws <- max(ncol(x), ncol(shape), ncol(rate))
+        full <- lapply(list(x, shape, rate), function(m)
+            m[rep(seq_len(nrow(m)), length.out = n),
+              rep(seq_len(ncol(m)), length.out = draws), drop = FALSE])
+        for (log in c(FALSE, TRUE)) {
+            expected <- rvec(dgamma(full[[1L]], full[[2L]], rate = full[[3L]], log = log))
+            expect_identical(dgamma_rvec(rvec(x), rvec(shape), rate = rvec(rate), log = log), expected)
+            expected_scale <- rvec(dgamma(full[[1L]], full[[2L]], rate = 1 / full[[3L]], log = log))
+            expect_identical(dgamma_rvec(rvec(x), rvec(shape), scale = rvec(rate), log = log), expected_scale)
+        }
+    }
+})
+
+test_that("'dgamma_rvec' preserves ordinary, mixed, and empty inputs", {
+    for (x in list(c(a = 0.5, b = 2), 1:2, c(TRUE, FALSE))) {
+        expect_identical(dgamma_rvec(x, 2, rate = 3), as.double(dgamma(x, 2, rate = 3)))
+        m <- matrix(rep(x, 3L), nrow = 2L)
+        expect_identical(dgamma_rvec(rvec(m), 2, rate = 3), rvec(dgamma(m, 2, rate = 3)))
+        expect_identical(dgamma_rvec(1, rvec(m), rate = 3), rvec(dgamma(1, m, rate = 3)))
+        expect_identical(dgamma_rvec(1, 2, rate = rvec(m)), rvec(dgamma(1, 2, rate = m)))
+    }
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    expect_identical(dgamma_rvec(numeric(), 2), numeric())
+    expect_identical(dgamma_rvec(empty, 2), empty)
+    expect_identical(dgamma_rvec(1, empty), empty)
+    expect_identical(dgamma_rvec(1, 2, rate = empty), empty)
+})
+
+test_that("'dgamma_rvec' preserves warnings and checks every draw-count pair", {
+    set.seed(42)
+    state_before <- .Random.seed
+    one <- rvec(c(1, 2))
+    two <- rvec(matrix(1:4, nrow = 2L))
+    three <- rvec(matrix(1:6, nrow = 2L))
+    expect_error(dgamma_rvec(one, two, rate = three), "Can't align rvec `shape`")
+    expect_error(dgamma_rvec(two, one, rate = three), "Can't align rvec `x`")
+    expect_error(dgamma_rvec(two, three, rate = one), "Can't align rvec `x`")
+    expect_error(dgamma_rvec(1:2, 1:3), "Can't recycle")
+    expect_error(dgamma_rvec(rvec("a"), 2), "`x` has class")
+    expect_error(dgamma_rvec(1, rvec("a")), "`shape` has class")
+    expect_error(dgamma_rvec(1, 2, rate = rvec("a")), "`rate` has class")
+    expect_error(dgamma_rvec("a", 2), "Problem with call to function")
+    expect_warning(dgamma_rvec(NA_real_, 2), "NAs produced")
+    expect_warning(dgamma_rvec(1, -1), "NAs produced")
+    expect_identical(.Random.seed, state_before)
+})
+
 test_that("'pgamma_rvec' works with valid input - scale", {
     m <- matrix(1:6, nr = 2)
     q <- 2:1

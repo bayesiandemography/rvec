@@ -953,7 +953,7 @@ dgamma_rvec <- function(x, shape, rate = 1, scale = 1/rate, log = FALSE) {
     x <- args[[1]]
     shape <- args[[2]]
     rate <- args[[3]]
-    dist_rvec_3(fun = dgamma,
+    dist_rvec_3_compact(fun = dgamma,
                 arg1 = x,
                 arg2 = shape,
                 arg3 = rate,
@@ -2566,6 +2566,78 @@ dist_rvec_2_compact <- function(fun, arg1, arg2, ...) {
         cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
       ## Base functions can retain input attributes. Remove them without
       ## copying the double data, then set dimensions before tryCatch returns.
+      attributes(ans) <- NULL
+      if (!is.null(n_draw))
+        dim(ans) <- c(n, n_draw)
+      ans
+    },
+    warning = function(w) {
+      if (grepl("NAs produced|NaNs produced", w$message))
+        invokeRestart("muffleWarning")
+    }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (!is.null(n_draw))
+    ans <- rvec(ans)
+  ans
+}
+
+## HAS_TESTS
+#' Apply a three-argument distribution function without expanding draws
+#'
+#' Arguments have already been recycled to a common observation count.
+#' The function must return doubles. Single-draw arguments can remain
+#' compact because base R recycles them in column order.
+#'
+#' @noRd
+dist_rvec_3_compact <- function(fun, arg1, arg2, arg3, ...) {
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+  nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  nm_arg3 <- rlang::as_name(rlang::enquo(arg3))
+  n <- length(arg1)
+  is_rv_1 <- is_rvec(arg1)
+  is_rv_2 <- is_rvec(arg2)
+  is_rv_3 <- is_rvec(arg3)
+  ## Check every pair: a single-draw argument can align with two others
+  ## whose draw counts are incompatible with each other.
+  if (is_rv_1 && is_rv_2)
+    n_draw_common(arg1, arg2, x_arg = nm_arg1, y_arg = nm_arg2)
+  if (is_rv_1 && is_rv_3)
+    n_draw_common(arg1, arg3, x_arg = nm_arg1, y_arg = nm_arg3)
+  if (is_rv_2 && is_rv_3)
+    n_draw_common(arg2, arg3, x_arg = nm_arg2, y_arg = nm_arg3)
+  n_draw <- NULL
+  if (is_rv_1 || is_rv_2 || is_rv_3)
+    n_draw <- 1L
+  if (is_rv_1) {
+    check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+    n_draw <- max(n_draw, n_draw(arg1))
+    arg1 <- as.matrix(arg1)
+  }
+  if (is_rv_2) {
+    check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+    n_draw <- max(n_draw, n_draw(arg2))
+    arg2 <- as.matrix(arg2)
+  }
+  if (is_rv_3) {
+    check_not_rvec_chr(arg3, nm_arg = nm_arg3)
+    n_draw <- max(n_draw, n_draw(arg3))
+    arg3 <- as.matrix(arg3)
+  }
+  n_values <- if (is.null(n_draw)) n else n * n_draw
+  ans <- tryCatch(
+    withCallingHandlers({
+      ans <- fun(arg1, arg2, arg3, ...)
+      if (length(ans) != n_values)
+        cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+      ## Remove inherited attributes and set dimensions before tryCatch
+      ## returns, avoiding a copy of the double data.
       attributes(ans) <- NULL
       if (!is.null(n_draw))
         dim(ans) <- c(n, n_draw)
