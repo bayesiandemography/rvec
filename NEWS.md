@@ -30,6 +30,11 @@
   the same compact-argument approach, reducing temporary memory while
   preserving results and random-number generator state.
 
+- `dbinom_rvec()`, `pbinom_rvec()`, `qbinom_rvec()`, and `rbinom_rvec()` use
+  compact arguments and avoid unnecessary matrix copies. Results and
+  random-number generator state are preserved, including double-valued
+  output from `rbinom_rvec()`.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

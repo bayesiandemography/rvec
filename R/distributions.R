@@ -249,7 +249,7 @@ dbinom_rvec <- function(x, size, prob, log = FALSE) {
     x <- args[[1]]
     size <- args[[2]]
     prob <- args[[3]]
-    dist_rvec_3(fun = dbinom,
+    dist_rvec_3_compact(fun = dbinom,
                 arg1 = x,
                 arg2 = size,
                 arg3 = prob,
@@ -267,7 +267,7 @@ pbinom_rvec <- function(q, size, prob, lower.tail = TRUE, log.p = FALSE) {
     q <- args[[1]]
     size <- args[[2]]
     prob <- args[[3]]
-    dist_rvec_3(fun = pbinom,
+    dist_rvec_3_compact(fun = pbinom,
                 arg1 = q,
                 arg2 = size,
                 arg3 = prob,
@@ -286,7 +286,7 @@ qbinom_rvec <- function(p, size, prob, lower.tail = TRUE, log.p = FALSE) {
     p <- args[[1L]]
     size <- args[[2L]]
     prob <- args[[3L]]
-    dist_rvec_3(fun = qbinom,
+    dist_rvec_3_compact(fun = qbinom,
                 arg1 = p,
                 arg2 = size,
                 arg3 = prob,
@@ -302,16 +302,37 @@ rbinom_rvec <- function(n, size, prob, n_draw = NULL) {
     size <- vec_recycle(size, size = n)
     prob <- vec_recycle(prob, size = n)
     args <- list(size = size, prob = prob)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    size <- args[["size"]]
-    prob <- args[["prob"]]
-    dist_rvec_2(fun = rbinom,
-                arg1 = size,
-                arg2 = prob,
-                n = n)
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else if (all(is_rv))
+        n_draw <- n_draw_common(size, prob, x_arg = "size", y_arg = "prob")
+    else if (is_rv[["size"]])
+        n_draw <- n_draw(size)
+    else if (is_rv[["prob"]])
+        n_draw <- n_draw(prob)
+    rdist_rvec_2(fun = rbinom,
+                 arg1 = size,
+                 arg2 = prob,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 
