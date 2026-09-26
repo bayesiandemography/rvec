@@ -1465,6 +1465,90 @@ test_that("'rnorm_rvec' works with valid input - n_draw is supplied", {
 })
 
 
+test_that("normal density, probability, and quantile functions preserve alignment", {
+    for (kind in c("d", "p", "q")) {
+        fun <- get(paste0(kind, "norm_rvec"))
+        base_fun <- get(paste0(kind, "norm"), envir = asNamespace("stats"))
+        for (log in c(FALSE, TRUE)) {
+            values <- if (kind == "q") c(0, 0.1, 0.3, 0.7, 0.9, 1) else c(-Inf, -2, 0, 1, 3, Inf)
+            if (kind == "q" && log)
+                values <- log(values)
+            x <- matrix(values, nrow = 2L)
+            mean <- matrix(c(-1, 2), ncol = 1L)
+            sd <- matrix(c(0.5, 1, 2), nrow = 1L)
+            cases <- list(list(x, mean, sd),
+                          list(x[, 1L, drop = FALSE], matrix(1:6, 2L), sd),
+                          list(x[1L, , drop = FALSE], mean, matrix(1:6 / 3, 2L)))
+            for (args in cases) {
+                full <- lapply(args, function(m)
+                    m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = 3L), drop = FALSE])
+                for (lower in c(FALSE, TRUE)) {
+                    flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                    expected <- rvec(do.call(base_fun, c(full, flags)))
+                    expect_identical(do.call(fun, c(lapply(args, rvec), flags)), expected)
+                }
+            }
+        }
+    }
+})
+
+test_that("'rnorm_rvec' preserves draw order, degenerate values, and RNG state", {
+    parameters <- list(c(-1, 2), rvec(c(-1, 2)), rvec(matrix(c(-1, 0, 2), nrow = 1L)),
+                       rvec(matrix(c(-1, 0, 2, 1, 3, 4), nrow = 2L)))
+    for (mean in parameters) {
+        for (sd in list(1, c(0, 2), rvec(matrix(c(0, 1, 2, 0, 3, 4), 2L)))) {
+            draws <- max(if (is_rvec(mean)) n_draw(mean) else 1L,
+                         if (is_rvec(sd)) n_draw(sd) else 1L)
+            full <- lapply(list(mean, sd), function(x) {
+                m <- if (is_rvec(x)) as.matrix(x) else matrix(x, ncol = 1L)
+                m[rep(seq_len(nrow(m)), length.out = 2L),
+                  rep(seq_len(ncol(m)), length.out = draws), drop = FALSE]
+            })
+            set.seed(42)
+            expected <- rnorm(2L * draws, full[[1L]], full[[2L]])
+            if (is_rvec(mean) || is_rvec(sd))
+                expected <- rvec(matrix(expected, nrow = 2L))
+            state_expected <- .Random.seed
+            next_expected <- rnorm(5L)
+            set.seed(42)
+            expect_identical(rnorm_rvec(2L, mean, sd), expected)
+            expect_identical(.Random.seed, state_expected)
+            expect_identical(rnorm(5L), next_expected)
+        }
+    }
+    set.seed(42)
+    expected <- rvec(matrix(rnorm(6L, c(-1, 2), 1), nrow = 2L))
+    state_expected <- .Random.seed
+    set.seed(42)
+    expect_identical(rnorm_rvec(2L, c(-1, 2), 1, n_draw = 3L), expected)
+    expect_identical(.Random.seed, state_expected)
+})
+
+test_that("normal functions preserve empty outputs and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    set.seed(42)
+    state_before <- .Random.seed
+    for (fun in list(dnorm_rvec, pnorm_rvec, qnorm_rvec)) {
+        expect_identical(fun(numeric()), numeric())
+        expect_identical(fun(empty), empty)
+        expect_identical(fun(0.5, mean = empty), empty)
+        expect_identical(fun(0.5, sd = empty), empty)
+        expect_warning(fun(NA_real_), "NAs produced")
+        expect_warning(fun(0.5, sd = -1), "NAs produced")
+        expect_error(fun(1:2, mean = 1:3), "Can't recycle")
+    }
+    expect_identical(rnorm_rvec(0L), numeric())
+    expect_identical(rnorm_rvec(0L, n_draw = 3L), empty)
+    expect_identical(rnorm_rvec(0L, mean = empty), empty)
+    expect_error(rnorm_rvec(2L, mean = rvec(1:2), n_draw = 3L), "has 1 draws")
+    expect_error(rnorm_rvec(2L, mean = rvec(matrix(1:4, 2L)), sd = rvec(matrix(1:6, 2L))), "Can't align")
+    expect_error(rnorm_rvec(2L, mean = "a", n_draw = 3L), "must not be a character vector")
+    expect_error(rnorm_rvec(2L, sd = "a", n_draw = 3L), "must not be a character vector")
+    expect_identical(.Random.seed, state_before)
+})
+
+
 ## 'pois' ---------------------------------------------------------------------
 
 test_that("'dpois_rvec' works with valid input", {

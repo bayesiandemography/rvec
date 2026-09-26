@@ -22,6 +22,10 @@
   and avoid unnecessary matrix copies, preserving alignment across their
   three arguments and the existing handling of rate and scale.
 
+- `dnorm_rvec()`, `pnorm_rvec()`, `qnorm_rvec()`, and `rnorm_rvec()` use
+  compact arguments and avoid unnecessary matrix copies. Results and
+  random-number generator state are preserved.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

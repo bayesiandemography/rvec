@@ -1929,7 +1929,7 @@ dnorm_rvec <- function(x, mean = 0, sd = 1, log = FALSE) {
     x <- args[[1]]
     mean <- args[[2]]
     sd <- args[[3]]
-    dist_rvec_3(fun = dnorm,
+    dist_rvec_3_compact(fun = dnorm,
                 arg1 = x,
                 arg2 = mean,
                 arg3 = sd,
@@ -1947,7 +1947,7 @@ pnorm_rvec <- function(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
     q <- args[[1]]
     mean <- args[[2]]
     sd <- args[[3]]
-    dist_rvec_3(fun = pnorm,
+    dist_rvec_3_compact(fun = pnorm,
                 arg1 = q,
                 arg2 = mean,
                 arg3 = sd,
@@ -1966,7 +1966,7 @@ qnorm_rvec <- function(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) {
     p <- args[[1L]]
     mean <- args[[2L]]
     sd <- args[[3L]]
-    dist_rvec_3(fun = qnorm,
+    dist_rvec_3_compact(fun = qnorm,
                 arg1 = p,
                 arg2 = mean,
                 arg3 = sd,
@@ -1982,16 +1982,37 @@ rnorm_rvec <- function(n, mean = 0, sd = 1, n_draw = NULL) {
     mean <- vec_recycle(mean, size = n)
     sd <- vec_recycle(sd, size = n)
     args <- list(mean = mean, sd = sd)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    mean <- args[["mean"]]
-    sd <- args[["sd"]]
-    dist_rvec_2(fun = rnorm,
-                arg1 = mean,
-                arg2 = sd,
-                n = n)
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else if (all(is_rv))
+        n_draw <- n_draw_common(mean, sd, x_arg = "mean", y_arg = "sd")
+    else if (is_rv[["mean"]])
+        n_draw <- n_draw(mean)
+    else if (is_rv[["sd"]])
+        n_draw <- n_draw(sd)
+    rdist_rvec_2(fun = rnorm,
+                 arg1 = mean,
+                 arg2 = sd,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 
