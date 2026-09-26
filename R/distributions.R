@@ -2436,7 +2436,7 @@ dunif_rvec <- function(x, min = 0, max = 1, log = FALSE) {
     x <- args[[1]]
     min <- args[[2]]
     max <- args[[3]]
-    dist_rvec_3(fun = dunif,
+    dist_rvec_3_compact(fun = dunif,
                 arg1 = x,
                 arg2 = min,
                 arg3 = max,
@@ -2454,7 +2454,7 @@ punif_rvec <- function(q, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE) {
     q <- args[[1]]
     min <- args[[2]]
     max <- args[[3]]
-    dist_rvec_3(fun = punif,
+    dist_rvec_3_compact(fun = punif,
                 arg1 = q,
                 arg2 = min,
                 arg3 = max,
@@ -2473,7 +2473,7 @@ qunif_rvec <- function(p, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE) {
     p <- args[[1L]]
     min <- args[[2L]]
     max <- args[[3L]]
-    dist_rvec_3(fun = qunif,
+    dist_rvec_3_compact(fun = qunif,
                 arg1 = p,
                 arg2 = min,
                 arg3 = max,
@@ -2489,16 +2489,37 @@ runif_rvec <- function(n, min = 0, max = 1, n_draw = NULL) {
     min <- vec_recycle(min, size = n)
     max <- vec_recycle(max, size = n)
     args <- list(min = min, max = max)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    min <- args[["min"]]
-    max <- args[["max"]]
-    dist_rvec_2(fun = runif,
-                arg1 = min,
-                arg2 = max,
-                n = n)
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else if (all(is_rv))
+        n_draw <- n_draw_common(min, max, x_arg = "min", y_arg = "max")
+    else if (is_rv[["min"]])
+        n_draw <- n_draw(min)
+    else if (is_rv[["max"]])
+        n_draw <- n_draw(max)
+    rdist_rvec_2(fun = runif,
+                 arg1 = min,
+                 arg2 = max,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 

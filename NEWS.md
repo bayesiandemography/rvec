@@ -44,6 +44,10 @@
   use compact arguments and avoid unnecessary matrix copies, preserving
   results and random-number generator state.
 
+- `dunif_rvec()`, `punif_rvec()`, `qunif_rvec()`, and `runif_rvec()` use
+  compact arguments and avoid unnecessary matrix copies, preserving
+  results and random-number generator state.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

@@ -2271,6 +2271,97 @@ test_that("'runif_rvec' works with valid input - n_draw is supplied", {
 })
 
 
+test_that("uniform density, probability, and quantile functions preserve alignment", {
+    for (kind in c("d", "p", "q")) {
+        fun <- get(paste0(kind, "unif_rvec"))
+        base_fun <- get(paste0(kind, "unif"), envir = asNamespace("stats"))
+        for (log in c(FALSE, TRUE)) {
+            values <- if (kind == "q") c(0, 0.1, 0.3, 0.7, 0.9, 1) else c(-Inf, -2, 0, 1, 3, Inf)
+            if (kind == "q" && log)
+                values <- log(values)
+            x <- matrix(values, nrow = 2L)
+            lower_bound <- matrix(c(-1, 0), ncol = 1L)
+            upper_bound <- matrix(c(1, 2, 3), nrow = 1L)
+            cases <- list(list(x, lower_bound, upper_bound),
+                          list(x[, 1L, drop = FALSE], matrix(-6:-1, 2L), upper_bound),
+                          list(x[1L, , drop = FALSE], lower_bound, matrix(1:6, 2L)))
+            for (args in cases) {
+                full <- lapply(args, function(m)
+                    m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = 3L), drop = FALSE])
+                for (lower in c(FALSE, TRUE)) {
+                    flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                    expected <- rvec(do.call(base_fun, c(full, flags)))
+                    expect_identical(do.call(fun, c(lapply(args, rvec), flags)), expected)
+                }
+            }
+        }
+    }
+})
+
+test_that("'runif_rvec' preserves equal bounds, draw order, and RNG state", {
+    lower_bounds <- list(c(-1, 0), rvec(c(-1, 0)), rvec(matrix(c(-1, 0, 1), nrow = 1L)),
+                         rvec(matrix(c(-1, 0, 1, 0, 1, 2), nrow = 2L)))
+    for (lower_bound in lower_bounds) {
+        for (upper_bound in list(2, c(2, 3), rvec(matrix(c(2, 0, 1, 3, 4, 5), 2L)))) {
+            draws <- max(if (is_rvec(lower_bound)) n_draw(lower_bound) else 1L,
+                         if (is_rvec(upper_bound)) n_draw(upper_bound) else 1L)
+            full <- lapply(list(lower_bound, upper_bound), function(x) {
+                m <- if (is_rvec(x)) as.matrix(x) else matrix(x, ncol = 1L)
+                m[rep(seq_len(nrow(m)), length.out = 2L),
+                  rep(seq_len(ncol(m)), length.out = draws), drop = FALSE]
+            })
+            set.seed(42)
+            expected <- runif(2L * draws, full[[1L]], full[[2L]])
+            if (is_rvec(lower_bound) || is_rvec(upper_bound))
+                expected <- rvec(matrix(expected, nrow = 2L))
+            state_expected <- .Random.seed
+            next_expected <- runif(5L)
+            set.seed(42)
+            expect_identical(runif_rvec(2L, lower_bound, upper_bound), expected)
+            expect_identical(.Random.seed, state_expected)
+            expect_identical(runif(5L), next_expected)
+        }
+    }
+    set.seed(42)
+    expected <- rvec(matrix(runif(6L, c(-1, 0), 2), nrow = 2L))
+    state_expected <- .Random.seed
+    set.seed(42)
+    expect_identical(runif_rvec(2L, c(-1, 0), 2, n_draw = 3L), expected)
+    expect_identical(.Random.seed, state_expected)
+})
+
+test_that("uniform functions preserve boundary handling, empty outputs, and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    for (fun in list(dunif_rvec, punif_rvec, qunif_rvec)) {
+        expect_identical(fun(numeric()), numeric())
+        expect_identical(fun(empty), empty)
+        expect_identical(fun(0.5, min = empty), empty)
+        expect_warning(fun(NA_real_), "NAs produced")
+        expect_warning(fun(0.5, min = 2, max = 1), "NAs produced")
+        expect_error(fun(1:2, min = 1:3), "Can't recycle")
+    }
+    set.seed(42)
+    state_before <- .Random.seed
+    expect_identical(runif_rvec(0L), numeric())
+    expect_identical(runif_rvec(0L, n_draw = 3L), empty)
+    expect_identical(runif_rvec(0L, min = empty), empty)
+    expect_error(runif_rvec(2L, min = rvec(1:2), n_draw = 3L), "has 1 draws")
+    expect_error(runif_rvec(2L, min = rvec(matrix(1:4, 2L)), max = rvec(matrix(1:6, 2L))), "Can't align")
+    expect_error(runif_rvec(2L, min = "a", n_draw = 3L), "must not be a character vector")
+    expect_identical(.Random.seed, state_before)
+    lower_bounds <- c(0, 2, -Inf, NA_real_)
+    upper_bounds <- c(0, 1, Inf, 1)
+    set.seed(42)
+    expected <- suppressWarnings(runif(4L, lower_bounds, upper_bounds))
+    state_expected <- .Random.seed
+    set.seed(42)
+    expect_warning(obtained <- runif_rvec(4L, lower_bounds, upper_bounds), "NAs produced")
+    expect_identical(obtained, expected)
+    expect_identical(.Random.seed, state_expected)
+})
+
+
 ## 'weibull' ---------------------------------------------------------------------
 
 test_that("'dweibull_rvec' works with valid input", {
