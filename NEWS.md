@@ -10,6 +10,10 @@
   assigns output dimensions directly to the generated values. It continues
   to use base R's `rgamma()`, preserving results for a given random seed.
 
+- `rpois_rvec()` uses the same approach to avoid expanding parameters
+  across draws and copying the output matrix. Results and random-number
+  generator state are preserved, and output remains double-valued.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

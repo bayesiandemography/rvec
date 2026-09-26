@@ -2098,15 +2098,24 @@ qpois_rvec <- function(p, lambda, lower.tail = TRUE, log.p = FALSE) {
 rpois_rvec <- function(n, lambda, n_draw = NULL) {
     rpois <- stats::rpois
     lambda <- vec_recycle(lambda, size = n)
-    args <- list(lambda = lambda)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    lambda <- args[["lambda"]]
-    dist_rvec_1(fun = rpois,
-                arg = lambda,
-                n = n)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        if (is_rvec(lambda)) {
+            n_draw_arg <- n_draw(lambda)
+            if (n_draw_arg != n_draw)
+                cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg lambda}",
+                                     "has {n_draw_arg} draws."))
+        }
+        else if (!is.atomic(lambda) || !is.vector(lambda))
+            cli::cli_abort(c("{.arg lambda} is not a vector or rvec.",
+                             i = "{.arg lambda} has class {.cls {class(lambda)}}."))
+    }
+    else if (is_rvec(lambda))
+        n_draw <- n_draw(lambda)
+    rdist_rvec_1(fun = rpois,
+                 arg = lambda,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 
@@ -2520,6 +2529,45 @@ rweibull_rvec <- function(n, shape, scale = 1, n_draw = NULL) {
 ## Helper functions -----------------------------------------------------------
 
 ## HAS_TESTS
+#' Generate random values with one parameter without expanding draws
+#'
+#' The parameter has already been recycled to the required observation count.
+#' A NULL n_draw requests an ordinary vector; otherwise it specifies the
+#' validated output draw count.
+#'
+#' @noRd
+rdist_rvec_1 <- function(fun, arg, n, n_draw) {
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  if (is_rvec(arg))
+    arg <- as.matrix(arg)
+  n_values <- if (is.null(n_draw)) n else n * n_draw
+  ans <- tryCatch(
+    withCallingHandlers({
+      ans <- as.double(fun(n = n_values, arg))
+      if (length(ans) != n_values)
+        cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+      ## Set dimensions before tryCatch returns and shares the result.
+      if (!is.null(n_draw))
+        dim(ans) <- c(n, n_draw)
+      ans
+    },
+    warning = function(w) {
+      if (grepl("NAs produced|NaNs produced", w$message))
+        invokeRestart("muffleWarning")
+    }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (!is.null(n_draw))
+    ans <- rvec(ans)
+  ans
+}
+
+## HAS_TESTS
 #' Generate random values with two parameters without expanding draws
 #'
 #' Parameters have already been recycled to the required observation count.
@@ -2528,42 +2576,42 @@ rweibull_rvec <- function(n, shape, scale = 1, n_draw = NULL) {
 #'
 #' @noRd
 rdist_rvec_2 <- function(fun, arg1, arg2, n, n_draw) {
-    nm_fun <- rlang::as_name(rlang::enquo(fun))
-    nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
-    nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
-    if (is_rvec(arg1)) {
-        check_not_rvec_chr(arg1, nm_arg = nm_arg1)
-        arg1 <- as.matrix(arg1)
-    }
-    if (is_rvec(arg2)) {
-        check_not_rvec_chr(arg2, nm_arg = nm_arg2)
-        arg2 <- as.matrix(arg2)
-    }
-    n_values <- if (is.null(n_draw)) n else n * n_draw
-    ans <- tryCatch(
-        withCallingHandlers({
-                                ans <- as.double(fun(n = n_values, arg1, arg2))
-                                if (length(ans) != n_values)
-                                    cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
-                                ## Set dimensions before tryCatch returns and shares the result.
-                                if (!is.null(n_draw))
-                                    dim(ans) <- c(n, n_draw)
-                                ans
-                            },
-                            warning = function(w) {
-                                if (grepl("NAs produced|NaNs produced", w$message))
-                                    invokeRestart("muffleWarning")
-                            }),
-        error = function(e) e
-    )
-    if (inherits(ans, "error"))
-        cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
-                         i = ans$message))
-    if (anyNA(ans))
-        cli::cli_warn("NAs produced")
-    if (!is.null(n_draw))
-        ans <- rvec(ans)
-    ans
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+  nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  if (is_rvec(arg1)) {
+    check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+    arg1 <- as.matrix(arg1)
+  }
+  if (is_rvec(arg2)) {
+    check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+    arg2 <- as.matrix(arg2)
+  }
+  n_values <- if (is.null(n_draw)) n else n * n_draw
+  ans <- tryCatch(
+    withCallingHandlers({
+      ans <- as.double(fun(n = n_values, arg1, arg2))
+      if (length(ans) != n_values)
+        cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+      ## Set dimensions before tryCatch returns and shares the result.
+      if (!is.null(n_draw))
+        dim(ans) <- c(n, n_draw)
+      ans
+    },
+    warning = function(w) {
+      if (grepl("NAs produced|NaNs produced", w$message))
+        invokeRestart("muffleWarning")
+    }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (!is.null(n_draw))
+    ans <- rvec(ans)
+  ans
 }
 
 ## HAS_TESTS

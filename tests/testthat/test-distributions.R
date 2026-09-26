@@ -1410,6 +1410,73 @@ test_that("'rpois_rvec' works with valid input - n_draw, rvec input", {
 })
 
 
+test_that("'rpois_rvec' preserves values, double output, and RNG state", {
+    for (lambda in list(3, c(0, 0.2, 3, 50, 3e9), 1:5,
+                        c(TRUE, FALSE, TRUE, FALSE, TRUE))) {
+        set.seed(42)
+        expected <- rvec(matrix(as.double(rpois(15L, lambda)), nrow = 5L))
+        state_expected <- .Random.seed
+        set.seed(42)
+        obtained <- rpois_rvec(5L, lambda, n_draw = 3L)
+        expect_identical(obtained, expected)
+        expect_identical(.Random.seed, state_expected)
+    }
+    set.seed(42)
+    expected <- as.double(rpois(5L, 3))
+    state_expected <- .Random.seed
+    set.seed(42)
+    expect_identical(rpois_rvec(5L, 3), expected)
+    expect_identical(.Random.seed, state_expected)
+})
+
+test_that("'rpois_rvec' recycles rvec observations in draw order", {
+    for (rows in c(1L, 2L)) {
+        for (values in list(c(0.2, 3, 50, 1, 0, 2), 1:6,
+                            c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE))) {
+            m <- matrix(values, nrow = rows)
+            full <- m[rep(seq_len(rows), length.out = 2L), , drop = FALSE]
+            set.seed(42)
+            expected <- rvec(matrix(as.double(rpois(length(full), full)), nrow = 2L))
+            state_expected <- .Random.seed
+            for (draws in list(NULL, ncol(m))) {
+                set.seed(42)
+                obtained <- rpois_rvec(2L, rvec(m), n_draw = draws)
+                expect_identical(obtained, expected)
+                expect_identical(.Random.seed, state_expected)
+            }
+        }
+    }
+})
+
+test_that("'rpois_rvec' preserves empty outputs without drawing", {
+    set.seed(42)
+    state_before <- .Random.seed
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    expect_identical(rpois_rvec(0L, 3), numeric())
+    expect_identical(rpois_rvec(0L, 3, n_draw = 3L), empty)
+    expect_identical(rpois_rvec(0L, empty), empty)
+    expect_identical(.Random.seed, state_before)
+})
+
+test_that("'rpois_rvec' preserves warnings and input validation", {
+    lambda <- c(NA_real_, NaN, -1, Inf, 0, 3)
+    set.seed(42)
+    expected <- rvec(matrix(as.double(suppressWarnings(rpois(12L, lambda))), nrow = 6L))
+    state_expected <- .Random.seed
+    set.seed(42)
+    expect_warning(obtained <- rpois_rvec(6L, lambda, n_draw = 2L), "NAs produced")
+    expect_identical(obtained, expected)
+    expect_identical(.Random.seed, state_expected)
+    expect_error(rpois_rvec(2L, rvec(c(2, 3)), n_draw = 3L),
+                 "`n_draw` is 3 but `lambda` has 1 draws.", fixed = TRUE)
+    expect_error(rpois_rvec(2L, 3, n_draw = 0L), "equals 0")
+    expect_error(rpois_rvec(2L, 1:3), "Can't recycle")
+    expect_error(rpois_rvec(2L, "a"), "Problem with call to function")
+    expect_error(rpois_rvec(2L, rvec(c("a", "b"))), "Problem with call to function")
+    expect_identical(.Random.seed, state_expected)
+})
+
+
 ## 't' ------------------------------------------------------------------------
 
 test_that("'dt_rvec' works with valid input", {
