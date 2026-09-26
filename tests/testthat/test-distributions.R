@@ -1360,6 +1360,57 @@ test_that("'dpois_rvec' works with valid input", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'dpois_rvec' aligns observations and draws without changing results", {
+    cases <- expand.grid(x_rows = c(1L, 2L), x_draws = c(1L, 3L),
+                         lambda_rows = c(1L, 2L), lambda_draws = c(1L, 3L))
+    for (i in seq_len(nrow(cases))) {
+        case <- cases[i, ]
+        x <- matrix(seq_len(case$x_rows * case$x_draws) - 1L, nrow = case$x_rows)
+        lambda <- matrix(seq_len(case$lambda_rows * case$lambda_draws) / 2,
+                          nrow = case$lambda_rows)
+        n <- max(nrow(x), nrow(lambda))
+        draws <- max(ncol(x), ncol(lambda))
+        x_full <- x[rep(seq_len(nrow(x)), length.out = n),
+                    rep(seq_len(ncol(x)), length.out = draws), drop = FALSE]
+        lambda_full <- lambda[rep(seq_len(nrow(lambda)), length.out = n),
+                              rep(seq_len(ncol(lambda)), length.out = draws), drop = FALSE]
+        for (log in c(FALSE, TRUE)) {
+            expected <- rvec(dpois(x_full, lambda_full, log = log))
+            expect_identical(dpois_rvec(rvec(x), rvec(lambda), log = log), expected)
+        }
+    }
+})
+
+test_that("'dpois_rvec' preserves types, attributes, and empty outputs", {
+    for (x in list(c(a = 0, b = 3), 0:1, c(TRUE, FALSE))) {
+        expect_identical(dpois_rvec(x, 3), as.double(dpois(x, 3)))
+        m <- matrix(rep(x, 3L), nrow = 2L,
+                     dimnames = list(c("a", "b"), c("one", "two", "three")))
+        expected <- rvec(matrix(as.double(dpois(m, 3)), nrow = 2L))
+        expect_identical(dpois_rvec(rvec(m), 3), expected)
+    }
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    expect_identical(dpois_rvec(numeric(), 3), numeric())
+    expect_identical(dpois_rvec(empty, 3), empty)
+    expect_identical(dpois_rvec(2, empty), empty)
+})
+
+test_that("'dpois_rvec' preserves warnings and validation without drawing", {
+    set.seed(42)
+    state_before <- .Random.seed
+    expect_warning(result <- dpois_rvec(rvec(c(0, NA_real_)), 3), "NAs produced")
+    expect_identical(result, rvec(matrix(c(dpois(0, 3), NA_real_), ncol = 1L)))
+    expect_warning(dpois_rvec(2, -1), "NAs produced")
+    expect_warning(dpois_rvec(0.5, 3), "non-integer")
+    expect_error(dpois_rvec(1:2, 1:3), "Can't recycle")
+    expect_error(dpois_rvec(rvec(matrix(1:4, 2)), rvec(matrix(1:6, 2))), "Can't align")
+    expect_error(dpois_rvec(rvec("a"), 3), "`x` has class")
+    expect_error(dpois_rvec(2, rvec("a")), "`lambda` has class")
+    expect_error(dpois_rvec("a", 3), "Problem with call to function")
+    expect_error(dpois_rvec(2, 3, log = NA))
+    expect_identical(.Random.seed, state_before)
+})
+
 test_that("'ppois_rvec' works with valid input", {
     m <- matrix(1:6, nr = 2)
     lambda <- rvec(m)

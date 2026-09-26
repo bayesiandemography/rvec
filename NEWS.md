@@ -14,6 +14,9 @@
   across draws and copying the output matrix. Results and random-number
   generator state are preserved, and output remains double-valued.
 
+- `dpois_rvec()` also avoids expanding arguments across draws and copying
+  parameter and output matrices, while preserving input alignment and results.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

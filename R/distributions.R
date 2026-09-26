@@ -2052,7 +2052,7 @@ dpois_rvec <- function(x, lambda, log = FALSE) {
     args <- vec_recycle_common(x, lambda)
     x <- args[[1L]]
     lambda <- args[[2L]]
-    dist_rvec_2(fun = dpois,
+    dist_rvec_2_compact(fun = dpois,
                 arg1 = x,
                 arg2 = lambda,
                 log = log)
@@ -2527,6 +2527,65 @@ rweibull_rvec <- function(n, shape, scale = 1, n_draw = NULL) {
 
 
 ## Helper functions -----------------------------------------------------------
+
+## HAS_TESTS
+#' Apply a two-argument distribution function without expanding draws
+#'
+#' Arguments have already been recycled to a common observation count.
+#' The function must return doubles. Output dimensions are determined
+#' separately from the compact argument storage.
+#'
+#' @noRd
+dist_rvec_2_compact <- function(fun, arg1, arg2, ...) {
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+  nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  n <- length(arg1)
+  is_rv_1 <- is_rvec(arg1)
+  is_rv_2 <- is_rvec(arg2)
+  n_draw <- NULL
+  if (is_rv_1 && is_rv_2)
+    n_draw <- n_draw_common(arg1, arg2, x_arg = nm_arg1, y_arg = nm_arg2)
+  else if (is_rv_1)
+    n_draw <- n_draw(arg1)
+  else if (is_rv_2)
+    n_draw <- n_draw(arg2)
+  if (is_rv_1) {
+    check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+    arg1 <- as.matrix(arg1)
+  }
+  if (is_rv_2) {
+    check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+    arg2 <- as.matrix(arg2)
+  }
+  n_values <- if (is.null(n_draw)) n else n * n_draw
+  ans <- tryCatch(
+    withCallingHandlers({
+      ans <- fun(arg1, arg2, ...)
+      if (length(ans) != n_values)
+        cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+      ## Base functions can retain input attributes. Remove them without
+      ## copying the double data, then set dimensions before tryCatch returns.
+      attributes(ans) <- NULL
+      if (!is.null(n_draw))
+        dim(ans) <- c(n, n_draw)
+      ans
+    },
+    warning = function(w) {
+      if (grepl("NAs produced|NaNs produced", w$message))
+        invokeRestart("muffleWarning")
+    }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (!is.null(n_draw))
+    ans <- rvec(ans)
+  ans
+}
 
 ## HAS_TESTS
 #' Generate random values with one parameter without expanding draws
