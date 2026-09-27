@@ -20,6 +20,10 @@ rvec_to_rvec_chr <- function(x, n_draw) {
 ## conversion to character always allowed
 #' @export
 rvec_to_rvec_chr.rvec <- function(x, n_draw) {
+    data <- same_type_rvec_data(x, "character")
+    if (!is.null(data) && (identical(n_draw, ncol(data)) ||
+                           identical(n_draw, as.double(ncol(data)))))
+        return(.new_rvec_chr(data))
     data_old <- field(x, "data")
     data_new_vec <- as.character(data_old)
     data_new <- data_matrix(data_new_vec = data_new_vec,
@@ -42,6 +46,10 @@ rvec_to_rvec_dbl <- function(x, n_draw) {
 ## conversion to double always allowed
 #' @export
 rvec_to_rvec_dbl.rvec_dbl <- function(x, n_draw) {
+    data <- same_type_rvec_data(x, "double")
+    if (!is.null(data) && (identical(n_draw, ncol(data)) ||
+                           identical(n_draw, as.double(ncol(data)))))
+        return(.new_rvec_dbl(data))
     data_old <- field(x, "data")
     data_new_vec <- as.double(data_old)
     data_new <- data_matrix(data_new_vec = data_new_vec,
@@ -99,6 +107,10 @@ rvec_to_rvec_int.rvec_dbl <- function(x, n_draw) {
 ## conversion to integer only allowed if information preserved
 #' @export
 rvec_to_rvec_int.rvec_int <- function(x, n_draw) {
+    data <- same_type_rvec_data(x, "integer")
+    if (!is.null(data) && (identical(n_draw, ncol(data)) ||
+                           identical(n_draw, as.double(ncol(data)))))
+        return(.new_rvec_int(data))
     data_old <- field(x, "data")
     data_new_vec <- as.integer(data_old)
     data_new <- data_matrix(data_new_vec = data_new_vec,
@@ -158,6 +170,10 @@ rvec_to_rvec_lgl.rvec_int <- function(x, n_draw) {
 ## HAS_TESTS
 #' @export
 rvec_to_rvec_lgl.rvec_lgl <- function(x, n_draw) {
+    data <- same_type_rvec_data(x, "logical")
+    if (!is.null(data) && (identical(n_draw, ncol(data)) ||
+                           identical(n_draw, as.double(ncol(data)))))
+        return(.new_rvec_lgl(data))
     data_old <- field(x, "data")
     data_new_vec <- as.logical(data_old)
     data_new <- data_matrix(data_new_vec = data_new_vec,

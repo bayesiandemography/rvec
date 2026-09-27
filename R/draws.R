@@ -295,7 +295,8 @@ draws_median.rvec <- function(x, na_rm = FALSE) {
   if (nrow(m) == 0L)
     NA_real_ ## base::median returns NA with zero-length 'x'
   else {
-    m <- 1 * m
+    if (!is.double(m))
+      m <- 1 * m
     ans <- matrixStats::rowMedians(m, na.rm = na_rm)
     names(ans) <- rownames(m)
     ans
@@ -317,7 +318,8 @@ draws_mean.rvec <- function(x, na_rm = FALSE) {
   if (nrow(m) == 0L)
     NaN ## base::mean returns NaN with zero-length 'x'
   else {
-    m <- 1 * m
+    if (!is.double(m))
+      m <- 1 * m
     ans <- matrixStats::rowMeans2(m, na.rm = na_rm)
     names(ans) <- rownames(m)
     ans
@@ -644,7 +646,8 @@ draws_sd.rvec <- function(x, na_rm = FALSE) {
   if (nrow(m) == 0L)
     NA_real_ ## stats::sd returns NA with zero-length 'x'
   else {
-    m <- 1 * m
+    if (!is.double(m))
+      m <- 1 * m
     ans <- matrixStats::rowSds(m, na.rm = na_rm)
     names(ans) <- rownames(m)
     ans
@@ -673,7 +676,8 @@ draws_var.rvec <- function(x, na_rm = FALSE) {
   if (nrow(m) == 0L)
     NA_real_ ## stats::var returns NA with zero-length 'x'
   else {
-    m <- 1 * m
+    if (!is.double(m))
+      m <- 1 * m
     ans <- matrixStats::rowVars(m, na.rm = na_rm)
     names(ans) <- rownames(m)
     ans
@@ -702,7 +706,8 @@ draws_cv.rvec <- function(x, na_rm = FALSE) {
   if (nrow(m) == 0L)
     NA_real_ ## stats::var returns NA with zero-length 'x'
   else {
-    m <- 1 * m
+    if (!is.double(m))
+      m <- 1 * m
     numerator <- matrixStats::rowSds(m, na.rm = na_rm)
     denominator <- matrixStats::rowMeans2(m, na.rm = na_rm)
     ans <- numerator / denominator

@@ -645,3 +645,33 @@ test_that("'prob' works with logical vector", {
 })
 
 
+
+
+test_that("double draw summaries retain results without coercion copies", {
+    functions <- list(draws_median, draws_mean, draws_sd, draws_var)
+    matrix_functions <- list(matrixStats::rowMedians, matrixStats::rowMeans2,
+                             matrixStats::rowSds, matrixStats::rowVars)
+    for (v in list(c(0, -0, NA_real_, NaN), c(Inf, -Inf, 1, 1e300),
+                   c(1e16, 1, -1e16, 1))) {
+        m <- matrix(v, 2L, dimnames = list(c("a", "b"), NULL))
+        x <- rvec(m)
+        before <- serialize(x, NULL)
+        for (remove in c(FALSE, TRUE)) {
+            for (i in seq_along(functions)) {
+                expected <- matrix_functions[[i]](1 * m, na.rm = remove)
+                names(expected) <- rownames(m)
+                expect_identical(functions[[i]](x, na_rm = remove), expected)
+            }
+            expected <- matrixStats::rowSds(1 * m, na.rm = remove) /
+                matrixStats::rowMeans2(1 * m, na.rm = remove)
+            expected[matrixStats::rowMeans2(1 * m, na.rm = remove) == 0] <- NA_real_
+            names(expected) <- rownames(m)
+            expect_identical(draws_cv(x, na_rm = remove), expected)
+            expect_identical(sd(x, na.rm = remove),
+                             rvec(matrix(matrixStats::colSds(1 * m, na.rm = remove), 1L)))
+            expect_identical(var(x, na.rm = remove),
+                             rvec(matrix(matrixStats::colVars(1 * m, na.rm = remove), 1L)))
+        }
+        expect_identical(serialize(x, NULL), before)
+    }
+})

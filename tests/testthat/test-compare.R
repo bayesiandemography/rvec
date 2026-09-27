@@ -76,3 +76,28 @@ test_that("'compare_rvec' works with two rvecs", {
 
                          
     
+
+
+test_that("comparisons preserve common types and compact draw alignment", {
+    inputs <- list()
+    for (v in list(c(1, NA_real_), c(1L, 2L), c(TRUE, NA), c("1", "a"))) {
+        inputs <- c(inputs, list(v, rvec(setNames(v, c("a", "b"))),
+                                 rvec(matrix(rep(v, 3L), 2L, 3L))))
+    }
+    for (x in inputs) for (y in inputs) {
+        if (!is_rvec(x) && !is_rvec(y)) next
+        args <- vec_cast_common(!!!vec_recycle_common(x, y))
+        matrices <- lapply(args, as.matrix)
+        for (op in c("==", "!=", "<", "<=", ">", ">=")) {
+            fun <- getExportedValue("base", op)
+            expected <- rvec(fun(matrices[[1L]], matrices[[2L]]))
+            expect_identical(fun(x, y), expected)
+        }
+    }
+    x <- rvec(matrix(1, 2L, 3L))
+    expect_error(x == rvec(matrix(1, 2L, 2L)), "Can't align",
+                 class = "vctrs_error_incompatible_type")
+    expect_error(x < 1:3, class = "vctrs_error_incompatible_size")
+    empty <- rvec(matrix(logical(), 0L, 3L))
+    expect_identical(rvec(matrix(numeric(), 0L, 3L)) < 1, empty)
+})

@@ -94,7 +94,9 @@ var.rvec_chr <- function(x, y = NULL, na.rm = FALSE, use) {
 #'
 #' @noRd
 var_rvec <- function(x, na.rm) {
-    m <- 1 * field(x, "data")
+    m <- field(x, "data")
+    if (!is.double(m))
+        m <- 1 * m
     data <- matrixStats::colVars(m, na.rm = na.rm)
     data <- matrix(data, nrow = 1L)
     rvec_dbl(data)

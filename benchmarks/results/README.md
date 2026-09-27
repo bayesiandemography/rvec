@@ -24,3 +24,14 @@ the uncommitted binary-arithmetic implementation on `arith-refactor` based on
 that revision. Companion arithmetic session files record source checksums and
 dependencies. The benchmark cases ran sequentially, alongside package checks;
 timings are indicative only. All cases completed successfully.
+
+## Common operations comparison
+
+`common-operations.csv` records six cases before and after the constructors,
+casts, comparisons, and double-input summary changes. Before uses `d08797c`;
+after uses the uncommitted changes based on that revision on `arith-refactor`.
+Session details are in `common-before-session.txt` and
+`common-after-session.txt`. Each case uses a fresh process and collects input
+setup garbage before resetting high-water marks. Same-type outputs may share
+input storage; their object size is not additional allocated memory. All 12
+cases completed successfully. Timings are indicative only.

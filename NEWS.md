@@ -2,6 +2,14 @@
 
 ## Memory use
 
+- Comparisons retain shared operands in compact form rather than repeating
+  them across draws. Draw summaries, standard deviations, and variances
+  avoid coercion copies when inputs are already double-valued.
+
+- Typed constructors and same-type casts reuse suitable matrices when the
+  type and draw count already match, avoiding unnecessary copies while
+  preserving row names and independent modification of inputs and outputs.
+
 - Binary arithmetic avoids unnecessary input and output matrix copies and
   retains single-draw operands in compact form. Observation recycling,
   result types, names, and integer-overflow behavior are preserved.

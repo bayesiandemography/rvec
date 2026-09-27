@@ -236,6 +236,9 @@ rvec <- function(x) {
 #' @export
 #' @rdname rvec
 rvec_chr <- function(x = NULL) {
+  data <- same_type_rvec_data(x, "character")
+  if (!is.null(data))
+    return(.new_rvec_chr(data))
   if (is_rvec(x)) {
     m <- field(x, "data")
     data_vec <- as.vector(m)
@@ -285,6 +288,9 @@ rvec_chr <- function(x = NULL) {
 #' @export
 #' @rdname rvec
 rvec_dbl <- function(x = NULL) {
+  data <- same_type_rvec_data(x, "double")
+  if (!is.null(data))
+    return(.new_rvec_dbl(data))
   if (is_rvec(x)) {
     m <- field(x, "data")
     data_vec <- as.vector(m)
@@ -336,6 +342,9 @@ rvec_dbl <- function(x = NULL) {
 #' @export
 #' @rdname rvec
 rvec_int <- function(x = NULL) {
+  data <- same_type_rvec_data(x, "integer")
+  if (!is.null(data))
+    return(.new_rvec_int(data))
   if (is_rvec(x)) {
     m <- field(x, "data")
     data_vec <- as.vector(m)
@@ -387,6 +396,9 @@ rvec_int <- function(x = NULL) {
 #' @export
 #' @rdname rvec
 rvec_lgl <- function(x = NULL) {
+  data <- same_type_rvec_data(x, "logical")
+  if (!is.null(data))
+    return(.new_rvec_lgl(data))
   if (is_rvec(x)) {
     m <- field(x, "data")
     data_vec <- as.vector(m)
@@ -486,4 +498,24 @@ rvec_lgl <- function(x = NULL) {
 .new_rvec_lgl <- function(data) {
     new_rcrd(fields = list(data = data),
              class = c("rvec_lgl", "rvec"))
+}
+
+
+## HAS_TESTS
+#' Reuse a plain matrix when no type conversion is required
+#'
+#' Return NULL for inputs that require the normal constructor path. Preserve
+#' row names while discarding column names, as the typed constructors do.
+#' @noRd
+same_type_rvec_data <- function(x, type) {
+    m <- if (is_rvec(x)) field(x, "data") else x
+    if (!identical(class(m), c("matrix", "array")) ||
+        typeof(m) != type || ncol(m) == 0L ||
+        !all(names(attributes(m)) %in% c("dim", "dimnames")))
+        return(NULL)
+    nms <- rownames(m)
+    dn <- if (is.null(nms)) NULL else list(nms, NULL)
+    if (!identical(dimnames(m), dn))
+        dimnames(m) <- dn
+    m
 }

@@ -201,3 +201,24 @@ test_that("'data_matrix' works with valid inputs - with recycling", {
 
     
 
+
+
+test_that("same-type casts reuse data without retaining extra attributes", {
+    values <- list(c("a", NA), c(1, NA_real_), c(1L, NA_integer_), c(TRUE, NA))
+    casts <- list(rvec_to_rvec_chr, rvec_to_rvec_dbl, rvec_to_rvec_int, rvec_to_rvec_lgl)
+    for (i in seq_along(values)) {
+        m <- matrix(rep(values[[i]], 3L), 2L, 3L,
+                    dimnames = list(c("a", "b"), NULL))
+        x <- rvec(m)
+        attr(x, "extra") <- "discard"
+        before <- serialize(x, NULL)
+        for (nd in list(3L, 3)) {
+            obtained <- casts[[i]](x, n_draw = nd)
+            expect_identical(obtained, rvec(m))
+            obtained[1L] <- obtained[2L]
+            expect_identical(serialize(x, NULL), before)
+        }
+        one <- rvec(m[, 1L, drop = FALSE])
+        expect_identical(casts[[i]](one, n_draw = 3L), rvec(m))
+    }
+})

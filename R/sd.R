@@ -42,7 +42,9 @@ sd.default <- function(x, na.rm = FALSE) {
 ## HAS_TESTS
 #' @export
 sd.rvec <- function(x, na.rm = FALSE) {
-    m <- 1 * field(x, "data")
+    m <- field(x, "data")
+    if (!is.double(m))
+        m <- 1 * m
     data <- matrixStats::colSds(m, na.rm = na.rm)
     data <- matrix(data, nrow = 1L)
     rvec_dbl(data)

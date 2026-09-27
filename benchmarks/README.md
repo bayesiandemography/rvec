@@ -82,3 +82,21 @@ about peak heap growth and timings. The pre-arithmetic-refactor revision is
 `0f1695e`; export it to another directory and supply that directory as the first
 argument to compare it with the working tree. Run all layouts/types/orders in
 separate processes, and retain the source revisions with the results.
+
+## Constructors, casts, comparisons, and summaries
+
+`common-operations.R` measures a single double-input operation in a fresh
+process, using 1,000 observations and 1,000 draws:
+
+```sh
+Rscript --vanilla benchmarks/common-operations.R . compare_single /tmp/common-after.csv
+```
+
+Cases are `constructor`, `cast`, `compare_single`, `compare_ordinary`,
+`draws_mean`, and `sd`. Export revision `d08797c` and supply that directory
+instead of `.` for the baseline. The script collects garbage before resetting
+high-water marks so dead objects from input setup do not dominate small
+measurements. Output size can exceed additional allocation: same-type
+constructors and casts can share existing matrix storage until modification.
+A session file is written alongside each CSV. The memory/timing caveats above
+also apply here.

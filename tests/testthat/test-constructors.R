@@ -460,3 +460,30 @@ test_that("'.new_rvec_lgl' works", {
 
 
 
+
+
+test_that("same-type constructors preserve names and isolate later mutations", {
+    constructors <- list(rvec_chr, rvec_dbl, rvec_int, rvec_lgl)
+    values <- list(c("a", NA), c(1, NA_real_), c(1L, NA_integer_), c(TRUE, NA))
+    for (i in seq_along(values)) for (n in c(0L, 2L)) {
+        m <- matrix(rep(values[[i]], length.out = n * 3L), n, 3L)
+        if (n > 0L)
+            dimnames(m) <- list(rows = c("a", "b"), draws = letters[1:3])
+        expected <- m
+        attributes(expected) <- list(dim = dim(m))
+        rownames(expected) <- rownames(m)
+        fun <- constructors[[i]]
+        for (x in list(m, rvec(m))) {
+            before <- serialize(x, NULL)
+            obtained <- fun(x)
+            expect_identical(as.matrix(obtained), expected)
+            expect_identical(serialize(x, NULL), before)
+            if (n > 0L) {
+                obtained[1L] <- obtained[2L]
+                expect_identical(serialize(x, NULL), before)
+            }
+        }
+        attr(m, "extra") <- "discard"
+        expect_identical(as.matrix(fun(m)), expected)
+    }
+})
