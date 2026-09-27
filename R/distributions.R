@@ -81,18 +81,18 @@ dbeta_rvec <- function(x, shape1, shape2, ncp = 0, log = FALSE) {
     shape2 <- args[[3]]
     ncp <- args[[4L]]
     if (ncp_not_supplied)
-        dist_rvec_3(fun = dbeta,
-                    arg1 = x,
-                    arg2 = shape1,
-                    arg3 = shape2,
-                    log = log)
+        dist_rvec_3_compact(fun = dbeta,
+                            arg1 = x,
+                            arg2 = shape1,
+                            arg3 = shape2,
+                            log = log)
     else
-        dist_rvec_3(fun = dbeta,
-                    arg1 = x,
-                    arg2 = shape1,
-                    arg3 = shape2,
-                    ncp = ncp,
-                    log = log)
+        dist_rvec_3_compact(fun = dbeta,
+                            arg1 = x,
+                            arg2 = shape1,
+                            arg3 = shape2,
+                            ncp = ncp,
+                            log = log)
 }
 
 ## HAS_TESTS
@@ -110,20 +110,20 @@ pbeta_rvec <- function(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FA
     shape2 <- args[[3]]
     ncp <- args[[4L]]
     if (ncp_not_supplied)
-        dist_rvec_3(fun = pbeta,
-                    arg1 = q,
-                    arg2 = shape1,
-                    arg3 = shape2,
-                    lower.tail = lower.tail,
-                    log.p = log.p)
+        dist_rvec_3_compact(fun = pbeta,
+                            arg1 = q,
+                            arg2 = shape1,
+                            arg3 = shape2,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
     else
-        dist_rvec_3(fun = pbeta,
-                    arg1 = q,
-                    arg2 = shape1,
-                    arg3 = shape2,
-                    ncp = ncp,
-                    lower.tail = lower.tail,
-                    log.p = log.p)        
+        dist_rvec_3_compact(fun = pbeta,
+                            arg1 = q,
+                            arg2 = shape1,
+                            arg3 = shape2,
+                            ncp = ncp,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -141,20 +141,20 @@ qbeta_rvec <- function(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FA
     shape2 <- args[[3L]]
     ncp <- args[[4L]]
     if (ncp_not_supplied)
-        dist_rvec_3(fun = qbeta,
-                    arg1 = p,
-                    arg2 = shape1,
-                    arg3 = shape2,
-                    lower.tail = lower.tail,
-                    log.p = log.p)
+        dist_rvec_3_compact(fun = qbeta,
+                            arg1 = p,
+                            arg2 = shape1,
+                            arg3 = shape2,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
     else
-        dist_rvec_3(fun = qbeta,
-                    arg1 = p,
-                    arg2 = shape1,
-                    arg3 = shape2,
-                    ncp = ncp,
-                    lower.tail = lower.tail,
-                    log.p = log.p)        
+        dist_rvec_3_compact(fun = qbeta,
+                            arg1 = p,
+                            arg2 = shape1,
+                            arg3 = shape2,
+                            ncp = ncp,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -168,23 +168,46 @@ rbeta_rvec <- function(n, shape1, shape2, ncp = 0, n_draw = NULL) {
     shape2 <- vec_recycle(shape2, size = n)
     ncp <- vec_recycle(ncp, size = n)
     args <- list(shape1 = shape1, shape2 = shape2)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    shape1 <- args[["shape1"]]
-    shape2 <- args[["shape2"]]
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else if (all(is_rv))
+        n_draw <- n_draw_common(shape1, shape2, x_arg = "shape1", y_arg = "shape2")
+    else if (is_rv[["shape1"]])
+        n_draw <- n_draw(shape1)
+    else if (is_rv[["shape2"]])
+        n_draw <- n_draw(shape2)
+    # Base R distinguishes omitted ncp from an explicitly supplied zero.
     if (ncp_not_supplied)
-        dist_rvec_2(fun = rbeta,
-                    arg1 = shape1,
-                    arg2 = shape2,
-                    n = n)
+        rdist_rvec_2(fun = rbeta,
+                     arg1 = shape1,
+                     arg2 = shape2,
+                     n = n,
+                     n_draw = n_draw)
     else
-        dist_rvec_2(fun = rbeta,
-                    arg1 = shape1,
-                    arg2 = shape2,
-                    n = n,
-                    ncp = ncp)
+        rdist_rvec_2(fun = rbeta,
+                     arg1 = shape1,
+                     arg2 = shape2,
+                     n = n,
+                     n_draw = n_draw,
+                     ncp = ncp)
 }
 
 
@@ -2870,9 +2893,10 @@ rdist_rvec_1 <- function(fun, arg, n, n_draw, ...) {
 #' Parameters have already been recycled to the required observation count.
 #' A NULL n_draw requests an ordinary vector; otherwise it specifies the
 #' validated output draw count. Single-column parameters recycle in base R.
+#' Additional ordinary arguments pass through without expanding across draws.
 #'
 #' @noRd
-rdist_rvec_2 <- function(fun, arg1, arg2, n, n_draw) {
+rdist_rvec_2 <- function(fun, arg1, arg2, n, n_draw, ...) {
   nm_fun <- rlang::as_name(rlang::enquo(fun))
   nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
   nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
@@ -2887,7 +2911,7 @@ rdist_rvec_2 <- function(fun, arg1, arg2, n, n_draw) {
   n_values <- if (is.null(n_draw)) n else n * n_draw
   ans <- tryCatch(
     withCallingHandlers({
-      ans <- as.double(fun(n = n_values, arg1, arg2))
+      ans <- as.double(fun(n = n_values, arg1, arg2, ...))
       if (length(ans) != n_values)
         cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
       ## Set dimensions before tryCatch returns and shares the result.

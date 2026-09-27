@@ -63,6 +63,12 @@
   explicitly supplied zero, and noncentral draws still use base R's
   calculation.
 
+- `dbeta_rvec()`, `pbeta_rvec()`, `qbeta_rvec()`, and `rbeta_rvec()` use
+  compact arguments and avoid unnecessary matrix copies, preserving
+  results and random-number generator state. Omitted `ncp` remains
+  distinct from explicitly supplied zero, and noncentral draws still
+  use base R's calculation.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle
