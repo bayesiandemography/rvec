@@ -1360,12 +1360,12 @@ dhyper_rvec <- function(x, m, n, k, log = FALSE) {
     m <- args[[2]]
     n <- args[[3]]
     k <- args[[4]]
-    dist_rvec_4(fun = dhyper,
-                arg1 = x,
-                arg2 = m,
-                arg3 = n,
-                arg4 = k,
-                log = log)
+    dist_rvec_4_compact(fun = dhyper,
+                        arg1 = x,
+                        arg2 = m,
+                        arg3 = n,
+                        arg4 = k,
+                        log = log)
 }
 
 ## HAS_TESTS
@@ -1380,13 +1380,13 @@ phyper_rvec <- function(q, m, n, k, lower.tail = TRUE, log.p = FALSE) {
     m <- args[[2]]
     n <- args[[3]]
     k <- args[[4]]
-    dist_rvec_4(fun = phyper,
-                arg1 = q,
-                arg2 = m,
-                arg3 = n,
-                arg4 = k,
-                lower.tail = lower.tail,
-                log.p = log.p)
+    dist_rvec_4_compact(fun = phyper,
+                        arg1 = q,
+                        arg2 = m,
+                        arg3 = n,
+                        arg4 = k,
+                        lower.tail = lower.tail,
+                        log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -1401,13 +1401,13 @@ qhyper_rvec <- function(p, m, n, k, lower.tail = TRUE, log.p = FALSE) {
     m <- args[[2L]]
     n <- args[[3L]]
     k <- args[[4L]]
-    dist_rvec_4(fun = qhyper,
-                arg1 = p,
-                arg2 = m,
-                arg3 = n,
-                arg4 = k,
-                lower.tail = lower.tail,
-                log.p = log.p)
+    dist_rvec_4_compact(fun = qhyper,
+                        arg1 = p,
+                        arg2 = m,
+                        arg3 = n,
+                        arg4 = k,
+                        lower.tail = lower.tail,
+                        log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -1419,18 +1419,42 @@ rhyper_rvec <- function(nn, m, n, k, n_draw = NULL) {
     n <- vec_recycle(n, size = nn)
     k <- vec_recycle(k, size = nn)
     args <- list(m = m, n = n, k = k)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    nn <- n_rdist(n = nn, args = args)
-    m <- args[["m"]]
-    n <- args[["n"]]
-    k <- args[["k"]]
-    dist_rvec_3(fun = rhyper,
-                arg1 = m,
-                arg2 = n,
-                arg3 = k,
-                nn = nn)
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else {
+        if (is_rv[["m"]] && is_rv[["n"]])
+            n_draw_common(m, n, x_arg = "m", y_arg = "n")
+        if (is_rv[["m"]] && is_rv[["k"]])
+            n_draw_common(m, k, x_arg = "m", y_arg = "k")
+        if (is_rv[["n"]] && is_rv[["k"]])
+            n_draw_common(n, k, x_arg = "n", y_arg = "k")
+        if (any(is_rv))
+            n_draw <- max(vapply(args[is_rv], n_draw, 1L))
+    }
+    rdist_rvec_3(fun = rhyper,
+                 arg1 = m,
+                 arg2 = n,
+                 arg3 = k,
+                 n = nn,
+                 n_draw = n_draw)
 }
 
 
@@ -2928,6 +2952,91 @@ dist_rvec_3_compact <- function(fun, arg1, arg2, arg3, ...) {
 }
 
 ## HAS_TESTS
+#' Apply a four-argument distribution function without expanding draws
+#'
+#' Arguments have already been recycled to a common observation count.
+#' The function must return doubles. Check every pair of rvec draw counts,
+#' then let base R recycle single-draw arguments in column order.
+#'
+#' @noRd
+dist_rvec_4_compact <- function(fun, arg1, arg2, arg3, arg4, ...) {
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+  nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  nm_arg3 <- rlang::as_name(rlang::enquo(arg3))
+  nm_arg4 <- rlang::as_name(rlang::enquo(arg4))
+  n <- length(arg1)
+  is_rv_1 <- is_rvec(arg1)
+  is_rv_2 <- is_rvec(arg2)
+  is_rv_3 <- is_rvec(arg3)
+  is_rv_4 <- is_rvec(arg4)
+  ## Check every pair: a single-draw argument can align with two others
+  ## whose draw counts are incompatible with each other.
+  if (is_rv_1 && is_rv_2)
+    n_draw_common(arg1, arg2, x_arg = nm_arg1, y_arg = nm_arg2)
+  if (is_rv_1 && is_rv_3)
+    n_draw_common(arg1, arg3, x_arg = nm_arg1, y_arg = nm_arg3)
+  if (is_rv_2 && is_rv_3)
+    n_draw_common(arg2, arg3, x_arg = nm_arg2, y_arg = nm_arg3)
+  if (is_rv_1 && is_rv_4)
+    n_draw_common(arg1, arg4, x_arg = nm_arg1, y_arg = nm_arg4)
+  if (is_rv_2 && is_rv_4)
+    n_draw_common(arg2, arg4, x_arg = nm_arg2, y_arg = nm_arg4)
+  if (is_rv_3 && is_rv_4)
+    n_draw_common(arg3, arg4, x_arg = nm_arg3, y_arg = nm_arg4)
+  n_draw <- NULL
+  if (is_rv_1 || is_rv_2 || is_rv_3 || is_rv_4)
+    n_draw <- 1L
+  if (is_rv_1) {
+    check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+    n_draw <- max(n_draw, n_draw(arg1))
+    arg1 <- as.matrix(arg1)
+  }
+  if (is_rv_2) {
+    check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+    n_draw <- max(n_draw, n_draw(arg2))
+    arg2 <- as.matrix(arg2)
+  }
+  if (is_rv_3) {
+    check_not_rvec_chr(arg3, nm_arg = nm_arg3)
+    n_draw <- max(n_draw, n_draw(arg3))
+    arg3 <- as.matrix(arg3)
+  }
+  if (is_rv_4) {
+    check_not_rvec_chr(arg4, nm_arg = nm_arg4)
+    n_draw <- max(n_draw, n_draw(arg4))
+    arg4 <- as.matrix(arg4)
+  }
+  n_values <- if (is.null(n_draw)) n else n * n_draw
+  ans <- tryCatch(
+    withCallingHandlers({
+      ans <- fun(arg1, arg2, arg3, arg4, ...)
+      if (length(ans) != n_values)
+        cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+      ## Remove inherited attributes and set dimensions before tryCatch
+      ## returns, avoiding a copy of the double data.
+      attributes(ans) <- NULL
+      if (!is.null(n_draw))
+        dim(ans) <- c(n, n_draw)
+      ans
+    },
+    warning = function(w) {
+      if (grepl("NAs produced|NaNs produced", w$message))
+        invokeRestart("muffleWarning")
+    }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (!is.null(n_draw))
+    ans <- rvec(ans)
+  ans
+}
+
+## HAS_TESTS
 #' Generate random values with one parameter without expanding draws
 #'
 #' The parameter has already been recycled to the required observation count.
@@ -2998,6 +3107,65 @@ rdist_rvec_2 <- function(fun, arg1, arg2, n, n_draw, ...) {
   ans <- tryCatch(
     withCallingHandlers({
       ans <- as.double(fun(n = n_values, arg1, arg2, ...))
+      if (length(ans) != n_values)
+        cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
+      ## Set dimensions before tryCatch returns and shares the result.
+      if (!is.null(n_draw))
+        dim(ans) <- c(n, n_draw)
+      ans
+    },
+    warning = function(w) {
+      if (grepl("NAs produced|NaNs produced", w$message))
+        invokeRestart("muffleWarning")
+    }),
+    error = function(e) e
+  )
+  if (inherits(ans, "error"))
+    cli::cli_abort(c("Problem with call to function {.fun {nm_fun}}.",
+                     i = ans$message))
+  if (anyNA(ans))
+    cli::cli_warn("NAs produced")
+  if (!is.null(n_draw))
+    ans <- rvec(ans)
+  ans
+}
+
+## HAS_TESTS
+#' Generate random values with three parameters without expanding draws
+#'
+#' Parameters have already been recycled to the required observation count.
+#' A NULL n_draw requests an ordinary vector; otherwise it specifies the
+#' validated output draw count. The base function takes the count first.
+#'
+#' @noRd
+rdist_rvec_3 <- function(fun, arg1, arg2, arg3, n, n_draw, ...) {
+  nm_fun <- rlang::as_name(rlang::enquo(fun))
+  nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
+  nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  nm_arg3 <- rlang::as_name(rlang::enquo(arg3))
+  if (is_rvec(arg1)) {
+    check_not_rvec_chr(arg1, nm_arg = nm_arg1)
+    arg1 <- as.matrix(arg1)
+    if (ncol(arg1) == 1L)
+      dim(arg1) <- NULL
+  }
+  if (is_rvec(arg2)) {
+    check_not_rvec_chr(arg2, nm_arg = nm_arg2)
+    arg2 <- as.matrix(arg2)
+    if (ncol(arg2) == 1L)
+      dim(arg2) <- NULL
+  }
+  if (is_rvec(arg3)) {
+    check_not_rvec_chr(arg3, nm_arg = nm_arg3)
+    arg3 <- as.matrix(arg3)
+    if (ncol(arg3) == 1L)
+      dim(arg3) <- NULL
+  }
+  n_values <- if (is.null(n_draw)) n else n * n_draw
+  ans <- tryCatch(
+    withCallingHandlers({
+      ## Pass the count positionally: rhyper calls it nn, not n.
+      ans <- as.double(fun(n_values, arg1, arg2, arg3, ...))
       if (length(ans) != n_values)
         cli::cli_abort("Internal error: Return value has incorrect length.") # nocov
       ## Set dimensions before tryCatch returns and shares the result.

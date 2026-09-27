@@ -83,7 +83,16 @@
   draws. This further reduces temporary memory when parameters are rvecs,
   without changing the formula or switching base R parameterizations.
 
+- `dhyper_rvec()`, `phyper_rvec()`, `qhyper_rvec()`, and `rhyper_rvec()`
+  use compact arguments and avoid unnecessary matrix copies, preserving
+  results and random-number generator state. Alignment is checked across
+  all parameters, and random output remains double-valued.
+
 ## Bug fixes
+
+- Hypergeometric density, probability, and quantile functions correctly name
+  `n` and `k` when their draw counts are incompatible; the error previously
+  named `k` twice.
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle
   single-draw rvec parameters when another parameter has multiple draws and

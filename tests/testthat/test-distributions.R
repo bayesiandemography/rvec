@@ -1457,6 +1457,125 @@ test_that("'rhyper_rvec' works with valid input - n_draw is supplied", {
 })
 
 
+test_that("Hypergeometric functions preserve alignment across four inputs", {
+    for (kind in c("d", "p", "q")) {
+        fun <- get(paste0(kind, "hyper_rvec"))
+        base_fun <- get(paste0(kind, "hyper"), envir = asNamespace("stats"))
+        for (log in c(FALSE, TRUE)) {
+            values <- if (kind == "q") c(0.01, 0.1, 0.3, 0.7, 0.9, 1) else c(-1, 0, 1, 2, 3, 4)
+            if (kind == "q" && log)
+                values <- log(values)
+            args <- list(matrix(values, 2L), matrix(c(10, 12), ncol = 1L),
+                         matrix(c(20, 25, 30), nrow = 1L), matrix(1:6, 2L))
+            for (position in 1:4) {
+                inputs <- args
+                inputs[[position]] <- inputs[[position]][1L, , drop = FALSE]
+                full <- lapply(inputs, function(m)
+                    m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = 3L), drop = FALSE])
+                for (lower in c(FALSE, TRUE)) {
+                    flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                    expected <- rvec(do.call(base_fun, c(full, flags)))
+                    expect_identical(do.call(fun, c(lapply(inputs, rvec), flags)), expected)
+                }
+            }
+        }
+    }
+})
+
+test_that("'rhyper_rvec' preserves draw order, output type, and RNG state", {
+    layouts <- function(x) list(x[1L], x[1:2], rvec(x[1:2]),
+                                rvec(matrix(x[1:3], 1L)), rvec(matrix(x, 2L)))
+    for (m in layouts(10:15)) for (n in layouts(20:25)) for (k in layouts(1:6)) {
+        for (n_draw in list(NULL, 3L)) {
+            args <- list(m, n, k)
+            if (!is.null(n_draw) && any(vapply(args, function(x) is_rvec(x) && n_draw(x) != n_draw, TRUE)))
+                next
+            draws <- if (!is.null(n_draw)) n_draw else max(vapply(args, function(x) if (is_rvec(x)) n_draw(x) else 1L, 1L))
+            full <- lapply(args, function(x) {
+                x <- if (is_rvec(x)) as.matrix(x) else matrix(x, ncol = 1L)
+                x[rep(seq_len(nrow(x)), length.out = 2L),
+                  rep(seq_len(ncol(x)), length.out = draws), drop = FALSE]
+            })
+            set.seed(42)
+            expected <- as.double(do.call(rhyper, c(list(nn = 2L * draws), full)))
+            if (any(vapply(args, is_rvec, TRUE)) || !is.null(n_draw))
+                expected <- rvec(matrix(expected, nrow = 2L))
+            state_expected <- .Random.seed
+            next_expected <- rhyper(5L, 10, 20, 3)
+            set.seed(42)
+            expect_identical(rhyper_rvec(2L, m, n, k, n_draw = n_draw), expected)
+            expect_identical(.Random.seed, state_expected)
+            expect_identical(rhyper(5L, 10, 20, 3), next_expected)
+        }
+    }
+})
+
+test_that("'qhyper_rvec' preserves the base R log-probability boundary result", {
+    for (lower in c(FALSE, TRUE)) {
+        expected <- suppressWarnings(qhyper(-Inf, 10, 20, 3, lower.tail = lower, log.p = TRUE))
+        if (anyNA(expected))
+            expect_warning(obtained <- qhyper_rvec(-Inf, 10, 20, 3, lower.tail = lower, log.p = TRUE), "NAs produced")
+        else
+            obtained <- qhyper_rvec(-Inf, 10, 20, 3, lower.tail = lower, log.p = TRUE)
+        expect_identical(obtained, expected)
+    }
+})
+
+test_that("Hypergeometric functions check every pair of draw counts", {
+    for (fun in list(dhyper_rvec, phyper_rvec, qhyper_rvec)) {
+        for (pair in combn(1:4, 2L, simplify = FALSE)) {
+            args <- list(rvec(c(0.1, 0.5)), m = rvec(c(10, 10)),
+                         n = rvec(c(20, 20)), k = rvec(c(2, 2)))
+            args[[pair[1L]]] <- rvec(matrix(rep(as.matrix(args[[pair[1L]]]), 2L), 2L))
+            args[[pair[2L]]] <- rvec(matrix(rep(as.matrix(args[[pair[2L]]]), 3L), 2L))
+            expect_error(do.call(fun, args), "Can't align")
+        }
+        expect_error(fun(rvec(c(0.1, 0.5)), m = rvec(c(10, 10)),
+                         n = rvec(matrix(20, 2L, 2L)), k = rvec(matrix(2, 2L, 3L))),
+                     "rvec `n`.*rvec `k`")
+    }
+    set.seed(42)
+    state_before <- .Random.seed
+    for (pair in combn(1:3, 2L, simplify = FALSE)) {
+        args <- list(m = rvec(c(10, 10)), n = rvec(c(20, 20)), k = rvec(c(2, 2)))
+        args[[pair[1L]]] <- rvec(matrix(rep(as.matrix(args[[pair[1L]]]), 2L), 2L))
+        args[[pair[2L]]] <- rvec(matrix(rep(as.matrix(args[[pair[2L]]]), 3L), 2L))
+        expect_error(do.call(rhyper_rvec, c(list(nn = 2L), args)), "Can't align")
+    }
+    expect_identical(.Random.seed, state_before)
+})
+
+test_that("Hypergeometric functions preserve empty outputs and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    for (fun in list(dhyper_rvec, phyper_rvec, qhyper_rvec)) {
+        expect_identical(fun(numeric(), 10, 20, 3), numeric())
+        for (position in 1:4) {
+            args <- list(0.5, 10, 20, 3)
+            args[[position]] <- empty
+            expect_identical(do.call(fun, args), empty)
+        }
+        expect_warning(fun(NA_real_, 10, 20, 3), "NAs produced")
+        expect_warning(fun(0.5, -1, 20, 3), "NAs produced")
+        expect_error(fun(1:2, 1:3, 20, 3), "Can't recycle")
+    }
+    set.seed(42)
+    state_before <- .Random.seed
+    expect_identical(rhyper_rvec(0L, 10, 20, 3), numeric())
+    expect_identical(rhyper_rvec(0L, 10, 20, 3, n_draw = 3L), empty)
+    for (position in 1:3) {
+        args <- list(m = 10, n = 20, k = 3)
+        args[[position]] <- empty
+        expect_identical(do.call(rhyper_rvec, c(list(nn = 0L), args)), empty)
+        args[[position]] <- rvec(1:2)
+        expect_error(do.call(rhyper_rvec, c(list(nn = 2L, n_draw = 3L), args)), "has 1 draws")
+        args[[position]] <- "a"
+        expect_error(do.call(rhyper_rvec, c(list(nn = 2L, n_draw = 3L), args)), "must not be a character vector")
+    }
+    expect_identical(.Random.seed, state_before)
+})
+
+
 ## 'lnorm' --------------------------------------------------------------------
 
 test_that("'dlnorm_rvec' works with valid input", {
