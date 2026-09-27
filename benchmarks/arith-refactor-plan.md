@@ -166,7 +166,8 @@ requested. No push, merge, or release is part of the current planning step.
 
 ## Implementation record
 
-The binary refactor is implemented on `arith-refactor` and remains uncommitted.
+The binary refactor was committed on `arith-refactor` as `d08797c`, including
+the version bump to 1.0.4.
 All binary S3 entry points delegate to a shared private helper. Standard numeric
 rvecs use compact inputs; subclasses retain conversion dispatch. Unary methods
 are unchanged. Regression tests cover type combinations, operators, recycling,
@@ -183,5 +184,115 @@ names, empty results, errors, input immutability, and subclass conversion.
   40.1 to 16.1 MB for a one-observation rvec. Output size was about 8 MB.
 
 The benchmark script, results, and session information are saved alongside the
-distribution benchmarks. NEWS describes the change. The work is ready for
-review; nothing has been merged or pushed.
+distribution benchmarks. NEWS describes the change. The arithmetic changes are committed; nothing on this branch has been merged
+or pushed. See the resumption plan below for subsequent work.
+
+
+## Resumption plan (recorded after b23b6d4)
+
+### Start here
+
+- Current branch: `arith-refactor`. Latest implementation commit: `b23b6d4`.
+- Package version: 1.0.4. NEWS already includes arithmetic and subsequent
+  memory improvements; do not bump the version automatically for each step.
+- `dev` and `origin/dev` were last updated through `31b966f`, completing the
+  distribution refactor. The newer branch commits have not been pushed or merged.
+- The working tree was clean before updating this document. Check its current
+  state before resuming, preserving any intervening user work.
+- Next recommended step: investigate and prototype compact branch handling in
+  `if_else_rvec()`. Do not redo the completed arithmetic or distribution work.
+
+### Completed after the binary-arithmetic refactor
+
+Commit `b23b6d4` implements the first three groups from the package-wide review:
+
+1. Typed constructors and same-type casts reuse suitable plain matrices when
+   types and draw counts match. Row names are retained, column names are
+   discarded as before, and unusual inputs use the original paths.
+2. Comparisons retain compact operands while preserving common-type coercion,
+   including character/numeric comparisons. Nonstandard inputs retain the
+   original casting path.
+3. `draws_median`, `draws_mean`, `draws_sd`, `draws_var`, `draws_cv`, `sd`, and
+   single-input `var` avoid `1 * m` when the matrix is already double-valued.
+   Integer/logical conversion paths remain unchanged.
+
+Validation: 648 exact constructor/cast comparisons plus 9,224 comparison/summary
+checks passed (9,872 total), including result attributes, warnings, and error
+classes/messages. The full test suite passed. Package checking with
+`--no-manual` reported zero errors, zero warnings, and one environment-related
+note about remote time verification. The environment also printed diagnostics
+for an incompatible aspell executable and restricted network/Quarto access;
+these were not package-check warnings.
+
+For 1,000 observations by 1,000 draws, constructor/cast peak vector-heap growth
+fell from about 16 MB to under 0.2 MB, and comparison growth from about 28 MB to
+12 MB. Same-type results share input storage until modification. Summary peak
+heap measurements changed little, but allocation tracing of the methods
+confirmed removal of the 8 MB coercion allocation; do not claim a measured
+peak-memory reduction for summaries from these runs.
+
+Saved evidence:
+
+- `benchmarks/arithmetic.R` and `benchmarks/results/arithmetic*`.
+- `benchmarks/common-operations.R` and `benchmarks/results/common*`.
+- `benchmarks/README.md` documents commands, baselines, and metric limitations.
+- Exploratory scripts are in `/tmp/rvec-arith-experiment` and
+  `/tmp/rvec-memory-next`; these are disposable and may no longer exist.
+  Reconstruct baselines from Git rather than relying on temporary files.
+
+### Remaining candidates, in suggested order
+
+1. **Conditional selection (`R/if_else_rvec.R`).** The current implementation
+   constructs full matrices for true, false, and optional missing branches,
+   along with logical masks. Prototype allocating the result once and selecting
+   from compact branch inputs. Preserve branch type promotion, names, missing
+   handling, recycling, validation order, and behavior when a branch is unused.
+   Start with ordinary/shared branch values and single-draw rvecs.
+2. **Covariance (`R/var.R`).** `var_rvec_rvec()` and `var_rvec_nonrvec()` retain
+   lists of all matrix columns before applying `stats::var()`. Process one
+   column pair at a time with a preallocated result, retaining the same base
+   calculations and `use`/missing-value semantics. Do not confuse this with
+   single-input variance, whose coercion copy was already addressed.
+3. **Weighted summaries (`R/weighted_mean.R`).** Reuse an ordinary `x` vector
+   rather than expanding it across all draws when weights are rvecs. Examine
+   one-draw alignment carefully: the current loop indexes both matrices by
+   draw, so apparent alignment defects must be verified and separated from
+   memory-only changes.
+4. **Mathematical functions and missingness (`R/vec_math.R`, `R/missing.R`).**
+   Logical math first constructs an integer rvec. Investigate narrower paths
+   that preserve types and overflow behavior. Reassess `is.na()` after the
+   constructor fast paths: some of its previously identified copying may
+   already be eliminated by `b23b6d4`.
+5. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
+   Summary method calls `vec_c(...)` even for one input. A single-input fast
+   path may help, but preserve multi-argument behavior and dispatch. Reprofile
+   after cast improvements before deciding whether this warrants new methods.
+6. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
+   sparse operands, and rvec–rvec multiplication forms a full product before
+   summing. Potentially large gains, but higher risk of changing accumulation,
+   rounding, overflow, or dispatch. Treat as a separate investigation.
+7. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
+   `collapse_to_rvec()`, `as.vector(t(m))` in expansion, reconstruction in
+   pooling, and retention of all row frequency tables in mode/formatting
+   paths. Distinguish unavoidable output allocations from avoidable temporaries.
+
+Unary arithmetic was deliberately left unchanged and is not required to finish
+these remaining candidates. General constructor conversions that change type
+or draw count also remain on their original paths.
+
+### Workflow for each next step
+
+Keep changes small enough to review and commit separately. Inspect the current
+code first, then prototype and measure before broad implementation. Preserve
+exact results, types, attributes, warning/error behavior, and input immutability;
+retain base numerical algorithms where possible. Establish whether previously
+identified costs remain after shared-helper improvements.
+
+Use focused permanent regression tests plus temporary comparisons against the
+appropriate Git baseline. Measure in fresh processes with inputs outside the
+measurement; report vector-heap growth accurately and distinguish it from
+cumulative allocation and process RSS. Save reproducible benchmarks and update
+NEWS. Run focused tests followed by full tests/package checks as appropriate.
+
+User workflow so far: implement and report results, then commit when requested.
+Do not merge, push, or release the branch without a separate instruction.
