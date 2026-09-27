@@ -3226,136 +3226,136 @@ test_that("'nbinom_prob_from_mu' preserves empty results and invalid-input error
 })
 
 
-## 'dist_rvec_1' --------------------------------------------------------------
+## 'rdist_rvec_1' --------------------------------------------------------------
 
-test_that("'dist_rvec_1' works with valid rvec input", {
+test_that("'rdist_rvec_1' works with valid rvec input", {
     m <- matrix(1:6, nr = 2)
     lambda <- rvec(m)
     set.seed(0)
-    ans_obtained <- dist_rvec_1(fun = rpois, arg = lambda, n = 6)
+    ans_obtained <- rdist_rvec_1(fun = rpois, arg = lambda, n = 2L, n_draw = 3L)
     set.seed(0)
     ans_expected <- rvec_dbl(matrix(rpois(n = 6, lambda = 1:6), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_1' works with valid non-rvec input", {
+test_that("'rdist_rvec_1' works with valid non-rvec input", {
     set.seed(0)
-    ans_obtained <- dist_rvec_1(fun = rpois, arg = 1:6, n = 6)
+    ans_obtained <- rdist_rvec_1(fun = rpois, arg = 1:6, n = 6L, n_draw = NULL)
     set.seed(0)
     ans_expected <- as.double(rpois(n = 6, lambda = 1:6))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_1' throws appropriate error with invalid inputs", {
+test_that("'rdist_rvec_1' throws appropriate error with invalid inputs", {
     m <- matrix(letters[1:6], nr = 2)
     lambda <- rvec(m)
-    expect_error(dist_rvec_1(fun = rpois, arg = lambda, n = 6),
+    expect_error(rdist_rvec_1(fun = rpois, arg = lambda, n = 2L, n_draw = 3L),
                  "Problem with call to function `rpois\\(\\)`.")
 })
 
-test_that("'dist_rvec_1' gives appropriate warning with NAs", {
+test_that("'rdist_rvec_1' gives appropriate warning with NAs", {
     m <- matrix(c(1:5, NA), nr = 2)
     lambda <- rvec(m)
-    expect_warning(dist_rvec_1(fun = rpois, arg = lambda, n = 6),
+    expect_warning(rdist_rvec_1(fun = rpois, arg = lambda, n = 2L, n_draw = 3L),
                    "NAs produced")
 })
 
 
-## 'dist_rvec_2' --------------------------------------------------------------
+## 'dist_rvec_2_compact' --------------------------------------------------------------
 
-test_that("'dist_rvec_2' works with valid rvec input - density, both args rvecs", {
+test_that("'dist_rvec_2_compact' works with valid rvec input - density, both args rvecs", {
     m <- matrix(1:6, nr = 2)
     x <- rvec(m)
     lambda <- rvec(m + 1)
-    ans_obtained <- dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda)
+    ans_obtained <- dist_rvec_2_compact(fun = dpois, arg1 = x, arg2 = lambda)
     ans_expected <- rvec(matrix(dpois(x = m, lambda = m + 1), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_2' works with valid rvec input - density, arg1 numeric", {
+test_that("'dist_rvec_2_compact' works with valid rvec input - density, arg1 numeric", {
     m <- matrix(1:6, nr = 2)
     x <- 1:2
     lambda <- rvec(m)
-    ans_obtained <- dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda)
+    ans_obtained <- dist_rvec_2_compact(fun = dpois, arg1 = x, arg2 = lambda)
     ans_expected <- rvec(matrix(dpois(x = rep(1:2, 3), lambda = m), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_2' works with valid rvec input - density, arg2 numeric", {
+test_that("'dist_rvec_2_compact' works with valid rvec input - density, arg2 numeric", {
     m <- matrix(1:6, nr = 2)
     x <- rvec(m)
     lambda <- 1:2
-    ans_obtained <- dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda)
+    ans_obtained <- dist_rvec_2_compact(fun = dpois, arg1 = x, arg2 = lambda)
     ans_expected <- rvec(matrix(dpois(x = m, lambda = rep(1:2, 3)), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_2' works with valid rvec input - density, arg1, arg2 numeric", {
+test_that("'dist_rvec_2_compact' works with valid rvec input - density, arg1, arg2 numeric", {
     x <- 2:1
     lambda <- 1:2
-    ans_obtained <- dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda)
+    ans_obtained <- dist_rvec_2_compact(fun = dpois, arg1 = x, arg2 = lambda)
     ans_expected <- dpois(x = 2, lambda = lambda)
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_2' throws appropriate error with invalid inputs", {
+test_that("'dist_rvec_2_compact' throws appropriate error with invalid inputs", {
     m <- matrix(letters[1:6], nr = 2)
     x <- rvec(m)
     lambda <- c(1, 1)
-    expect_error(dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda),
+    expect_error(dist_rvec_2_compact(fun = dpois, arg1 = x, arg2 = lambda),
                  "`x` has class")
 })
 
-test_that("'dist_rvec_2' throws appropriate error with error in fun", {
+test_that("'dist_rvec_2_compact' throws appropriate error with error in fun", {
     m <- matrix(1:6, nr = 2)
     x <- rvec(m)
     lambda <- c(1, "a")
-    expect_error(dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda),
+    expect_error(dist_rvec_2_compact(fun = dpois, arg1 = x, arg2 = lambda),
                  "Non-numeric argument")
 })
 
-test_that("'dist_rvec_2' warns about NAs", {
+test_that("'dist_rvec_2_compact' warns about NAs", {
     m <- matrix(1:6, nr = 2)
     x <- rvec(m)
     lambda <- c(1, -1)
-    expect_warning(dist_rvec_2(fun = dpois, arg1 = x, arg2 = lambda),
+    expect_warning(dist_rvec_2_compact(fun = dpois, arg1 = x, arg2 = lambda),
                  "NAs produced")
 })
 
 
-## 'dist_rvec_3' --------------------------------------------------------------
+## 'dist_rvec_3_compact' --------------------------------------------------------------
 
-test_that("'dist_rvec_3' works with valid rvec input - density, all args rvecs", {
+test_that("'dist_rvec_3_compact' works with valid rvec input - density, all args rvecs", {
     m <- matrix(1:6, nr = 2)
     x <- rvec(m)
     mean <- rvec(m + 1)
     sd <- rvec(m + 3)
     set.seed(0)
-    ans_obtained <- dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
+    ans_obtained <- dist_rvec_3_compact(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
     set.seed(0)
     ans_expected <- rvec(matrix(dnorm(x = m, mean = m + 1, sd = m + 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_3' works with valid rvec input - density, arg2 numeric", {
+test_that("'dist_rvec_3_compact' works with valid rvec input - density, arg2 numeric", {
     m <- matrix(1:6, nr = 2)
     x <- rvec(m)
     mean <- 1:2
     sd <- rvec(m + 3)
     set.seed(0)
-    ans_obtained <- dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
+    ans_obtained <- dist_rvec_3_compact(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
     set.seed(0)
     ans_expected <- rvec(matrix(dnorm(x = m, mean = rep(1:2, times = 3), sd = m + 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_3' works with valid rvec input - density, arg1, arg2 numeric", {
+test_that("'dist_rvec_3_compact' works with valid rvec input - density, arg1, arg2 numeric", {
     x <- 3:4
     mean <- 1:2
     m <- matrix(1:6, nr = 2)
     sd <- rvec(m)
     set.seed(0)
-    ans_obtained <- dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
+    ans_obtained <- dist_rvec_3_compact(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
     set.seed(0)
     ans_expected <- rvec(matrix(dnorm(x = rep(3:4, times = 3),
                                       mean = rep(1:2, times = 3),
@@ -3365,219 +3365,219 @@ test_that("'dist_rvec_3' works with valid rvec input - density, arg1, arg2 numer
 })
 
 
-test_that("'dist_rvec_3' works with valid rvec input - density, arg1 numeric", {
+test_that("'dist_rvec_3_compact' works with valid rvec input - density, arg1 numeric", {
     m <- matrix(1:6, nr = 2)
     x <- 2:1
     mean <- rvec(m + 1)
     sd <- rvec(m + 3)
     set.seed(0)
-    ans_obtained <- dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
+    ans_obtained <- dist_rvec_3_compact(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd)
     set.seed(0)
     ans_expected <- rvec(matrix(dnorm(x = x, mean = m + 1, sd = m + 3), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
 
-test_that("'dist_rvec_3' works with valid rvec input - density, arg1, arg2, arg3 numeric", {
+test_that("'dist_rvec_3_compact' works with valid rvec input - density, arg1, arg2, arg3 numeric", {
     x <- 2:1
     mean <- 1:2
     sd <- 1:2
-    ans_obtained <- dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd, log = TRUE)
+    ans_obtained <- dist_rvec_3_compact(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd, log = TRUE)
     ans_expected <- dnorm(x = x, mean = mean, sd = sd, log = TRUE)
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_3' throws appropriate error with invalid inputs", {
+test_that("'dist_rvec_3_compact' throws appropriate error with invalid inputs", {
     m <- matrix(1:6, nr = 2)
     x <- rvec(m)
     mean <- 1:2
     sd  <- c("a", 0)
-    expect_error(dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd),
+    expect_error(dist_rvec_3_compact(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd),
                  "Problem with call to function `dnorm\\(\\)`.")
 })
 
-test_that("'dist_rvec_3' warns about NAs", {
+test_that("'dist_rvec_3_compact' warns about NAs", {
     m <- matrix(c(1:5, NA), nr = 2)
     x <- rvec(m)
     mean <- 1:2
     sd  <- c(0.1, -0.4)
-    expect_warning(dist_rvec_3(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd),
+    expect_warning(dist_rvec_3_compact(fun = dnorm, arg1 = x, arg2 = mean, arg3 = sd),
                    "NAs produced")
 })
 
 
-## 'dist_rvec_4' --------------------------------------------------------------
+## 'dist_rvec_4_compact' --------------------------------------------------------------
 
-test_that("'dist_rvec_4' works with valid rvec input - density, all args rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, all args rvecs", {
     y <- matrix(1:6, nr = 2)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = yy,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = yy, arg2 = yy,
                                 arg3 = zz, arg4 = zz)
     ans_expected <- rvec(matrix(dhyper(y, y, z, z), nrow = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 2,3,4 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 2,3,4 rvecs", {
     y <- matrix(1:6, nr = 2)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = yy,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = z, arg2 = yy,
                                 arg3 = zz, arg4 = zz)
     ans_expected <- rvec(matrix(dhyper(x = z, m = y, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 1,3,4 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 1,3,4 rvecs", {
     y <- matrix(1:6, nr = 2)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = yy, arg2 = z,
                                 arg3 = zz, arg4 = zz)
     ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 1,2,4 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 1,2,4 rvecs", {
     y <- matrix(1:6, nr = 2)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = yy,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = yy, arg2 = yy,
                                 arg3 = z, arg4 = zz)
     ans_expected <- rvec(matrix(dhyper(x = y, m = y, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 1,2,3 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 1,2,3 rvecs", {
     y <- matrix(1:6, nr = 2)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = yy,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = yy, arg2 = yy,
                                 arg3 = zz, arg4 = z)
     ans_expected <- rvec(matrix(dhyper(x = y, m = y, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 3,4 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 3,4 rvecs", {
     y <- matrix(1:6, nr = 2)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = z,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = z, arg2 = z,
                                 arg3 = yy, arg4 = yy)
     ans_expected <- rvec(matrix(dhyper(x = z, m = z, n = y, k = y), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 2,4 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 2,4 rvecs", {
     y <- matrix(1, nr = 2, nc = 3)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = zz,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = z, arg2 = zz,
                                 arg3 = z, arg4 = yy)
     ans_expected <- rvec(matrix(dhyper(x = z, m = z, n = z, k = y), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 1,4 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 1,4 rvecs", {
     y <- matrix(1, nr = 2, nc = 3)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = yy, arg2 = z,
                                 arg3 = z, arg4 = yy)
     ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = y), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 1,3 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 1,3 rvecs", {
     y <- matrix(1, nr = 2, nc = 3)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = yy, arg2 = z,
                                 arg3 = zz, arg4 = z)
     ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, args 2,3 rvecs", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, args 2,3 rvecs", {
     y <- matrix(1, nr = 2, nc = 3)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = yy,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = z, arg2 = yy,
                                 arg3 = zz, arg4 = z)
     ans_expected <- rvec(matrix(dhyper(x = z, m = y, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, arg 4 rvec", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, arg 4 rvec", {
     y <- matrix(1, nr = 2, nc = 3)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = z,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = z, arg2 = z,
                                 arg3 = z, arg4 = yy)
     ans_expected <- rvec(matrix(dhyper(x = z, m = z, n = z, k = y), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, arg 3 rvec", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, arg 3 rvec", {
     y <- matrix(1, nr = 2, nc = 3)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = z,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = z, arg2 = z,
                                 arg3 = yy, arg4 = z)
     ans_expected <- rvec(matrix(dhyper(x = z, m = z, n = y, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, arg 2 rvec", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, arg 2 rvec", {
     y <- matrix(1, nr = 2, nc = 3)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = z, arg2 = yy,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = z, arg2 = yy,
                                 arg3 = z, arg4 = z)
     ans_expected <- rvec(matrix(dhyper(x = z, m = y, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' works with valid rvec input - density, arg 1 rvec", {
+test_that("'dist_rvec_4_compact' works with valid rvec input - density, arg 1 rvec", {
     y <- matrix(1, nr = 2, nc = 3)
     yy <- rvec(y)
     z <- matrix(1:2, nr = 2)
     zz <- rvec(z)
-    ans_obtained <- dist_rvec_4(fun = dhyper, arg1 = yy, arg2 = z,
+    ans_obtained <- dist_rvec_4_compact(fun = dhyper, arg1 = yy, arg2 = z,
                                 arg3 = z, arg4 = z)
     ans_expected <- rvec(matrix(dhyper(x = y, m = z, n = z, k = z), nr = 2))
     expect_identical(ans_obtained, ans_expected)
 })
 
-test_that("'dist_rvec_4' throws appropriate error with invalid inputs", {
+test_that("'dist_rvec_4_compact' throws appropriate error with invalid inputs", {
     m <- matrix(1:6, nr = 2)
     x <- rvec(m)
     n <- 1:2
     k <- as.character(1:2)
-    expect_error(dist_rvec_4(fun = dhyper, arg1 = x, arg2 = m,
+    expect_error(dist_rvec_4_compact(fun = dhyper, arg1 = x, arg2 = m,
                              arg3 = n, arg4 = "k"),
                  "Problem with call to function `dhyper\\(\\)`.")
 })
 
-test_that("'dist_rvec_4' warns about NAs", {
+test_that("'dist_rvec_4_compact' warns about NAs", {
   x <- rvec(matrix(c(1:5, NA), nr = 2))
   m <- 2:1
   n <- 1:2
   k <- c(1, -2)
-  expect_warning(dist_rvec_4(fun = dhyper, arg1 = x, arg2 = m,
+  expect_warning(dist_rvec_4_compact(fun = dhyper, arg1 = x, arg2 = m,
                              arg3 = n, arg4 = k),
                  "NAs produced")
 })
