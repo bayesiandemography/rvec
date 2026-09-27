@@ -3,99 +3,21 @@
 
 ## Memory use
 
-- `rgamma_rvec()` uses less temporary memory without processing draws in
-  chunks. After checking rvec alignment rules, it lets base R recycle
-  parameters across draws instead of constructing full-sized repeated
-  copies. It also avoids unnecessary copies of parameter matrices and
-  assigns output dimensions directly to the generated values. It continues
-  to use base R's `rgamma()`, preserving results for a given random seed.
+- Distribution functions use less temporary memory by retaining shared
+  parameters in compact form and avoiding unnecessary input and output
+  matrix copies. The changes cover all distribution families supported by
+  rvec and preserve results, warnings, and random-number generator behavior,
+  apart from the bug fixes below. Random output remains double-valued.
 
-- `rpois_rvec()` uses the same approach to avoid expanding parameters
-  across draws and copying the output matrix. Results and random-number
-  generator state are preserved, and output remains double-valued.
+- Calculations continue to use the same base R distribution functions,
+  including the distinction between omitted and explicitly supplied `ncp`.
+  Negative binomial conversion from `mu` to `prob` avoids intermediate
+  rvecs while retaining the same arithmetic.
 
-- `dpois_rvec()`, `ppois_rvec()`, and `qpois_rvec()` also avoid expanding
-  arguments across draws and copying parameter and output matrices, while
-  preserving input alignment and results.
-
-- `dgamma_rvec()`, `pgamma_rvec()`, and `qgamma_rvec()` use compact arguments
-  and avoid unnecessary matrix copies, preserving alignment across their
-  three arguments and the existing handling of rate and scale.
-
-- `dnorm_rvec()`, `pnorm_rvec()`, `qnorm_rvec()`, and `rnorm_rvec()` use
-  compact arguments and avoid unnecessary matrix copies. Results and
-  random-number generator state are preserved.
-
-- `dlnorm_rvec()`, `plnorm_rvec()`, `qlnorm_rvec()`, and `rlnorm_rvec()` use
-  the same compact-argument approach, reducing temporary memory while
-  preserving results and random-number generator state.
-
-- `dbinom_rvec()`, `pbinom_rvec()`, `qbinom_rvec()`, and `rbinom_rvec()` use
-  compact arguments and avoid unnecessary matrix copies. Results and
-  random-number generator state are preserved, including double-valued
-  output from `rbinom_rvec()`.
-
-- The exponential and geometric distribution functions also use compact
-  arguments and avoid unnecessary matrix copies. Results, warnings, and
-  random-number generator state are preserved; `rgeom_rvec()` continues
-  to return doubles.
-
-- `dcauchy_rvec()`, `pcauchy_rvec()`, `qcauchy_rvec()`, and `rcauchy_rvec()`
-  use compact arguments and avoid unnecessary matrix copies, preserving
-  results and random-number generator state.
-
-- `dunif_rvec()`, `punif_rvec()`, `qunif_rvec()`, and `runif_rvec()` use
-  compact arguments and avoid unnecessary matrix copies, preserving
-  results and random-number generator state.
-
-- `dweibull_rvec()`, `pweibull_rvec()`, `qweibull_rvec()`, and `rweibull_rvec()`
-  use compact arguments and avoid unnecessary matrix copies, preserving
-  results and random-number generator state.
-
-- `dchisq_rvec()`, `pchisq_rvec()`, `qchisq_rvec()`, and `rchisq_rvec()`
-  use compact arguments and avoid unnecessary matrix copies, preserving
-  results and random-number generator state. The distinction between
-  omitted `ncp` and explicitly supplied zero is retained.
-
-- `dt_rvec()`, `pt_rvec()`, `qt_rvec()`, and `rt_rvec()` use compact
-  arguments and avoid unnecessary matrix copies, preserving results and
-  random-number generator state. Omitted `ncp` remains distinct from
-  explicitly supplied zero, and noncentral draws still use base R's
-  calculation.
-
-- `dbeta_rvec()`, `pbeta_rvec()`, `qbeta_rvec()`, and `rbeta_rvec()` use
-  compact arguments and avoid unnecessary matrix copies, preserving
-  results and random-number generator state. Omitted `ncp` remains
-  distinct from explicitly supplied zero, and noncentral draws still
-  use base R's calculation.
-
-- `df_rvec()`, `pf_rvec()`, `qf_rvec()`, and `rf_rvec()` use compact
-  arguments and avoid unnecessary matrix copies, preserving results and
-  random-number generator state. Single-draw parameters are passed as
-  ordinary vectors so base R's noncentral F calculation can recycle them
-  across draws. Omitted `ncp` remains distinct from explicitly supplied zero.
-
-- `dnbinom_rvec()`, `pnbinom_rvec()`, `qnbinom_rvec()`, and `rnbinom_rvec()`
-  use compact arguments and avoid unnecessary matrix copies, preserving
-  results, random-number generator state, and double-valued random output.
-  Conversion from `mu` to `prob` uses the same arithmetic on the underlying
-  numeric data, avoiding intermediate rvec construction and expansion across
-  draws. This further reduces temporary memory when parameters are rvecs,
-  without changing the formula or switching base R parameterizations.
-
-- `dhyper_rvec()`, `phyper_rvec()`, `qhyper_rvec()`, and `rhyper_rvec()`
-  use compact arguments and avoid unnecessary matrix copies, preserving
-  results and random-number generator state. Alignment is checked across
-  all parameters, and random output remains double-valued.
-
-- `rmultinom_rvec()` retains compact size and probability inputs and allocates
-  double-valued output directly, reducing temporary memory. The existing
-  loops and order of calls to base R's `rmultinom()` are retained, preserving
-  results and random-number generator state.
-
-- `dmultinom_rvec()` retains compact inputs and avoids copying standard
-  double rvecs when calculating the default size. Results, warnings, and
-  validation are preserved while reducing temporary memory.
+- Multinomial functions retain compact inputs and the existing order of
+  base R calls. `rmultinom_rvec()` allocates double output directly, and
+  `dmultinom_rvec()` avoids an unnecessary copy when calculating default
+  size for standard double rvecs.
 
 ## Bug fixes
 
