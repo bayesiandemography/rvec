@@ -1810,6 +1810,65 @@ test_that("'dmultinom' throws expected error when 'x' and 'size' inconsistent", 
                  "Problem with call to function `dmultinom\\(\\)`:")
 })
 
+test_that("'dmultinom_rvec' aligns compact inputs without changing results", {
+    xs <- list(c(1, 2, 3), rvec(c(1, 2, 3)), rvec(c(1L, 2L, 3L)),
+               rvec(matrix(c(1, 2, 3, 0, 0, 6, 3, 2, 1), 3L)))
+    ps <- list(c(2, 3, 5), rvec(c(2L, 3L, 5L)),
+               rvec(matrix(c(2, 3, 5, 0, 0, 1, 5, 5, 0), 3L)))
+    for (x in xs) for (prob in ps) for (log in c(FALSE, TRUE)) {
+        sizes <- if (is_rvec(x)) list(NULL, rvec(6L), rvec(matrix(6, 1L, 3L))) else list(NULL, 6L)
+        for (size in sizes) {
+            s <- if (is.null(size)) sum(x) else size
+            args <- list(x, s, prob)
+            nd <- max(vapply(args, function(a) if (is_rvec(a)) n_draw(a) else 1L, 1L))
+            full <- lapply(args, function(a) {
+                m <- if (is_rvec(a)) as.matrix(a) else matrix(a, ncol = 1L)
+                m[, rep(seq_len(ncol(m)), length.out = nd), drop = FALSE]
+            })
+            expected <- vapply(seq_len(nd), function(j)
+                dmultinom(full[[1L]][, j], full[[2L]][1L, j], full[[3L]][, j], log = log), 1)
+            if (any(vapply(args, is_rvec, TRUE)))
+                expected <- rvec(matrix(expected, 1L))
+            expect_identical(dmultinom_rvec(x, size, prob, log), expected)
+        }
+    }
+})
+
+test_that("'dmultinom_rvec' retains default-size behavior across types and boundaries", {
+    capture <- function(expr) {
+        warnings <- character()
+        value <- tryCatch(withCallingHandlers(expr, warning = function(w) {
+            warnings <<- c(warnings, conditionMessage(w))
+            invokeRestart("muffleWarning")
+        }), error = function(e) conditionMessage(e))
+        list(value = value, warnings = warnings)
+    }
+    values <- list(c(1, 2, 3), c(1L, 2L, 3L), c(TRUE, FALSE, TRUE),
+                   c(NA_real_, 1, 2), c(NaN, 1, 2), c(Inf, 1, 2),
+                   c(0.5, 2, 3.5), c(1e16, 1, -1e16),
+                   c(2147483647L, 1L, 0L), c("a", "b", "c"), numeric())
+    for (v in values) {
+        x <- rvec(matrix(v, ncol = 1L))
+        prob <- rep(1, length(x))
+        for (log in c(FALSE, TRUE)) {
+            expected <- capture(dmultinom_rvec(x, size = sum(x), prob = prob, log = log))
+            expect_identical(capture(dmultinom_rvec(x, prob = prob, log = log)), expected)
+        }
+    }
+})
+
+test_that("'dmultinom_rvec' checks every pair of draw counts", {
+    for (pair in combn(1:3, 2L, simplify = FALSE)) {
+        args <- list(x = rvec(c(1, 2, 3)), size = rvec(6), prob = rvec(c(2, 3, 5)))
+        for (j in seq_along(pair)) {
+            i <- pair[[j]]
+            m <- as.matrix(args[[i]])
+            args[[i]] <- rvec(m[, rep(1L, j + 1L), drop = FALSE])
+        }
+        expect_error(do.call(dmultinom_rvec, args), "Can't align")
+    }
+})
+
 test_that("'rmultinom_rvec' works with valid input - n_draw is NULL, size is rvec", {
     m <- matrix(4:5, nr = 1)
     size <- rvec(m)
@@ -1943,6 +2002,67 @@ test_that("'rmultinom' throws expected error when 'prob' negative", {
     prob <- rvec(matrix(c(3, -1, 1), nrow = 3, nc = 1))
     expect_error(rmultinom_rvec(n = 1, size = size, prob = prob),
                  "Problem with call to function `rmultinom\\(\\)`:")
+})
+
+
+test_that("'rmultinom_rvec' preserves sample order, draw order, and RNG state", {
+    sizes <- list(10L, rvec(10L), rvec(matrix(c(0L, 1L, 10L), 1L)))
+    probs <- list(c(2, 3, 5), rvec(c(2L, 3L, 5L)),
+                  rvec(matrix(c(2, 3, 5, 0, 0, 1, 5, 5, 0), 3L)),
+                  setNames(c(TRUE, FALSE, FALSE), c("a", "b", "c")))
+    for (size in sizes) for (prob in probs) for (draws in list(NULL, 3L)) {
+        args <- list(size, prob)
+        if (!is.null(draws) && any(vapply(args, function(x)
+            is_rvec(x) && n_draw(x) != draws, TRUE)))
+            next
+        nd <- if (is.null(draws)) max(vapply(args, function(x)
+            if (is_rvec(x)) n_draw(x) else 1L, 1L)) else draws
+        s <- if (is_rvec(size)) as.vector(as.matrix(size)) else size
+        p <- if (is_rvec(prob)) as.matrix(prob) else matrix(prob, ncol = 1L)
+        s <- rep(s, length.out = nd)
+        p <- p[, rep(seq_len(ncol(p)), length.out = nd), drop = FALSE]
+        for (n in c(1L, 2L)) {
+            set.seed(42)
+            expected <- lapply(seq_len(n), function(i) {
+                m <- vapply(seq_len(nd), function(j)
+                    as.double(rmultinom(1L, s[[j]], p[, j])), double(nrow(p)))
+                if (any(vapply(args, is_rvec, TRUE)) || !is.null(draws))
+                    rvec(m)
+                else
+                    m
+            })
+            if (n == 1L)
+                expected <- expected[[1L]]
+            state_expected <- .Random.seed
+            next_expected <- rmultinom(3L, 10, c(0.2, 0.3, 0.5))
+            set.seed(42)
+            expect_identical(rmultinom_rvec(n, size, prob, n_draw = draws), expected)
+            expect_identical(.Random.seed, state_expected)
+            expect_identical(rmultinom(3L, 10, c(0.2, 0.3, 0.5)), next_expected)
+        }
+    }
+})
+
+test_that("'rmultinom_rvec' validates compact inputs before sampling", {
+    set.seed(42)
+    state_before <- .Random.seed
+    expect_error(rmultinom_rvec(0L, 10, c(2, 3, 5)), "`n` equals 0")
+    for (n in c(1L, 2L)) {
+        expect_error(rmultinom_rvec(n, rvec(10), c(2, 3, 5), n_draw = 3L),
+                     "has 1 draws")
+        expect_error(rmultinom_rvec(n, 10, rvec(c(2, 3, 5)), n_draw = 3L),
+                     "has 1 draws")
+        expect_error(rmultinom_rvec(n, rvec(matrix(10, 1L, 2L)),
+                                   rvec(matrix(1, 3L, 3L))), "Can't align")
+        expect_error(rmultinom_rvec(n, "a", c(2, 3, 5), n_draw = 3L),
+                     "has class.*rvec_chr")
+        expect_error(rmultinom_rvec(n, 10, c("a", "b"), n_draw = 3L),
+                     "has class.*rvec_chr")
+        expect_error(rmultinom_rvec(n, 10, matrix(1, 3L, 1L), n_draw = 3L),
+                     "is not a vector or rvec")
+        expect_error(rmultinom_rvec(n, 10, c(2, 3, 5), n_draw = 0L))
+    }
+    expect_identical(.Random.seed, state_before)
 })
 
 

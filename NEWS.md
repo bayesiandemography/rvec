@@ -88,6 +88,15 @@
   results and random-number generator state. Alignment is checked across
   all parameters, and random output remains double-valued.
 
+- `rmultinom_rvec()` retains compact size and probability inputs and allocates
+  double-valued output directly, reducing temporary memory. The existing
+  loops and order of calls to base R's `rmultinom()` are retained, preserving
+  results and random-number generator state.
+
+- `dmultinom_rvec()` retains compact inputs and avoids copying standard
+  double rvecs when calculating the default size. Results, warnings, and
+  validation are preserved while reducing temporary memory.
+
 ## Bug fixes
 
 - Hypergeometric density, probability, and quantile functions correctly name

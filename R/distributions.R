@@ -1671,8 +1671,15 @@ rlnorm_rvec <- function(n, meanlog = 0, sdlog = 1, n_draw = NULL) {
 dmultinom_rvec <- function(x, size = NULL, prob, log = FALSE) {
     check_flag(log)
     dmultinom <- stats::dmultinom
-    if (is.null(size))
-        size <- sum(x)
+    if (is.null(size)) {
+        ## Summary dispatch concatenates its arguments, copying even one rvec.
+        ## Use the same sum method directly for standard double rvecs only;
+        ## retain dispatch for other types and subclasses.
+        if (identical(class(x), c("rvec_dbl", "rvec", "vctrs_rcrd", "vctrs_vctr")))
+            size <- vec_math.rvec_dbl("sum", x)
+        else
+            size <- sum(x)
+    }
     n_x <- length(x)
     n_p <- length(prob)
     if (n_x == 0L)
@@ -1718,25 +1725,20 @@ dmultinom_rvec <- function(x, size = NULL, prob, log = FALSE) {
             n_draw <- n_draw(prob)
         if (is_rv_x) {
             check_not_rvec_chr(x, nm_arg = "x")
-            x <- rvec_to_rvec_dbl(x, n_draw = n_draw)
             x <- as.matrix(x)
         }
         else
-            x <- matrix(x, nrow = n_x, ncol = n_draw)
+            x <- matrix(x, nrow = n_x, ncol = 1L)
         if (is_rv_s) {
             check_not_rvec_chr(size, nm_arg = "size")
-            size <- rvec_to_rvec_dbl(size, n_draw = n_draw)
             size <- as.vector(as.matrix(size))
         }
-        else
-            size <- rep.int(size, times = n_draw)
         if (is_rv_p) {
             check_not_rvec_chr(prob, nm_arg = "prob")
-            prob <- rvec_to_rvec_dbl(prob, n_draw = n_draw)
             prob <- as.matrix(prob)
         }
         else
-            prob <- matrix(prob, nrow = n_p, ncol = n_draw)
+            prob <- matrix(prob, nrow = n_p, ncol = 1L)
     }
     else {
         n_draw <- 1L
@@ -1745,9 +1747,13 @@ dmultinom_rvec <- function(x, size = NULL, prob, log = FALSE) {
     }
     ans <- double(length = n_draw)
     for (i_draw in seq_len(n_draw)) {
-        val <- tryCatch(dmultinom(x = x[, i_draw],
-                                  size = size[[i_draw]],
-                                  prob = prob[, i_draw],
+        ## Reuse shared inputs without expanding them across draws.
+        i_x <- if (ncol(x) == 1L) 1L else i_draw
+        i_size <- if (length(size) == 1L) 1L else i_draw
+        i_prob <- if (ncol(prob) == 1L) 1L else i_draw
+        val <- tryCatch(dmultinom(x = x[, i_x],
+                                  size = size[[i_size]],
+                                  prob = prob[, i_prob],
                                   log = log),
                         error = function(e) e)
         if (inherits(val, "error"))
@@ -1790,8 +1796,25 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
     }
     else {
         args <- list(size = size, prob = prob)
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (is.atomic(arg) && is.vector(arg)) {
+                ## Retain one column; the loop reuses it for every draw.
+                m <- matrix(arg, nrow = length(arg), ncol = 1L)
+                rownames(m) <- names(arg)
+                args[[nm]] <- rvec(m)
+            }
+            else
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
         size <- args[["size"]]
         prob <- args[["prob"]]
         is_rv_s <- TRUE
@@ -1799,25 +1822,23 @@ rmultinom_rvec <- function(n, size, prob, n_draw = NULL) {
     }
     if (is_rv_s) {
         check_not_rvec_chr(size, nm_arg = "size")
-        size <- rvec_to_rvec_dbl(size, n_draw = n_draw)
         size <- as.vector(as.matrix(size))
     }
-    else
-        size <- rep.int(size, times = n_draw)
     if (is_rv_p) {
         check_not_rvec_chr(prob, nm_arg = "prob")
-        prob <- rvec_to_rvec_dbl(prob, n_draw = n_draw)
         prob <- as.matrix(prob)
     }
     else
-        prob <- matrix(prob, nrow = n_p, ncol = n_draw)
+        prob <- matrix(prob, nrow = n_p, ncol = 1L)
     ans <- vector(mode = "list", length = n)
     for (i_ans in seq_along(ans)) {
-        m <- matrix(nrow = n_p, ncol = n_draw)
+        m <- matrix(0, nrow = n_p, ncol = n_draw)
         for (i_draw in seq_len(n_draw)) {
+            i_size <- if (length(size) == 1L) 1L else i_draw
+            i_prob <- if (ncol(prob) == 1L) 1L else i_draw
             val <- tryCatch(rmultinom(n = 1L,
-                                      size = size[[i_draw]],
-                                      prob = prob[, i_draw]),
+                                      size = size[[i_size]],
+                                      prob = prob[, i_prob]),
                             error = function(e) e)
             if (inherits(val, "error"))
                 cli::cli_abort(c("Problem with call to function {.fun rmultinom}:",
