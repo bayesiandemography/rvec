@@ -69,6 +69,12 @@
   distinct from explicitly supplied zero, and noncentral draws still
   use base R's calculation.
 
+- `df_rvec()`, `pf_rvec()`, `qf_rvec()`, and `rf_rvec()` use compact
+  arguments and avoid unnecessary matrix copies, preserving results and
+  random-number generator state. Single-draw parameters are passed as
+  ordinary vectors so base R's noncentral F calculation can recycle them
+  across draws. Omitted `ncp` remains distinct from explicitly supplied zero.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

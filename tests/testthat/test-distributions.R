@@ -784,6 +784,94 @@ test_that("'rf_rvec' works with valid input - n_draw supplied, ncp not supplied"
 })
 
 
+test_that("F functions preserve alignment and omitted ncp", {
+    for (kind in c("d", "p", "q")) {
+        fun <- get(paste0(kind, "f_rvec"))
+        base_fun <- get(paste0(kind, "f"), envir = asNamespace("stats"))
+        for (log in c(FALSE, TRUE)) {
+            values <- c(0, 0.1, 0.3, 0.7, 0.9, 1)
+            if (kind == "q" && log)
+                values <- log(values)
+            x <- matrix(values, nrow = 2L)
+            cases <- list(list(x, matrix(c(0.5, 3), ncol = 1L), matrix(c(1, 2, 3), nrow = 1L)),
+                          list(x[, 1L, drop = FALSE], matrix(1:6, 2L), matrix(2)),
+                          list(x[1L, , drop = FALSE], matrix(2), matrix(1:6, 2L)))
+            for (args in cases) {
+                full <- lapply(args, function(m)
+                    m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = 3L), drop = FALSE])
+                for (extra in list(list(), list(ncp = 0), list(ncp = c(0, 2)))) {
+                    for (lower in c(FALSE, TRUE)) {
+                        flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                        expected <- rvec(do.call(base_fun, c(full, extra, flags)))
+                        expect_identical(do.call(fun, c(lapply(args, rvec), extra, flags)), expected)
+                    }
+                }
+            }
+        }
+    }
+})
+
+test_that("'rf_rvec' preserves draw order and RNG state with and without ncp", {
+    parameters <- list(c(0.5, 3), rvec(c(0.5, 3)),
+                       rvec(matrix(c(0.5, 1, 3), nrow = 1L)),
+                       rvec(matrix(c(0.5, 1, 2, 3, 4, 5), nrow = 2L)))
+    for (df1 in parameters) for (df2 in parameters) {
+        for (n_draw in list(NULL, 3L)) {
+            args <- list(df1, df2)
+            if (!is.null(n_draw) && any(vapply(args, function(x) is_rvec(x) && n_draw(x) != n_draw, TRUE)))
+                next
+            draws <- if (!is.null(n_draw)) n_draw else max(vapply(args, function(x) if (is_rvec(x)) n_draw(x) else 1L, 1L))
+            full <- lapply(args, function(x) {
+                m <- if (is_rvec(x)) as.matrix(x) else matrix(x, ncol = 1L)
+                m[rep(seq_len(nrow(m)), length.out = 2L),
+                  rep(seq_len(ncol(m)), length.out = draws), drop = FALSE]
+            })
+            for (extra in list(list(), list(ncp = 0), list(ncp = c(0, 2)))) {
+                set.seed(42)
+                expected <- as.double(do.call(rf, c(list(n = 2L * draws), full, extra)))
+                if (any(vapply(args, is_rvec, TRUE)) || !is.null(n_draw))
+                    expected <- rvec(matrix(expected, nrow = 2L))
+                state_expected <- .Random.seed
+                next_expected <- rf(5L, 2, 3)
+                set.seed(42)
+                expect_identical(do.call(rf_rvec, c(list(n = 2L, df1 = df1, df2 = df2, n_draw = n_draw), extra)), expected)
+                expect_identical(.Random.seed, state_expected)
+                expect_identical(rf(5L, 2, 3), next_expected)
+            }
+        }
+    }
+})
+
+test_that("F functions preserve empty outputs and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    set.seed(42)
+    state_before <- .Random.seed
+    for (extra in list(list(), list(ncp = 0), list(ncp = 2))) {
+        for (fun in list(df_rvec, pf_rvec, qf_rvec)) {
+            expect_identical(do.call(fun, c(list(numeric(), 2, 3), extra)), numeric())
+            expect_identical(do.call(fun, c(list(empty, 2, 3), extra)), empty)
+            expect_identical(do.call(fun, c(list(0.5, empty, 3), extra)), empty)
+            expect_identical(do.call(fun, c(list(0.5, 2, empty), extra)), empty)
+            expect_warning(do.call(fun, c(list(NA_real_, 2, 3), extra)), "NAs produced")
+            expect_warning(do.call(fun, c(list(0.5, -1, 3), extra)), "NAs produced")
+            expect_error(do.call(fun, c(list(rvec(0.5), rvec(matrix(1:4, 2L)), rvec(matrix(1:6, 2L))), extra)), "Can't align")
+        }
+        expect_identical(do.call(rf_rvec, c(list(0L, 2, 3), extra)), numeric())
+        expect_identical(do.call(rf_rvec, c(list(0L, 2, 3, n_draw = 3L), extra)), empty)
+        expect_identical(do.call(rf_rvec, c(list(0L, empty, 3), extra)), empty)
+        expect_error(do.call(rf_rvec, c(list(2L, rvec(1:2), 3, n_draw = 3L), extra)), "has 1 draws")
+        expect_error(do.call(rf_rvec, c(list(2L, rvec(matrix(1:4, 2L)), rvec(matrix(1:6, 2L))), extra)), "Can't align")
+        expect_error(do.call(rf_rvec, c(list(2L, "a", 3, n_draw = 3L), extra)), "must not be a character vector")
+    }
+    for (fun in list(df_rvec, pf_rvec, qf_rvec, rf_rvec)) {
+        for (ncp in list(-1, NA_real_, "a", rvec(1)))
+            expect_error(fun(2L, 2, 3, ncp = ncp))
+    }
+    expect_identical(.Random.seed, state_before)
+})
+
+
 ## 'gamma' ---------------------------------------------------------------------
 
 test_that("'dgamma_rvec' works with valid input", {

@@ -859,18 +859,18 @@ df_rvec <- function(x, df1, df2, ncp = 0, log = FALSE) {
     df2 <- args[[3L]]
     ncp <- args[[4L]]
     if (ncp_not_supplied)
-        dist_rvec_3(fun = df,
-                    arg1 = x,
-                    arg2 = df1,
-                    arg3 = df2,
-                    log = log)
+        dist_rvec_3_compact(fun = df,
+                            arg1 = x,
+                            arg2 = df1,
+                            arg3 = df2,
+                            log = log)
     else
-        dist_rvec_3(fun = df,
-                    arg1 = x,
-                    arg2 = df1,
-                    arg3 = df2,
-                    ncp = ncp,
-                    log = log)
+        dist_rvec_3_compact(fun = df,
+                            arg1 = x,
+                            arg2 = df1,
+                            arg3 = df2,
+                            ncp = ncp,
+                            log = log)
 }
 
 ## HAS_TESTS
@@ -888,20 +888,20 @@ pf_rvec <- function(q, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     df2 <- args[[3L]]
     ncp <- args[[4L]]
     if (ncp_not_supplied)
-        dist_rvec_3(fun = pf,
-                    arg1 = q,
-                    arg2 = df1,
-                    arg3 = df2,
-                    lower.tail = lower.tail,
-                    log.p = log.p)
+        dist_rvec_3_compact(fun = pf,
+                            arg1 = q,
+                            arg2 = df1,
+                            arg3 = df2,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
     else
-        dist_rvec_3(fun = pf,
-                    arg1 = q,
-                    arg2 = df1,
-                    arg3 = df2,
-                    ncp = ncp,
-                    lower.tail = lower.tail,
-                    log.p = log.p)        
+        dist_rvec_3_compact(fun = pf,
+                            arg1 = q,
+                            arg2 = df1,
+                            arg3 = df2,
+                            ncp = ncp,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -919,20 +919,20 @@ qf_rvec <- function(p, df1, df2, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     df2 <- args[[3L]]
     ncp <- args[[4L]]
     if (ncp_not_supplied)
-        dist_rvec_3(fun = qf,
-                    arg1 = p,
-                    arg2 = df1,
-                    arg3 = df2,
-                    lower.tail = lower.tail,
-                    log.p = log.p)
+        dist_rvec_3_compact(fun = qf,
+                            arg1 = p,
+                            arg2 = df1,
+                            arg3 = df2,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
     else
-        dist_rvec_3(fun = qf,
-                    arg1 = p,
-                    arg2 = df1,
-                    arg3 = df2,
-                    ncp = ncp,
-                    lower.tail = lower.tail,
-                    log.p = log.p)        
+        dist_rvec_3_compact(fun = qf,
+                            arg1 = p,
+                            arg2 = df1,
+                            arg3 = df2,
+                            ncp = ncp,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -946,23 +946,46 @@ rf_rvec <- function(n, df1, df2, ncp = 0, n_draw = NULL) {
     df2 <- vec_recycle(df2, size = n)
     ncp <- vec_recycle(ncp, size = n)
     args <- list(df1 = df1, df2 = df2)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    df1 <- args[["df1"]]
-    df2 <- args[["df2"]]
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
+    }
+    else if (all(is_rv))
+        n_draw <- n_draw_common(df1, df2, x_arg = "df1", y_arg = "df2")
+    else if (is_rv[["df1"]])
+        n_draw <- n_draw(df1)
+    else if (is_rv[["df2"]])
+        n_draw <- n_draw(df2)
+    # Base R distinguishes omitted ncp from an explicitly supplied zero.
     if (ncp_not_supplied)
-        dist_rvec_2(fun = rf,
-                    arg1 = df1,
-                    arg2 = df2,
-                    n = n)
+        rdist_rvec_2(fun = rf,
+                     arg1 = df1,
+                     arg2 = df2,
+                     n = n,
+                     n_draw = n_draw)
     else
-        dist_rvec_2(fun = rf,
-                    arg1 = df1, 
-                    arg2 = df2,
-                    n = n,
-                    ncp = ncp)
+        rdist_rvec_2(fun = rf,
+                     arg1 = df1,
+                     arg2 = df2,
+                     n = n,
+                     n_draw = n_draw,
+                     ncp = ncp)
 }
 
 
@@ -2900,13 +2923,19 @@ rdist_rvec_2 <- function(fun, arg1, arg2, n, n_draw, ...) {
   nm_fun <- rlang::as_name(rlang::enquo(fun))
   nm_arg1 <- rlang::as_name(rlang::enquo(arg1))
   nm_arg2 <- rlang::as_name(rlang::enquo(arg2))
+  ## Base R arithmetic (for example in noncentral rf) needs ordinary
+  ## vectors to recycle single-draw parameters across multiple draws.
   if (is_rvec(arg1)) {
     check_not_rvec_chr(arg1, nm_arg = nm_arg1)
     arg1 <- as.matrix(arg1)
+    if (ncol(arg1) == 1L)
+      dim(arg1) <- NULL
   }
   if (is_rvec(arg2)) {
     check_not_rvec_chr(arg2, nm_arg = nm_arg2)
     arg2 <- as.matrix(arg2)
+    if (ncol(arg2) == 1L)
+      dim(arg2) <- NULL
   }
   n_values <- if (is.null(n_draw)) n else n * n_draw
   ans <- tryCatch(
