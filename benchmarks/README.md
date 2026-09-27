@@ -62,3 +62,23 @@ excluded from the package build.
 
 A recorded before/after run is available in `results/`, including its source
 revisions and session information.
+
+## Binary arithmetic
+
+`arithmetic.R` measures one addition in a fresh process. It accepts the package
+source directory, layout (`full`, `single`, `ordinary`, or `row`), operand type
+(`double`, `integer`, or `logical`), operand order (`forward` or `reverse`), and
+output CSV path. Every case produces 1,000 observations by 1,000 draws. `row`
+uses one observation with 1,000 draws and tests observation recycling.
+
+```sh
+Rscript --vanilla benchmarks/arithmetic.R . single double forward /tmp/arith-after.csv
+```
+
+The CSV records the same memory and timing metrics as the distribution
+benchmark. A companion `.session.txt` records dependencies and a checksum of
+`R/vec_arith.R`. Inputs are created before measurement. See the caveats above
+about peak heap growth and timings. The pre-arithmetic-refactor revision is
+`0f1695e`; export it to another directory and supply that directory as the first
+argument to compare it with the working tree. Run all layouts/types/orders in
+separate processes, and retain the source revisions with the results.

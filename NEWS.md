@@ -1,3 +1,10 @@
+# rvec 1.0.4
+
+## Memory use
+
+- Binary arithmetic avoids unnecessary input and output matrix copies and
+  retains single-draw operands in compact form. Observation recycling,
+  result types, names, and integer-overflow behavior are preserved.
 
 # rvec 1.0.3
 

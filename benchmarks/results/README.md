@@ -15,3 +15,12 @@ At this scale, gamma and negative binomial cases show clear reductions, while
 multinomial peak heap growth changes little. Larger multinomial cases expose
 reductions more clearly, as explained in the parent README. R's garbage
 collector makes peak growth sensitive to input size and the heap state.
+
+## Arithmetic comparison
+
+`arithmetic.csv` contains 48 measurements: before and after for four layouts,
+three numeric types, and both operand orders. Before uses `0f1695e`; after uses
+the uncommitted binary-arithmetic implementation on `arith-refactor` based on
+that revision. Companion arithmetic session files record source checksums and
+dependencies. The benchmark cases ran sequentially, alongside package checks;
+timings are indicative only. All cases completed successfully.

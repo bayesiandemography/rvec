@@ -5,7 +5,8 @@
 Work branch: `arith-refactor`, created from `dev` at `31b966f`.
 The distribution refactor is complete. This document records the subsequent
 read-only review of `R/vec_arith.R` and a temporary binary-arithmetic experiment.
-No arithmetic package code has been changed yet.
+At the time of the initial plan, no arithmetic package code had been changed.
+See the implementation record below for current status.
 
 The proposed scope is binary arithmetic between double, integer, and logical
 rvecs, and between those rvecs and ordinary double, integer, or logical vectors.
@@ -161,3 +162,26 @@ improvements and any explicitly agreed behavior changes.
 Review the diff and benchmark results before committing. Keep implementation
 work on `arith-refactor`; merge or otherwise integrate into `dev` only when
 requested. No push, merge, or release is part of the current planning step.
+
+
+## Implementation record
+
+The binary refactor is implemented on `arith-refactor` and remains uncommitted.
+All binary S3 entry points delegate to a shared private helper. Standard numeric
+rvecs use compact inputs; subclasses retain conversion dispatch. Unary methods
+are unchanged. Regression tests cover type combinations, operators, recycling,
+names, empty results, errors, input immutability, and subclass conversion.
+
+- All 5,726 baseline comparisons match, including error classes, messages,
+  warnings, result values, and attributes.
+- The full test suite passes.
+- `R CMD check` with `--no-manual` reports zero errors, zero warnings, and one
+  environment-related note: remote current-time verification was unavailable.
+- All 48 before/after arithmetic benchmark runs completed. For double addition,
+  peak vector-heap growth fell from 48.1 to 8.1 MB for full inputs, 40.1 to
+  8.0 MB for a single-draw operand, 24.1 to 8.1 MB for an ordinary vector, and
+  40.1 to 16.1 MB for a one-observation rvec. Output size was about 8 MB.
+
+The benchmark script, results, and session information are saved alongside the
+distribution benchmarks. NEWS describes the change. The work is ready for
+review; nothing has been merged or pushed.
