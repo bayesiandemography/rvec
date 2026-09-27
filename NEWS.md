@@ -78,8 +78,10 @@
 - `dnbinom_rvec()`, `pnbinom_rvec()`, `qnbinom_rvec()`, and `rnbinom_rvec()`
   use compact arguments and avoid unnecessary matrix copies, preserving
   results, random-number generator state, and double-valued random output.
-  The existing conversion from `mu` to `prob` is retained; this calculation
-  can still require substantial temporary memory when parameters are rvecs.
+  Conversion from `mu` to `prob` uses the same arithmetic on the underlying
+  numeric data, avoiding intermediate rvec construction and expansion across
+  draws. This further reduces temporary memory when parameters are rvecs,
+  without changing the formula or switching base R parameterizations.
 
 ## Bug fixes
 

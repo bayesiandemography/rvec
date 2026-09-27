@@ -2944,6 +2944,49 @@ test_that("Weibull functions preserve empty outputs and validation", {
 })
 
 
+test_that("'nbinom_prob_from_mu' preserves arithmetic and warnings", {
+    parameters <- list(c(0, 1), c(Inf, -Inf), c(NA_real_, NaN),
+                       c(1e-300, 1e300), c(-1, 1), c(TRUE, FALSE),
+                       c(2147483647L, 1L), rvec(c(2147483647L, 1L)),
+                       rvec(c(TRUE, FALSE)), rvec(c(Inf, NaN)),
+                       rvec(matrix(c(0, 1, Inf, NaN, 1e300, 1e-300), 2L)),
+                       rvec(matrix(1:6, 2L)), rvec(matrix(c(0.1, 0.5, 0.9), 1L)),
+                       rvec(c(0.1, 0.5)))
+    capture <- function(fun, size, mu) {
+        warnings <- character()
+        value <- withCallingHandlers(fun(size, mu), warning = function(w) {
+            warnings <<- c(warnings, conditionMessage(w))
+            invokeRestart("muffleWarning")
+        })
+        list(value = value, warnings = warnings)
+    }
+    for (size in parameters) for (mu in parameters) {
+        size <- vec_recycle(size, size = 2L)
+        mu <- vec_recycle(mu, size = 2L)
+        expected <- capture(function(size, mu) size / (size + mu), size, mu)
+        expect_identical(capture(nbinom_prob_from_mu, size, mu), expected)
+    }
+})
+
+test_that("'nbinom_prob_from_mu' preserves empty results and invalid-input errors", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    expect_identical(nbinom_prob_from_mu(empty, numeric()), empty)
+    expect_identical(nbinom_prob_from_mu(numeric(), empty), empty)
+    expect_identical(nbinom_prob_from_mu(numeric(), numeric()), numeric())
+    inputs <- list(list(rvec(matrix(1:4, 2L)), rvec(matrix(1:6, 2L))),
+                   list(rvec(c("a", "b")), c(1, 2)),
+                   list(c(1, 2), rvec(c("a", "b"))),
+                   list(rvec(1:2), c("a", "b")))
+    error_message <- function(fun, args)
+        tryCatch(do.call(fun, args), error = function(e) conditionMessage(e))
+    for (args in inputs) {
+        expected <- error_message(function(size, mu) size / (size + mu), args)
+        expect_type(expected, "character")
+        expect_identical(error_message(nbinom_prob_from_mu, args), expected)
+    }
+})
+
+
 ## 'dist_rvec_1' --------------------------------------------------------------
 
 test_that("'dist_rvec_1' works with valid rvec input", {

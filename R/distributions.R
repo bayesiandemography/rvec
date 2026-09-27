@@ -1890,7 +1890,7 @@ dnbinom_rvec <- function(x, size, prob, mu, log = FALSE) {
         x <- args[[1]]
         size <- args[[2]]
         mu <- args[[3]]
-        prob <- size / (size + mu)
+        prob <- nbinom_prob_from_mu(size, mu)
     }
     dist_rvec_3_compact(fun = dnbinom,
                         arg1 = x,
@@ -1923,7 +1923,7 @@ pnbinom_rvec <- function(q, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
         q <- args[[1]]
         size <- args[[2]]
         mu <- args[[3]]
-        prob <- size / (size + mu)
+        prob <- nbinom_prob_from_mu(size, mu)
     }
     dist_rvec_3_compact(fun = pnbinom,
                         arg1 = q,
@@ -1957,7 +1957,7 @@ qnbinom_rvec <- function(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
         p <- args[[1]]
         size <- args[[2]]
         mu <- args[[3]]
-        prob <- size / (size + mu)
+        prob <- nbinom_prob_from_mu(size, mu)
     }
     dist_rvec_3_compact(fun = qnbinom,
                         arg1 = p,
@@ -2013,7 +2013,7 @@ rnbinom_rvec <- function(n, size, prob, mu, n_draw = NULL) {
     else if (any(is_rv))
         n_draw <- n_draw(args[[which(is_rv)]])
     if (!has_prob)
-        prob <- size / (size + mu)
+        prob <- nbinom_prob_from_mu(size, mu)
     rdist_rvec_2(fun = rnbinom,
                  arg1 = size,
                  arg2 = prob,
@@ -2755,6 +2755,46 @@ rweibull_rvec <- function(n, shape, scale = 1, n_draw = NULL) {
 
 
 ## Helper functions -----------------------------------------------------------
+
+## HAS_TESTS
+#' Convert negative-binomial means to probabilities without expanding draws
+#'
+#' Arguments have already been recycled to a common observation count.
+#' Keep the same arithmetic as size / (size + mu), but avoid constructing
+#' intermediate rvecs. Single-column parameters recycle as ordinary vectors.
+#'
+#' @noRd
+nbinom_prob_from_mu <- function(size, mu) {
+  is_rv_size <- is_rvec(size)
+  is_rv_mu <- is_rvec(mu)
+  if (!is_rv_size && !is_rv_mu)
+    return(size / (size + mu))
+  numeric_size <- if (is_rv_size) !inherits(size, "rvec_chr") else is.numeric(size) || is.logical(size)
+  numeric_mu <- if (is_rv_mu) !inherits(mu, "rvec_chr") else is.numeric(mu) || is.logical(mu)
+  ## Preserve existing errors for unsupported argument types.
+  if (!numeric_size || !numeric_mu)
+    return(size / (size + mu))
+  if (is_rv_size && is_rv_mu)
+    n_draw <- n_draw_common(size, mu, x_arg = "x", y_arg = "y")
+  else if (is_rv_size)
+    n_draw <- n_draw(size)
+  else
+    n_draw <- n_draw(mu)
+  n <- length(size)
+  if (is_rv_size) {
+    size <- as.matrix(size)
+    if (ncol(size) == 1L)
+      dim(size) <- NULL
+  }
+  if (is_rv_mu) {
+    mu <- as.matrix(mu)
+    if (ncol(mu) == 1L)
+      dim(mu) <- NULL
+  }
+  prob <- size / (size + mu)
+  dim(prob) <- c(n, n_draw)
+  rvec(prob)
+}
 
 ## HAS_TESTS
 #' Apply a two-argument distribution function without expanding draws
