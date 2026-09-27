@@ -2016,6 +2016,94 @@ test_that("'rnbinom_rvec' throws correct error if neighter prob nor mu supplied"
 })
 
 
+test_that("Negative-binomial functions preserve alignment and mu conversion", {
+    for (kind in c("d", "p", "q")) {
+        fun <- get(paste0(kind, "nbinom_rvec"))
+        base_fun <- get(paste0(kind, "nbinom"), envir = asNamespace("stats"))
+        for (log in c(FALSE, TRUE)) {
+            values <- if (kind == "q") c(0, 0.1, 0.3, 0.7, 0.9, 1) else c(-1, 0, 1, 3, 10, Inf)
+            if (kind == "q" && log)
+                values <- log(values)
+            x <- matrix(values, nrow = 2L)
+            cases <- list(list(x, matrix(c(0.5, 3), ncol = 1L), matrix(c(0.1, 0.5, 0.9), nrow = 1L)),
+                          list(x[, 1L, drop = FALSE], matrix(1:6, 2L), matrix(0.3)),
+                          list(x[1L, , drop = FALSE], matrix(2), matrix(1:6 / 7, 2L)))
+            for (args in cases) {
+                full <- lapply(args, function(m)
+                    m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = 3L), drop = FALSE])
+                for (param in c("prob", "mu")) for (lower in c(FALSE, TRUE)) {
+                    flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                    prob <- if (param == "prob") full[[3L]] else full[[2L]] / (full[[2L]] + full[[3L]])
+                    expected <- rvec(do.call(base_fun, c(list(full[[1L]], full[[2L]], prob), flags)))
+                    inputs <- list(rvec(args[[1L]]), size = rvec(args[[2L]]))
+                    inputs[[param]] <- rvec(args[[3L]])
+                    expect_identical(do.call(fun, c(inputs, flags)), expected)
+                }
+            }
+        }
+    }
+})
+
+test_that("'rnbinom_rvec' preserves draws and RNG state with prob and mu", {
+    parameters <- list(c(0.1, 0.8), rvec(c(0.1, 0.8)),
+                       rvec(matrix(c(0.1, 0.5, 0.8), nrow = 1L)),
+                       rvec(matrix(1:6 / 7, nrow = 2L)))
+    for (size in parameters) for (param in parameters) for (nm in c("prob", "mu")) {
+        for (n_draw in list(NULL, 3L)) {
+            args <- list(size, param)
+            if (!is.null(n_draw) && any(vapply(args, function(x) is_rvec(x) && n_draw(x) != n_draw, TRUE)))
+                next
+            draws <- if (!is.null(n_draw)) n_draw else max(vapply(args, function(x) if (is_rvec(x)) n_draw(x) else 1L, 1L))
+            full <- lapply(args, function(x) {
+                m <- if (is_rvec(x)) as.matrix(x) else matrix(x, ncol = 1L)
+                m[rep(seq_len(nrow(m)), length.out = 2L),
+                  rep(seq_len(ncol(m)), length.out = draws), drop = FALSE]
+            })
+            prob <- if (nm == "prob") full[[2L]] else full[[1L]] / (full[[1L]] + full[[2L]])
+            set.seed(42)
+            expected <- as.double(rnbinom(2L * draws, full[[1L]], prob))
+            if (any(vapply(args, is_rvec, TRUE)) || !is.null(n_draw))
+                expected <- rvec(matrix(expected, nrow = 2L))
+            state_expected <- .Random.seed
+            next_expected <- rnbinom(5L, 2, 0.3)
+            inputs <- list(n = 2L, size = size, n_draw = n_draw)
+            inputs[[nm]] <- param
+            set.seed(42)
+            expect_identical(do.call(rnbinom_rvec, inputs), expected)
+            expect_identical(.Random.seed, state_expected)
+            expect_identical(rnbinom(5L, 2, 0.3), next_expected)
+        }
+    }
+})
+
+test_that("Negative-binomial functions preserve empty outputs and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    set.seed(42)
+    state_before <- .Random.seed
+    for (nm in c("prob", "mu")) {
+        extra <- setNames(list(0.3), nm)
+        for (fun in list(dnbinom_rvec, pnbinom_rvec, qnbinom_rvec)) {
+            expect_identical(do.call(fun, c(list(numeric(), size = 2), extra)), numeric())
+            expect_identical(do.call(fun, c(list(empty, size = 2), extra)), empty)
+            expect_identical(do.call(fun, c(list(0.5, size = empty), extra)), empty)
+            expect_warning(do.call(fun, c(list(NA_real_, size = 2), extra)), "NAs produced")
+            expect_error(do.call(fun, c(list(1:2, size = 1:3), extra)), "Can't recycle")
+        }
+        expect_identical(do.call(rnbinom_rvec, c(list(0L, size = 2), extra)), numeric())
+        expect_identical(do.call(rnbinom_rvec, c(list(0L, size = 2, n_draw = 3L), extra)), empty)
+        expect_identical(do.call(rnbinom_rvec, c(list(0L, size = empty), extra)), empty)
+        expect_error(do.call(rnbinom_rvec, c(list(2L, size = rvec(1:2), n_draw = 3L), extra)), "has 1 draws")
+        expect_error(do.call(rnbinom_rvec, c(list(2L, size = "a", n_draw = 3L), extra)), "must not be a character vector")
+    }
+    for (fun in list(dnbinom_rvec, pnbinom_rvec, qnbinom_rvec, rnbinom_rvec)) {
+        expect_error(fun(2L, size = 2), "No value supplied")
+        expect_error(fun(2L, size = 2, prob = 0.3, mu = 2), "Value supplied")
+    }
+    expect_identical(.Random.seed, state_before)
+})
+
+
 ## 'norm' ---------------------------------------------------------------------
 
 test_that("'dnorm_rvec' works with valid input", {

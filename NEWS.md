@@ -75,6 +75,12 @@
   ordinary vectors so base R's noncentral F calculation can recycle them
   across draws. Omitted `ncp` remains distinct from explicitly supplied zero.
 
+- `dnbinom_rvec()`, `pnbinom_rvec()`, `qnbinom_rvec()`, and `rnbinom_rvec()`
+  use compact arguments and avoid unnecessary matrix copies, preserving
+  results, random-number generator state, and double-valued random output.
+  The existing conversion from `mu` to `prob` is retained; this calculation
+  can still require substantial temporary memory when parameters are rvecs.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

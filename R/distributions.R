@@ -1892,11 +1892,11 @@ dnbinom_rvec <- function(x, size, prob, mu, log = FALSE) {
         mu <- args[[3]]
         prob <- size / (size + mu)
     }
-    dist_rvec_3(fun = dnbinom,
-                arg1 = x,
-                arg2 = size,
-                arg3 = prob,
-                log = log)
+    dist_rvec_3_compact(fun = dnbinom,
+                        arg1 = x,
+                        arg2 = size,
+                        arg3 = prob,
+                        log = log)
 }
 
 ## HAS_TESTS
@@ -1925,12 +1925,12 @@ pnbinom_rvec <- function(q, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
         mu <- args[[3]]
         prob <- size / (size + mu)
     }
-    dist_rvec_3(fun = pnbinom,
-                arg1 = q,
-                arg2 = size,
-                arg3 = prob,
-                lower.tail = lower.tail,
-                log.p = log.p)
+    dist_rvec_3_compact(fun = pnbinom,
+                        arg1 = q,
+                        arg2 = size,
+                        arg3 = prob,
+                        lower.tail = lower.tail,
+                        log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -1959,12 +1959,12 @@ qnbinom_rvec <- function(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE) {
         mu <- args[[3]]
         prob <- size / (size + mu)
     }
-    dist_rvec_3(fun = qnbinom,
-                arg1 = p,
-                arg2 = size,
-                arg3 = prob,
-                lower.tail = lower.tail,
-                log.p = log.p)
+    dist_rvec_3_compact(fun = qnbinom,
+                        arg1 = p,
+                        arg2 = size,
+                        arg3 = prob,
+                        lower.tail = lower.tail,
+                        log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -1987,21 +1987,38 @@ rnbinom_rvec <- function(n, size, prob, mu, n_draw = NULL) {
         mu <- vec_recycle(mu, size = n)
         args <- list(size = size, mu = mu)
     }
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    size <- args[["size"]]
-    if (has_prob)
-        prob <- args[["prob"]]
-    else {
-        mu <- args[["mu"]]
-        prob <- size / (size + mu)
+    is_rv <- vapply(args, is_rvec, TRUE)
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        for (nm in names(args)) {
+            arg <- args[[nm]]
+            if (is_rvec(arg)) {
+                n_draw_arg <- n_draw(arg)
+                if (n_draw_arg != n_draw)
+                    cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg {nm}}",
+                                         "has {n_draw_arg} draws."))
+            }
+            else if (!is.atomic(arg) || !is.vector(arg))
+                cli::cli_abort(c("{.arg {nm}} is not a vector or rvec.",
+                                 i = "{.arg {nm}} has class {.cls {class(arg)}}."))
+        }
+        for (nm in names(args)) {
+            if (is.character(args[[nm]]) && !is_rvec(args[[nm]]))
+                cli::cli_abort("{.arg {nm}} must not be a character vector.")
+        }
     }
-    dist_rvec_2(fun = rnbinom,
-                arg1 = size,
-                arg2 = prob,
-                n = n)
+    else if (all(is_rv))
+        n_draw <- n_draw_common(args[[1L]], args[[2L]],
+                                x_arg = "size", y_arg = names(args)[[2L]])
+    else if (any(is_rv))
+        n_draw <- n_draw(args[[which(is_rv)]])
+    if (!has_prob)
+        prob <- size / (size + mu)
+    rdist_rvec_2(fun = rnbinom,
+                 arg1 = size,
+                 arg2 = prob,
+                 n = n,
+                 n_draw = n_draw)
 }
 
 
