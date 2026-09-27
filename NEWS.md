@@ -52,6 +52,11 @@
   use compact arguments and avoid unnecessary matrix copies, preserving
   results and random-number generator state.
 
+- `dchisq_rvec()`, `pchisq_rvec()`, `qchisq_rvec()`, and `rchisq_rvec()`
+  use compact arguments and avoid unnecessary matrix copies, preserving
+  results and random-number generator state. The distinction between
+  omitted `ncp` and explicitly supplied zero is retained.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

@@ -544,16 +544,16 @@ dchisq_rvec <- function(x, df, ncp = 0, log = FALSE) {
     df <- args[[2L]]
     ncp <- args[[3L]]
     if (ncp_not_supplied)
-        dist_rvec_2(fun = dchisq,
-                    arg1 = x,
-                    arg2 = df,
-                    log = log)
+        dist_rvec_2_compact(fun = dchisq,
+                            arg1 = x,
+                            arg2 = df,
+                            log = log)
     else
-        dist_rvec_2(fun = dchisq,
-                    arg1 = x,
-                    arg2 = df,
-                    ncp = ncp,
-                    log = log)
+        dist_rvec_2_compact(fun = dchisq,
+                            arg1 = x,
+                            arg2 = df,
+                            ncp = ncp,
+                            log = log)
 }
 
 ## HAS_TESTS
@@ -570,18 +570,18 @@ pchisq_rvec <- function(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     df <- args[[2L]]
     ncp <- args[[3L]]
     if (ncp_not_supplied)
-        dist_rvec_2(fun = pchisq,
-                    arg1 = q,
-                    arg2 = df,
-                    lower.tail = lower.tail,
-                    log.p = log.p)
+        dist_rvec_2_compact(fun = pchisq,
+                            arg1 = q,
+                            arg2 = df,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
     else
-        dist_rvec_2(fun = pchisq,
-                    arg1 = q,
-                    arg2 = df,
-                    ncp = ncp,
-                    lower.tail = lower.tail,
-                    log.p = log.p)
+        dist_rvec_2_compact(fun = pchisq,
+                            arg1 = q,
+                            arg2 = df,
+                            ncp = ncp,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -598,18 +598,18 @@ qchisq_rvec <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE) {
     df <- args[[2L]]
     ncp <- args[[3L]]
     if (ncp_not_supplied)
-        dist_rvec_2(fun = qchisq,
-                    arg1 = p,
-                    arg2 = df,
-                    lower.tail = lower.tail,
-                    log.p = log.p)
+        dist_rvec_2_compact(fun = qchisq,
+                            arg1 = p,
+                            arg2 = df,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
     else
-        dist_rvec_2(fun = qchisq,
-                    arg1 = p,
-                    arg2 = df,
-                    ncp = ncp,
-                    lower.tail = lower.tail,
-                    log.p = log.p)
+        dist_rvec_2_compact(fun = qchisq,
+                            arg1 = p,
+                            arg2 = df,
+                            ncp = ncp,
+                            lower.tail = lower.tail,
+                            log.p = log.p)
 }
 
 ## HAS_TESTS
@@ -621,21 +621,32 @@ rchisq_rvec <- function(n, df, ncp = 0, n_draw = NULL) {
     rchisq <- stats::rchisq
     df <- vec_recycle(df, size = n)
     ncp <- vec_recycle(ncp, size = n)
-    args <- list(df = df)
-    if (!is.null(n_draw))
-        args <- promote_args_to_rvec(args = args,
-                                     n_draw = n_draw)
-    n <- n_rdist(n = n, args = args)
-    df <- args[["df"]]
+    if (!is.null(n_draw)) {
+        check_n_draw(n_draw)
+        if (is_rvec(df)) {
+            n_draw_arg <- n_draw(df)
+            if (n_draw_arg != n_draw)
+                cli::cli_abort(paste("{.arg n_draw} is {n_draw} but {.arg df}",
+                                     "has {n_draw_arg} draws."))
+        }
+        else if (!is.atomic(df) || !is.vector(df))
+            cli::cli_abort(c("{.arg df} is not a vector or rvec.",
+                             i = "{.arg df} has class {.cls {class(df)}}."))
+    }
+    else if (is_rvec(df))
+        n_draw <- n_draw(df)
+    # Base R distinguishes omitted ncp from an explicitly supplied zero.
     if (ncp_not_supplied)
-        dist_rvec_1(fun = rchisq,
-                    arg = df,
-                    n = n)
+        rdist_rvec_1(fun = rchisq,
+                     arg = df,
+                     n = n,
+                     n_draw = n_draw)
     else
-        dist_rvec_1(fun = rchisq,
-                    arg = df,
-                    ncp = ncp,
-                    n = n)
+        rdist_rvec_2(fun = rchisq,
+                     arg1 = df,
+                     arg2 = ncp,
+                     n = n,
+                     n_draw = n_draw)
 }
 
 
