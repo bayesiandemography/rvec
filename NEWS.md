@@ -57,6 +57,12 @@
   results and random-number generator state. The distinction between
   omitted `ncp` and explicitly supplied zero is retained.
 
+- `dt_rvec()`, `pt_rvec()`, `qt_rvec()`, and `rt_rvec()` use compact
+  arguments and avoid unnecessary matrix copies, preserving results and
+  random-number generator state. Omitted `ncp` remains distinct from
+  explicitly supplied zero, and noncentral draws still use base R's
+  calculation.
+
 ## Bug fixes
 
 - Random-generation functions such as `rgamma_rvec()` now correctly recycle

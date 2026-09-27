@@ -2299,6 +2299,102 @@ test_that("'rt_rvec' works with valid input - n_draw, ncp supplied", {
 })
 
 
+test_that("Student t functions preserve alignment and omitted ncp", {
+    for (kind in c("d", "p", "q")) {
+        fun <- get(paste0(kind, "t_rvec"))
+        base_fun <- get(paste0(kind, "t"), envir = asNamespace("stats"))
+        for (log in c(FALSE, TRUE)) {
+            values <- if (kind == "q") c(0, 0.1, 0.3, 0.7, 0.9, 1) else c(-Inf, -2, 0, 1, 3, Inf)
+            if (kind == "q" && log)
+                values <- log(values)
+            x <- matrix(values, nrow = 2L)
+            cases <- list(list(x, matrix(c(0.5, 3), ncol = 1L)),
+                          list(x[, 1L, drop = FALSE], matrix(1:6, 2L)),
+                          list(x[1L, , drop = FALSE], matrix(c(1, 3), ncol = 1L)))
+            for (args in cases) {
+                full <- lapply(args, function(m)
+                    m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = 3L), drop = FALSE])
+                for (extra in list(list(), list(ncp = 0), list(ncp = c(0, 2)))) {
+                    for (lower in c(FALSE, TRUE)) {
+                        flags <- if (kind == "d") list(log = log) else list(lower.tail = lower, log.p = log)
+                        expected <- rvec(do.call(base_fun, c(full, extra, flags)))
+                        expect_identical(do.call(fun, c(lapply(args, rvec), extra, flags)), expected)
+                    }
+                }
+            }
+        }
+    }
+})
+
+test_that("'rt_rvec' preserves draw order and RNG state with and without ncp", {
+    parameters <- list(c(0.5, 3), rvec(c(0.5, 3)),
+                       rvec(matrix(c(0.5, 1, 3), nrow = 1L)),
+                       rvec(matrix(c(0.5, 1, 2, 3, 4, 5), nrow = 2L)))
+    for (df in parameters) {
+        for (n_draw in list(NULL, 3L)) {
+            if (is_rvec(df) && !is.null(n_draw) && n_draw(df) != n_draw)
+                next
+            draws <- if (!is.null(n_draw)) n_draw else if (is_rvec(df)) n_draw(df) else 1L
+            m <- if (is_rvec(df)) as.matrix(df) else matrix(df, ncol = 1L)
+            full <- m[rep(seq_len(nrow(m)), length.out = 2L),
+                      rep(seq_len(ncol(m)), length.out = draws), drop = FALSE]
+            for (extra in list(list(), list(ncp = 0), list(ncp = c(0, 2)))) {
+                set.seed(42)
+                expected <- as.double(do.call(rt, c(list(n = 2L * draws, df = full), extra)))
+                if (is_rvec(df) || !is.null(n_draw))
+                    expected <- rvec(matrix(expected, nrow = 2L))
+                state_expected <- .Random.seed
+                next_expected <- rt(5L, df = 3)
+                set.seed(42)
+                expect_identical(do.call(rt_rvec, c(list(n = 2L, df = df, n_draw = n_draw), extra)), expected)
+                expect_identical(.Random.seed, state_expected)
+                expect_identical(rt(5L, df = 3), next_expected)
+            }
+        }
+    }
+})
+
+test_that("Student t functions preserve empty outputs and validation", {
+    empty <- rvec(matrix(numeric(), nrow = 0L, ncol = 3L))
+    set.seed(42)
+    state_before <- .Random.seed
+    for (extra in list(list(), list(ncp = 0), list(ncp = 2))) {
+        for (fun in list(dt_rvec, pt_rvec, qt_rvec)) {
+            expect_identical(do.call(fun, c(list(numeric(), df = 2), extra)), numeric())
+            expect_identical(do.call(fun, c(list(empty, df = 2), extra)), empty)
+            expect_identical(do.call(fun, c(list(0.5, df = empty), extra)), empty)
+            expect_warning(do.call(fun, c(list(NA_real_, df = 2), extra)), "NAs produced")
+            expect_warning(do.call(fun, c(list(0.5, df = -1), extra)), "NAs produced")
+            expect_error(do.call(fun, c(list(1:2, df = 1:3), extra)), "Can't recycle")
+        }
+        expect_identical(do.call(rt_rvec, c(list(n = 0L, df = 2), extra)), numeric())
+        expect_identical(do.call(rt_rvec, c(list(n = 0L, df = 2, n_draw = 3L), extra)), empty)
+        expect_identical(do.call(rt_rvec, c(list(n = 0L, df = empty), extra)), empty)
+        expect_error(do.call(rt_rvec, c(list(n = 2L, df = rvec(1:2), n_draw = 3L), extra)), "has 1 draws")
+    }
+    for (fun in list(dt_rvec, pt_rvec, qt_rvec, rt_rvec)) {
+        for (ncp in list(-1, NA_real_, "a", rvec(1)))
+            expect_error(fun(2L, df = 2, ncp = ncp))
+    }
+    expect_identical(.Random.seed, state_before)
+})
+
+
+test_that("'rt_rvec' preserves RNG advancement before character-input errors", {
+    for (extra in list(list(), list(ncp = 0), list(ncp = c(0, 2)))) {
+        set.seed(42)
+        expect_error(do.call(rt, c(list(n = 2L, df = matrix(c("a", "b"), 2L)), extra)))
+        state_expected <- .Random.seed
+        next_expected <- rnorm(5L)
+        set.seed(42)
+        expect_error(do.call(rt_rvec, c(list(n = 2L, df = rvec(c("a", "b"))), extra)))
+        expect_identical(.Random.seed, state_expected)
+        expect_identical(rnorm(5L), next_expected)
+    }
+})
+
+
 ## 'unif' ---------------------------------------------------------------------
 
 test_that("'dunif_rvec' works with valid input", {
