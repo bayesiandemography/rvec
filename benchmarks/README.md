@@ -231,3 +231,20 @@ as.matrix(m %*% x)  # 1, Inf: skips the implicit zero times Inf
 The same distinction occurs in the other operand order. Streaming dot products
 also failed to reduce peak vector-heap growth in the recorded cases. These
 results therefore document an investigation, not a shipped memory improvement.
+
+## Expansion from rvecs
+
+`expansion.R` measures `expand_from_rvec()` on a data frame with 1,000 rows and
+1,000 draws. Run each type in a fresh process:
+
+```sh
+Rscript --vanilla benchmarks/expansion.R . dbl /tmp/expansion-after.csv
+```
+
+Types are `dbl`, `int`, `lgl`, `chr`, and `mixed` (one column of each type).
+Export revision `8b9e172` and supply that directory for the baseline. Inputs
+include missing values and are constructed outside measurement. The CSV and
+companion files use the same metrics as `logical-predicates.R`, including
+allocation tracing of a separate warmed call above a 1,000,000-byte threshold.
+The measurement includes the full expansion, including repeated identifiers
+and the draw column, not only the reshaping of value columns.

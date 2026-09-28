@@ -2,6 +2,9 @@
 
 ## Memory use
 
+- `expand_from_rvec()` reuses each transposed value matrix as its output
+  vector, avoiding a second full-size copy of the values.
+
 - `sum()`, `prod()`, `any()`, and `all()` avoid concatenating a single
   unnamed numeric or logical rvec before summarising it. Named inputs,
   multiple inputs, and custom subclasses retain the existing dispatch.

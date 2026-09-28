@@ -379,7 +379,9 @@ expand_from_rvec_inner <- function(data,
     for (colnum in values_colnums) {
         var <- data[[colnum]]
         m <- field(var, "data")
-        ans[[colnum]] <- as.vector(t(m))
+        values <- t(m)
+        attributes(values) <- NULL
+        ans[[colnum]] <- values
     }
     val_draw <- vec_rep(seq_len(n_draw), times = nrow(data))
     after <- values_colnums[[1L]] - 1L

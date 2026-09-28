@@ -278,3 +278,37 @@ test_that("'expand_from_rvec_inner' gives correct error when no rvecs", {
 
                    
                    
+
+test_that("expansion preserves all value types, ordering, and grouping", {
+    for (nr in c(0L, 1L, 3L)) for (nc in c(1L, 4L)) {
+        matrices <- list(lgl = matrix(rep(c(TRUE, FALSE, NA), length.out = nr * nc), nr, nc),
+                         int = matrix(seq_len(nr * nc), nr, nc),
+                         dbl = matrix(seq_len(nr * nc) / 10, nr, nc),
+                         chr = matrix(as.character(seq_len(nr * nc)), nr, nc))
+        data <- data.frame(id = seq_len(nr))
+        expected <- data.frame(id = rep(seq_len(nr), each = nc),
+                               sim = rep(seq_len(nc), times = nr))
+        for (type in names(matrices)) {
+            m <- matrices[[type]]
+            if (nr > 0L) {
+                m[1L, 1L] <- NA
+                rownames(m) <- paste0("row", seq_len(nr))
+            }
+            data[[type]] <- get(paste0("rvec_", type))(m)
+            values <- vector(typeof(m), 0L)
+            for (i in seq_len(nr))
+                values <- c(values, unname(m[i, ]))
+            expected[[type]] <- values
+        }
+        for (grouped in c(FALSE, TRUE)) {
+            input <- if (grouped) dplyr::group_by(data, id) else data
+            target <- if (grouped) dplyr::group_by(expected, id) else expected
+            ans <- expand_from_rvec(input, draw = "sim")
+            expect_identical(ans, target)
+            if (nrow(ans) > 0L) {
+                ans$dbl[1L] <- 999
+                expect_identical(input, if (grouped) dplyr::group_by(data, id) else data)
+            }
+        }
+    }
+})

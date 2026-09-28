@@ -242,10 +242,13 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
-   `collapse_to_rvec()`, `as.vector(t(m))` in expansion, reconstruction in
-   pooling, and retention of all row frequency tables in mode/formatting
-   paths. Distinguish unavoidable output allocations from avoidable temporaries.
+1. **Collapse, pooling, modes, and formatting.** Expansion no longer copies
+   its transposed value matrix (see below). Inspect typed allocation in
+   `collapse_to_rvec()`, reconstruction in pooling, and retention of all row
+   frequency tables in mode/formatting paths. Collapse reuses `m_tmp` across
+   value columns, so earlier columns can affect subsequent storage types;
+   distinguish any intended behavior fix from a memory-only change.
+   Distinguish unavoidable output allocations from avoidable temporaries.
 2. **Matrix multiplication: deferred after profiling.** Direct sparse
    multiplication changes non-finite arithmetic, and a streamed rvec dot-product
    prototype increased measured peak memory. See the investigation below before
@@ -433,6 +436,34 @@ Reproducible prototypes and recorded evidence are in
 `benchmarks/results/matrix-multiplication*`. No NEWS entry was added because
 package behavior and memory use have not changed. Reshaping, pooling, modes,
 and formatting are the next active candidates.
+
+### Expansion implementation
+
+The expansion change is implemented in the working tree after `8b9e172`.
+`expand_from_rvec()` transposes each value matrix, then clears the fresh
+transpose's attributes instead of copying it with `as.vector()`. The transpose
+retains the required observation-then-draw ordering; removing its attributes
+produces the same ordinary vector without a second full-size allocation.
+The collapse path is unchanged.
+
+All 1,620 comparisons against the baseline matched results, warnings, and
+error classes/messages. Cases covered all four rvec types and mixed columns;
+zero, one, and multiple observations; one or multiple draws; row names; data frames,
+tibbles, and grouped data; missing and infinite values; and valid, conflicting,
+and invalid draw names. Permanent tests cover types, ordering, grouping,
+empty inputs, row names, and input immutability. All 11,624 package test
+assertions passed. Package checking with manual and vignette building disabled
+reported zero errors, zero warnings, and one environment-related note about
+remote time verification.
+
+For 1,000 rows by 1,000 draws, peak vector-heap growth fell from 40.0 MB to
+32.0 MB for a double or character column and from 32.0 MB to 28.0 MB for an
+integer or logical column. The mixed four-column case fell from 88.0 MB to
+44.0 MB, with garbage-collection timing affecting the peak; separate warmed
+allocation tracing confirmed a 24 MB reduction in allocations above 1 MB,
+corresponding to one avoided copy per value column. Reproducible benchmarks
+and recorded comparisons are in `benchmarks/expansion.R` and
+`benchmarks/results/expansion*`.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

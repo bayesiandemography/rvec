@@ -144,3 +144,18 @@ sparse arithmetic skips implicit zero products and changes NA/NaN/Inf behavior;
 it cannot replace the current dense arithmetic unconditionally. The README
 contains a minimal reproducer, and regression tests protect both operand orders.
 No production optimization was retained. Timings are indicative only.
+
+## Expansion comparison
+
+`expansion.csv` compares `8b9e172` with the uncommitted implementation based
+on that revision. Representative session files from the double-value case
+record the reshaping source checksum and common environment in
+`expansion-before-session.txt` and `expansion-after-session.txt`.
+
+For 1,000 rows by 1,000 draws, peak vector-heap growth fell from about 40.0 MB
+to 32.0 MB for a double or character value column, and from 32.0 MB to 28.0 MB
+for integer or logical values. With one column of each type, the recorded peak
+fell from 88.0 MB to 44.0 MB. Garbage-collection timing affects that mixed-case
+peak; warmed allocation tracing showed a 24 MB reduction, from 96 MB to 72 MB
+in allocations above 1,000,000 bytes. This matches one avoided full-value copy
+per column. Timings are indicative only.
