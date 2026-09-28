@@ -355,14 +355,17 @@ weighted_fun_has_rvec <- function(x,
         if (is_rv_x)
             m_x <- field(x, "data")
         else
-            m_x <- matrix(x, nrow = n_obs, ncol = n_draw)
+            m_x <- matrix(x, nrow = n_obs, ncol = 1L)
         if (is_rv_w) {
             m_w <- field(wt, "data")
             data <- double(length = n_draw)
-            for (i in seq_len(n_draw))
-                data[[i]] <- fun_vec(x = m_x[, i],
-                                     w = m_w[, i],
+            for (i in seq_len(n_draw)) {
+                i_x <- if (ncol(m_x) == 1L) 1L else i
+                i_w <- if (ncol(m_w) == 1L) 1L else i
+                data[[i]] <- fun_vec(x = m_x[, i_x],
+                                     w = m_w[, i_w],
                                      na.rm = na_rm)
+            }
         }
         else 
             data <- fun_mat(x = m_x,

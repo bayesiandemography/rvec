@@ -129,3 +129,19 @@ Rscript --vanilla benchmarks/covariance.R . rvec_rvec /tmp/covariance-after.csv
 Cases are `rvec_rvec` and `rvec_vector`. Export revision `1521441` and supply
 that directory for the baseline. The CSV and companion session file use the
 same metrics and caveats as the other benchmarks above.
+
+## Weighted summaries
+
+`weighted-summaries.R` measures a weighted summary with rvec weights and
+ordinary or full-rvec values. Each case uses 1,000 observations and 1,000 draws
+in a fresh process:
+
+```sh
+Rscript --vanilla benchmarks/weighted-summaries.R . mean ordinary /tmp/weighted-after.csv
+```
+
+Summaries are `mean`, `median`, `mad`, `var`, and `sd`; cases are `ordinary`
+and `full`. Export revision `8e9bf5e` and supply that directory for the baseline.
+The CSV and companion session file use the same metrics and caveats as the
+other benchmarks above. One-draw alignment is covered by regression tests;
+the baseline errors on those inputs, so they are not benchmark comparisons.

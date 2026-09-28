@@ -306,3 +306,51 @@ test_that("weighted_var works with wt rvec", {
 
 
 
+
+test_that("weighted summaries align one-draw rvecs in either operand", {
+    functions <- c(weighted_mean = "weightedMean", weighted_median = "weightedMedian",
+                   weighted_mad = "weightedMad", weighted_var = "weightedVar",
+                   weighted_sd = "weightedSd")
+    mx <- cbind(c(1, 3, 8, 12), c(9, 2, 5, 4), c(3, 7, 2, 10))
+    mw <- cbind(c(1, 2, 4, 1), c(3, 1, 2, 5), c(2, 4, 1, 3))
+    for (name in names(functions)) {
+        fun <- get(name)
+        reference <- getExportedValue("matrixStats", functions[[name]])
+        for (single in c("x", "wt")) {
+            x <- if (single == "x") mx[, 1L, drop = FALSE] else mx
+            wt <- if (single == "wt") mw[, 1L, drop = FALSE] else mw
+            expected <- vapply(seq_len(3L), function(j)
+                reference(x[, if (single == "x") 1L else j],
+                          w = wt[, if (single == "wt") 1L else j]), numeric(1))
+            expect_identical(fun(rvec(x), wt = rvec(wt)),
+                             rvec_dbl(matrix(expected, nrow = 1L)),
+                             info = paste(name, single))
+        }
+    }
+})
+
+test_that("weighted summaries reuse ordinary values across weight draws", {
+    functions <- c(weighted_mean = "weightedMean", weighted_median = "weightedMedian",
+                   weighted_mad = "weightedMad", weighted_var = "weightedVar",
+                   weighted_sd = "weightedSd")
+    for (name in names(functions)) {
+        fun <- get(name)
+        reference <- getExportedValue("matrixStats", functions[[name]])
+        for (missing in c(FALSE, TRUE)) for (na_rm in c(FALSE, TRUE)) {
+            x <- c(1, 3, 8, 12)
+            mw <- cbind(c(1, 2, 4, 1), c(3, 1, 2, 5), c(2, 4, 1, 3))
+            if (missing) {
+                x[2L] <- NA_real_
+                mw[3L, 2L] <- NA_real_
+            }
+            wt <- rvec(mw)
+            expected <- vapply(seq_len(ncol(mw)), function(j)
+                reference(x, w = mw[, j], na.rm = na_rm), numeric(1))
+            expect_identical(fun(x, wt = wt, na_rm = na_rm),
+                             rvec_dbl(matrix(expected, nrow = 1L)),
+                             info = paste(name, missing, na_rm))
+            expect_identical(x, c(1, if (missing) NA_real_ else 3, 8, 12))
+            expect_identical(vctrs::field(wt, "data"), mw)
+        }
+    }
+})

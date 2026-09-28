@@ -2,6 +2,10 @@
 
 ## Memory use
 
+- Weighted means, medians, MADs, variances, and standard deviations retain
+  ordinary `x` inputs in compact form when weights are rvecs, instead of
+  repeating `x` across all draws.
+
 - Covariance calculations process rvec matrix columns one at a time instead
   of retaining lists containing copies of every column.
 
@@ -19,6 +23,12 @@
 - Binary arithmetic avoids unnecessary input and output matrix copies and
   retains single-draw operands in compact form. Observation recycling,
   result types, names, and integer-overflow behavior are preserved.
+
+## Bug fixes
+
+- Weighted summaries correctly align a one-draw rvec with a multi-draw rvec,
+  whether the one-draw input supplies values or weights. Previously these
+  calls failed with a subscript-out-of-bounds error.
 
 # rvec 1.0.3
 

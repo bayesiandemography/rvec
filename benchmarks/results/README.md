@@ -58,3 +58,18 @@ implementation based on that revision. Session details are in
 For 1,000 observations by 1,000 draws, peak vector-heap growth fell from about
 40.2 MB to 28.5 MB for two rvecs and from about 20.5 MB to 16.5 MB for an rvec
 and ordinary vector. Timings are indicative only.
+
+## Weighted-summary comparison
+
+`weighted-summaries.csv` records all five weighted summaries with rvec weights
+and ordinary or full-rvec values. Before uses `8e9bf5e`; after uses the
+uncommitted implementation based on that revision. Representative session
+files (from the ordinary-value mean case) record each source checksum and the
+common environment in `weighted-summaries-before-session.txt` and
+`weighted-summaries-after-session.txt`.
+
+For 1,000 observations by 1,000 draws, ordinary-value means and medians reduced
+peak vector-heap growth from about 32.1 MB to 24.1 MB. Ordinary-value MAD,
+variance, and standard deviation stayed near 44.1 MB; removing the repeated
+8 MB double matrix does not necessarily reduce the garbage-collector high-water
+mark. Full-rvec cases were essentially unchanged. Timings are indicative only.

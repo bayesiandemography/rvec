@@ -242,25 +242,20 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Weighted summaries (`R/weighted_mean.R`).** Reuse an ordinary `x` vector
-   rather than expanding it across all draws when weights are rvecs. Examine
-   one-draw alignment carefully: the current loop indexes both matrices by
-   draw, so apparent alignment defects must be verified and separated from
-   memory-only changes.
-2. **Mathematical functions and missingness (`R/vec_math.R`, `R/missing.R`).**
+1. **Mathematical functions and missingness (`R/vec_math.R`, `R/missing.R`).**
    Logical math first constructs an integer rvec. Investigate narrower paths
    that preserve types and overflow behavior. Reassess `is.na()` after the
    constructor fast paths: some of its previously identified copying may
    already be eliminated by `b23b6d4`.
-3. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
+2. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
    Summary method calls `vec_c(...)` even for one input. A single-input fast
    path may help, but preserve multi-argument behavior and dispatch. Reprofile
    after cast improvements before deciding whether this warrants new methods.
-4. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
+3. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
    sparse operands, and rvec–rvec multiplication forms a full product before
    summing. Potentially large gains, but higher risk of changing accumulation,
    rounding, overflow, or dispatch. Treat as a separate investigation.
-5. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
+4. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
    `collapse_to_rvec()`, `as.vector(t(m))` in expansion, reconstruction in
    pooling, and retention of all row frequency tables in mode/formatting
    paths. Distinguish unavoidable output allocations from avoidable temporaries.
@@ -300,6 +295,35 @@ reproducible benchmark and recorded comparison are in
 `benchmarks/covariance.R` and `benchmarks/results/covariance*`. All 10,970
 package tests passed. Package checking with `--no-manual` reported zero errors,
 zero warnings, and the environment-related remote time verification note.
+
+### Weighted-summary implementation
+
+The weighted-summary changes are implemented in the working tree after
+`8e9bf5e`. First, draw indexing was corrected to reuse column 1 for either
+one-draw rvec operand. Both operand orders previously failed with a
+subscript-out-of-bounds error; a regression test reproduced the failure before
+the fix and now covers all five summaries. Separately, ordinary values are
+kept in a single-column matrix rather than repeated across all weight draws.
+Keeping the matrix conversion preserves the previous coercion behavior.
+
+The memory change matched an alignment-only intermediate version in 7,200
+comparisons covering empty, singleton, and longer inputs; ordinary, one-draw,
+and full operands; logical/integer/double values; missing and infinite values;
+zero weights; all five summaries; and both `na_rm` settings. Of these, 6,720
+cases outside the intentional alignment fix also matched `8e9bf5e`. Another
+30 comparisons of named, factor, Date, character, raw, and complex ordinary
+inputs matched the baseline. Comparisons included results, warnings, and
+error classes/messages. All 11,034 package test assertions passed. Package
+checking with manual and vignette building disabled reported zero errors,
+zero warnings, and one environment-related note about remote time verification.
+
+For 1,000 observations by 1,000 draws, ordinary-value means and medians reduced
+peak vector-heap growth from about 32.1 MB to 24.1 MB. MAD, variance, and
+standard deviation stayed near 44.1 MB despite removing the repeated 8 MB
+double matrix; garbage-collection timing affects this metric. Full-rvec cases
+were essentially unchanged. Reproducible benchmarks and recorded comparisons
+are in `benchmarks/weighted-summaries.R` and
+`benchmarks/results/weighted-summaries*`.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type
