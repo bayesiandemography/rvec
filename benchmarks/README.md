@@ -181,3 +181,19 @@ and companion files use the same metrics as `logical-predicates.R`, including
 allocation tracing of a separate warmed call with a 1,000,000-byte threshold.
 The `sum` case includes the existing Summary dispatch overhead; this change
 only reduces the logical-to-integer conversion inside the math method.
+
+## Summary dispatch
+
+`summary-dispatch.R` measures a single unnamed rvec passed to `sum`, `prod`,
+`any`, or `all`. Each case uses 1,000 observations and 1,000 draws, including
+`NA` values. Run each summary/type combination in a fresh process:
+
+```sh
+Rscript --vanilla benchmarks/summary-dispatch.R . sum dbl /tmp/summary-after.csv
+```
+
+Types are `dbl`, `int`, and `lgl`. Export revision `65bd57b` and supply that
+directory for the baseline. The CSV and companion files use the same metrics
+as `logical-predicates.R`, including allocation tracing of a separate warmed
+call with a 1,000,000-byte threshold. Named and multiple inputs and custom
+subclasses retain the previous dispatch and are covered by regression tests.

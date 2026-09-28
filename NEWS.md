@@ -2,6 +2,10 @@
 
 ## Memory use
 
+- `sum()`, `prod()`, `any()`, and `all()` avoid concatenating a single
+  unnamed numeric or logical rvec before summarising it. Named inputs,
+  multiple inputs, and custom subclasses retain the existing dispatch.
+
 - Mathematical operations on logical rvecs convert their data to integer
   with fewer temporary copies, preserving dimensions, row names, and result
   types.

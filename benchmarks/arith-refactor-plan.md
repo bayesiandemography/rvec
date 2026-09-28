@@ -242,15 +242,11 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
-   Summary method calls `vec_c(...)` even for one input. A single-input fast
-   path may help, but preserve multi-argument behavior and dispatch. Reprofile
-   after cast improvements before deciding whether this warrants new methods.
-2. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
+1. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
    sparse operands, and rvec–rvec multiplication forms a full product before
    summing. Potentially large gains, but higher risk of changing accumulation,
    rounding, overflow, or dispatch. Treat as a separate investigation.
-3. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
+2. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
    `collapse_to_rvec()`, `as.vector(t(m))` in expansion, reconstruction in
    pooling, and retention of all row frequency tables in mode/formatting
    paths. Distinguish unavoidable output allocations from avoidable temporaries.
@@ -375,6 +371,36 @@ traces confirmed removal of two approximately 4 MB temporaries. The
 `is.finite()` control stayed at about 4.0 MB. Reproducible benchmarks and
 recorded comparisons are in `benchmarks/logical-math.R` and
 `benchmarks/results/logical-math*`.
+
+### Summary-dispatch implementation
+
+The summary-dispatch change is implemented in the working tree after
+`65bd57b`. Profiling confirmed that the inherited vctrs Summary method still
+copies one full input matrix through `vec_c()`. `Summary.rvec()` bypasses that
+concatenation for a single unnamed standard double, integer, or logical rvec
+passed to `sum()`, `prod()`, `any()`, or `all()`. It retains the existing math
+methods and numerical algorithms. Named arguments, multiple inputs, custom
+subclasses, character inputs, and other Summary operations use `NextMethod()`.
+Named inputs require this fallback to preserve vec_c's name-combination errors.
+
+All 12,096 comparisons against the baseline matched results, warnings, and
+error classes/messages. Cases covered all seven Summary operations; logical,
+integer, double, and character inputs; empty, singleton, and longer inputs;
+names; multiple operands; NULL and ordinary operands; incompatible draw counts;
+missing and infinite values; integer overflow; and invalid `na.rm` arguments.
+Permanent tests cover single-input results and types, input immutability,
+multiple and named inputs, and custom subclass dispatch. All 11,588 package
+test assertions passed. Package checking with manual and vignette building
+disabled reported zero errors, zero warnings, and one environment-related
+note about remote time verification.
+
+For 1,000 observations and 1,000 draws, peak vector-heap growth decreased by
+about 8.1 MB for double inputs and 4.1 MB for integer/logical inputs across
+all four summaries. Double `sum()` dropped from about 8.1 MB to 0.03 MB;
+logical `sum()` dropped from about 8.1 MB to 4.1 MB. Separate warmed allocation
+traces confirmed removal of one full matrix copy. Reproducible benchmarks and
+recorded comparisons are in `benchmarks/summary-dispatch.R` and
+`benchmarks/results/summary-dispatch*`.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

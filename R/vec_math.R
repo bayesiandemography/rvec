@@ -5,6 +5,21 @@
 ## their own methods
 
 #' @export
+Summary.rvec <- function(..., na.rm = FALSE) {
+    if (.Generic %in% c("sum", "prod", "any", "all") && ...length() == 1L) {
+        args <- list(...)
+        x <- args[[1L]]
+        cls <- class(x)
+        # Preserve vec_c's name handling and subclass dispatch on the fallback.
+        if (is.null(names(args)) &&
+            cls[[1L]] %in% c("rvec_dbl", "rvec_int", "rvec_lgl") &&
+            identical(cls[-1L], c("rvec", "vctrs_rcrd", "vctrs_vctr")))
+            return(vec_math(.Generic, x, na.rm = na.rm))
+    }
+    NextMethod()
+}
+
+#' @export
 vec_math.rvec_dbl <- function(.fn, .x, ...) {
   m <- field(.x, "data")
   ## --- Not in Math or Summary group but implemented by vec_math ---

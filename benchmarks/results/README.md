@@ -104,3 +104,21 @@ and from 16.1 MB to 8.1 MB for `sum`. Allocation tracing of a separate warmed
 call confirmed removal of two approximately 4 MB conversion temporaries.
 The allocation metric includes only allocations exceeding 1,000,000 bytes.
 The `is.finite` control stayed at about 4.0 MB. Timings are indicative only.
+
+## Summary-dispatch comparison
+
+`summary-dispatch.csv` compares `65bd57b` with the uncommitted implementation
+based on that revision. Representative session files from the double-input
+`sum` case record the math source checksum and common environment in
+`summary-dispatch-before-session.txt` and `summary-dispatch-after-session.txt`.
+
+For one unnamed 1,000 by 1,000 rvec, peak vector-heap growth decreased by
+about 8.1 MB for double inputs and 4.1 MB for integer and logical inputs across
+all four summaries. Double `sum` dropped from about 8.1 MB to 0.03 MB; logical
+`sum` dropped from about 8.1 MB to 4.1 MB because its integer conversion remains.
+`prod` retains its existing numerical algorithm and additional allocations.
+
+Tracing a separate warmed call confirmed removal of one full input-matrix
+allocation (8 MB double, 4 MB integer/logical). The allocation metric only
+counts allocations exceeding 1,000,000 bytes; zero does not mean the call
+allocates nothing. Timings are indicative only.
