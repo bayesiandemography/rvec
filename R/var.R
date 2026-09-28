@@ -125,12 +125,11 @@ var_rvec_rvec <- function(x, y, na.rm, use) {
     y <- xy$y
     m_x <- field(x, "data")
     m_y <- field(y, "data")
-    m_x <- matrix_to_list_of_cols(m_x)
-    m_y <- matrix_to_list_of_cols(m_y)
-    data <- .mapply(stats::var,
-                    dots = list(m_x, m_y),
-                    MoreArgs = list(na.rm = na.rm, use = use))
-    data <- unlist(data)
+    n <- ncol(m_x)
+    data <- numeric(n)
+    for (j in seq_len(n))
+        data[[j]] <- stats::var(m_x[, j], m_y[, j],
+                                na.rm = na.rm, use = use)
     data <- matrix(data, nrow = 1)
     rvec_dbl(data)
 }
@@ -155,13 +154,19 @@ var_rvec_nonrvec <- function(e1, e2, nm_e2, na.rm, use) {
         e2 <- e1e2$e2
         m <- field(e1, "data")
         if (nrow(m) > 0L) {
-            m <- matrix_to_list_of_cols(m)
-            data <- lapply(X = m,
-                           FUN = stats::var,
-                           y = e2,
-                           na.rm = na.rm,
-                           use = use)
-            data <- unlist(data)
+            n <- ncol(m)
+            first <- stats::var(m[, 1L], y = e2,
+                                na.rm = na.rm, use = use)
+            width <- length(first)
+            data <- numeric(n * width)
+            data[seq_len(width)] <- first
+            if (n > 1L) {
+                for (j in 2:n) {
+                    here <- seq_len(width) + (j - 1L) * width
+                    data[here] <- stats::var(m[, j], y = e2,
+                                             na.rm = na.rm, use = use)
+                }
+            }
         }
         else
             data <- rep.int(NA_real_, times = ncol(m))
@@ -172,4 +177,3 @@ var_rvec_nonrvec <- function(e1, e2, nm_e2, na.rm, use) {
         cli::cli_abort("{.arg {nm_e2}} has class {.cls {class(e2)}}.")
     }
 }
-

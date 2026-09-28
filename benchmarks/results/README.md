@@ -47,3 +47,14 @@ For 1,000 observations by 1,000 draws, peak vector-heap growth fell from about
 41.3 MB to 34.1 MB for both ordinary and one-draw `false` and `missing`
 branches. The full-rvec case remained at about 45.4 MB. Timings are indicative
 only.
+
+## Covariance comparison
+
+`covariance.csv` records covariance between two rvecs and between an rvec and
+an ordinary vector. Before uses `1521441`; after uses the uncommitted
+implementation based on that revision. Session details are in
+`covariance-before-session.txt` and `covariance-after-session.txt`.
+
+For 1,000 observations by 1,000 draws, peak vector-heap growth fell from about
+40.2 MB to 28.5 MB for two rvecs and from about 20.5 MB to 16.5 MB for an rvec
+and ordinary vector. Timings are indicative only.

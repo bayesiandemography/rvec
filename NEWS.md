@@ -2,6 +2,9 @@
 
 ## Memory use
 
+- Covariance calculations process rvec matrix columns one at a time instead
+  of retaining lists containing copies of every column.
+
 - `if_else_rvec()` retains ordinary and one-draw `false` and `missing`
   branches in compact form instead of expanding each one across all draws.
 

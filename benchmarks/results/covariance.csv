@@ -1,0 +1,5 @@
+"stage","case","observations","draws","elapsed_seconds","output_mb","peak_vector_heap_growth_mb"
+"after","rvec_rvec",1000,1000,0.016,0.008936,28.479272
+"after","rvec_vector",1000,1000,0.014,0.008936,16.487056
+"before","rvec_rvec",1000,1000,0.03,0.008936,40.159576
+"before","rvec_vector",1000,1000,0.018,0.008936,20.495568

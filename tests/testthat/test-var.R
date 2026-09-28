@@ -74,6 +74,21 @@ test_that("'var_rvec_rvec' works with valid inputs, nrow == 0", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'var_rvec_rvec' preserves use and missing-value behavior", {
+    x_m <- matrix(c(1, NA, 3, 4, 5, 6), nrow = 3)
+    y_m <- matrix(c(6, 5, NA, 3, 2, 1), nrow = 3)
+    x <- rvec(x_m)
+    y <- rvec(y_m)
+
+    for (use in c("everything", "complete.obs", "na.or.complete",
+                  "pairwise.complete.obs")) {
+        expected <- vapply(seq_len(ncol(x_m)), function(j)
+            stats::var(x_m[, j], y_m[, j], use = use), numeric(1))
+        expect_identical(var(x, y, use = use),
+                         rvec_dbl(matrix(expected, nrow = 1L)))
+    }
+})
+
 test_that("'var_rvec_rvec' throws expected error with character", {
     x <- rvec(matrix(rep(1, 5), nr = 1))
     y <- rvec(matrix(rep("a", 5), nr = 1))
@@ -99,6 +114,18 @@ test_that("'var_rvec_nonrvec' works with valid inputs, nrow == 0", {
                                      na.rm = FALSE, use = "everything")
     ans_expected <- rvec_dbl(matrix(c(NA, NA, NA, NA, NA), nr = 1))
     expect_identical(ans_obtained, ans_expected)
+})
+
+test_that("'var_rvec_nonrvec' preserves matrix covariance results", {
+    m <- matrix(1:12, nrow = 4)
+    x <- rvec(m)
+    y <- matrix(c(4:1, 8:5), nrow = 4)
+    expected <- unlist(lapply(seq_len(ncol(m)), function(j)
+        stats::var(m[, j], y, use = "everything")))
+
+    ans <- var_rvec_nonrvec(e1 = x, e2 = y, nm_e2 = "y",
+                            na.rm = FALSE, use = "everything")
+    expect_identical(ans, rvec_dbl(matrix(expected, nrow = 1L)))
 })
 
 test_that("'var_rvec_nonrvec' throws expected error with non-atomic", {

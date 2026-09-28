@@ -242,30 +242,25 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Covariance (`R/var.R`).** `var_rvec_rvec()` and `var_rvec_nonrvec()` retain
-   lists of all matrix columns before applying `stats::var()`. Process one
-   column pair at a time with a preallocated result, retaining the same base
-   calculations and `use`/missing-value semantics. Do not confuse this with
-   single-input variance, whose coercion copy was already addressed.
-2. **Weighted summaries (`R/weighted_mean.R`).** Reuse an ordinary `x` vector
+1. **Weighted summaries (`R/weighted_mean.R`).** Reuse an ordinary `x` vector
    rather than expanding it across all draws when weights are rvecs. Examine
    one-draw alignment carefully: the current loop indexes both matrices by
    draw, so apparent alignment defects must be verified and separated from
    memory-only changes.
-3. **Mathematical functions and missingness (`R/vec_math.R`, `R/missing.R`).**
+2. **Mathematical functions and missingness (`R/vec_math.R`, `R/missing.R`).**
    Logical math first constructs an integer rvec. Investigate narrower paths
    that preserve types and overflow behavior. Reassess `is.na()` after the
    constructor fast paths: some of its previously identified copying may
    already be eliminated by `b23b6d4`.
-4. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
+3. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
    Summary method calls `vec_c(...)` even for one input. A single-input fast
    path may help, but preserve multi-argument behavior and dispatch. Reprofile
    after cast improvements before deciding whether this warrants new methods.
-5. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
+4. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
    sparse operands, and rvec–rvec multiplication forms a full product before
    summing. Potentially large gains, but higher risk of changing accumulation,
    rounding, overflow, or dispatch. Treat as a separate investigation.
-6. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
+5. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
    `collapse_to_rvec()`, `as.vector(t(m))` in expansion, reconstruction in
    pooling, and retention of all row frequency tables in mode/formatting
    paths. Distinguish unavoidable output allocations from avoidable temporaries.
@@ -286,6 +281,25 @@ branch type, and ordinary/one-draw/full layout with results identical to
 41.3 MB to 34.1 MB for ordinary and one-draw branches; the full-rvec path
 remained at about 45.4 MB. The reproducible benchmark and recorded comparison
 are in `benchmarks/if-else.R` and `benchmarks/results/if-else*`.
+
+### Covariance implementation
+
+The covariance paths in `R/var.R` are implemented in the working tree after
+`1521441`. They pass one matrix column at a time to `stats::var()` and
+preallocate the result, avoiding lists that retained copies of every input
+column. The non-rvec path preserves the existing behavior for matrix operands,
+where each input draw can produce multiple output covariance values.
+
+Comparison against `1521441` covered 1,040 combinations of empty and non-empty
+inputs, logical/integer/double data, all five `use` modes, `na.rm`, missing and
+non-finite values, and vector or matrix non-rvec operands. Results, warnings,
+and error classes/messages were identical. For 1,000 observations by 1,000
+draws, peak vector-heap growth fell from about 40.2 MB to 28.5 MB for two
+rvecs, and from about 20.5 MB to 16.5 MB for an rvec and ordinary vector. The
+reproducible benchmark and recorded comparison are in
+`benchmarks/covariance.R` and `benchmarks/results/covariance*`. All 10,970
+package tests passed. Package checking with `--no-manual` reported zero errors,
+zero warnings, and the environment-related remote time verification note.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

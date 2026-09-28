@@ -115,3 +115,17 @@ Rscript --vanilla benchmarks/if-else.R . ordinary /tmp/if-else-after.csv
 Export revision `16cb8f3` and supply that directory for the baseline. The CSV
 and companion session file use the same metrics and caveats as the other
 benchmarks above.
+
+## Covariance
+
+`covariance.R` measures covariance between two full rvecs or between a full
+rvec and an ordinary vector. Each case uses 1,000 observations and 1,000 draws
+in a fresh process:
+
+```sh
+Rscript --vanilla benchmarks/covariance.R . rvec_rvec /tmp/covariance-after.csv
+```
+
+Cases are `rvec_rvec` and `rvec_vector`. Export revision `1521441` and supply
+that directory for the baseline. The CSV and companion session file use the
+same metrics and caveats as the other benchmarks above.
