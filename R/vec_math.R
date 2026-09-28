@@ -76,7 +76,10 @@ vec_math.rvec_int <- function(.fn, .x, ...) {
 vec_math.rvec_lgl <- function(.fn, .x, ...) {
     if (.fn %in% c("is.nan", "is.finite", "is.infinite"))
         return(vec_math.rvec_dbl(.fn = .fn, .x = .x, ...))
-    data <- field(.x, "data")
-    .x <- rvec_int(data)
+    m <- field(.x, "data")
+    data <- as.integer(m)
+    dim(data) <- dim(m)
+    rownames(data) <- rownames(m)
+    .x <- .new_rvec_int(data)
     vec_math.rvec_int(.fn = .fn, .x = .x, ...)
 }

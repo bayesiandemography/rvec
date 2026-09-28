@@ -2,6 +2,10 @@
 
 ## Memory use
 
+- Mathematical operations on logical rvecs convert their data to integer
+  with fewer temporary copies, preserving dimensions, row names, and result
+  types.
+
 - `is.nan()`, `is.finite()`, and `is.infinite()` operate directly on logical
   rvec data, avoiding temporary copies used to convert it to integer data.
 

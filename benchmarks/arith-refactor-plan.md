@@ -242,21 +242,15 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Remaining logical math (`R/vec_math.R`).** Logical predicates now bypass
-   integer conversion, and `is.na()` needs no further change (see below).
-   Other logical math still constructs an integer rvec. Allocation tracing
-   confirms three full-size conversion temporaries for `abs()` and `sqrt()`.
-   Investigate reducing these while preserving types, names, and overflow
-   behavior; the general constructor conversion path is unchanged.
-2. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
+1. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
    Summary method calls `vec_c(...)` even for one input. A single-input fast
    path may help, but preserve multi-argument behavior and dispatch. Reprofile
    after cast improvements before deciding whether this warrants new methods.
-3. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
+2. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
    sparse operands, and rvec–rvec multiplication forms a full product before
    summing. Potentially large gains, but higher risk of changing accumulation,
    rounding, overflow, or dispatch. Treat as a separate investigation.
-4. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
+3. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
    `collapse_to_rvec()`, `as.vector(t(m))` in expansion, reconstruction in
    pooling, and retention of all row frequency tables in mode/formatting
    paths. Distinguish unavoidable output allocations from avoidable temporaries.
@@ -352,6 +346,35 @@ separate warmed call confirmed elimination of three approximately 4 MB
 conversion temporaries, leaving the result allocation. `is.na()` remained
 at about 4.0 MB. Reproducible benchmarks and recorded comparisons are in
 `benchmarks/logical-predicates.R` and `benchmarks/results/logical-predicates*`.
+
+### Remaining logical-math implementation
+
+The logical-math conversion change is implemented in the working tree after
+`1b8c0cf`. The math method converts the logical matrix directly with
+`as.integer()`, restores its dimensions and row names, and wraps it using the
+internal integer constructor. This removes two full-size temporaries from
+the previous general constructor path. Predicate fast paths, numerical
+algorithms, integer result handling, and general constructor conversions
+remain unchanged.
+
+All 18,920 exhaustive comparisons across 11 operations matched the baseline,
+covering TRUE/FALSE/NA matrices with zero to three observations and one or two
+draws, named and unnamed. Another 4,536 comparisons across 42 operations
+covered logical, integer, and double inputs, empty and non-empty data, names,
+and omitted/valid/invalid `na.rm` arguments. Results, warnings, and error
+classes/messages matched. Permanent tests cover integer-equivalent behavior,
+result types, dimensions, row names, and input immutability. All 11,268
+package test assertions passed. Package checking with manual and vignette
+building disabled reported zero errors, zero warnings, and one
+environment-related note about remote time verification.
+
+For a 1,000 by 1,000 logical rvec, peak vector-heap growth fell from about
+16.0 MB to 8.0 MB for `abs()` and `cumsum()`, from 20.0 MB to 12.0 MB for
+`sqrt()`, and from 16.1 MB to 8.1 MB for `sum()`. Separate warmed allocation
+traces confirmed removal of two approximately 4 MB temporaries. The
+`is.finite()` control stayed at about 4.0 MB. Reproducible benchmarks and
+recorded comparisons are in `benchmarks/logical-math.R` and
+`benchmarks/results/logical-math*`.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

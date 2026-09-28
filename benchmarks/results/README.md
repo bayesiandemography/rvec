@@ -90,3 +90,17 @@ leaving the logical result. The allocation metric includes only allocations
 exceeding 1,000,000 bytes. The `is.na` control stayed at about 4.0 MB; existing
 constructor fast paths already avoid extra matrix copies there. Timings are
 indicative only.
+
+## Logical-math comparison
+
+`logical-math.csv` compares `1b8c0cf` with the uncommitted implementation based
+on that revision. Representative session files from `abs` record the math
+source checksum and common environment in `logical-math-before-session.txt`
+and `logical-math-after-session.txt`.
+
+For a 1,000 by 1,000 logical rvec, peak vector-heap growth fell from about
+16.0 MB to 8.0 MB for `abs` and `cumsum`, from 20.0 MB to 12.0 MB for `sqrt`,
+and from 16.1 MB to 8.1 MB for `sum`. Allocation tracing of a separate warmed
+call confirmed removal of two approximately 4 MB conversion temporaries.
+The allocation metric includes only allocations exceeding 1,000,000 bytes.
+The `is.finite` control stayed at about 4.0 MB. Timings are indicative only.

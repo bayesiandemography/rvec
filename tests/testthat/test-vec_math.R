@@ -436,3 +436,27 @@ test_that("logical predicates preserve values, names, and dimensions", {
         }
     }
 })
+
+test_that("logical math preserves integer-input behavior and input data", {
+    for (nr in c(0L, 1L, 4L)) for (nc in c(1L, 3L)) {
+        logical_data <- matrix(rep(c(TRUE, FALSE, NA), length.out = nr * nc), nr, nc)
+        integer_data <- matrix(rep(c(1L, 0L, NA_integer_), length.out = nr * nc), nr, nc)
+        if (nr > 0L) {
+            rownames(logical_data) <- paste0("row", seq_len(nr))
+            rownames(integer_data) <- rownames(logical_data)
+        }
+        x <- rvec_lgl(logical_data)
+        reference <- rvec_int(integer_data)
+        for (name in c("abs", "sqrt", "cummin", "cummax", "cumsum", "cumprod",
+                       "sum", "prod", "mean", "any", "all")) {
+            fun <- get(name)
+            ans <- fun(x)
+            expect_identical(ans, fun(reference), info = name)
+            expect_identical(vctrs::field(x, "data"), logical_data)
+            if (length(ans) > 0L) {
+                vctrs::field(ans, "data")[1L, 1L] <- NA
+                expect_identical(vctrs::field(x, "data"), logical_data)
+            }
+        }
+    }
+})

@@ -164,3 +164,20 @@ size. A separate warmed call uses `Rprofmem()` to record allocations exceeding
 `allocations_over_1mb_mb` is their sum in decimal MB, not total allocation or
 peak memory. This requires R with memory-profiling support. A companion
 `.session.txt` records the environment and math/missingness source checksums.
+
+## Logical math
+
+`logical-math.R` measures mathematical operations on a logical rvec with
+1,000 observations and 1,000 draws, including `NA` values. Run each case in a
+fresh process:
+
+```sh
+Rscript --vanilla benchmarks/logical-math.R . abs /tmp/logical-math-after.csv
+```
+
+Cases are `abs`, `sqrt`, `cumsum`, `sum`, and the unchanged `is.finite` control.
+Export revision `1b8c0cf` and supply that directory for the baseline. The CSV
+and companion files use the same metrics as `logical-predicates.R`, including
+allocation tracing of a separate warmed call with a 1,000,000-byte threshold.
+The `sum` case includes the existing Summary dispatch overhead; this change
+only reduces the logical-to-integer conversion inside the math method.
