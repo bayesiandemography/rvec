@@ -122,3 +122,25 @@ Tracing a separate warmed call confirmed removal of one full input-matrix
 allocation (8 MB double, 4 MB integer/logical). The allocation metric only
 counts allocations exceeding 1,000,000 bytes; zero does not mean the call
 allocates nothing. Timings are indicative only.
+
+## Matrix-multiplication investigation
+
+`matrix-multiplication-investigation.csv` records current paths at `20efcc3`
+and benchmark-local prototypes, not before/after package implementations.
+`matrix-multiplication-session.txt` records the common environment and unchanged
+matrix source checksum, taken from the 1,000-observation dot-product case.
+
+For two double rvecs with 1,000 draws, streaming one draw at a time increased
+peak vector-heap growth from 8.1 MB to 24.3 MB at 1,000 observations, and from
+80.1 MB to 163.1 MB at 10,000 observations. The streamed results were identical
+for these inputs, but the prototype allocated extracted columns and temporary
+products and ran slower. Live temporary size alone does not predict R's
+vector-heap high-water mark.
+
+For a sparse 1,000 by 1,000 tridiagonal matrix and 100 draws, direct sparse
+multiplication reduced peak growth from about 9.0 MB to 1.8 MB with the matrix
+on the left, and from 9.8 MB to 2.6 MB with it on the right. However, direct
+sparse arithmetic skips implicit zero products and changes NA/NaN/Inf behavior;
+it cannot replace the current dense arithmetic unconditionally. The README
+contains a minimal reproducer, and regression tests protect both operand orders.
+No production optimization was retained. Timings are indicative only.

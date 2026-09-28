@@ -197,3 +197,37 @@ directory for the baseline. The CSV and companion files use the same metrics
 as `logical-predicates.R`, including allocation tracing of a separate warmed
 call with a 1,000,000-byte threshold. Named and multiple inputs and custom
 subclasses retain the previous dispatch and are covered by regression tests.
+
+## Matrix multiplication investigation
+
+`matrix-multiplication.R` compares the current package paths with experimental
+alternatives. The alternatives are local to the benchmark and are not package
+implementations. Run each case in a fresh process against revision `20efcc3`:
+
+```sh
+Rscript --vanilla benchmarks/matrix-multiplication.R . dot 1000 1000 /tmp/dot.csv
+Rscript --vanilla benchmarks/matrix-multiplication.R . dot_stream 1000 1000 /tmp/dot-stream.csv
+Rscript --vanilla benchmarks/matrix-multiplication.R . sparse_left 1000 100 /tmp/sparse-left.csv
+Rscript --vanilla benchmarks/matrix-multiplication.R . sparse_left_direct 1000 100 /tmp/sparse-left-direct.csv
+```
+
+`dot_stream` computes one draw's product and sum at a time, using double rvecs
+with equal dimensions. Repeat `dot` and `dot_stream` with 10,000 observations
+for the larger recorded case. `sparse_right` and `sparse_right_direct` cover
+the other operand order. Sparse cases use a tridiagonal coefficient matrix
+and finite double rvec data. Metrics and companion session files follow the
+other peak vector-heap benchmarks.
+
+Direct sparse multiplication is not behaviorally interchangeable with the
+current implementation. For example:
+
+```r
+m <- Matrix::Diagonal(2L)
+x <- matrix(c(1, Inf), nrow = 2L)
+as.matrix(m) %*% x  # NaN, Inf: current semantics
+as.matrix(m %*% x)  # 1, Inf: skips the implicit zero times Inf
+```
+
+The same distinction occurs in the other operand order. Streaming dot products
+also failed to reduce peak vector-heap growth in the recorded cases. These
+results therefore document an investigation, not a shipped memory improvement.

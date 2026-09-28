@@ -242,14 +242,15 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
-   sparse operands, and rvec–rvec multiplication forms a full product before
-   summing. Potentially large gains, but higher risk of changing accumulation,
-   rounding, overflow, or dispatch. Treat as a separate investigation.
-2. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
+1. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
    `collapse_to_rvec()`, `as.vector(t(m))` in expansion, reconstruction in
    pooling, and retention of all row frequency tables in mode/formatting
    paths. Distinguish unavoidable output allocations from avoidable temporaries.
+2. **Matrix multiplication: deferred after profiling.** Direct sparse
+   multiplication changes non-finite arithmetic, and a streamed rvec dot-product
+   prototype increased measured peak memory. See the investigation below before
+   revisiting this; a different approach needs both compatibility evidence and
+   a demonstrated memory saving.
 
 ### Conditional-selection implementation
 
@@ -401,6 +402,37 @@ logical `sum()` dropped from about 8.1 MB to 4.1 MB. Separate warmed allocation
 traces confirmed removal of one full matrix copy. Reproducible benchmarks and
 recorded comparisons are in `benchmarks/summary-dispatch.R` and
 `benchmarks/results/summary-dispatch*`.
+
+### Matrix-multiplication investigation
+
+Investigation against `20efcc3` retained the production implementation.
+Direct sparse multiplication avoids densification but skips implicit zero
+products: multiplying a sparse identity by `c(1, Inf)` yields `c(1, Inf)`,
+whereas the current dense calculation yields `c(NaN, Inf)`. The distinction
+also occurs with the sparse operand on the right. New tests cover both orders
+with diagonal and general sparse matrices and Inf, -Inf, NA, and NaN inputs.
+All 34 matrix-multiplication test assertions passed.
+
+A local prototype computed one rvec product column at a time and retained
+the existing `matrixStats::colSums2()` summation. Results matched the current
+implementation for the two measured inputs, but peak vector-heap growth
+increased from 8.1 MB to 24.3 MB for 1,000 observations and from 80.1 MB to
+163.1 MB for 10,000 observations (both with 1,000 draws). Column extraction
+and product allocations outweighed the benefit of smaller live temporaries;
+the prototype also ran slower.
+
+Direct sparse multiplication with a 1,000 by 1,000 tridiagonal matrix and
+100 draws reduced measured peak growth from 9.0 MB to 1.8 MB on the left and
+9.8 MB to 2.6 MB on the right, but was rejected as an unconditional replacement
+because of the arithmetic difference above. Future work could investigate a
+carefully restricted sparse path or a dot-product implementation that avoids
+column copies, while checking rounding, overflow, and dispatch behavior.
+
+Reproducible prototypes and recorded evidence are in
+`benchmarks/matrix-multiplication.R` and
+`benchmarks/results/matrix-multiplication*`. No NEWS entry was added because
+package behavior and memory use have not changed. Reshaping, pooling, modes,
+and formatting are the next active candidates.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

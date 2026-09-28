@@ -155,3 +155,16 @@ test_that("rvec %*% Matrix respects dimensions", {
   expect_identical(dim(out_mat), c(2L, 5L))
 })
 
+
+test_that("sparse Matrix operands retain dense non-finite arithmetic", {
+    identity <- Matrix::Diagonal(2L)
+    sparse <- Matrix::sparseMatrix(i = c(1L, 2L), j = c(1L, 2L), x = c(1, 2))
+    for (m in list(identity, sparse)) {
+        for (nonfinite in c(Inf, -Inf, NA_real_, NaN)) {
+            data <- matrix(c(1, nonfinite, nonfinite, 2), nrow = 2L)
+            x <- rvec_dbl(data)
+            expect_identical(m %*% x, rvec(as.matrix(m) %*% data))
+            expect_identical(x %*% m, rvec(t(crossprod(data, as.matrix(m)))))
+        }
+    }
+})
