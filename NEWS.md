@@ -2,6 +2,9 @@
 
 ## Memory use
 
+- `is.nan()`, `is.finite()`, and `is.infinite()` operate directly on logical
+  rvec data, avoiding temporary copies used to convert it to integer data.
+
 - Weighted means, medians, MADs, variances, and standard deviations retain
   ordinary `x` inputs in compact form when weights are rvecs, instead of
   repeating `x` across all draws.

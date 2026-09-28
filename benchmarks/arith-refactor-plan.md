@@ -242,11 +242,12 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Mathematical functions and missingness (`R/vec_math.R`, `R/missing.R`).**
-   Logical math first constructs an integer rvec. Investigate narrower paths
-   that preserve types and overflow behavior. Reassess `is.na()` after the
-   constructor fast paths: some of its previously identified copying may
-   already be eliminated by `b23b6d4`.
+1. **Remaining logical math (`R/vec_math.R`).** Logical predicates now bypass
+   integer conversion, and `is.na()` needs no further change (see below).
+   Other logical math still constructs an integer rvec. Allocation tracing
+   confirms three full-size conversion temporaries for `abs()` and `sqrt()`.
+   Investigate reducing these while preserving types, names, and overflow
+   behavior; the general constructor conversion path is unchanged.
 2. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
    Summary method calls `vec_c(...)` even for one input. A single-input fast
    path may help, but preserve multi-argument behavior and dispatch. Reprofile
@@ -324,6 +325,33 @@ double matrix; garbage-collection timing affects this metric. Full-rvec cases
 were essentially unchanged. Reproducible benchmarks and recorded comparisons
 are in `benchmarks/weighted-summaries.R` and
 `benchmarks/results/weighted-summaries*`.
+
+### Logical-predicate implementation
+
+The logical-predicate change is implemented in the working tree after
+`84872e8`. `is.nan()`, `is.finite()`, and `is.infinite()` reuse the existing
+predicate implementation directly on logical data, bypassing conversion to
+an integer rvec. Other logical math retains its previous path and result-type
+handling. Profiling confirmed that `is.na()` already allocates only its result
+matrix after the earlier constructor improvements, so it was left unchanged.
+
+All 5,160 exhaustive predicate comparisons matched the baseline, covering all
+TRUE/FALSE/NA combinations for matrices with zero to three observations and
+one or two draws, both named and unnamed. Another 4,536 comparisons covered
+42 math operations on logical, integer, and double inputs, with empty and
+non-empty data, names, and omitted/valid/invalid `na.rm` arguments. Results,
+warnings, and error classes/messages matched. Permanent tests cover predicate
+values, dimensions, row names, and input immutability. All 11,082 package test
+assertions passed. Package checking with manual and vignette building disabled
+reported zero errors, zero warnings, and one environment-related note about
+remote time verification.
+
+For a 1,000 by 1,000 logical rvec, peak vector-heap growth fell from about
+16.0 MB to 4.0 MB for each of the three predicates. Allocation tracing of a
+separate warmed call confirmed elimination of three approximately 4 MB
+conversion temporaries, leaving the result allocation. `is.na()` remained
+at about 4.0 MB. Reproducible benchmarks and recorded comparisons are in
+`benchmarks/logical-predicates.R` and `benchmarks/results/logical-predicates*`.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

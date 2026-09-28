@@ -417,3 +417,22 @@ test_that("'cummax' works with empty rvec_lgl", {
 
 
 
+
+test_that("logical predicates preserve values, names, and dimensions", {
+    for (nr in c(0L, 1L, 4L)) for (nc in c(1L, 3L)) {
+        m <- matrix(rep(c(TRUE, FALSE, NA), length.out = nr * nc), nr, nc)
+        if (nr > 0L)
+            rownames(m) <- paste0("row", seq_len(nr))
+        x <- rvec_lgl(m)
+        for (name in c("is.nan", "is.finite", "is.infinite")) {
+            fun <- get(name)
+            ans <- fun(x)
+            expect_identical(ans, rvec_lgl(fun(m)), info = name)
+            expect_identical(vctrs::field(x, "data"), m)
+            if (nr > 0L) {
+                vctrs::field(ans, "data")[1L, 1L] <- NA
+                expect_identical(vctrs::field(x, "data"), m)
+            }
+        }
+    }
+})

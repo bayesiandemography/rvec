@@ -73,3 +73,20 @@ peak vector-heap growth from about 32.1 MB to 24.1 MB. Ordinary-value MAD,
 variance, and standard deviation stayed near 44.1 MB; removing the repeated
 8 MB double matrix does not necessarily reduce the garbage-collector high-water
 mark. Full-rvec cases were essentially unchanged. Timings are indicative only.
+
+## Logical-predicate comparison
+
+`logical-predicates.csv` compares `84872e8` with the uncommitted implementation
+based on that revision. Representative session files from `is.finite` record
+source checksums and the common environment in
+`logical-predicates-before-session.txt` and
+`logical-predicates-after-session.txt`.
+
+For a 1,000 by 1,000 logical rvec, peak vector-heap growth for `is.nan`,
+`is.finite`, and `is.infinite` fell from about 16.0 MB to 4.0 MB. Allocation
+tracing of a separate warmed call likewise fell from four approximately 4 MB
+allocations to one: the three integer-conversion temporaries are eliminated,
+leaving the logical result. The allocation metric includes only allocations
+exceeding 1,000,000 bytes. The `is.na` control stayed at about 4.0 MB; existing
+constructor fast paths already avoid extra matrix copies there. Timings are
+indicative only.

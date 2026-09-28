@@ -145,3 +145,22 @@ and `full`. Export revision `8e9bf5e` and supply that directory for the baseline
 The CSV and companion session file use the same metrics and caveats as the
 other benchmarks above. One-draw alignment is covered by regression tests;
 the baseline errors on those inputs, so they are not benchmark comparisons.
+
+## Logical predicates
+
+`logical-predicates.R` measures missingness and finiteness predicates on a
+logical rvec with 1,000 observations and 1,000 draws, including `NA` values.
+Run each case in a fresh process:
+
+```sh
+Rscript --vanilla benchmarks/logical-predicates.R . is.finite /tmp/logical-after.csv
+```
+
+Cases are `is.nan`, `is.finite`, `is.infinite`, and the unchanged `is.na`
+control. Export revision `84872e8` and supply that directory for the baseline.
+The CSV reports the usual peak vector-heap growth, elapsed time, and output
+size. A separate warmed call uses `Rprofmem()` to record allocations exceeding
+1,000,000 bytes in a companion `.allocations.txt` file. The CSV's
+`allocations_over_1mb_mb` is their sum in decimal MB, not total allocation or
+peak memory. This requires R with memory-profiling support. A companion
+`.session.txt` records the environment and math/missingness source checksums.
