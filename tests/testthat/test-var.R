@@ -117,9 +117,9 @@ test_that("'var_rvec_nonrvec' works with valid inputs, nrow == 0", {
 })
 
 test_that("'var_rvec_nonrvec' preserves matrix covariance results", {
-    m <- matrix(1:12, nrow = 4)
+    m <- cbind(1:4, c(2, 1, 5, 3), c(8, 2, 4, 1))
     x <- rvec(m)
-    y <- matrix(c(4:1, 8:5), nrow = 4)
+    y <- cbind(4:1, c(1, 3, 2, 6))
     expected <- unlist(lapply(seq_len(ncol(m)), function(j)
         stats::var(m[, j], y, use = "everything")))
 

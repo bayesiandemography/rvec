@@ -130,7 +130,7 @@ var_rvec_rvec <- function(x, y, na.rm, use) {
     for (j in seq_len(n))
         data[[j]] <- stats::var(m_x[, j], m_y[, j],
                                 na.rm = na.rm, use = use)
-    data <- matrix(data, nrow = 1)
+    data <- matrix(data, nrow = 1L)
     rvec_dbl(data)
 }
 
@@ -158,11 +158,12 @@ var_rvec_nonrvec <- function(e1, e2, nm_e2, na.rm, use) {
             first <- stats::var(m[, 1L], y = e2,
                                 na.rm = na.rm, use = use)
             width <- length(first)
+            indices <- seq_len(width)
             data <- numeric(n * width)
-            data[seq_len(width)] <- first
+            data[indices] <- first
             if (n > 1L) {
                 for (j in 2:n) {
-                    here <- seq_len(width) + (j - 1L) * width
+                    here <- indices + (j - 1L) * width
                     data[here] <- stats::var(m[, j], y = e2,
                                              na.rm = na.rm, use = use)
                 }
