@@ -80,23 +80,47 @@ if_else_rvec <- function(condition, true, false, missing = NULL, size = NULL) {
             cli::cli_abort(paste("{.arg condition} has {n_draw} draw{?s} but",
                                  "{.arg missing} has {n_draw_missing} draw{?s}."))
     }
-    if (is_rvec(true))
+    true_is_rvec <- is_rvec(true)
+    false_is_rvec <- is_rvec(false)
+    missing_is_rvec <- has_missing && is_rvec(missing)
+    if (true_is_rvec)
         true <- field(true, "data")
     ans <- matrix(true, nrow = size, ncol = n_draw)
     condition_m <- field(condition, "data")
-    if (is_rvec(false))
+    if (false_is_rvec)
         false <- field(false, "data")
-    false_m <- matrix(false, nrow = size, ncol = n_draw)
-    here <- !is.na(condition_m) & !condition_m
-    ans[here] <- false_m[here]
-    if (has_missing) {
-        if (is_rvec(missing))
-            missing <- field(missing, "data")
+    if (missing_is_rvec)
+        missing <- field(missing, "data")
+    false_is_full <- false_is_rvec && n_draw_false == n_draw
+    if (false_is_full) {
+        false_m <- matrix(false, nrow = size, ncol = n_draw)
+        here <- !is.na(condition_m) & !condition_m
+        ans[here] <- false_m[here]
+    }
+    else {
+        for (j in seq_len(n_draw)) {
+            offset <- (j - 1L) * size
+            condition_j <- condition_m[, j]
+            here <- which(!is.na(condition_j) & !condition_j)
+            ans[here + offset] <- false[here]
+        }
+    }
+    missing_is_full <- missing_is_rvec && n_draw_missing == n_draw
+    if (missing_is_full) {
         missing_m <- matrix(missing, nrow = size, ncol = n_draw)
         here <- is.na(condition_m)
         ans[here] <- missing_m[here]
     }
-    else
-        ans[is.na(condition_m)] <- NA
+    else {
+        for (j in seq_len(n_draw)) {
+            offset <- (j - 1L) * size
+            condition_j <- condition_m[, j]
+            here <- which(is.na(condition_j))
+            if (has_missing)
+                ans[here + offset] <- missing[here]
+            else
+                ans[here + offset] <- NA
+        }
+    }
     rvec(ans)
 }

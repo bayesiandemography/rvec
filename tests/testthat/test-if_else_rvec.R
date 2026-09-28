@@ -54,6 +54,29 @@ test_that("'if_else_rvec' works with valid inputs - rvec argument has 1 draw", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'if_else_rvec' preserves branch types when branches are unused", {
+    condition <- rvec(matrix(TRUE, nrow = 2, ncol = 2))
+
+    ans <- if_else_rvec(condition, 1:2, c(3, 4))
+    expect_identical(ans, rvec_dbl(matrix(c(1, 2, 1, 2), nrow = 2)))
+
+    ans <- if_else_rvec(condition, 1:2, 3:4, missing = c("a", "b"))
+    expect_identical(ans, rvec_chr(matrix(c("1", "2", "1", "2"), nrow = 2)))
+})
+
+test_that("'if_else_rvec' selects from compact branch inputs", {
+    condition <- rvec(matrix(c(TRUE, FALSE, NA,
+                               FALSE, TRUE, NA), nrow = 3))
+    true <- c(one = 1L, two = 2L, three = 3L)
+    false <- rvec(c(one = 11L, two = 12L, three = 13L))
+    missing <- rvec(matrix(21:26, nrow = 3))
+
+    ans <- if_else_rvec(condition, true, false, missing)
+    expected <- rvec(matrix(c(1L, 12L, 23L,
+                              11L, 2L, 26L), nrow = 3))
+    expect_identical(ans, expected)
+})
+
 test_that("'if_else_rvec' throws correct error with non-rvec condition", {
     w <- c(TRUE, FALSE, TRUE)
     x <- 1:3
@@ -100,8 +123,6 @@ test_that("'if_else_rvec' throws correct error when condition, missing have diff
 
                  
     
-
-
 
 
 

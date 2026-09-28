@@ -100,3 +100,18 @@ measurements. Output size can exceed additional allocation: same-type
 constructors and casts can share existing matrix storage until modification.
 A session file is written alongside each CSV. The memory/timing caveats above
 also apply here.
+
+## Conditional selection
+
+`if-else.R` measures `if_else_rvec()` with ordinary, one-draw, or full rvec
+`false` and `missing` branches. The `true` branch is ordinary in every case,
+and the condition contains an even mix of true, false, and missing values.
+Each case produces 1,000 observations by 1,000 draws in a fresh process:
+
+```sh
+Rscript --vanilla benchmarks/if-else.R . ordinary /tmp/if-else-after.csv
+```
+
+Export revision `16cb8f3` and supply that directory for the baseline. The CSV
+and companion session file use the same metrics and caveats as the other
+benchmarks above.

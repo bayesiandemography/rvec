@@ -242,39 +242,50 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Conditional selection (`R/if_else_rvec.R`).** The current implementation
-   constructs full matrices for true, false, and optional missing branches,
-   along with logical masks. Prototype allocating the result once and selecting
-   from compact branch inputs. Preserve branch type promotion, names, missing
-   handling, recycling, validation order, and behavior when a branch is unused.
-   Start with ordinary/shared branch values and single-draw rvecs.
-2. **Covariance (`R/var.R`).** `var_rvec_rvec()` and `var_rvec_nonrvec()` retain
+1. **Covariance (`R/var.R`).** `var_rvec_rvec()` and `var_rvec_nonrvec()` retain
    lists of all matrix columns before applying `stats::var()`. Process one
    column pair at a time with a preallocated result, retaining the same base
    calculations and `use`/missing-value semantics. Do not confuse this with
    single-input variance, whose coercion copy was already addressed.
-3. **Weighted summaries (`R/weighted_mean.R`).** Reuse an ordinary `x` vector
+2. **Weighted summaries (`R/weighted_mean.R`).** Reuse an ordinary `x` vector
    rather than expanding it across all draws when weights are rvecs. Examine
    one-draw alignment carefully: the current loop indexes both matrices by
    draw, so apparent alignment defects must be verified and separated from
    memory-only changes.
-4. **Mathematical functions and missingness (`R/vec_math.R`, `R/missing.R`).**
+3. **Mathematical functions and missingness (`R/vec_math.R`, `R/missing.R`).**
    Logical math first constructs an integer rvec. Investigate narrower paths
    that preserve types and overflow behavior. Reassess `is.na()` after the
    constructor fast paths: some of its previously identified copying may
    already be eliminated by `b23b6d4`.
-5. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
+4. **Summary dispatch (`sum`, `prod`, `any`, `all`).** The installed vctrs
    Summary method calls `vec_c(...)` even for one input. A single-input fast
    path may help, but preserve multi-argument behavior and dispatch. Reprofile
    after cast improvements before deciding whether this warrants new methods.
-6. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
+5. **Matrix multiplication (`R/matrixOps.R`).** The Matrix methods densify
    sparse operands, and rvec–rvec multiplication forms a full product before
    summing. Potentially large gains, but higher risk of changing accumulation,
    rounding, overflow, or dispatch. Treat as a separate investigation.
-7. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
+6. **Reshaping, pooling, modes, and formatting.** Inspect typed allocation in
    `collapse_to_rvec()`, `as.vector(t(m))` in expansion, reconstruction in
    pooling, and retention of all row frequency tables in mode/formatting
    paths. Distinguish unavoidable output allocations from avoidable temporaries.
+
+### Conditional-selection implementation
+
+The `if_else_rvec()` refactor is implemented in the working tree after
+`16cb8f3`. It retains ordinary and one-draw `false` and `missing` branches in
+compact form, selecting their values one draw at a time instead of constructing
+full branch matrices. Assignments still process the complete `false` branch
+before `missing`, including zero-length assignments, preserving the original
+type-promotion behavior when a branch is unused.
+
+Randomized comparison covered 6,912 combinations of output size, draw count,
+branch type, and ordinary/one-draw/full layout with results identical to
+`16cb8f3`. Fourteen focused checks and all 10,965 package tests passed. For
+1,000 observations by 1,000 draws, peak vector-heap growth fell from about
+41.3 MB to 34.1 MB for ordinary and one-draw branches; the full-rvec path
+remained at about 45.4 MB. The reproducible benchmark and recorded comparison
+are in `benchmarks/if-else.R` and `benchmarks/results/if-else*`.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

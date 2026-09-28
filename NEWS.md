@@ -2,6 +2,9 @@
 
 ## Memory use
 
+- `if_else_rvec()` retains ordinary and one-draw `false` and `missing`
+  branches in compact form instead of expanding each one across all draws.
+
 - Comparisons retain shared operands in compact form rather than repeating
   them across draws. Draw summaries, standard deviations, and variances
   avoid coercion copies when inputs are already double-valued.

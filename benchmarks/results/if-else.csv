@@ -1,0 +1,7 @@
+"stage","layout","observations","draws","elapsed_seconds","output_mb","peak_vector_heap_growth_mb"
+"after","full",1000,1000,0.014,8.000936,45.372088
+"after","ordinary",1000,1000,0.026,8.000936,34.075472
+"after","single",1000,1000,0.024,8.000936,34.071536
+"before","full",1000,1000,0.014,8.000936,45.372088
+"before","ordinary",1000,1000,0.0640000000000001,8.000936,41.344592
+"before","single",1000,1000,0.0790000000000002,8.000936,41.344656

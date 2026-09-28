@@ -35,3 +35,15 @@ Session details are in `common-before-session.txt` and
 setup garbage before resetting high-water marks. Same-type outputs may share
 input storage; their object size is not additional allocated memory. All 12
 cases completed successfully. Timings are indicative only.
+
+## Conditional-selection comparison
+
+`if-else.csv` records ordinary, one-draw, and full-rvec branch layouts before
+and after the `if_else_rvec()` change. Before uses `16cb8f3`; after uses the
+uncommitted implementation based on that revision. Session details are in
+`if-else-before-session.txt` and `if-else-after-session.txt`.
+
+For 1,000 observations by 1,000 draws, peak vector-heap growth fell from about
+41.3 MB to 34.1 MB for both ordinary and one-draw `false` and `missing`
+branches. The full-rvec case remained at about 45.4 MB. Timings are indicative
+only.
