@@ -32,7 +32,8 @@ A vector.
 }
 \description{
 Apply \code{all} or \code{any} logical summaries
-across random draws.
+across random draws. For missingness and finiteness checks, see
+\code{\link[=draws_any_na]{draws_any_na()}} and its related functions.
 }
 \examples{
 m <- rbind(a = c(TRUE,  FALSE,  TRUE),

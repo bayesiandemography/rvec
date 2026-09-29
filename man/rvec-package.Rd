@@ -68,6 +68,9 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 \itemize{
 \item \code{\link[=draws_all]{draws_all()}} All
 \item \code{\link[=draws_any]{draws_any()}} Any
+\item \code{\link[=draws_any_na]{draws_any_na()}}, \code{\link[=draws_all_na]{draws_all_na()}} Missing draws
+\item \code{\link[=draws_any_infinite]{draws_any_infinite()}}, \code{\link[=draws_all_infinite]{draws_all_infinite()}} Infinite draws
+\item \code{\link[=draws_any_finite]{draws_any_finite()}}, \code{\link[=draws_all_finite]{draws_all_finite()}} Finite draws
 \item \code{\link[=draws_min]{draws_min()}} Minimum
 \item \code{\link[=draws_max]{draws_max()}} Maximum
 \item \code{\link[=draws_median]{draws_median()}} Median

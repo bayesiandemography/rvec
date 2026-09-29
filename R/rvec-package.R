@@ -59,6 +59,9 @@
 #'
 #' - [draws_all()] All
 #' - [draws_any()] Any
+#' - [draws_any_na()], [draws_all_na()] Missing draws
+#' - [draws_any_infinite()], [draws_all_infinite()] Infinite draws
+#' - [draws_any_finite()], [draws_all_finite()] Finite draws
 #' - [draws_min()] Minimum
 #' - [draws_max()] Maximum
 #' - [draws_median()] Median

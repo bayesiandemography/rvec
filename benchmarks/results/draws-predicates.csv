@@ -1,0 +1,3 @@
+method,elapsed_seconds,peak_vector_heap_growth_mb
+direct,0.00299999999999989,8.083584
+composed,0.00499999999999989,8.091904

@@ -4,7 +4,8 @@
 #' Logical Operations Across Random Draws
 #'
 #' Apply `all` or `any` logical summaries
-#' across random draws.
+#' across random draws. For missingness and finiteness checks, see
+#' [draws_any_na()] and its related functions.
 #'
 #' @param x An object of class [rvec][rvec()].
 #' @param na_rm Whether to remove NAs before
@@ -93,6 +94,189 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
     names(ans) <- rownames(m)
     ans
   }
+}
+
+
+## Missingness and finiteness across draws ----------------------------------
+
+#' Check Missingness and Finiteness Across Draws
+#'
+#' Ask whether any or all draws for each element are missing, infinite, or
+#' finite. These functions return one ordinary logical value per element,
+#' rather than an rvec.
+#'
+#' @param x An [rvec][rvec()]. Missingness checks accept all rvec types.
+#'   Finiteness checks accept double, integer, and logical rvecs, but not
+#'   character rvecs.
+#'
+#' @returns A logical vector of length `length(x)`, with the same names as `x`.
+#'   Results never contain `NA`. A zero-length rvec returns `logical(0)`.
+#'
+#' @details
+#' Each function applies the following predicate to the draws of each element,
+#' then asks whether any or all draws satisfy it.
+#'
+#' | Predicate | TRUE for | FALSE for |
+#' | --- | --- | --- |
+#' | `na` | `NA` and `NaN` | All other values |
+#' | `infinite` | `Inf` and `-Inf` | Finite values, `NA`, and `NaN` |
+#' | `finite` | Finite numbers and nonmissing logical values | `Inf`, `-Inf`, `NA`, and `NaN` |
+#'
+#' There is no `na_rm` argument: missing values are classified by the predicate.
+#' Having no infinite draws does not imply that all draws are finite, since
+#' some draws may be `NA` or `NaN`.
+#'
+#' `draws_any_na(x)` summarises across draws, returning one logical value for
+#' each element. In contrast, `anyNA(x)` summarises across elements within each
+#' draw and returns a logical rvec of length one. `is.na(x)` preserves both
+#' elements and draws, returning a logical rvec with the same shape as `x`.
+#'
+#' @seealso [draws_any()], [draws_all()] for general logical summaries across
+#'   draws; [is.na()], [is.finite()], [is.infinite()] for predicates that
+#'   preserve draws.
+#'
+#' @examples
+#' x <- rvec(rbind(complete = c(1, 2, 3),
+#'                 missing = c(1, NA, NaN),
+#'                 unbounded = c(Inf, -Inf, 2)))
+#' draws_any_na(x)
+#' draws_all_na(x)
+#' draws_any_infinite(x)
+#' draws_all_infinite(x)
+#' draws_any_finite(x)
+#' draws_all_finite(x)
+#'
+#' # Keep elements whose draws are all finite
+#' x[draws_all_finite(x)]
+#'
+#' # Filter rows of a data frame using the same condition
+#' df <- tibble::tibble(id = seq_along(x), value = x)
+#' df[draws_all_finite(df$value), ]
+#' @name draws_any_na
+NULL
+
+#' @rdname draws_any_na
+#' @export
+draws_any_na <- function(x) {
+    UseMethod("draws_any_na")
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_any_na.rvec <- function(x) {
+    m <- field(x, "data")
+    ans <- if (nrow(m) == 0L) logical() else matrixStats::rowAnyNAs(m)
+    names(ans) <- rownames(m)
+    ans
+}
+
+#' @rdname draws_any_na
+#' @export
+draws_all_na <- function(x) {
+    UseMethod("draws_all_na")
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_all_na.rvec <- function(x) {
+    m <- field(x, "data")
+    ans <- if (nrow(m) == 0L) logical() else matrixStats::rowAlls(m, value = NA)
+    names(ans) <- rownames(m)
+    ans
+}
+
+#' @rdname draws_any_na
+#' @export
+draws_any_infinite <- function(x) {
+    UseMethod("draws_any_infinite")
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_any_infinite.rvec <- function(x) {
+    draws_predicate(x, is.infinite, all = FALSE)
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_any_infinite.rvec_chr <- function(x) {
+    cli::cli_abort("Finiteness checks are not defined for character rvecs.")
+}
+
+#' @rdname draws_any_na
+#' @export
+draws_all_infinite <- function(x) {
+    UseMethod("draws_all_infinite")
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_all_infinite.rvec <- function(x) {
+    draws_predicate(x, is.infinite, all = TRUE)
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_all_infinite.rvec_chr <- function(x) {
+    cli::cli_abort("Finiteness checks are not defined for character rvecs.")
+}
+
+#' @rdname draws_any_na
+#' @export
+draws_any_finite <- function(x) {
+    UseMethod("draws_any_finite")
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_any_finite.rvec <- function(x) {
+    draws_predicate(x, is.finite, all = FALSE)
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_any_finite.rvec_chr <- function(x) {
+    cli::cli_abort("Finiteness checks are not defined for character rvecs.")
+}
+
+#' @rdname draws_any_na
+#' @export
+draws_all_finite <- function(x) {
+    UseMethod("draws_all_finite")
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_all_finite.rvec <- function(x) {
+    draws_predicate(x, is.finite, all = TRUE)
+}
+
+## HAS_TESTS
+#' @rdname draws_any_na
+#' @export
+draws_all_finite.rvec_chr <- function(x) {
+    cli::cli_abort("Finiteness checks are not defined for character rvecs.")
+}
+
+## HAS_TESTS
+#' Summarise a predicate across draws without constructing an intermediate rvec
+#' @noRd
+draws_predicate <- function(x, predicate, all) {
+    m <- field(x, "data")
+    ans <- if (nrow(m) == 0L) logical()
+           else if (all) matrixStats::rowAlls(predicate(m))
+           else matrixStats::rowAnys(predicate(m))
+    names(ans) <- rownames(m)
+    ans
 }
 
 

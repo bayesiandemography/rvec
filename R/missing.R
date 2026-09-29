@@ -44,6 +44,8 @@
 #'   all draws for an observation are missing
 #' - [vctrs::vec_detect_complete()] Test whether
 #'   any draws for an observation are missing
+#' - [draws_any_na()], [draws_all_na()], [draws_all_finite()] Check
+#'   missingness and finiteness across draws
 #' - [draws_any()], [draws_all()] Summarise
 #'   across draws
 #' 
