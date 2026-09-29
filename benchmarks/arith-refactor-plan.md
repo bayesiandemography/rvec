@@ -586,3 +586,12 @@ NEWS. Run focused tests followed by full tests/package checks as appropriate.
 
 User workflow so far: implement and report results, then commit when requested.
 Do not merge, push, or release the branch without a separate instruction.
+
+### Cross-platform checks before promotion to main
+
+CI on Windows and Linux exposed platform-dependent NA/NaN propagation in base
+arithmetic when operand lengths change. The regression oracle now preserves the
+original layout for ordinary-vector operands. When two rvecs have different draw
+counts and both contain missing values, arithmetic retains the original draw
+expansion path. Other compact layouts remain unchanged; `anyNA()` checks the
+one-draw operand first and creates no full-size logical temporary.

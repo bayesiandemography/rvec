@@ -314,6 +314,12 @@ arith_rvec_binary <- function(op, x, y, double) {
                                       "vctrs_rcrd", "vctrs_vctr")), TRUE))
         compact <- standard(x) && standard(y) &&
             op %in% c("+", "-", "*", "/", "^", "%%", "%/%")
+        # Recycling can change base R's NA/NaN propagation on some platforms.
+        # Preserve the original layout when both operands contain missing values.
+        if (compact && n_draw(x) != n_draw(y) &&
+            anyNA(field(if (n_draw(x) == 1L) x else y, "data")) &&
+            anyNA(field(if (n_draw(x) == 1L) y else x, "data")))
+            compact <- FALSE
         if (!compact) {
             ## Retain conversion dispatch for subclasses and other operators.
             convert <- function(z) {
