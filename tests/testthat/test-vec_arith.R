@@ -161,14 +161,19 @@ test_that("binary arithmetic preserves types and recycling across compact layout
             m[rep(seq_len(nrow(m)), length.out = n),
               rep(seq_len(ncol(m)), length.out = nd), drop = FALSE]
         }
-        mx <- expand(x)
-        my <- expand(y)
+        # Match the original operand layouts: only two rvecs expanded draws.
+        # Base R can distinguish NA from NaN differently when recycling.
+        both_rvec <- is_rvec(x) && is_rvec(y)
+        mx <- if (both_rvec) expand(x) else if (is_rvec(x)) as.matrix(x) else x
+        my <- if (both_rvec) expand(y) else if (is_rvec(y)) as.matrix(y) else y
         original_x <- serialize(x, NULL)
         original_y <- serialize(y, NULL)
         for (op in c("+", "-", "*", "/", "^", "%%", "%/%")) {
             fun <- getExportedValue("base", op)
-            expected <- capture(rvec(fun(mx, my)))
-            expect_identical(capture(fun(x, y)), expected)
+            expected <- capture(rvec(vctrs::vec_arith_base(op, mx, my)))
+            expect_identical(capture(fun(x, y)), expected,
+                             info = paste(op, paste(capture.output(dput(x)), collapse = " "),
+                                          paste(capture.output(dput(y)), collapse = " ")))
         }
         expect_identical(serialize(x, NULL), original_x)
         expect_identical(serialize(y, NULL), original_y)
