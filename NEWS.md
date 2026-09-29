@@ -2,6 +2,9 @@
 
 ## Memory use
 
+- `draws_mode()` processes one row's frequency table at a time instead of
+  retaining frequency tables for every row.
+
 - Pooling draws reshapes the existing data instead of reconstructing a
   matrix, avoiding an extra copy of the pooled values.
 

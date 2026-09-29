@@ -675,3 +675,41 @@ test_that("double draw summaries retain results without coercion copies", {
         expect_identical(serialize(x, NULL), before)
     }
 })
+
+test_that("draws_mode preserves ties, missing values, types, and input data", {
+    for (kind in c("dbl", "int", "lgl", "chr")) {
+        constructor <- get(paste0("rvec_", kind))
+        values <- switch(kind, dbl = c(1.5, 2.5), int = c(1L, 2L),
+                         lgl = c(TRUE, FALSE), chr = c("b", "a"))
+        a <- values[1L]
+        b <- values[2L]
+        m <- rbind(unique = c(a, a, b, NA), tied = c(a, a, b, b),
+                   missing = c(NA, NA, a, b), missing_tie = c(a, a, NA, NA))
+        x <- constructor(m)
+        expect_identical(draws_mode(x),
+                         setNames(c(a, values[NA_integer_], values[NA_integer_], values[NA_integer_]),
+                                  rownames(m)))
+        expect_identical(draws_mode(x, na_rm = TRUE),
+                         setNames(c(a, values[NA_integer_], values[NA_integer_], a), rownames(m)))
+        expect_identical(vctrs::field(x, "data"), m)
+        empty <- constructor(matrix(values[integer()], 0L, 3L))
+        expect_identical(draws_mode(empty), values[NA_integer_])
+        all_missing <- constructor(matrix(rep(values[NA_integer_], 6L), 2L, 3L))
+        expect_identical(draws_mode(all_missing), rep(values[NA_integer_], 2L))
+        warnings <- character()
+        result <- withCallingHandlers(draws_mode(all_missing, na_rm = TRUE),
+                                      warning = function(w) {
+                                          warnings <<- c(warnings, conditionMessage(w))
+                                          invokeRestart("muffleWarning")
+                                      })
+        expect_identical(result, rep(values[NA_integer_], 2L))
+        expect_identical(warnings, rep("no non-missing arguments to max; returning -Inf", 2L))
+    }
+})
+
+test_that("draws_mode retains non-finite modes", {
+    x <- rvec_dbl(rbind(infinite = c(Inf, Inf, 1),
+                        negative = c(-Inf, -Inf, 1), nan = c(NaN, NaN, 1)))
+    expect_identical(draws_mode(x), c(infinite = Inf, negative = -Inf, nan = NaN))
+    expect_identical(draws_mode(x, na_rm = TRUE), c(infinite = Inf, negative = -Inf, nan = 1))
+})

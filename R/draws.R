@@ -351,17 +351,13 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
   }
   else {
     useNA <- if (na_rm) "no" else "ifany"
-    tabs <- apply(m, 1L, table, useNA = useNA, simplify = FALSE)
-    nms_tabs <- lapply(tabs, names)
-    i_max <- lapply(tabs, function(x) which(x == max(x))) # allows multiple
-    has_unique_mode <- vapply(i_max, length, 1L) == 1L
     ans <- rep(NA, times = nrow(m))
-    modes <- .mapply(function(x, i) x[[i]],
-                     dots = list(nms_tabs[has_unique_mode],
-                                 i_max[has_unique_mode]),
-                     MoreArgs = list())
-    modes <- unlist(modes, use.names = FALSE)
-    ans[has_unique_mode] <- modes
+    for (i in seq_len(nrow(m))) {
+      tab <- table(m[i, ], useNA = useNA)
+      i_max <- which(tab == max(tab)) # allows multiple
+      if (length(i_max) == 1L)
+        ans[i] <- names(tab)[i_max]
+    }
     names(ans) <- rownames(m)
   }
   storage.mode(ans) <- storage_mode
@@ -843,6 +839,5 @@ prob.rvec_lgl <- function(x, na_rm = FALSE) {
 prob.logical <- function(x, na_rm = FALSE) {
   as.double(x)
 }
-
 
 

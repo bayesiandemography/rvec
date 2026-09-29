@@ -242,19 +242,19 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Modes.** Streaming one row table at a time reduced the recorded
-   distinct-value peak from 54.0 MB to 48.1 MB; low-cardinality data showed no
-   peak improvement. Preserve ties, missingness, names, and conversion warnings.
-2. **Collapse and character formatting: lower priority.** Typed initialization
+The main measured opportunities have been implemented. The remaining entries
+are lower priority or deferred, rather than required follow-up work.
+
+1. **Collapse and character formatting: lower priority.** Typed initialization
    of only the first collapse matrix saves one 4 MB allocation without changing
    subsequent type promotion, but did not improve peak memory. Streaming
    character formatting removes a transpose allocation but did not improve
    peak memory either. Both need a stronger benefit case before broad changes.
-3. **Logical formatting: deferred after compatibility checks.** Direct logical
+2. **Logical formatting: deferred after compatibility checks.** Direct logical
    rowMeans2 saves an allocation but changes formatted results at rounding
    boundaries compared with the current refined double calculation. The
    original implementation and dependency requirements remain unchanged.
-4. **Matrix multiplication: deferred after profiling.** Direct sparse
+3. **Matrix multiplication: deferred after profiling.** Direct sparse
    multiplication changes non-finite arithmetic, and a streamed rvec dot-product
    prototype increased measured peak memory. See the investigation below before
    revisiting this; a different approach needs both compatibility evidence and
@@ -537,6 +537,34 @@ regression test comparing to the existing double calculation. All 16,826
 logical proportion/rounding comparisons then matched the baseline. Its memory
 benchmark remains an unchanged control; earlier prototype savings are not
 shipped improvements.
+
+### Draw-mode implementation
+
+The mode change is implemented in the working tree after `0f9f999`.
+`draws_mode()` constructs and consumes one row's table at a time instead of
+retaining lists of every table, its names, and maximum indices. It retains the
+existing table calculation, tie rule, final storage-mode conversion, and
+empty-input behavior. All-missing rows with `na_rm = TRUE` retain the original
+max-of-empty warning, including one warning per affected row.
+
+All 5,808 exhaustive comparisons matched the baseline across logical, integer,
+double, and character inputs with one through five draws, names, ties, missing
+values, and both `na_rm` settings. Another 1,296 comparisons covered multiple
+rows, empty inputs, non-finite and closely spaced numeric values, Unicode and
+special character values, invalid flags, warnings, and error classes/messages.
+Permanent tests cover types, ties, missing values, names, empty results,
+non-finite modes, warning counts, and input immutability. All 11,716 package
+test assertions passed. Package checking with manual and vignette building
+disabled reported zero errors, zero warnings, and one environment-related
+note about remote time verification.
+
+With 1,000 observations and 1,000 distinct numeric draws per row, peak
+vector-heap growth fell from 61.0 MB to 44.1 MB for integers and from 57.0 MB
+to 40.1 MB for doubles. Repeated-value and character cases showed essentially
+unchanged peaks. These production-path measurements supersede prototype
+estimates from other harnesses; the peak depends on type, cardinality, and
+garbage collection. Reproducible benchmarks and recorded comparisons are in
+`benchmarks/draws-mode.R` and `benchmarks/results/draws-mode*`.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

@@ -1,0 +1,15 @@
+"stage","type","scenario","observations","draws","elapsed_seconds","output_mb","peak_vector_heap_growth_mb"
+"after","chr","repeated",1000,1000,0.123,0.008048,40.1352
+"after","chr","unique",1000,1000,0.756,0.008048,49.465016
+"after","dbl","repeated",1000,1000,0.341,0.008048,40.1344
+"after","dbl","unique",1000,1000,0.778,0.008048,40.14248
+"after","int","repeated",1000,1000,0.073,0.004048,44.140736
+"after","int","unique",1000,1000,0.335,0.004048,44.141064
+"after","lgl","repeated",1000,1000,0.063,0.004048,44.134712
+"before","chr","repeated",1000,1000,0.132,0.008048,40.132664
+"before","chr","unique",1000,1000,0.772,0.008048,49.466608
+"before","dbl","repeated",1000,1000,0.382,0.008048,40.131024
+"before","dbl","unique",1000,1000,1.002,0.008048,57.011744
+"before","int","repeated",1000,1000,0.0719999999999998,0.004048,44.135192
+"before","int","unique",1000,1000,0.49,0.004048,61.02652
+"before","lgl","repeated",1000,1000,0.069,0.004048,44.132872

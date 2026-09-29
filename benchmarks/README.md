@@ -309,3 +309,21 @@ formatC(matrixStats::rowMeans2(m, na.rm = TRUE), format = "fg")     # "0.1429"
 
 The previous investigation's logical-format prototype is therefore not a
 compatible replacement; its allocation savings must not be reported as shipped.
+
+## Draw modes
+
+`draws-mode.R` measures `draws_mode()` on a 1,000-row, 1,000-draw rvec.
+Use revision `0f9f999` as the before baseline and run each case in a fresh
+process:
+
+```sh
+Rscript --vanilla benchmarks/draws-mode.R . int unique /tmp/mode-after.csv
+```
+
+Types are `dbl`, `int`, `lgl`, and `chr`. Scenarios are `repeated` (97 distinct
+values for numeric/character inputs) and `unique` (every cell distinct).
+Logical inputs use two values and support only `repeated`. The CSV records
+elapsed time, output size, and peak vector-heap growth. A companion session
+file records the draws source checksum and environment. These public-call
+benchmarks supersede estimates from the earlier investigation harness; peak
+memory depends on input type and garbage-collection timing.

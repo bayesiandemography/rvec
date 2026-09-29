@@ -211,3 +211,17 @@ values out of 100,000 format as `p=0.1428` with the current double/refined
 calculation but `p=0.1429` with direct logical input in this environment. The
 prototype was not adopted, and the existing calculation has a regression test.
 Timings are indicative only.
+
+## Draw-mode implementation
+
+`draws-mode.csv` compares `0f9f999` with the uncommitted implementation based
+on that revision. Representative session files from the distinct-integer case
+record the draws source checksum and common environment in
+`draws-mode-before-session.txt` and `draws-mode-after-session.txt`.
+
+For 1,000 observations and 1,000 draws with distinct numeric values, peak
+vector-heap growth fell from 61.0 MB to 44.1 MB for integers and from 57.0 MB
+to 40.1 MB for doubles. Repeated-value and character cases showed essentially
+unchanged peaks. The implementation avoids retaining all row tables and the
+transpose performed by apply; the effect on measured peak depends on type,
+cardinality, and garbage collection. Timings are indicative only.
