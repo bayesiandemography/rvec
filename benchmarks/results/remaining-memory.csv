@@ -1,0 +1,15 @@
+"case","variant","scenario","observations","draws","elapsed_seconds","peak_vector_heap_growth_mb","allocations_over_1mb_mb","identical_to_current"
+"collapse","new","repeated",1000,1000,1.04,92.507328,173.167296,TRUE
+"collapse","old","repeated",1000,1000,1.037,92.507368,177.167344,TRUE
+"format","new","repeated",1000,1000,0.121,40.12852,0,TRUE
+"format","new","unique",1000,1000,0.728,45.33176,0,TRUE
+"format","old","repeated",1000,1000,0.123,40.12956,8.000048,TRUE
+"format","old","unique",1000,1000,0.72,45.33324,8.000048,TRUE
+"logical_format","new","repeated",1000,1000,0.00100000000000011,0.310952,0,TRUE
+"logical_format","old","repeated",1000,1000,0.00399999999999978,8.310976,8.000048,TRUE
+"mode","new","repeated",1000,1000,0.071,34.068208,0,TRUE
+"mode","new","unique",1000,1000,0.314,48.129904,4.194352,TRUE
+"mode","old","repeated",1000,1000,0.0720000000000001,34.06836,4.000048,TRUE
+"mode","old","unique",1000,1000,0.57,54.0116,4.000048,TRUE
+"pool","new","repeated",1000,1000,0,0.036904,0,TRUE
+"pool","old","repeated",1000,1000,0.00099999999999989,4.036912,4.000048,TRUE

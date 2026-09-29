@@ -2,6 +2,9 @@
 
 ## Memory use
 
+- Pooling draws reshapes the existing data instead of reconstructing a
+  matrix, avoiding an extra copy of the pooled values.
+
 - `expand_from_rvec()` reuses each transposed value matrix as its output
   vector, avoiding a second full-size copy of the values.
 

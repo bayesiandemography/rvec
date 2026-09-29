@@ -248,3 +248,64 @@ companion files use the same metrics as `logical-predicates.R`, including
 allocation tracing of a separate warmed call above a 1,000,000-byte threshold.
 The measurement includes the full expansion, including repeated identifiers
 and the draw column, not only the reshaping of value columns.
+
+## Remaining memory candidates
+
+`remaining-memory.R` contains investigation-only prototypes for collapse,
+pooling, modes, and formatting. They are not package implementations. Run
+against revision `bbb8890`, with each case in a fresh process:
+
+```sh
+Rscript --vanilla benchmarks/remaining-memory.R . pool old repeated /tmp/pool-old.csv
+Rscript --vanilla benchmarks/remaining-memory.R . pool new repeated /tmp/pool-new.csv
+Rscript --vanilla benchmarks/remaining-memory.R . mode new unique /tmp/mode-new.csv
+```
+
+Cases are `pool`, `mode`, `format` (character summaries), `logical_format`,
+and `collapse`. Variants are `old` (current package) and `new` (prototype).
+Each input matrix has 1,000 rows and 1,000 draws. The `repeated` scenario uses
+97 distinct integers, or their character equivalents; logical formatting uses
+TRUE/FALSE/NA. `unique` gives each cell a distinct integer or character value
+and is recorded for mode and character formatting.
+
+Prototypes change pooling dimensions directly, process one row table at a time
+for modes and character formatting, pass logical data directly to rowMeans2,
+or initialize collapse's first matrix with the first value column's storage
+type. Collapse continues to reuse that matrix so existing cross-column type
+promotion is preserved. These experiments do not establish compatibility with
+all supported dependency versions or extension classes.
+
+The CSV records peak vector-heap growth and the sum of allocations exceeding
+1,000,000 bytes in a separate warmed call; these are different metrics.
+`identical_to_current` compares results outside measurement. Companion files
+record allocation traces, source checksums, and the session environment.
+
+## Pooling implementation and formatting control
+
+`pooling-formatting.R` benchmarks public pooling calls and unchanged logical
+formatting. Use revision `bbb8890` as the before baseline, with each case in a
+fresh process:
+
+```sh
+Rscript --vanilla benchmarks/pooling-formatting.R . pool int /tmp/pool-after.csv
+Rscript --vanilla benchmarks/pooling-formatting.R . pool_grouped dbl /tmp/grouped-after.csv
+Rscript --vanilla benchmarks/pooling-formatting.R . logical_format lgl /tmp/format-control.csv
+```
+
+Pooling types are `dbl`, `int`, `lgl`, and `chr`; `logical_format` requires
+`lgl`. Inputs have 1,000 observations and 1,000 draws. `pool_grouped` pools
+within ten equally sized groups using `by`. The CSV and companion files use
+the same peak and warmed large-allocation metrics as the other benchmarks.
+
+Logical formatting remains unchanged: direct logical rowMeans2 can round
+slightly differently from the existing refined double calculation. With
+matrixStats 1.5.0 in the recorded environment:
+
+```r
+m <- matrix(c(rep(TRUE, 14285L), rep(FALSE, 85715L)), nrow = 1L)
+formatC(matrixStats::rowMeans2(1 * m, na.rm = TRUE), format = "fg") # "0.1428"
+formatC(matrixStats::rowMeans2(m, na.rm = TRUE), format = "fg")     # "0.1429"
+```
+
+The previous investigation's logical-format prototype is therefore not a
+compatible replacement; its allocation savings must not be reported as shipped.

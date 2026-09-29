@@ -228,3 +228,38 @@ test_that("'pool_draws_vec' throws error with non-rvec", {
 
 
 
+
+test_that("pooling preserves storage types, order, and independent modification", {
+  for (kind in c("dbl", "int", "lgl", "chr")) {
+    constructor <- get(paste0("rvec_", kind))
+    values <- switch(kind, dbl = c(1.5, NA, Inf, NaN), int = c(1L, NA_integer_, 3L, 4L),
+                     lgl = c(TRUE, NA, FALSE, TRUE), chr = c("a", NA, "b", "c"))
+    for (nr in c(0L, 1L, 4L)) for (nc in c(1L, 3L)) {
+      m <- matrix(rep(values, length.out = nr * nc), nr, nc)
+      if (nr > 0L) rownames(m) <- paste0("row", seq_len(nr))
+      x <- constructor(m)
+      ans <- pool_draws_vec(x)
+      expected <- if (nr == 0L) x else constructor(matrix(as.vector(m), nrow = 1L))
+      expect_identical(ans, expected)
+      if (nr > 0L) {
+        vctrs::field(ans, "data")[1L, 1L] <- NA
+        expect_identical(vctrs::field(x, "data"), m)
+        fresh <- pool_draws_vec(x)
+        vctrs::field(x, "data")[1L, 1L] <- NA
+        expect_identical(fresh, expected)
+      }
+    }
+  }
+})
+
+test_that("grouped pooling retains column-major draw order for mixed types", {
+  df <- data.frame(group = c("b", "a", "b", "a"),
+                   value = rvec_dbl(matrix(1:12, 4L, 3L)),
+                   label = rvec_chr(matrix(letters[1:12], 4L, 3L)))
+  expected <- tibble::tibble(group = c("b", "a"),
+                             value = rvec_dbl(rbind(c(1, 3, 5, 7, 9, 11), c(2, 4, 6, 8, 10, 12))),
+                             label = rvec_chr(rbind(letters[c(1, 3, 5, 7, 9, 11)],
+                                                    letters[c(2, 4, 6, 8, 10, 12)])))
+  expect_identical(pool_draws(df, by = group), expected)
+  expect_identical(pool_draws(dplyr::group_by(df, group)), expected)
+})

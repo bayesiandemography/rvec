@@ -159,3 +159,55 @@ fell from 88.0 MB to 44.0 MB. Garbage-collection timing affects that mixed-case
 peak; warmed allocation tracing showed a 24 MB reduction, from 96 MB to 72 MB
 in allocations above 1,000,000 bytes. This matches one avoided full-value copy
 per column. Timings are indicative only.
+
+## Remaining-candidate investigation
+
+`remaining-memory.csv` compares current implementations at `bbb8890` with
+benchmark-local prototypes; no package implementation changed. The common
+environment and source checksums are in `remaining-memory-session.txt`.
+Each input matrix has 1,000 rows and 1,000 draws.
+
+- Pooling an integer rvec: changing dimensions directly reduced peak growth
+  from 4.04 MB to 0.04 MB and removed one 4 MB allocation.
+- Logical summary formatting: passing logical data directly to rowMeans2
+  reduced peak growth from 8.31 MB to 0.31 MB and removed the 8 MB double matrix.
+- Modes: streaming row tables left the repeated-value case at about 34.1 MB.
+  The distinct-value case showed a smaller peak; see the CSV. Earlier exploratory
+  harnesses produced different peaks, so the size of the benefit is sensitive
+  to garbage-collection timing and string-table allocation.
+- Character summary formatting: streaming removed an 8 MB allocation but
+  left peak growth essentially unchanged (40.1 MB repeated, 45.3 MB distinct).
+- Collapse: typing only the initial matrix removed a 4 MB allocation, while
+  peak growth remained 92.5 MB. Subsequent columns retain the current type
+  promotion rather than changing behavior based on a memory-only refactor.
+
+The large-allocation metric excludes allocations of 1,000,000 bytes or less;
+zero does not mean no allocation. All benchmark results matched current output.
+Temporary compatibility checks also matched values, names, warnings, and error
+classes/messages across 216 pooling cases, 432 mode cases, 54 character-format
+cases, 54 logical-format cases, and 144 collapse cases. Pooling comparisons
+included checking that modifying a result did not modify its input.
+These prototypes still need permanent tests and full package validation before
+being adopted. Timings are indicative only.
+
+## Pooling implementation
+
+`pooling-formatting.csv` compares `bbb8890` with the uncommitted pooling
+implementation based on that revision. Representative session files from the
+integer ungrouped case record pooling/formatting source checksums and the
+common environment in `pooling-formatting-before-session.txt` and
+`pooling-formatting-after-session.txt`.
+
+For 1,000 observations and 1,000 draws, ungrouped public pooling reduced peak
+vector-heap growth from about 8.8 MB to 0.8 MB for doubles/characters and from
+4.8 MB to 0.8 MB for integers/logicals. Pooling within ten groups fell from
+25.3 MB to 17.3 MB and from 13.4 MB to 9.4 MB respectively. These public-call
+measurements include overhead excluded by the earlier helper-only prototypes.
+Allocation tracing confirmed removal of the reconstruction copy.
+
+Logical formatting is unchanged at about 8.3 MB. Broader proportion tests
+found that the earlier direct-logical prototype changes rounding: 14,285 TRUE
+values out of 100,000 format as `p=0.1428` with the current double/refined
+calculation but `p=0.1429` with direct logical input in this environment. The
+prototype was not adopted, and the existing calculation has a regression test.
+Timings are indicative only.

@@ -242,14 +242,19 @@ Saved evidence:
 
 ### Remaining candidates, in suggested order
 
-1. **Collapse, pooling, modes, and formatting.** Expansion no longer copies
-   its transposed value matrix (see below). Inspect typed allocation in
-   `collapse_to_rvec()`, reconstruction in pooling, and retention of all row
-   frequency tables in mode/formatting paths. Collapse reuses `m_tmp` across
-   value columns, so earlier columns can affect subsequent storage types;
-   distinguish any intended behavior fix from a memory-only change.
-   Distinguish unavoidable output allocations from avoidable temporaries.
-2. **Matrix multiplication: deferred after profiling.** Direct sparse
+1. **Modes.** Streaming one row table at a time reduced the recorded
+   distinct-value peak from 54.0 MB to 48.1 MB; low-cardinality data showed no
+   peak improvement. Preserve ties, missingness, names, and conversion warnings.
+2. **Collapse and character formatting: lower priority.** Typed initialization
+   of only the first collapse matrix saves one 4 MB allocation without changing
+   subsequent type promotion, but did not improve peak memory. Streaming
+   character formatting removes a transpose allocation but did not improve
+   peak memory either. Both need a stronger benefit case before broad changes.
+3. **Logical formatting: deferred after compatibility checks.** Direct logical
+   rowMeans2 saves an allocation but changes formatted results at rounding
+   boundaries compared with the current refined double calculation. The
+   original implementation and dependency requirements remain unchanged.
+4. **Matrix multiplication: deferred after profiling.** Direct sparse
    multiplication changes non-finite arithmetic, and a streamed rvec dot-product
    prototype increased measured peak memory. See the investigation below before
    revisiting this; a different approach needs both compatibility evidence and
@@ -464,6 +469,74 @@ allocation tracing confirmed a 24 MB reduction in allocations above 1 MB,
 corresponding to one avoided copy per value column. Reproducible benchmarks
 and recorded comparisons are in `benchmarks/expansion.R` and
 `benchmarks/results/expansion*`.
+
+### Remaining-candidate investigation
+
+Investigation against `bbb8890` added only benchmark-local prototypes, saved
+results, and this plan update. Production implementations are unchanged.
+The recorded cases and metrics are described in `benchmarks/remaining-memory.R`
+and `benchmarks/results/remaining-memory*`. Each input matrix has 1,000 rows
+and 1,000 draws; mode and character-format cases include 97-value and
+fully distinct scenarios. The priorities above reflect measured savings.
+
+All 900 targeted comparisons matched current results, names, warnings, and
+error classes/messages: 216 pooling, 432 mode, 54 character-format, 54
+logical-format, and 144 collapse cases. These covered empty/singleton/longer
+inputs, different draw counts and storage types, names, missing and non-finite
+values, ties, and explicit collapse output types. Pooling additionally passed
+input-immutability checks. These are exploratory checks, not replacements for
+permanent regression tests or full package validation of a production change.
+
+Collapse's shared matrix really does carry type across columns: a character
+value column followed by an integer column currently produces two character
+rvecs under default type inference. Independently allocating each column
+would change that behavior. The measured prototype instead types only the
+first matrix and retains later promotion. Character formatting also has an
+edge case: all-missing rows can contribute no entry to its summary helper's
+result. A streaming rewrite must preserve this behavior or fix it separately.
+
+The mode prototype's peak varied across exploratory harnesses (about 34 MB
+versus 48 MB for distinct data); the final saved script reproduced 48.1 MB
+against 54.0 MB currently. Avoid claiming a universal peak reduction from
+retaining fewer tables. Character formatting and collapse reduced traced
+allocations without lowering recorded peaks. No NEWS entry was added because
+no production behavior or memory use changed.
+
+### Pooling implementation and logical-formatting follow-up
+
+The pooling change is implemented in the working tree after `bbb8890`.
+`pool_draws_vec()` still clears the input matrix's attributes, then sets its
+dimensions directly to one row instead of reconstructing it with `matrix()`.
+The existing rvec constructor and empty-input path remain in use. This avoids
+the reconstruction copy while preserving column-major order, storage type,
+name removal, and independent modification of inputs and results.
+
+All 1,344 comparisons of pooling and formatting matched baseline results,
+warnings, and error classes/messages, including all four types, missing and
+non-finite values, names, empty/singleton/longer inputs, multiple draw counts,
+plain/by/grouped pooling, and unequal groups. Permanent tests cover storage,
+order, grouped mixed-type data, and independent modification in both directions.
+All 11,686 package test assertions passed. Package checking with manual and
+vignette building disabled reported zero errors, zero warnings, and one
+environment-related note about remote time verification.
+
+Public pooling of 1,000 observations and 1,000 draws reduced peak vector-heap
+growth from 8.8 MB to 0.8 MB for doubles/characters and from 4.8 MB to 0.8 MB
+for integers/logicals. Pooling within ten groups fell from 25.3 MB to 17.3 MB
+and from 13.4 MB to 9.4 MB respectively. Reproducible benchmarks and recorded
+results are in `benchmarks/pooling-formatting.R` and
+`benchmarks/results/pooling-formatting*`.
+
+Logical rowMeans2 support was verified in matrixStats NEWS as dating to
+0.53.0 (2018). However, broader rounding checks found an incompatibility:
+14,285 TRUE values among 100,000 draws format as `p=0.1428` with the current
+double/refined calculation and `p=0.1429` with direct logical input on the
+recorded environment. The direct-logical change and proposed minimum-version
+requirement were withdrawn. Formatting is unchanged, with a permanent
+regression test comparing to the existing double calculation. All 16,826
+logical proportion/rounding comparisons then matched the baseline. Its memory
+benchmark remains an unchanged control; earlier prototype savings are not
+shipped improvements.
 
 Unary arithmetic was deliberately left unchanged and is not required to finish
 these remaining candidates. General constructor conversions that change type

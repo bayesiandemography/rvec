@@ -187,8 +187,8 @@ pool_draws_vec <- function(vec) {
   if (length(vec) > 0L) {
     m <- field(vec, "data")
     attributes(m) <- NULL
-    ans <- matrix(m, nrow = 1L)
-    ans <- rvec(ans)
+    dim(m) <- c(1L, length(m))
+    ans <- rvec(m)
   }
   else
     ans <- vec

@@ -101,3 +101,23 @@ test_that("obj_print_data.rvec works with length > 0", {
     x <- rvec_dbl(matrix(1:4, 2))
     expect_snapshot(vctrs::obj_print_data(x))
 })
+
+test_that("logical summary formatting preserves missingness, rounding, and names", {
+    m <- rbind(all_true = rep(TRUE, 7L), all_false = rep(FALSE, 7L),
+               all_missing = rep(NA, 7L), partial = c(TRUE, FALSE, NA, NA, NA, NA, NA),
+               fraction = c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE))
+    x <- rvec_lgl(m)
+    expect_identical(format(x),
+                     c(all_true = "p=1", all_false = "p=0", all_missing = "p=NaN",
+                       partial = "p=0.5", fraction = "p=0.1429"))
+    expect_identical(vctrs::field(x, "data"), m)
+    empty <- rvec_lgl(matrix(logical(), nrow = 0L, ncol = 7L))
+    expect_identical(format(empty), "p=")
+})
+
+test_that("logical formatting retains double-precision refinement at rounding boundaries", {
+    m <- matrix(c(rep(TRUE, 14285L), rep(FALSE, 85715L)), nrow = 1L)
+    expected <- paste0("p=", formatC(matrixStats::rowMeans2(1 * m, na.rm = TRUE),
+                                    format = "fg"))
+    expect_identical(format(rvec_lgl(m)), expected)
+})
