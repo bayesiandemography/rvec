@@ -47,7 +47,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+then an \link{rvec}; otherwise an ordinary R vector.
 \item Unlike base \code{rgeom()}, \code{rgeom_rvec()} always  returns doubles.
 }
 }
@@ -69,7 +69,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dgeom_rvec()}, \code{pgeom_rvec()},
 \code{pgeom_rvec()} and \code{rgeom_rvec()}
-use \link[vctrs:theory-faq-recycling]{tidyverse}
+use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -89,6 +89,6 @@ rgeom_rvec(n = 2,
 \seealso{
 \itemize{
 \item \code{\link[=dgeom]{dgeom()}}, \code{\link[=pgeom]{pgeom()}}, \code{\link[=qgeom]{qgeom()}}, \code{\link[=rgeom]{rgeom()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

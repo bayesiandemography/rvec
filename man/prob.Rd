@@ -13,7 +13,7 @@ prob(x, na_rm = FALSE)
 \method{prob}{logical}(x, na_rm = FALSE)
 }
 \arguments{
-\item{x}{An object of class \link[=rvec_lgl]{rvec_lgl}.}
+\item{x}{An object of class \link{rvec_lgl}.}
 
 \item{na_rm}{Whether to remove NAs before
 calculating summaries. Default is \code{FALSE}.}
@@ -23,7 +23,7 @@ A logical vector with the same
 length as \code{x}.
 }
 \description{
-Convert an rvec of logical values (an \link[=rvec_lgl]{rvec_lgl})
+Convert an rvec of logical values (an \link{rvec_lgl})
 into a vector of probabilities.
 }
 \details{

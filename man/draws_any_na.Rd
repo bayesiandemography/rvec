@@ -17,7 +17,7 @@
 \alias{draws_all_finite}
 \alias{draws_all_finite.rvec}
 \alias{draws_all_finite.rvec_chr}
-\title{Check Missingness and Finiteness Across Draws}
+\title{Missing and Finite Values Across Draws}
 \usage{
 draws_any_na(x)
 
@@ -52,42 +52,25 @@ draws_all_finite(x)
 \method{draws_all_finite}{rvec_chr}(x)
 }
 \arguments{
-\item{x}{An \link{rvec}. Missingness checks accept all rvec types.
-Finiteness checks accept double, integer, and logical rvecs, but not
-character rvecs.}
+\item{x}{An \link{rvec}.}
 }
 \value{
-A logical vector of length \code{length(x)}, with the same names as \code{x}.
-Results never contain \code{NA}. A zero-length rvec returns \code{logical(0)}.
+A logical vector of length \code{length(x)}.
 }
 \description{
-Ask whether any or all draws for each element are missing, infinite, or
-finite. These functions return one ordinary logical value per element,
-rather than an rvec.
+Test whether draws are missing, infinite, or finite.
+Tests can apply to all draws or any draws.
 }
 \details{
-Each function applies the following predicate to the draws of each element,
-then asks whether any or all draws satisfy it.\tabular{lll}{
-   Predicate \tab TRUE for \tab FALSE for \cr
-   \code{na} \tab \code{NA} and \code{NaN} \tab All other values \cr
-   \code{infinite} \tab \code{Inf} and \code{-Inf} \tab Finite values, \code{NA}, and \code{NaN} \cr
-   \code{finite} \tab Finite numbers and nonmissing logical values \tab \code{Inf}, \code{-Inf}, \code{NA}, and \code{NaN} \cr
-}
-
-
-There is no \code{na_rm} argument: missing values are classified by the predicate.
-Having no infinite draws does not imply that all draws are finite, since
-some draws may be \code{NA} or \code{NaN}.
-
-\code{draws_any_na(x)} summarises across draws, returning one logical value for
-each element. In contrast, \code{anyNA(x)} summarises across elements within each
-draw and returns a logical rvec of length one. \code{is.na(x)} preserves both
-elements and draws, returning a logical rvec with the same shape as \code{x}.
+Missing values include \code{NA} and \code{NaN}; infinite values are \code{Inf} and \code{-Inf};
+finite values exclude all four. Missingness checks accept all rvec types,
+but finiteness checks reject character rvecs. Results never contain \code{NA}.
 }
 \examples{
-x <- rvec(rbind(complete = c(1, 2, 3),
+x <- rvec(rbind(complete1 = c(1, 2, 3),
                 missing = c(1, NA, NaN),
-                unbounded = c(Inf, -Inf, 2)))
+                unbounded = c(Inf, -Inf, 2),
+                complete2 = c(11, 12, 13)))
 draws_any_na(x)
 draws_all_na(x)
 draws_any_infinite(x)
@@ -101,9 +84,36 @@ x[draws_all_finite(x)]
 # Filter rows of a data frame using the same condition
 df <- tibble::tibble(id = seq_along(x), value = x)
 df[draws_all_finite(df$value), ]
+
+# draws_any_na() vs anyNA()
+draws_any_na(x) # aggregates within elements, across draws
+anyNA(x)        # aggregates across elements, within draws
 }
 \seealso{
-\code{\link[=draws_any]{draws_any()}}, \code{\link[=draws_all]{draws_all()}} for general logical summaries across
-draws; \code{\link[=is.na]{is.na()}}, \code{\link[=is.finite]{is.finite()}}, \code{\link[=is.infinite]{is.infinite()}} for predicates that
-preserve draws.
+Apply pre-specified functions across draws:
+\itemize{
+\item \code{\link[=draws_all]{draws_all()}}
+\item \code{\link[=draws_any]{draws_any()}}
+\item \code{\link[=draws_median]{draws_median()}}
+\item \code{\link[=draws_mean]{draws_mean()}}
+\item \code{\link[=draws_mode]{draws_mode()}}
+\item \code{\link[=draws_sd]{draws_sd()}}
+\item \code{\link[=draws_var]{draws_var()}}
+\item \code{\link[=draws_cv]{draws_cv()}}
+\item \code{\link[=draws_ci]{draws_ci()}}
+\item \code{\link[=draws_quantile]{draws_quantile()}}
+}
+
+Apply arbitrary function across draws:
+\itemize{
+\item \code{\link[=draws_fun]{draws_fun()}}
+}
+
+Test for missing or finite values separately
+across each element and draw:
+\itemize{
+\item \code{\link[=is.na]{is.na()}}
+\item \code{\link[=is.finite]{is.finite()}}
+\item \code{\link[=is.infinite]{is.infinite()}}
+}
 }

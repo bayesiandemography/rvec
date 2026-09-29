@@ -50,7 +50,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec};
+then an \link{rvec};
 otherwise an ordinary R vector.
 }
 }
@@ -72,7 +72,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dcauchy_rvec()}, \code{pcauchy_rvec()},
 \code{pcauchy_rvec()} and \code{rcauchy_rvec()}
-use \link[vctrs:theory-faq-recycling]{tidyverse}
+use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -92,6 +92,6 @@ rcauchy_rvec(n = 2,
 \seealso{
 \itemize{
 \item \code{\link[=dcauchy]{dcauchy()}}, \code{\link[=pcauchy]{pcauchy()}}, \code{\link[=qcauchy]{qcauchy()}}, \code{\link[=rcauchy]{rcauchy()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

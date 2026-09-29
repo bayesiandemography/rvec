@@ -14,7 +14,7 @@ with compatible dimensions to x.}
 
 \item{na.rm}{Whether \code{NA}s removed before calculations.}
 
-\item{use}{Calculation method. See \code{\link[stats:cor]{stats::var()}}.}
+\item{use}{Calculation method. See \code{\link[stats:var]{stats::var()}}.}
 }
 \value{
 An rvec, if \code{x} or \code{y} is an rvec. Otherwise
@@ -26,11 +26,11 @@ Calculate correlations and variances, including when
 }
 \details{
 To enable different behavior for rvecs and for ordinary vectors,
-the base R function \code{\link[stats:cor]{stats::var()}} is turned into a generic,
-with \code{\link[stats:cor]{stats::var()}} as the default.
+the base R function \code{\link[stats:var]{stats::var()}} is turned into a generic,
+with \code{\link[stats:var]{stats::var()}} as the default.
 
 For details on the calculations, see the documentation
-for \code{\link[stats:cor]{stats::var()}}.
+for \code{\link[stats:var]{stats::var()}}.
 }
 \examples{
 x <- rvec(cbind(rnorm(10), rnorm(10, sd = 20)))

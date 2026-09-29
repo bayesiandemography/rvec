@@ -50,10 +50,10 @@ weighted_var(x, wt = NULL, na_rm = FALSE)
 }
 \arguments{
 \item{x}{Quantity being summarised.
-An ordinary vector or an \link[=rvec]{rvec}.}
+An ordinary vector or an \link{rvec}.}
 
 \item{wt}{Weights. An ordinary vector,
-an \link[=rvec]{rvec}, or \code{NULL} (the default.)
+an \link{rvec}, or \code{NULL} (the default.)
 If \code{NULL}, an unweighted summary is returned.}
 
 \item{na_rm}{Whether to remove \code{NA}s
@@ -64,7 +64,7 @@ See
 of the algorithm used.}
 }
 \value{
-If \code{x} or \code{wt} or is \link[=rvec]{rvec},
+If \code{x} or \code{wt} or is \link{rvec},
 then an rvec of length 1. Otherwise, a scalar.
 }
 \description{
@@ -86,7 +86,7 @@ and with \link[=rvec]{rvecs}.
 Internally the calculations are done by
 \href{https://CRAN.R-project.org/package=matrixStats}{matrixStats}
 functions such as \code{\link[matrixStats:weightedMean]{matrixStats::weightedMean()}}
-and \code{\link[matrixStats:rowWeightedMeans]{matrixStats::colWeightedMeans()}}.
+and \code{\link[matrixStats:colWeightedMeans]{matrixStats::colWeightedMeans()}}.
 }
 \examples{
 ## 'x' is rvec, 'wt' is ordinary vector

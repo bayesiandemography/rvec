@@ -128,6 +128,11 @@ Useful links:
 \author{
 \strong{Maintainer}: John Bryant \email{john@bayesiandemography.com}
 
+Authors:
+\itemize{
+  \item John Bryant \email{john@bayesiandemography.com}
+}
+
 Other contributors:
 \itemize{
   \item Bayesian Demography Limited [copyright holder]

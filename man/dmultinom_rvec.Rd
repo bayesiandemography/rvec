@@ -13,13 +13,13 @@ rmultinom_rvec(n, size, prob, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{size}{Total number of trials.
-See \code{\link[stats:Multinom]{stats::dmultinom()}}.
+See \code{\link[stats:dmultinom]{stats::dmultinom()}}.
 Can be an rvec.}
 
 \item{prob}{Numeric non-negative vector,
 giving the probability of each outcome.
 Internally normalized to sum to 1.
-See \code{\link[stats:Multinom]{stats::dmultinom()}}.
+See \code{\link[stats:dmultinom]{stats::dmultinom()}}.
 Can be an rvec.}
 
 \item{log}{Whether to return
@@ -39,7 +39,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+then an \link{rvec}; otherwise an ordinary R vector.
 }
 \item \code{rmultinom()}
 \itemize{
@@ -85,6 +85,6 @@ rmultinom_rvec(n = 1,
 \seealso{
 \itemize{
 \item \code{\link[=dmultinom]{dmultinom()}}, \code{\link[=rmultinom]{rmultinom()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

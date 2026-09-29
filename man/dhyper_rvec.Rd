@@ -19,14 +19,14 @@ rhyper_rvec(nn, m, n, k, n_draw = NULL)
 \item{x}{Quantiles. Can be an rvec.}
 
 \item{m}{Number of white balls in the urn.
-See \code{\link[stats:Hypergeometric]{stats::dhyper()}}. Can be an rvec.}
+See \code{\link[stats:dhyper]{stats::dhyper()}}. Can be an rvec.}
 
 \item{n}{Number of black balls
-in the urn. See \code{\link[stats:Hypergeometric]{stats::rhyper()}}.
+in the urn. See \code{\link[stats:rhyper]{stats::rhyper()}}.
 Can be an rvec.}
 
 \item{k}{Number of balls drawn from urn.
-See \code{\link[stats:Hypergeometric]{stats::dhyper()}}. Can be an rvec.}
+See \code{\link[stats:dhyper]{stats::dhyper()}}. Can be an rvec.}
 
 \item{log, log.p}{Whether to return results
 on a log scale. Default is
@@ -44,7 +44,7 @@ Cannot be an rvec.}
 \item{nn}{The length of the random vector
 being created. The equivalent of \code{n} in
 other random variate functions.
-See \code{\link[stats:Hypergeometric]{stats::rhyper()}}. Cannot be an rvec.}
+See \code{\link[stats:rhyper]{stats::rhyper()}}. Cannot be an rvec.}
 
 \item{n_draw}{Number of random draws
 in the random vector being
@@ -54,7 +54,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+then an \link{rvec}; otherwise an ordinary R vector.
 \item Unlike base \code{rhyper()}, \code{rhyper_rvec()}
 always returns doubles.
 }
@@ -77,7 +77,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dhyper_rvec()}, \code{phyper_rvec()},
 \code{phyper_rvec()} and \code{rhyper_rvec()}
-use \link[vctrs:theory-faq-recycling]{tidyverse}
+use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -99,6 +99,6 @@ rhyper_rvec(nn = 2,
 \seealso{
 \itemize{
 \item \code{\link[=dhyper]{dhyper()}}, \code{\link[=phyper]{phyper()}}, \code{\link[=qhyper]{qhyper()}}, \code{\link[=rhyper]{rhyper()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

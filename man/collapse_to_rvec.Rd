@@ -72,7 +72,7 @@ draws within the same combination
 of 'by' variables. In rvec format,
 each row represents one
 combination of 'by' variables, and
-multiple draws are stored in an \link[=rvec]{rvec}.
+multiple draws are stored in an \link{rvec}.
 See below for examples.
 }
 \section{\code{by} argument}{

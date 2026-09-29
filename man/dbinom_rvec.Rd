@@ -48,7 +48,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+then an \link{rvec}; otherwise an ordinary R vector.
 \item Unlike base \code{rbinom()}, \code{rbinom_rvec()}
 always returns doubles.
 }
@@ -71,7 +71,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dbinom_rvec()}, \code{pbinom_rvec()},
 \code{pbinom_rvec()} and \code{rbinom_rvec()}
-use \link[vctrs:theory-faq-recycling]{tidyverse}
+use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -92,6 +92,6 @@ rbinom_rvec(n = 2,
 \seealso{
 \itemize{
 \item \code{\link[=dbinom]{dbinom()}}, \code{\link[=pbinom]{pbinom()}}, \code{\link[=qbinom]{qbinom()}}, \code{\link[=rbinom]{rbinom()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

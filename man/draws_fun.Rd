@@ -10,7 +10,7 @@ draws_fun(x, fun, ...)
 \method{draws_fun}{rvec}(x, fun, ...)
 }
 \arguments{
-\item{x}{An object of class \link[=rvec]{rvec}.}
+\item{x}{An \link{rvec}.}
 
 \item{fun}{A function.}
 
@@ -51,5 +51,15 @@ Apply pre-specified functions across draws:
 \item \code{\link[=draws_cv]{draws_cv()}}
 \item \code{\link[=draws_ci]{draws_ci()}}
 \item \code{\link[=draws_quantile]{draws_quantile()}}
+}
+
+Check for missing or finite values:
+\itemize{
+\item \code{\link[=draws_any_na]{draws_any_na()}}
+\item \code{\link[=draws_all_na]{draws_all_na()}}
+\item \code{\link[=draws_any_infinite]{draws_any_infinite()}}
+\item \code{\link[=draws_all_infinite]{draws_all_infinite()}}
+\item \code{\link[=draws_any_finite]{draws_any_finite()}}
+\item \code{\link[=draws_all_finite]{draws_all_finite()}}
 }
 }

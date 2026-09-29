@@ -35,7 +35,7 @@ rgamma_rvec(n, shape, rate = 1, scale = 1/rate, n_draw = NULL)
 \item{shape}{Shape parameter.
 See \code{\link[=dgamma]{dgamma()}}. Can be an rvec.}
 
-\item{rate}{Rate parameter. See \code{\link[stats:GammaDist]{stats::dgamma()}}.
+\item{rate}{Rate parameter. See \code{\link[stats:dgamma]{stats::dgamma()}}.
 Can be an rvec.}
 
 \item{scale}{Scale parameter.
@@ -66,7 +66,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+then an \link{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -87,7 +87,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dgamma_rvec()}, \code{pgamma_rvec()},
 \code{pgamma_rvec()} and \code{rgamma_rvec()}
-use \link[vctrs:theory-faq-recycling]{tidyverse}
+use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -108,6 +108,6 @@ rgamma_rvec(n = 2,
 \seealso{
 \itemize{
 \item \code{\link[=dgamma]{dgamma()}}, \code{\link[=pgamma]{pgamma()}}, \code{\link[=qgamma]{qgamma()}}, \code{\link[=rgamma]{rgamma()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

@@ -1,10 +1,17 @@
-# rvec 1.0.4
+# rvec 1.0.5
 
 ## New functions
 
 - Added `draws_any_na()`, `draws_all_na()`, `draws_any_infinite()`,
   `draws_all_infinite()`, `draws_any_finite()`, and `draws_all_finite()`
   to check missingness and finiteness across draws for each element.
+
+## Documentation
+
+- Improved documentation for draw summaries and resolved a roxygen warning
+  about matrix multiplication methods while retaining support for R < 4.3.
+
+# rvec 1.0.4
 
 ## Memory use
 

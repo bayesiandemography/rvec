@@ -27,7 +27,7 @@ A list:
 }
 }
 \description{
-Convert an \link[=rvec]{rvec} or matrix
+Convert an \link{rvec} or matrix
 to a list that can be used
 as a list column in a data frame.
 }

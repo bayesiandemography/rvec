@@ -49,7 +49,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+then an \link{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -70,7 +70,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dchisq_rvec()}, \code{pchisq_rvec()},
 \code{pchisq_rvec()} and \code{rchisq_rvec()}
-use \link[vctrs:theory-faq-recycling]{tidyverse}
+use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -90,6 +90,6 @@ rchisq_rvec(n = 2,
 \seealso{
 \itemize{
 \item \code{\link[=dchisq]{dchisq()}}, \code{\link[=pchisq]{pchisq()}}, \code{\link[=qchisq]{qchisq()}}, \code{\link[=rchisq]{rchisq()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

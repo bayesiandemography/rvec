@@ -35,6 +35,8 @@
 #' @name rvec-matrix-mult
 NULL
 
+# Registered conditionally in .onLoad(): matrixOps exists only in R >= 4.3.0.
+#' @exportS3Method NULL
 #' @noRd
 matrixOps.rvec <- function(x, y) {
   if (getRversion() < "4.3.0")

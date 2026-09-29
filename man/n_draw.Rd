@@ -14,7 +14,7 @@ n_draw(x)
 }
 \arguments{
 \item{x}{An object that holds random draws,
-eg an \link[=rvec]{rvec}.}
+eg an \link{rvec}.}
 }
 \value{
 An integer scalar.

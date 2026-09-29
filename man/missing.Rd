@@ -18,7 +18,7 @@ in Rvecs}
 \method{na.omit}{rvec}(object, ...)
 }
 \arguments{
-\item{x, object}{An \link[=rvec]{rvec}.}
+\item{x, object}{An \link{rvec}.}
 
 \item{recursive}{Whether \code{anyNA()} should be
 applied recursively to lists. Ignored when
@@ -95,7 +95,7 @@ values within draws
 \item \code{\link[=is.na]{is.na()}}, \code{\link[=is.nan]{is.nan()}},
 \code{\link[=is.finite]{is.finite()}}, \code{\link[=is.infinite]{is.infinite()}},
 \code{\link[=anyNA]{anyNA()}}, \code{\link[=na.omit]{na.omit()}}, \code{\link[=na.exclude]{na.exclude()}} Base R functions
-\item \code{\link[vctrs:missing]{vctrs::vec_detect_missing()}} Test whether
+\item \code{\link[vctrs:vec_detect_missing]{vctrs::vec_detect_missing()}} Test whether
 all draws for an observation are missing
 \item \code{\link[vctrs:vec_detect_complete]{vctrs::vec_detect_complete()}} Test whether
 any draws for an observation are missing

@@ -268,7 +268,7 @@ check_lengths_nonzero <- function(x) {
 ## HAS_TESTS
 #' Check that 'n' is a positive integer
 #'
-#' @param n
+#' @param n A number
 #'
 #' @returns TRUE, invisibly
 #'
@@ -286,7 +286,7 @@ check_n <- function(n) {
 ## HAS_TESTS
 #' Check that 'n_draw' is a positive integer
 #'
-#' @param n_draw
+#' @param n_draw A number
 #'
 #' @returns TRUE, invisibly
 #'
@@ -751,7 +751,7 @@ check_values_type_consistent <- function(values_colnums, type) {
 ## HAS_TESTS
 #' Check that 'width' Consists of Unique Numbers Between 0 and 1
 #'
-#' @param width 
+#' @param width A number
 #'
 #' @returns TRUE, invisibly.
 #'

@@ -13,7 +13,7 @@ draws_ci(x, width = 0.95, prefix = NULL, na_rm = FALSE)
 \method{draws_ci}{rvec_chr}(x, width = 0.95, prefix = NULL, na_rm = FALSE)
 }
 \arguments{
-\item{x}{An object of class \link[=rvec]{rvec}.}
+\item{x}{An \link{rvec}.}
 
 \item{width}{Width(s) of credible interval(s).
 One or more numbers greater than 0
@@ -97,5 +97,15 @@ across draws are:
 Apply arbitrary function across draws:
 \itemize{
 \item \code{\link[=draws_fun]{draws_fun()}}
+}
+
+Check for missing or finite values:
+\itemize{
+\item \code{\link[=draws_any_na]{draws_any_na()}}
+\item \code{\link[=draws_all_na]{draws_all_na()}}
+\item \code{\link[=draws_any_infinite]{draws_any_infinite()}}
+\item \code{\link[=draws_all_infinite]{draws_all_infinite()}}
+\item \code{\link[=draws_any_finite]{draws_any_finite()}}
+\item \code{\link[=draws_all_finite]{draws_all_finite()}}
 }
 }

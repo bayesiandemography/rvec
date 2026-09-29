@@ -13,7 +13,7 @@ draws_quantile(x, probs = c(0.025, 0.25, 0.5, 0.75, 0.975), na_rm = FALSE)
 \method{draws_quantile}{rvec_chr}(x, probs = c(0.025, 0.25, 0.5, 0.75, 0.975), na_rm = FALSE)
 }
 \arguments{
-\item{x}{An object of class \link[=rvec]{rvec}.}
+\item{x}{An \link{rvec}.}
 
 \item{probs}{Vector of probabilities.}
 
@@ -94,5 +94,15 @@ functions across draws are:
 Apply arbitrary function across draws:
 \itemize{
 \item \code{\link[=draws_fun]{draws_fun()}}
+}
+
+Check for missing or finite values:
+\itemize{
+\item \code{\link[=draws_any_na]{draws_any_na()}}
+\item \code{\link[=draws_all_na]{draws_all_na()}}
+\item \code{\link[=draws_any_infinite]{draws_any_infinite()}}
+\item \code{\link[=draws_all_infinite]{draws_all_infinite()}}
+\item \code{\link[=draws_any_finite]{draws_any_finite()}}
+\item \code{\link[=draws_all_finite]{draws_all_finite()}}
 }
 }

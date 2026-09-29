@@ -14,7 +14,7 @@ map_rvec(.x, .f, ...)
 \item{...}{Additional arguments passed to \code{.f}.}
 }
 \value{
-An \link[=rvec]{rvec} with the same
+An \link{rvec} with the same
 length as \code{.x}.
 }
 \description{
@@ -24,7 +24,7 @@ rvec with the same length as \code{.x}.
 }
 \details{
 Each call to function \code{.f} should produce
-an \link[=rvec]{rvec} with length 1.
+an \link{rvec} with length 1.
 }
 \examples{
 l <- list(a = rvec(matrix(1:2, 1)),

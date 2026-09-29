@@ -7,7 +7,7 @@
 extract_draw(x, i = NULL)
 }
 \arguments{
-\item{x}{An \link[=rvec]{rvec}.}
+\item{x}{An \link{rvec}.}
 
 \item{i}{Index for the draw
 to be extracted. A number between

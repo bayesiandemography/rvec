@@ -361,10 +361,14 @@ export(weighted_var)
 import(vctrs)
 importFrom(Matrix,Matrix)
 importFrom(lifecycle,deprecated)
-importFrom(methods,setMethod)
-importFrom(methods,setOldClass)
-importFrom(stats,median)
-importFrom(stats,na.exclude)
-importFrom(stats,na.fail)
-importFrom(stats,na.omit)
+importFrom(methods,
+  setMethod,
+  setOldClass
+)
+importFrom(stats,
+  median,
+  na.exclude,
+  na.fail,
+  na.omit
+)
 importFrom(utils,globalVariables)

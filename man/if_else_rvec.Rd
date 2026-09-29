@@ -7,7 +7,7 @@
 if_else_rvec(condition, true, false, missing = NULL, size = NULL)
 }
 \arguments{
-\item{condition}{An object of class \link[=rvec_lgl]{rvec_lgl}.}
+\item{condition}{An object of class \link{rvec_lgl}.}
 
 \item{true, false}{Vectors (including rvecs) to use for
 \code{TRUE} and \code{FALSE} values of \code{condition}.}

@@ -48,7 +48,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}
+then an \link{rvec}
 \item Otherwise an ordinary R vector.
 }
 }
@@ -70,7 +70,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{df_rvec()}, \code{pf_rvec()},
 \code{pf_rvec()} and \code{rf_rvec()}
-use \link[vctrs:theory-faq-recycling]{tidyverse}
+use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -88,6 +88,6 @@ rf_rvec(n = 2, df1 = 1,df2 = 2:3, n_draw = 1000)
 \seealso{
 \itemize{
 \item \code{\link[=df]{df()}}, \code{\link[=pf]{pf()}}, \code{\link[=qf]{qf()}}, \code{\link[=rf]{rf()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

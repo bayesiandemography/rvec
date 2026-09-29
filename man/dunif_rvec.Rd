@@ -48,7 +48,7 @@ created. Cannot be an rvec.}
 \itemize{
 \item If any of the arguments are rvecs,
 or if a value for \code{n_draw} is supplied,
-then an \link[=rvec]{rvec}; otherwise an ordinary R vector.
+then an \link{rvec}; otherwise an ordinary R vector.
 }
 }
 \description{
@@ -69,7 +69,7 @@ rvec if a value for \code{n_draw} is supplied.
 
 \code{dunif_rvec()}, \code{punif_rvec()},
 \code{punif_rvec()} and \code{runif_rvec()}
-use \link[vctrs:theory-faq-recycling]{tidyverse}
+use \link[vctrs:vector_recycling_rules]{tidyverse}
 vector recycling rules:
 \itemize{
 \item Vectors of length 1 are recycled
@@ -89,6 +89,6 @@ runif_rvec(n = 2,
 \seealso{
 \itemize{
 \item \code{\link[=dunif]{dunif()}}, \code{\link[=punif]{punif()}}, \code{\link[=qunif]{qunif()}}, \code{\link[=runif]{runif()}} Base R equivalents
-\item \link[stats:Distributions]{distributions} All base R distributions
+\item \link[stats:distributions]{distributions} All base R distributions
 }
 }

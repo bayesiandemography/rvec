@@ -28,7 +28,7 @@ draws_mode(x, na_rm = FALSE)
 \method{draws_mode}{rvec}(x, na_rm = FALSE)
 }
 \arguments{
-\item{x}{An object of class \link[=rvec]{rvec}.}
+\item{x}{An \link{rvec}.}
 
 \item{na_rm}{Whether to remove NAs before
 calculating summaries. Default is \code{FALSE}.}
@@ -74,5 +74,15 @@ Apply pre-specified functions across draws:
 Apply arbitrary function across draws:
 \itemize{
 \item \code{\link[=draws_fun]{draws_fun()}}
+}
+
+Check for missing or finite values:
+\itemize{
+\item \code{\link[=draws_any_na]{draws_any_na()}}
+\item \code{\link[=draws_all_na]{draws_all_na()}}
+\item \code{\link[=draws_any_infinite]{draws_any_infinite()}}
+\item \code{\link[=draws_all_infinite]{draws_all_infinite()}}
+\item \code{\link[=draws_any_finite]{draws_any_finite()}}
+\item \code{\link[=draws_all_finite]{draws_all_finite()}}
 }
 }

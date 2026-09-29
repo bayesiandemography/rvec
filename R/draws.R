@@ -4,10 +4,9 @@
 #' Logical Operations Across Random Draws
 #'
 #' Apply `all` or `any` logical summaries
-#' across random draws. For missingness and finiteness checks, see
-#' [draws_any_na()] and its related functions.
+#' across random draws.
 #'
-#' @param x An object of class [rvec][rvec()].
+#' @param x An [rvec][rvec()].
 #' @param na_rm Whether to remove NAs before
 #' calculating summaries. Default is `FALSE`.
 #'
@@ -28,6 +27,14 @@
 #'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
+#'
+#' Check for missing or finite values:
+#' - [draws_any_na()]
+#' - [draws_all_na()]
+#' - [draws_any_infinite()]
+#' - [draws_all_infinite()]
+#' - [draws_any_finite()]
+#' - [draws_all_finite()]
 #'
 #' @examples
 #' m <- rbind(a = c(TRUE,  FALSE,  TRUE),
@@ -99,46 +106,49 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 
 ## Missingness and finiteness across draws ----------------------------------
 
-#' Check Missingness and Finiteness Across Draws
+#' Missing and Finite Values Across Draws
 #'
-#' Ask whether any or all draws for each element are missing, infinite, or
-#' finite. These functions return one ordinary logical value per element,
-#' rather than an rvec.
+#' Test whether draws are missing, infinite, or finite.
+#' Tests can apply to all draws or any draws.
 #'
-#' @param x An [rvec][rvec()]. Missingness checks accept all rvec types.
-#'   Finiteness checks accept double, integer, and logical rvecs, but not
-#'   character rvecs.
+#' Missing values include `NA` and `NaN`; infinite values are `Inf` and `-Inf`;
+#' finite values exclude all four. Missingness checks accept all rvec types,
+#' but finiteness checks reject character rvecs. Results never contain `NA`.
 #'
-#' @returns A logical vector of length `length(x)`, with the same names as `x`.
-#'   Results never contain `NA`. A zero-length rvec returns `logical(0)`.
+#' @param x An [rvec][rvec()].
 #'
-#' @details
-#' Each function applies the following predicate to the draws of each element,
-#' then asks whether any or all draws satisfy it.
+#' @returns A logical vector of length `length(x)`.
 #'
-#' | Predicate | TRUE for | FALSE for |
-#' | --- | --- | --- |
-#' | `na` | `NA` and `NaN` | All other values |
-#' | `infinite` | `Inf` and `-Inf` | Finite values, `NA`, and `NaN` |
-#' | `finite` | Finite numbers and nonmissing logical values | `Inf`, `-Inf`, `NA`, and `NaN` |
 #'
-#' There is no `na_rm` argument: missing values are classified by the predicate.
-#' Having no infinite draws does not imply that all draws are finite, since
-#' some draws may be `NA` or `NaN`.
+#' @seealso
+#' Apply pre-specified functions across draws:
+#' - [draws_all()]
+#' - [draws_any()]
+#' - [draws_median()]
+#' - [draws_mean()]
+#' - [draws_mode()]
+#' - [draws_sd()]
+#' - [draws_var()]
+#' - [draws_cv()]
+#' - [draws_ci()]
+#' - [draws_quantile()]
 #'
-#' `draws_any_na(x)` summarises across draws, returning one logical value for
-#' each element. In contrast, `anyNA(x)` summarises across elements within each
-#' draw and returns a logical rvec of length one. `is.na(x)` preserves both
-#' elements and draws, returning a logical rvec with the same shape as `x`.
+#' Apply arbitrary function across draws:
+#' - [draws_fun()]
 #'
-#' @seealso [draws_any()], [draws_all()] for general logical summaries across
-#'   draws; [is.na()], [is.finite()], [is.infinite()] for predicates that
-#'   preserve draws.
+#' Test for missing or finite values separately
+#' across each element and draw:
+#' - [is.na()]
+#' - [is.finite()]
+#' - [is.infinite()]
 #'
 #' @examples
-#' x <- rvec(rbind(complete = c(1, 2, 3),
+#' x <- rvec(rbind(complete1 = c(1, 2, 3),
 #'                 missing = c(1, NA, NaN),
-#'                 unbounded = c(Inf, -Inf, 2)))
+#'                 unbounded = c(Inf, -Inf, 2),
+#'                 complete2 = c(11, 12, 13)))
+#' x
+#'
 #' draws_any_na(x)
 #' draws_all_na(x)
 #' draws_any_infinite(x)
@@ -152,6 +162,10 @@ draws_any.rvec <- function(x, na_rm = FALSE) {
 #' # Filter rows of a data frame using the same condition
 #' df <- tibble::tibble(id = seq_along(x), value = x)
 #' df[draws_all_finite(df$value), ]
+#'
+#' # draws_any_na() vs anyNA()
+#' draws_any_na(x) # aggregates within elements, across draws
+#' anyNA(x)        # aggregates across elements, within draws
 #' @name draws_any_na
 NULL
 
@@ -334,6 +348,14 @@ draws_predicate <- function(x, predicate, all) {
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
 #'
+#' Check for missing or finite values:
+#' - [draws_any_na()]
+#' - [draws_all_na()]
+#' - [draws_any_infinite()]
+#' - [draws_all_infinite()]
+#' - [draws_any_finite()]
+#' - [draws_all_finite()]
+#'
 #' @examples
 #' set.seed(0)
 #' m <- rbind(a = rnorm(100, mean = 5, sd = 2),
@@ -449,6 +471,14 @@ draws_ci.rvec_chr <- function(x,
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
 #'
+#' Check for missing or finite values:
+#' - [draws_any_na()]
+#' - [draws_all_na()]
+#' - [draws_any_infinite()]
+#' - [draws_all_infinite()]
+#' - [draws_any_finite()]
+#' - [draws_all_finite()]
+#'
 #' @examples
 #' m <- rbind(a = c(1, 1, 1, 2, 3),
 #'            b = c(2, 4, 0, 2, 3),
@@ -555,7 +585,7 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #'
 #' Apply `min` or `max` across random draws.
 #'
-#' @param x An object of class [rvec][rvec()].
+#' @param x An [rvec][rvec()].
 #' @param na_rm Whether to remove NAs before
 #' calculating minima and maxima. Default is `FALSE`.
 #'
@@ -576,6 +606,14 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
+#'
+#' Check for missing or finite values:
+#' - [draws_any_na()]
+#' - [draws_all_na()]
+#' - [draws_any_infinite()]
+#' - [draws_all_infinite()]
+#' - [draws_any_finite()]
+#' - [draws_all_finite()]
 #'
 #' @examples
 #' m <- rbind(a = c(1,  -3,  2),
@@ -701,6 +739,14 @@ draws_max.rvec <- function(x, na_rm = FALSE) {
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
 #'
+#' Check for missing or finite values:
+#' - [draws_any_na()]
+#' - [draws_all_na()]
+#' - [draws_any_infinite()]
+#' - [draws_all_infinite()]
+#' - [draws_any_finite()]
+#' - [draws_all_finite()]
+#'
 #' @examples
 #' set.seed(0)
 #' m <- rbind(a = rnorm(100, mean = 5, sd = 2),
@@ -765,6 +811,7 @@ draws_quantile.rvec_chr <- function(x,
   cli::cli_abort("Quantiles not defined for character.")
 }
 
+## 'draws_sd' --------------------------------------------------------
 
 #' Standard Deviations, Variances, and Coefficients
 #' of Variation Across Random Draws
@@ -795,6 +842,14 @@ draws_quantile.rvec_chr <- function(x,
 #'
 #' Apply arbitrary function across draws:
 #' - [draws_fun()]
+#'
+#' Check for missing or finite values:
+#' - [draws_any_na()]
+#' - [draws_all_na()]
+#' - [draws_any_infinite()]
+#' - [draws_all_infinite()]
+#' - [draws_any_finite()]
+#' - [draws_all_finite()]
 #'
 #' @examples
 #' m <- rbind(a = c(1, 1, 1, 2, 3),
@@ -927,6 +982,14 @@ draws_cv.rvec <- function(x, na_rm = FALSE) {
 #' - [draws_ci()]
 #' - [draws_quantile()]
 #'
+#' Check for missing or finite values:
+#' - [draws_any_na()]
+#' - [draws_all_na()]
+#' - [draws_any_infinite()]
+#' - [draws_all_infinite()]
+#' - [draws_any_finite()]
+#' - [draws_all_finite()]
+#'
 #' @examples
 #' set.seed(0)
 #' m <- rbind(a = rnorm(100, mean = 5, sd = 2),
@@ -1023,5 +1086,4 @@ prob.rvec_lgl <- function(x, na_rm = FALSE) {
 prob.logical <- function(x, na_rm = FALSE) {
   as.double(x)
 }
-
 
