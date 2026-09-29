@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,31 @@
       <small>Source: <a href="https://github.com/bayesiandemography/rvec/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.4" id="rvec-104">rvec 1.0.4<a class="anchor" aria-label="anchor" href="#rvec-104"></a></h2>
+<div class="section level3">
+<h3 id="memory-use-1-0-4">Memory use<a class="anchor" aria-label="anchor" href="#memory-use-1-0-4"></a></h3>
+<ul><li>Reduced temporary memory use in constructors, casts, arithmetic, comparisons, logical math, summaries, covariance, weighted summaries, <code><a href="../reference/if_else_rvec.html">if_else_rvec()</a></code>, <code><a href="../reference/draws_median.html">draws_mode()</a></code>, draw pooling, and expansion by avoiding unnecessary copies and repeated data, while preserving existing behavior.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-0-4">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-0-4"></a></h3>
+<ul><li>Weighted summaries correctly align a one-draw rvec with a multi-draw rvec, whether the one-draw input supplies values or weights. Previously these calls failed with a subscript-out-of-bounds error.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.3" id="rvec-103">rvec 1.0.3<a class="anchor" aria-label="anchor" href="#rvec-103"></a></h2>
+<div class="section level3">
+<h3 id="memory-use-1-0-3">Memory use<a class="anchor" aria-label="anchor" href="#memory-use-1-0-3"></a></h3>
+<ul><li><p>Distribution functions use less temporary memory by retaining shared parameters in compact form and avoiding unnecessary input and output matrix copies. The changes cover all distribution families supported by rvec and preserve results, warnings, and random-number generator behavior, apart from the bug fixes below. Random output remains double-valued.</p></li>
+<li><p>Calculations continue to use the same base R distribution functions, including the distinction between omitted and explicitly supplied <code>ncp</code>. Negative binomial conversion from <code>mu</code> to <code>prob</code> avoids intermediate rvecs while retaining the same arithmetic.</p></li>
+<li><p>Multinomial functions retain compact inputs and the existing order of base R calls. <code><a href="../reference/dmultinom_rvec.html">rmultinom_rvec()</a></code> allocates double output directly, and <code><a href="../reference/dmultinom_rvec.html">dmultinom_rvec()</a></code> avoids an unnecessary copy when calculating default size for standard double rvecs.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-0-3">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-0-3"></a></h3>
+<ul><li><p>Hypergeometric density, probability, and quantile functions correctly name <code>n</code> and <code>k</code> when their draw counts are incompatible; the error previously named <code>k</code> twice.</p></li>
+<li><p>Random-generation functions such as <code><a href="../reference/dgamma_rvec.html">rgamma_rvec()</a></code> now correctly recycle single-draw rvec parameters when another parameter has multiple draws and <code>n_draw</code> is omitted. Previously, if the first rvec parameter had a single draw, the call failed with an internal length error after advancing the random-number generator state.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.2" id="rvec-102">rvec 1.0.2<a class="anchor" aria-label="anchor" href="#rvec-102"></a></h2>
 <div class="section level3">
@@ -178,7 +203,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>
