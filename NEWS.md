@@ -2,47 +2,10 @@
 
 ## Memory use
 
-- `draws_mode()` processes one row's frequency table at a time instead of
-  retaining frequency tables for every row.
-
-- Pooling draws reshapes the existing data instead of reconstructing a
-  matrix, avoiding an extra copy of the pooled values.
-
-- `expand_from_rvec()` reuses each transposed value matrix as its output
-  vector, avoiding a second full-size copy of the values.
-
-- `sum()`, `prod()`, `any()`, and `all()` avoid concatenating a single
-  unnamed numeric or logical rvec before summarising it. Named inputs,
-  multiple inputs, and custom subclasses retain the existing dispatch.
-
-- Mathematical operations on logical rvecs convert their data to integer
-  with fewer temporary copies, preserving dimensions, row names, and result
-  types.
-
-- `is.nan()`, `is.finite()`, and `is.infinite()` operate directly on logical
-  rvec data, avoiding temporary copies used to convert it to integer data.
-
-- Weighted means, medians, MADs, variances, and standard deviations retain
-  ordinary `x` inputs in compact form when weights are rvecs, instead of
-  repeating `x` across all draws.
-
-- Covariance calculations process rvec matrix columns one at a time instead
-  of retaining lists containing copies of every column.
-
-- `if_else_rvec()` retains ordinary and one-draw `false` and `missing`
-  branches in compact form instead of expanding each one across all draws.
-
-- Comparisons retain shared operands in compact form rather than repeating
-  them across draws. Draw summaries, standard deviations, and variances
-  avoid coercion copies when inputs are already double-valued.
-
-- Typed constructors and same-type casts reuse suitable matrices when the
-  type and draw count already match, avoiding unnecessary copies while
-  preserving row names and independent modification of inputs and outputs.
-
-- Binary arithmetic avoids unnecessary input and output matrix copies and
-  retains single-draw operands in compact form. Observation recycling,
-  result types, names, and integer-overflow behavior are preserved.
+- Reduced temporary memory use in constructors, casts, arithmetic, comparisons,
+  logical math, summaries, covariance, weighted summaries, `if_else_rvec()`,
+  `draws_mode()`, draw pooling, and expansion by avoiding unnecessary copies
+  and repeated data, while preserving existing behavior.
 
 ## Bug fixes
 
