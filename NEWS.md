@@ -11,6 +11,12 @@
 - `min()`, `max()`, and `range()` now summarise elements independently
   within each draw, including multiple arguments and missing-value handling.
 
+## Bug fixes
+
+- `rank()` now preserves fractional average ranks for tied values instead
+  of failing when converting them to integers. Logical rvecs also use
+  a compatible ranking method.
+
 ## Documentation
 
 - Improved documentation for draw summaries and resolved a roxygen warning

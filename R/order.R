@@ -28,8 +28,9 @@
 #' @param ties.method Treatment of ties.
 #' See [base::rank()] for details.
 #'
-#' @returns An object of class [rvec_int()] if `x` is
-#' an rvec. Otherwise an ordinary integer vector.
+#' @returns An rvec if `x` is an rvec, otherwise an ordinary numeric vector.
+#' Average ranks are doubles, allowing fractional ranks for ties; other
+#' tie methods return integer ranks.
 #'
 #' @examples
 #' x <- rvec(list(c(3, 30),
@@ -60,15 +61,15 @@ rank.rvec <- function(x,
                       ties.method = c("average", "first", "last", "random", "max", "min")) {
     ties.method <- match.arg(ties.method)
     m <- vctrs::field(x, "data")
-    ## 'colRanks' implements 'na.last = "keep"', and only works with numeric or logical
+    ## 'colRanks' implements 'na.last = "keep"', and only works with numeric inputs
     if (identical(na.last, TRUE) || identical(na.last, FALSE)) {
-        if (anyNA(m) || is.character(m))
+        if (anyNA(m) || is.character(m) || is.logical(m))
             ans <- apply(m, 2L, rank, na.last = na.last, ties.method = ties.method)
         else
             ans <- matrixStats::colRanks(m, ties.method = ties.method, preserveShape = TRUE)
     }
     else if (identical(na.last, "keep")) {
-        if (is.character(m))
+        if (is.character(m) || is.logical(m))
             ans <- apply(m, 2L, rank, na.last = na.last, ties.method = ties.method)
         else
             ans <- matrixStats::colRanks(m, ties.method = ties.method, preserveShape = TRUE)
@@ -77,7 +78,7 @@ rank.rvec <- function(x,
         cli::cli_abort("{.arg na.last} is {.val {na.last}}.")
     }
     rownames(ans) <- rownames(m)
-    rvec::rvec_int(ans)
+    rvec::rvec(ans)
 }
 
 

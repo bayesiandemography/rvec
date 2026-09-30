@@ -20,8 +20,9 @@ rank(
 See \code{\link[base:rank]{base::rank()}} for details.}
 }
 \value{
-An object of class \code{\link[=rvec_int]{rvec_int()}} if \code{x} is
-an rvec. Otherwise an ordinary integer vector.
+An rvec if \code{x} is an rvec, otherwise an ordinary numeric vector.
+Average ranks are doubles, allowing fractional ranks for ties; other
+tie methods return integer ranks.
 }
 \description{
 Calculate sample ranks for ordinary vectors or for rvecs.
