@@ -11,6 +11,9 @@
 - `min()`, `max()`, and `range()` now summarise elements independently
   within each draw, including multiple arguments and missing-value handling.
 
+- `quantile()` now calculates quantiles independently within each draw,
+  preserving base R's probability, missing-value, naming, and algorithm options.
+
 ## Bug fixes
 
 - `rank()` now preserves fractional average ranks for tied values instead

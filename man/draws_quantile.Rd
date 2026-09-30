@@ -25,7 +25,8 @@ A \link[tibble:tibble]{tibble}.
 }
 \description{
 Summarise the distribution of random draws
-in an rvec, using quantiles.
+in an rvec, using quantiles. To calculate quantiles across elements
+within each draw instead, use \code{\link[stats:quantile]{stats::quantile()}}.
 }
 \details{
 The \code{probs} argument defaults to

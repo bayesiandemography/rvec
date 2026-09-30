@@ -100,3 +100,55 @@ min(rate, 0)
 - `?min`, `?max`, and `?range` for base R's treatment of missing and empty inputs.
 - `?draws_min` for minima and maxima across draws.
 - [Troubleshooting: put the rvec first in `min()`](troubleshooting.html#min-argument-order).
+
+
+## Calculate quantiles within each draw {#quantiles-within-draws}
+
+### Problem
+
+You have draws for rates in several regions and want draws for the median
+and quartiles across those regions.
+
+### Solution
+
+Use `quantile()`, specifying the probabilities you need. Each column below
+is a draw, and each row is a region.
+
+```{r quantile-input}
+rate <- rvec(rbind(
+  north = c(3, 1, 8, 4),
+  south = c(1, 7, 3, 6),
+  west = c(2, 4, 5, 2)
+))
+regional_quantiles <- quantile(rate, probs = c(0.25, 0.5, 0.75))
+as.matrix(regional_quantiles)
+```
+
+The result is an rvec of length three, with one element for each probability
+and all four draws retained. Probability labels supply its names; use
+`names = FALSE` to omit them.
+
+### Discussion
+
+`quantile(rate)` summarises regions within each draw. In contrast,
+`draws_quantile(rate)` summarises draws separately for each region and returns
+a tibble:
+
+```{r quantile-directions}
+draws_quantile(rate, probs = c(0.25, 0.5, 0.75))
+```
+
+Use `na.rm = TRUE` to remove missing values within each draw. The `type`
+argument selects among base R's nine quantile algorithms; the default is
+`type = 7`. For example, `type = 1` selects observed values rather than
+interpolating between them.
+
+```{r quantile-algorithm}
+as.matrix(quantile(rate, probs = c(0.25, 0.5, 0.75), type = 1))
+```
+
+### See Also
+
+- `?quantile` for probabilities, algorithms, and missing-value handling.
+- `?draws_quantile` for quantiles across draws.
+- [Calculate a minimum, maximum, or range](#min-max-range).

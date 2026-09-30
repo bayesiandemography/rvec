@@ -693,7 +693,8 @@ draws_max.rvec <- function(x, na_rm = FALSE) {
 #' Quantiles Across Random Draws
 #'
 #' Summarise the distribution of random draws
-#' in an rvec, using quantiles.
+#' in an rvec, using quantiles. To calculate quantiles across elements
+#' within each draw instead, use [stats::quantile()].
 #'
 #' The `probs` argument defaults to
 #' `c(0.025, 0.25, 0.5, 0.75, 0.975)`,

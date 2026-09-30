@@ -91,6 +91,7 @@ S3method(pool_draws,data.frame)
 S3method(pool_draws,grouped_df)
 S3method(prob,logical)
 S3method(prob,rvec_lgl)
+S3method(quantile,rvec)
 S3method(range,rvec)
 S3method(rank,default)
 S3method(rank,rvec)
@@ -372,6 +373,7 @@ importFrom(stats,
   median,
   na.exclude,
   na.fail,
-  na.omit
+  na.omit,
+  quantile
 )
 importFrom(utils,globalVariables)
