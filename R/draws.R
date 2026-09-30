@@ -584,7 +584,7 @@ draws_mode.rvec <- function(x, na_rm = FALSE) {
 #' Minima and Maxima Across Random Draws
 #'
 #' Apply `min` or `max` across random draws. To summarise elements within
-#' each draw instead, use [min()][extrema] or [max()][extrema].
+#' each draw instead, use [base::min()] or [base::max()].
 #'
 #' @param x An [rvec][rvec()].
 #' @param na_rm Whether to remove NAs before

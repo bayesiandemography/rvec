@@ -143,3 +143,25 @@ test_that("rank preserves fractional averages and integer tie methods", {
     expect_identical(as.matrix(rank(rvec(rbind(c(10, 30), c(10, 10), c(20, 10))))),
                      rbind(c(1.5, 3), c(1.5, 1.5), c(3, 1.5)))
 })
+
+
+test_that("rank retains singleton and empty draw layouts", {
+    for (value in list(1, NA_real_, 1L, NA_integer_, TRUE, NA, "a", NA_character_)) {
+        for (nr in 0:1) for (nd in c(1L, 3L)) {
+            m <- matrix(rep(value, nr * nd), nr, nd)
+            if (nr == 1L) rownames(m) <- "only"
+            x <- rvec(m)
+            for (na_last in list(TRUE, FALSE, "keep")) {
+                for (ties in c("average", "first", "last", "random", "min", "max")) {
+                    results <- lapply(seq_len(nd), function(j)
+                        base::rank(m[, j], na.last = na_last, ties.method = ties))
+                    expected <- matrix(unlist(results, use.names = FALSE), nr, nd,
+                                       dimnames = dimnames(m))
+                    actual <- rank(x, na.last = na_last, ties.method = ties)
+                    expect_identical(as.matrix(actual), expected,
+                                     info = paste(typeof(m), nr, nd, na_last, ties))
+                }
+            }
+        }
+    }
+})

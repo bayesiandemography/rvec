@@ -32,7 +32,7 @@ A vector.
 }
 \description{
 Apply \code{min} or \code{max} across random draws. To summarise elements within
-each draw instead, use \link[=extrema]{min()} or \link[=extrema]{max()}.
+each draw instead, use \code{\link[base:min]{base::min()}} or \code{\link[base:max]{base::max()}}.
 }
 \examples{
 m <- rbind(a = c(1,  -3,  2),

@@ -65,7 +65,7 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 }
 
 Minima, maxima, and ranges within each draw are available through
-\link[=extrema]{min()}, \link[=extrema]{max()}, and \link[=extrema]{range()}.
+\code{\link[base:min]{base::min()}}, \code{\link[base:max]{base::max()}}, and \code{\link[base:range]{base::range()}}.
 
 \strong{Summarizing across draws}
 \itemize{

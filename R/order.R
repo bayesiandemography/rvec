@@ -77,6 +77,8 @@ rank.rvec <- function(x,
     else {
         cli::cli_abort("{.arg na.last} is {.val {na.last}}.")
     }
+    # apply() simplifies singleton and empty results; retain the draw layout.
+    dim(ans) <- dim(m)
     rownames(ans) <- rownames(m)
     rvec::rvec(ans)
 }

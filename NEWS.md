@@ -15,7 +15,8 @@
 
 - `rank()` now preserves fractional average ranks for tied values instead
   of failing when converting them to integers. Logical rvecs also use
-  a compatible ranking method.
+  a compatible ranking method, and singleton and empty inputs retain
+  their original draw counts.
 
 ## Documentation
 

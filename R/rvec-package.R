@@ -56,7 +56,7 @@
 #' - [dweibull_rvec()] Weibull
 #'
 #' Minima, maxima, and ranges within each draw are available through
-#' [min()][extrema], [max()][extrema], and [range()][extrema].
+#' [base::min()], [base::max()], and [base::range()].
 #'
 #' **Summarizing across draws**
 #'
