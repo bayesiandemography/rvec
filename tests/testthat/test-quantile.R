@@ -48,7 +48,11 @@ test_that("quantile follows base character support and validation", {
     for (x in list(rvec(c(1, NA)), rvec(c(1, NaN))))
         expect_error(quantile(x), "missing values")
     expect_error(quantile(rvec(1:3), probs = -0.1), "probs")
-    expect_error(quantile(rvec(1:3), type = 10), "type")
+    # Older R versions use a different diagnostic for an invalid algorithm.
+    base_error <- tryCatch(stats::quantile(1:3, type = 10), error = identity)
+    expect_s3_class(base_error, "error")
+    actual_error <- expect_error(quantile(rvec(1:3), type = 10))
+    expect_identical(conditionMessage(actual_error), conditionMessage(base_error))
     expect_error(quantile(rvec(m)), "non-numeric")
     expect_identical(quantile(1:3), stats::quantile(1:3))
 })
