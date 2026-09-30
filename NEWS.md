@@ -6,6 +6,10 @@
   `draws_all_infinite()`, `draws_any_finite()`, and `draws_all_finite()`
   to check missingness and finiteness across draws for each element.
 
+- `pmin()` and `pmax()` now accept rvecs in any argument position for
+  elementwise bounds and comparisons within each draw. Calls without rvecs
+  retain base R behaviour.
+
 ## Summaries
 
 - `min()`, `max()`, and `range()` now summarise elements independently

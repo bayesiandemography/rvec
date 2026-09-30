@@ -152,3 +152,57 @@ as.matrix(quantile(rate, probs = c(0.25, 0.5, 0.75), type = 1))
 - `?quantile` for probabilities, algorithms, and missing-value handling.
 - `?draws_quantile` for quantiles across draws.
 - [Calculate a minimum, maximum, or range](#min-max-range).
+
+
+# Modify elements within draws
+
+## Impose lower and upper bounds {#bound-values}
+
+### Problem
+
+You want to impose a bound on every value in an rvec, retaining all elements
+and draws.
+
+### Solution
+
+Use `pmax()` for a lower bound and `pmin()` for an upper bound. Combine them
+to impose both bounds:
+
+```{r bound-values}
+x <- rvec(rbind(a = c(-2, 0.3), b = c(4, -1)))
+as.matrix(pmax(x, 0))
+as.matrix(pmin(x, 1))
+as.matrix(pmin(pmax(x, 0), 1))
+```
+
+An rvec can occur in any argument position, so `pmax(0, x)` also works.
+You can supply a separate bound for each element:
+
+```{r element-bounds}
+as.matrix(pmax(x, c(0, 0.5)))
+```
+
+### Discussion
+
+`pmax(x, 0)` compares each value with zero. In contrast, `max(x, 0)`
+summarises all elements and zero within each draw, returning a length-one
+rvec.
+
+With rvec arguments, element lengths must agree or be one, and draw counts
+must agree or be one. Ordinary vectors supply values for elements and are
+repeated across draws. Names follow the first argument, so swapping arguments
+may change names even when the values are unchanged.
+
+Missing values are retained by default. Use `na.rm = TRUE` to ignore a
+missing input when another corresponding value is available; if all are
+missing, the result remains missing.
+
+The rvec package supplies wrappers for these functions. Calls without rvecs
+retain base R behaviour; explicitly calling `base::pmin()` or `base::pmax()`
+bypasses rvec support.
+
+### See Also
+
+- `?rvec::pmin` for argument types and recycling rules.
+- [Calculate a minimum, maximum, or range](#min-max-range) for summaries
+  across elements.
