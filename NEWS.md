@@ -10,6 +10,11 @@
   elementwise bounds and comparisons within each draw. Calls without rvecs
   retain base R behaviour.
 
+- `which.min()` and `which.max()` now find the first extreme position within
+  each draw, and `is.unsorted()` checks each draw's element order. Empty rvecs
+  return empty index rvecs; nonempty draws with no valid index return `NA`
+  with one summary warning per call. Ordinary inputs retain base R behaviour.
+
 ## Summaries
 
 - `min()`, `max()`, and `range()` now summarise elements independently

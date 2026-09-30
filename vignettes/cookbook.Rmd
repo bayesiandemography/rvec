@@ -102,6 +102,47 @@ min(rate, 0)
 - [Troubleshooting: put the rvec first in `min()`](troubleshooting.html#min-argument-order).
 
 
+## Find the position of an extreme value {#extreme-positions}
+
+### Problem
+
+You want to know which region has the largest rate in each draw. The region
+may differ between draws.
+
+### Solution
+
+Use `which.max()` for the position of the first maximum in each draw, or
+`which.min()` for the first minimum.
+
+```{r extreme-positions}
+rate <- rvec(rbind(
+  north = c(3, 1, 8, 4),
+  south = c(1, 7, 3, 6),
+  west = c(2, 4, 5, 2)
+))
+as.matrix(which.max(rate))
+as.matrix(which.min(rate))
+```
+
+The result is a length-one rvec. Its values are positions in the original
+element order: `1` is north, `2` is south, and `3` is west in this example.
+
+### Discussion
+
+Missing values are ignored. If a nonempty draw has no valid value, its index
+is `NA` and a warning reports how many draws were affected. A zero-element
+rvec returns a zero-length rvec without a warning. Ties select the first
+position.
+
+The index may differ between draws, so it cannot generally serve as one
+ordinary row subscript for a data frame.
+
+### See Also
+
+- `?which.min` for missing values, ties, and character coercion.
+- [Calculate a minimum, maximum, or range](#min-max-range).
+
+
 ## Calculate quantiles within each draw {#quantiles-within-draws}
 
 ### Problem
@@ -151,6 +192,41 @@ as.matrix(quantile(rate, probs = c(0.25, 0.5, 0.75), type = 1))
 
 - `?quantile` for probabilities, algorithms, and missing-value handling.
 - `?draws_quantile` for quantiles across draws.
+- [Calculate a minimum, maximum, or range](#min-max-range).
+
+
+## Check whether values are increasing within each draw {#unsorted-within-draws}
+
+### Problem
+
+You have a sequence of values for each draw and want to know whether the
+values are in increasing order.
+
+### Solution
+
+Use `is.unsorted()` to check the element order independently within each draw.
+
+```{r unsorted-within-draws}
+sequence <- rvec(rbind(
+  first = c(1, 1, 2),
+  second = c(2, 3, 2),
+  third = c(3, 2, 1)
+))
+as.matrix(is.unsorted(sequence))
+```
+
+The result is a length-one logical rvec. A draw with `FALSE` is sorted in
+nondecreasing order. To require strictly increasing values, use
+`strictly = TRUE`; repeated values then count as unsorted.
+
+### Discussion
+
+Missing values give `NA` for draws with more than one element unless you use
+`na.rm = TRUE`. This check leaves the values in their original order.
+
+### See Also
+
+- `?is.unsorted` for the treatment of ties and missing values.
 - [Calculate a minimum, maximum, or range](#min-max-range).
 
 
