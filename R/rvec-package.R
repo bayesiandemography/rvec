@@ -55,6 +55,9 @@
 #' - [dunif_rvec()] Uniform
 #' - [dweibull_rvec()] Weibull
 #'
+#' Minima, maxima, and ranges within each draw are available through
+#' [min()][extrema], [max()][extrema], and [range()][extrema].
+#'
 #' **Summarizing across draws**
 #'
 #' - [draws_all()] All

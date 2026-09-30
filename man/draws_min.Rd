@@ -31,7 +31,8 @@ calculating minima and maxima. Default is \code{FALSE}.}
 A vector.
 }
 \description{
-Apply \code{min} or \code{max} across random draws.
+Apply \code{min} or \code{max} across random draws. To summarise elements within
+each draw instead, use \link[=extrema]{min()} or \link[=extrema]{max()}.
 }
 \examples{
 m <- rbind(a = c(1,  -3,  2),

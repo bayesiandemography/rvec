@@ -1,0 +1,77 @@
+---
+title: "Troubleshooting rvec"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Troubleshooting rvec}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  error = FALSE
+)
+```
+
+This vignette collects solutions to problems encountered when using rvecs.
+Each recipe shows a symptom, explains its cause, and demonstrates a fix.
+
+```{r libs}
+library(rvec)
+```
+
+# Summarise elements within draws
+
+## Put the rvec first in min() {#min-argument-order}
+
+### Problem
+
+Calling `min()` with a numeric first argument and an rvec second argument
+produces an error, even though both arguments contain numbers.
+
+```{r min-numeric-first, error = TRUE}
+x <- rvec(rbind(a = c(3, -1, 8), b = c(1, 7, -2)))
+min(0, x)
+```
+
+### Solution
+
+Put the rvec first:
+
+```{r min-rvec-first}
+answer <- min(x, 0)
+as.matrix(answer)
+```
+
+The result has draws `0`, `-1`, and `-2`: the minimum of zero and all
+elements of `x`, calculated separately within each draw.
+
+### Discussion
+
+Base R uses the first argument to decide whether to call the rvec method
+for `min()`. With `min(0, x)`, the first argument is an ordinary number,
+so R does not select that method. It then encounters the rvec's internal
+list representation and reports an invalid-type error.
+
+With `min(x, 0)`, R selects the rvec method, which aligns the arguments
+and calculates a minimum within each draw. The same first-argument rule
+applies to `max()` and `range()`.
+
+```{r other-extrema}
+as.matrix(max(x, 0))
+as.matrix(range(x, 0))
+```
+
+Changing the argument order is enough; there is no need to convert the
+rvec to an ordinary vector. Also note that `min(x, 0)` returns one element
+per draw. It does not replace each positive element of `x` with zero.
+
+### See Also
+
+- [Cookbook: calculate a minimum, maximum, or range](cookbook.html#min-max-range).
+- `?min`, `?max`, and `?range` for the base R functions.

@@ -6,6 +6,11 @@
   `draws_all_infinite()`, `draws_any_finite()`, and `draws_all_finite()`
   to check missingness and finiteness across draws for each element.
 
+## Summaries
+
+- `min()`, `max()`, and `range()` now summarise elements independently
+  within each draw, including multiple arguments and missing-value handling.
+
 ## Documentation
 
 - Improved documentation for draw summaries and resolved a roxygen warning

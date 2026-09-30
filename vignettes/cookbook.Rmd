@@ -1,0 +1,102 @@
+---
+title: "Cookbook for rvec Package"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Cookbook for rvec Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  error = FALSE
+)
+```
+
+This cookbook collects recipes for common tasks with rvecs. Each recipe
+starts with a problem, gives a solution, and explains when and how to use it.
+
+```{r libs}
+library(rvec)
+```
+
+# Summarise elements within draws
+
+## Calculate a minimum, maximum, or range {#min-max-range}
+
+### Problem
+
+You have draws for rates in several regions. You want draws for the lowest
+rate, highest rate, or range of rates across the regions.
+
+### Solution
+
+Use `min()`, `max()`, or `range()`. Each function calculates its result
+independently within each draw.
+
+Here each row is a region and each column is a draw. The region with the
+lowest or highest rate can differ between draws.
+
+```{r regional-rates}
+m <- rbind(
+  north = c(3, 1, 8, 4),
+  south = c(1, 7, 3, 6),
+  west = c(2, 4, 5, 2)
+)
+m
+rate <- rvec(m)
+```
+
+```{r extrema}
+lowest <- min(rate)
+highest <- max(rate)
+limits <- range(rate)
+
+as.matrix(lowest)
+as.matrix(highest)
+as.matrix(limits)
+```
+
+`lowest` and `highest` are rvecs of length one, each retaining all four draws.
+`limits` is an rvec of length two: its first element contains the minima and
+its second contains the maxima. `range()` returns these two endpoints;
+use `max(rate) - min(rate)` for the distance between them.
+
+You can then summarise the draws of a derived quantity, just as with any
+other rvec:
+
+```{r summarise-highest}
+draws_mean(highest)
+```
+
+### Discussion
+
+`min(rate)` and `draws_min(rate)` answer different questions. `min(rate)`
+finds the lowest regional rate within each draw. `draws_min(rate)` finds
+the lowest draw for each region, returning an ordinary vector with one
+value per region.
+
+```{r compare-directions}
+draws_min(rate)
+```
+
+Use `na.rm = TRUE` to remove missing values before calculating extrema.
+For `range()`, `finite = TRUE` excludes missing values and both infinities.
+
+You can supply additional rvecs or ordinary vectors, but put an rvec first.
+An ordinary value is included in every draw:
+
+```{r include-reference}
+min(rate, 0)
+```
+
+### See Also
+
+- `?min`, `?max`, and `?range` for base R's treatment of missing and empty inputs.
+- `?draws_min` for minima and maxima across draws.
+- [Troubleshooting: put the rvec first in `min()`](troubleshooting.html#min-argument-order).

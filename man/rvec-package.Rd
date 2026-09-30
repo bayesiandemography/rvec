@@ -64,6 +64,9 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 \item \code{\link[=dweibull_rvec]{dweibull_rvec()}} Weibull
 }
 
+Minima, maxima, and ranges within each draw are available through
+\link[=extrema]{min()}, \link[=extrema]{max()}, and \link[=extrema]{range()}.
+
 \strong{Summarizing across draws}
 \itemize{
 \item \code{\link[=draws_all]{draws_all()}} All
