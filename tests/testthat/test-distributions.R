@@ -3581,3 +3581,87 @@ test_that("'dist_rvec_4_compact' warns about NAs", {
                              arg3 = n, arg4 = k),
                  "NAs produced")
 })
+
+
+test_that("random generators reject nonvector parameters with explicit draw counts", {
+    cases <- list(
+        rbeta_rvec = list(shape1 = 2, shape2 = 3),
+        rbinom_rvec = list(size = 2, prob = 0.5),
+        rcauchy_rvec = list(location = 0, scale = 1),
+        rchisq_rvec = list(df = 2),
+        rexp_rvec = list(rate = 1),
+        rf_rvec = list(df1 = 2, df2 = 3),
+        rgamma_rvec = list(shape = 2, rate = 1),
+        rgeom_rvec = list(prob = 0.5),
+        rhyper_rvec = list(m = 2, n = 3, k = 1),
+        rlnorm_rvec = list(meanlog = 0, sdlog = 1),
+        rnbinom_rvec = list(size = 2, prob = 0.5),
+        rnorm_rvec = list(mean = 0, sd = 1),
+        rpois_rvec = list(lambda = 1),
+        rt_rvec = list(df = 2),
+        runif_rvec = list(min = 0, max = 1),
+        rweibull_rvec = list(shape = 2, scale = 1)
+    )
+    withr::local_seed(1)
+    state_before <- .Random.seed
+    for (nm in names(cases)) {
+        fun <- get(nm)
+        parameters <- cases[[nm]]
+        count <- if (nm == "rhyper_rvec") list(nn = 2L) else list(n = 2L)
+        for (parameter in names(parameters)) {
+            for (invalid in list(list(1), matrix(1))) {
+                args <- parameters
+                args[[parameter]] <- invalid
+                error <- expect_error(do.call(fun, c(count, args, list(n_draw = 3L))),
+                                      paste0("`", parameter, "` is not a vector or rvec."),
+                                      fixed = TRUE)
+                expect_match(conditionMessage(error),
+                             paste0("`", parameter, "` has class"), fixed = TRUE)
+                expect_match(conditionMessage(error), class(invalid)[1L], fixed = TRUE)
+            }
+        }
+    }
+    expect_identical(.Random.seed, state_before)
+})
+
+
+test_that("'rdist_rvec_3' consolidates missing-value warnings", {
+    withr::local_seed(1)
+    m <- c(-1, 0)
+    n <- c(2, 2)
+    k <- c(1, 1)
+    for (nd in list(NULL, 3L)) {
+        warnings <- character()
+        actual <- withCallingHandlers(
+            rdist_rvec_3(fun = rhyper, arg1 = m, arg2 = n,
+                         arg3 = k, n = 2L, n_draw = nd),
+            warning = function(w) {
+                warnings <<- c(warnings, conditionMessage(w))
+                invokeRestart("muffleWarning")
+            })
+        expect_identical(warnings, "NAs produced")
+        values <- if (is.null(nd)) actual else as.matrix(actual)
+        expect_identical(as.vector(is.na(values)), rep(c(TRUE, FALSE), length.out = length(values)))
+        expect_true(all(values[!is.na(values)] == 0))
+        if (is.null(nd))
+            expect_type(actual, "double")
+        else {
+            expect_s3_class(actual, "rvec_dbl")
+            expect_identical(dim(values), c(2L, 3L))
+        }
+    }
+})
+
+
+test_that("'rdist_rvec_3' identifies the failing generator in errors", {
+    m <- "invalid"
+    n <- 2
+    k <- 1
+    for (nd in list(NULL, 3L)) {
+        error <- expect_error(
+            rdist_rvec_3(fun = rhyper, arg1 = m, arg2 = n,
+                         arg3 = k, n = 2L, n_draw = nd),
+            "Problem with call to function `rhyper()`.", fixed = TRUE)
+        expect_match(conditionMessage(error), "invalid arguments", fixed = TRUE)
+    }
+})

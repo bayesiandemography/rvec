@@ -69,6 +69,18 @@ test_that("'compare_rvec' works with two rvecs", {
     expect_identical(ans_obtained, ans_expected)
 })
 
+test_that("'compare_rvec' compares matching subclasses via the fallback path", {
+    x <- rvec(rbind(a = c(1, NA_real_), b = c(3, 2)))
+    class(x) <- c("special_rvec", class(x))
+    y <- rvec(rbind(a = c(2, 0), b = c(2, 2)))
+    class(y) <- class(x)
+
+    expect_identical(compare_rvec(x, y, "<"),
+                     rvec(rbind(a = c(TRUE, NA), b = c(FALSE, FALSE))))
+    expect_identical(compare_rvec(y, x, "<"),
+                     rvec(rbind(a = c(FALSE, NA), b = c(TRUE, FALSE))))
+})
+
 
 
 

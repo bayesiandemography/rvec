@@ -211,3 +211,38 @@ test_that("binary arithmetic retains subclass conversion dispatch", {
                    envir = asNamespace("rvec")$.__S3MethodsTable__.))
     expect_error(x + rvec(1), "subclass conversion invoked")
 })
+
+
+test_that("binary arithmetic converts integer subclasses before recycling draws", {
+    x <- rvec_int(c(a = 1L, b = 2L))
+    class(x) <- c("integer_arith_test", class(x))
+    y <- rvec_int(rbind(a = c(3L, 5L), b = c(4L, NA_integer_)))
+    expect_identical(x - y,
+                     rvec_int(rbind(a = c(-2L, -4L), b = c(-2L, NA_integer_))))
+    expect_identical(y - x,
+                     rvec_int(rbind(a = c(2L, 4L), b = c(2L, NA_integer_))))
+})
+
+
+test_that("binary arithmetic honours forced double results", {
+    x <- rvec_int(rbind(a = c(1L, NA_integer_), b = c(3L, 4L)))
+    expect_identical(arith_rvec_binary("+", x, 2L, double = TRUE),
+                     rvec_dbl(rbind(a = c(3, NA_real_), b = c(5, 6))))
+})
+
+
+test_that("binary arithmetic retains logical results", {
+    x <- rvec_lgl(rbind(a = c(TRUE, NA), b = c(FALSE, TRUE)))
+    y <- rvec_lgl(c(a = FALSE, b = TRUE))
+    expect_identical(arith_rvec_binary("&", x, y, double = FALSE),
+                     rvec_lgl(rbind(a = c(FALSE, FALSE), b = c(FALSE, TRUE))))
+})
+
+
+test_that("binary arithmetic rejects unsupported result types", {
+    x <- rvec_dbl(rbind(a = c(1, 2), b = c(3, 4)))
+    # Complex results cannot be stored in an rvec; the fallback constructor
+    # must reject them rather than silently dropping their imaginary parts.
+    expect_error(arith_rvec_binary("+", x, 1i, double = FALSE),
+                 "must be double, integer, logical, or character")
+})
