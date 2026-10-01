@@ -10,7 +10,8 @@
 #' @param x An object that holds random draws,
 #' eg an [rvec][rvec()].
 #'
-#' @returns An integer scalar.
+#' @returns A positive integer scalar. An rvec always has at least one draw,
+#' including when it has zero elements.
 #'
 #' @seealso
 #' - [is_rvec()] to test if an object is an rvec.

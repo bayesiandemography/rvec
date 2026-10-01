@@ -34,6 +34,9 @@
 
 ## Bug fixes
 
+- Enforced the at-least-one-draw constraint in internal constructors and
+  restoration. Zero-element rvecs remain supported and retain their draw count.
+
 - `rank()` now preserves fractional average ranks for tied values instead
   of failing when converting them to integers. Logical rvecs also use
   a compatible ranking method, and singleton and empty inputs retain

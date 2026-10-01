@@ -47,6 +47,8 @@ a diffent type:
 \item \code{"rvec_chr"} character
 }
 
+An rvec may have zero elements, but must have at least one draw.
+
 These subclasses are analogous to \code{\link[=double]{double()}},
 \code{\link[=integer]{integer()}}, \code{\link[=logical]{logical()}}, and \code{\link[=character]{character()}}
 vectors.

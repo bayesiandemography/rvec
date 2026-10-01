@@ -17,7 +17,8 @@ n_draw(x)
 eg an \link{rvec}.}
 }
 \value{
-An integer scalar.
+A positive integer scalar. An rvec always has at least one draw,
+including when it has zero elements.
 }
 \description{
 Get a count of the random draws

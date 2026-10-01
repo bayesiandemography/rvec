@@ -15,7 +15,7 @@ Default is \code{double()}.}
 Default is \code{0}.}
 
 \item{n_draw}{Number of draws of rvec.
-Default is \code{1000}.}
+Must be at least 1. Default is \code{1000}.}
 }
 \value{
 An rvec.

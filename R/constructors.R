@@ -18,7 +18,7 @@
 #' @param length Desired length of rvec.
 #' Default is `0`.
 #' @param n_draw Number of draws of rvec.
-#' Default is `1000`.
+#' Must be at least 1. Default is `1000`.
 #'
 #' @returns An rvec.
 #'
@@ -45,7 +45,7 @@
 new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
   check_nonneg_num_scalar(length)
   length <- as.integer(length)
-  check_nonneg_num_scalar(n_draw)
+  check_n_draw(n_draw)
   n_draw <- as.integer(n_draw)
   type <- typeof(x)
   if (type == "character") {
@@ -100,7 +100,7 @@ new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
 #' @param length Desired length of rvec.
 #' Default is `0`.
 #' @param n_draw Number of draws of rvec.
-#' Default is `1000`.
+#' Must be at least 1. Default is `1000`.
 #' @param value Value used to fill the rvec.
 #' Can be `NA`. Default is `0`, `""`, or `FALSE`.
 #' See below for details.
@@ -161,6 +161,8 @@ new_rvec_lgl <- function(length = 0, n_draw = 1000, value = FALSE) {
 #' - `"rvec_int"` integers
 #' - `"rvec_lgl"` logical
 #' - `"rvec_chr"` character
+#'
+#' An rvec may have zero elements, but must have at least one draw.
 #'
 #' These subclasses are analogous to [double()],
 #' [integer()], [logical()], and [character()]
@@ -466,6 +468,13 @@ rvec_lgl <- function(x = NULL) {
 
 ## Internal constructors ------------------------------------------------------
 
+## Representation invariant: an rvec has zero or more elements (matrix rows)
+## and at least one draw (matrix column), including empty vectors and prototypes.
+## All four low-level constructors check the draw dimension. Coercion and
+## arithmetic use these constructors; vctrs restoration checks it separately.
+## Callers must supply a matrix of the appropriate storage type.
+
+
 #' Create New Rvec Filled with a Single Value
 #'
 #' @param type Character, double, integer, or logical
@@ -481,7 +490,7 @@ rvec_lgl <- function(x = NULL) {
   type <- match.arg(type, choices = c("chr", "dbl", "int", "lgl"))
   check_nonneg_num_scalar(length)
   length <- as.integer(length)
-  check_nonneg_num_scalar(n_draw)
+  check_n_draw(n_draw)
   n_draw <- as.integer(n_draw)
   if (!is.atomic(value) || !is.null(dim(value)) || length(value) != 1L ||
       is_rvec(value))
@@ -500,24 +509,28 @@ rvec_lgl <- function(x = NULL) {
 
 ## HAS_TESTS
 .new_rvec_chr <- function(data) {
+    check_x_has_at_least_one_col(data)
     new_rcrd(fields = list(data = data),
              class = c("rvec_chr", "rvec"))
 }
 
 ## HAS_TESTS
 .new_rvec_dbl <- function(data) {
+    check_x_has_at_least_one_col(data)
     new_rcrd(fields = list(data = data),
              class = c("rvec_dbl", "rvec"))
 }
 
 ## HAS_TESTS
 .new_rvec_int <- function(data) {
+    check_x_has_at_least_one_col(data)
     new_rcrd(fields = list(data = data),
              class = c("rvec_int", "rvec"))
 }
 
 ## HAS_TESTS
 .new_rvec_lgl <- function(data) {
+    check_x_has_at_least_one_col(data)
     new_rcrd(fields = list(data = data),
              class = c("rvec_lgl", "rvec"))
 }

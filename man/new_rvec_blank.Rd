@@ -21,7 +21,7 @@ new_rvec_lgl(length = 0, n_draw = 1000, value = FALSE)
 Default is \code{0}.}
 
 \item{n_draw}{Number of draws of rvec.
-Default is \code{1000}.}
+Must be at least 1. Default is \code{1000}.}
 
 \item{value}{Value used to fill the rvec.
 Can be \code{NA}. Default is \code{0}, \code{""}, or \code{FALSE}.
