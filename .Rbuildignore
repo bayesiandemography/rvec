@@ -16,3 +16,5 @@
 ^Dockerfile
 
 ^benchmarks$
+^vignettes/cookbook\.Rmd$
+^vignettes/troubleshooting\.Rmd$

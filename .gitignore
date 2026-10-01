@@ -7,3 +7,7 @@ inst/doc
 /doc/
 /Meta/
 docs
+
+# Draft vignettes, not ready for publication
+/vignettes/cookbook.Rmd
+/vignettes/troubleshooting.Rmd
