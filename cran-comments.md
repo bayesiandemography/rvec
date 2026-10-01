@@ -1,4 +1,20 @@
-# Submission of version 1.0.01 on 15 February 2026
+
+# Submission of version 1.0.5 on 2 October 2026
+
+## Summary of changes from previous CRAN version (1.0.1)
+
+* Reduction in peak temporary memory usage through refactoring of functions
+* Added functions (eg `draws_any_na()`) for checking for missingness
+  and infinite values
+* Added rvec methods for pmin, pmax, which.min, which.max, min, max, range
+* Added 'value' argument to `new_rvec_*` functions
+* Added 'method' argument to `draws_ci()`
+* Added functions `thin_draws()` and `extract_draws()`
+* Formalised the previously implicit constraint that rvec objects must have
+  at least one draw
+
+
+# Submission of version 1.0.1 on 15 February 2026
 
 ## Summary of changes from previous version (1.0.0)
 

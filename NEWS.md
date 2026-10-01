@@ -37,9 +37,6 @@
 
 ## Bug fixes
 
-- Enforced the at-least-one-draw constraint in internal constructors and
-  restoration. Zero-element rvecs remain supported and retain their draw count.
-
 - `rank()` now preserves fractional average ranks for tied values instead
   of failing when converting them to integers. Logical rvecs also use
   a compatible ranking method, and singleton and empty inputs retain
@@ -49,6 +46,13 @@
 
 - Improved documentation for draw summaries and resolved a roxygen warning
   about matrix multiplication methods while retaining support for R < 4.3.
+
+## Clarifying interface
+
+- Internal functions now enforce the (previously implicit) constraint
+  that rvecs must have at least one draw. Rvecs of length 0 (ie with 1+ columns
+  but 0 rows internally) continue to be allowed.
+
 
 # rvec 1.0.4
 
@@ -104,8 +108,6 @@
 
 - Results from coverage tests not being uploaded to covr site,
   so updating yaml.
-
-
 
 # rvec 1.0.1
 
