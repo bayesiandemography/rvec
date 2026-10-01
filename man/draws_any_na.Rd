@@ -71,6 +71,8 @@ x <- rvec(rbind(complete1 = c(1, 2, 3),
                 missing = c(1, NA, NaN),
                 unbounded = c(Inf, -Inf, 2),
                 complete2 = c(11, 12, 13)))
+x
+
 draws_any_na(x)
 draws_all_na(x)
 draws_any_infinite(x)

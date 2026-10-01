@@ -55,9 +55,6 @@
 #' - [dunif_rvec()] Uniform
 #' - [dweibull_rvec()] Weibull
 #'
-#' Minima, maxima, and ranges within each draw are available through
-#' [base::min()], [base::max()], and [base::range()].
-#'
 #' **Summarizing across draws**
 #'
 #' - [draws_all()] All
@@ -76,7 +73,16 @@
 #' - [draws_ci()] Credible intervals
 #' - [draws_quantile()] Quantiles
 #' - [draws_fun()] Arbitrary function
-#' - [n_draw()] Number
+#' - [n_draw()] Number of draws
+#'
+#' **Dealing with NAs and infinite values**
+#'
+#' - [draws_any_na()]
+#' - [draws_all_na()]
+#' - [draws_any_infinite()]
+#' - [draws_all_infinite()]
+#' - [draws_any_finite()]
+#' - [draws_all_finite()]
 #'
 #' **Coercion, classes**
 #'

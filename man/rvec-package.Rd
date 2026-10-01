@@ -64,9 +64,6 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 \item \code{\link[=dweibull_rvec]{dweibull_rvec()}} Weibull
 }
 
-Minima, maxima, and ranges within each draw are available through
-\code{\link[base:min]{base::min()}}, \code{\link[base:max]{base::max()}}, and \code{\link[base:range]{base::range()}}.
-
 \strong{Summarizing across draws}
 \itemize{
 \item \code{\link[=draws_all]{draws_all()}} All
@@ -85,7 +82,17 @@ Minima, maxima, and ranges within each draw are available through
 \item \code{\link[=draws_ci]{draws_ci()}} Credible intervals
 \item \code{\link[=draws_quantile]{draws_quantile()}} Quantiles
 \item \code{\link[=draws_fun]{draws_fun()}} Arbitrary function
-\item \code{\link[=n_draw]{n_draw()}} Number
+\item \code{\link[=n_draw]{n_draw()}} Number of draws
+}
+
+\strong{Dealing with NAs and infinite values}
+\itemize{
+\item \code{\link[=draws_any_na]{draws_any_na()}}
+\item \code{\link[=draws_all_na]{draws_all_na()}}
+\item \code{\link[=draws_any_infinite]{draws_any_infinite()}}
+\item \code{\link[=draws_all_infinite]{draws_all_infinite()}}
+\item \code{\link[=draws_any_finite]{draws_any_finite()}}
+\item \code{\link[=draws_all_finite]{draws_all_finite()}}
 }
 
 \strong{Coercion, classes}
