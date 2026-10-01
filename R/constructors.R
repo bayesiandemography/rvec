@@ -80,25 +80,30 @@ new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
 
 #' Create an Rvec Filled with a Single Value
 #'
-#' Create an rvec with a given length and number of draws,
-#' using the same value for every element and every draw.
-#' Defaults are `0`, `""`, or `FALSE`, depending on the type.
+#' Create an rvec that uses the same value for
+#' every element and every draw.
+#'
+#' `value` must be an atomic vector of length 1.
+#' Matrices, arrays, lists, and rvecs are not allowed.
+#' Values are coerced to the correct type, when the
+#' coercion can be done without losing information.
+#' Character values are not converted to numeric
+#' or logical values.
+#'
+#' The defaults for `value` are
+#'
+#' - `new_rvec_chr()`: `""`
+#' - `new_rvec_dbl()`: `0`
+#' - `new_rvec_int()`: `0`
+#' - `new_rvec_lgl()`: `FALSE`
 #'
 #' @param length Desired length of rvec.
 #' Default is `0`.
 #' @param n_draw Number of draws of rvec.
 #' Default is `1000`.
-#'
-#' @param value An atomic vector of length 1 used to fill the rvec.
-#' Can be `NA`. Matrices, arrays, lists, and rvecs are not accepted.
-#' Any name is ignored. Numeric and logical values are cast to the
-#' target type without loss; incompatible or lossy casts give an error.
-#' Character values are not parsed as numbers or logical values.
-#' `NaN` is preserved for doubles and converted to `NA` for integers
-#' and logicals. Infinite values are accepted for doubles but rejected
-#' for integers and logicals.
-#' For `new_rvec_chr()`, values are converted with [as.character()].
-#' `value` is checked even when `length` is 0.
+#' @param value Value used to fill the rvec.
+#' Can be `NA`. Default is `0`, `""`, or `FALSE`.
+#' See below for details.
 #'
 #' @return An rvec.
 #'

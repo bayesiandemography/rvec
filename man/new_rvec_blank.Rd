@@ -23,24 +23,32 @@ Default is \code{0}.}
 \item{n_draw}{Number of draws of rvec.
 Default is \code{1000}.}
 
-\item{value}{An atomic vector of length 1 used to fill the rvec.
-Can be \code{NA}. Matrices, arrays, lists, and rvecs are not accepted.
-Any name is ignored. Numeric and logical values are cast to the
-target type without loss; incompatible or lossy casts give an error.
-Character values are not parsed as numbers or logical values.
-\code{NaN} is preserved for doubles and converted to \code{NA} for integers
-and logicals. Infinite values are accepted for doubles but rejected
-for integers and logicals.
-For \code{new_rvec_chr()}, values are converted with \code{\link[=as.character]{as.character()}}.
-\code{value} is checked even when \code{length} is 0.}
+\item{value}{Value used to fill the rvec.
+Can be \code{NA}. Default is \code{0}, \code{""}, or \code{FALSE}.
+See below for details.}
 }
 \value{
 An rvec.
 }
 \description{
-Create an rvec with a given length and number of draws,
-using the same value for every element and every draw.
-Defaults are \code{0}, \code{""}, or \code{FALSE}, depending on the type.
+Create an rvec that uses the same value for
+every element and every draw.
+}
+\details{
+\code{value} must be an atomic vector of length 1.
+Matrices, arrays, lists, and rvecs are not allowed.
+Values are coerced to the correct type, when the
+coercion can be done without losing information.
+Character values are not converted to numeric
+or logical values.
+
+The defaults for \code{value} are
+\itemize{
+\item \code{new_rvec_chr()}: \code{""}
+\item \code{new_rvec_dbl()}: \code{0}
+\item \code{new_rvec_int()}: \code{0}
+\item \code{new_rvec_lgl()}: \code{FALSE}
+}
 }
 \examples{
 new_rvec_int()
