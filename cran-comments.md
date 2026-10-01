@@ -8,7 +8,7 @@
   and infinite values
 * Added rvec methods for pmin, pmax, which.min, which.max, min, max, range
 * Added 'value' argument to `new_rvec_*` functions
-* Added 'method' argument to `draws_ci()`
+* Added 'point' argument to `draws_ci()`
 * Added functions `thin_draws()` and `extract_draws()`
 * Formalised the previously implicit constraint that rvec objects must have
   at least one draw
