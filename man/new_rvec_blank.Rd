@@ -6,15 +6,15 @@
 \alias{new_rvec_dbl}
 \alias{new_rvec_int}
 \alias{new_rvec_lgl}
-\title{Create an Empty Rvec}
+\title{Create an Rvec Filled with a Single Value}
 \usage{
-new_rvec_chr(length = 0, n_draw = 1000)
+new_rvec_chr(length = 0, n_draw = 1000, value = "")
 
-new_rvec_dbl(length = 0, n_draw = 1000)
+new_rvec_dbl(length = 0, n_draw = 1000, value = 0)
 
-new_rvec_int(length = 0, n_draw = 1000)
+new_rvec_int(length = 0, n_draw = 1000, value = 0L)
 
-new_rvec_lgl(length = 0, n_draw = 1000)
+new_rvec_lgl(length = 0, n_draw = 1000, value = FALSE)
 }
 \arguments{
 \item{length}{Desired length of rvec.
@@ -22,18 +22,31 @@ Default is \code{0}.}
 
 \item{n_draw}{Number of draws of rvec.
 Default is \code{1000}.}
+
+\item{value}{An atomic vector of length 1 used to fill the rvec.
+Can be \code{NA}. Matrices, arrays, lists, and rvecs are not accepted.
+Any name is ignored. Numeric and logical values are cast to the
+target type without loss; incompatible or lossy casts give an error.
+Character values are not parsed as numbers or logical values.
+\code{NaN} is preserved for doubles and converted to \code{NA} for integers
+and logicals. Infinite values are accepted for doubles but rejected
+for integers and logicals.
+For \code{new_rvec_chr()}, values are converted with \code{\link[=as.character]{as.character()}}.
+\code{value} is checked even when \code{length} is 0.}
 }
 \value{
 An rvec.
 }
 \description{
-Create an rvec, filled with \code{0}, \code{""},
-or \code{FALSE}, with a given length
-or number of draws.
+Create an rvec with a given length and number of draws,
+using the same value for every element and every draw.
+Defaults are \code{0}, \code{""}, or \code{FALSE}, depending on the type.
 }
 \examples{
 new_rvec_int()
 new_rvec_lgl(length = 1, n_draw = 5)
+new_rvec_dbl(length = 2, n_draw = 5, value = NA)
+new_rvec_int(length = 3, n_draw = 5, value = 2)
 
 x <- new_rvec_dbl(length = 2)
 x[1] <- rnorm_rvec(n = 1, n_draw = 1000)

@@ -88,6 +88,69 @@ test_that("'new_rvec_lgl' works with default arguments", {
 })
 
 
+test_that("new_rvec constructors fill every element and draw", {
+  constructors <- list(new_rvec_chr, new_rvec_dbl, new_rvec_int, new_rvec_lgl)
+  defaults <- list("", 0, 0L, FALSE)
+  values <- list("ready", 2.5, 3L, TRUE)
+  missing <- list(NA_character_, NA_real_, NA_integer_, NA)
+  for (i in seq_along(constructors)) {
+    constructor <- constructors[[i]]
+    expect_identical(constructor(2, 3), rvec(matrix(defaults[[i]], 2, 3)))
+    expect_identical(constructor(2, 3, value = values[[i]]),
+                     rvec(matrix(values[[i]], 2, 3)))
+    expect_identical(constructor(2, 3, value = NA),
+                     rvec(matrix(missing[[i]], 2, 3)))
+    expect_identical(constructor(2, 3, value = setNames(values[[i]], "ignored")),
+                     constructor(2, 3, value = values[[i]]))
+    expect_identical(constructor(0, 3, value = values[[i]]),
+                     rvec(matrix(defaults[[i]], 0, 3)))
+  }
+})
+
+
+test_that("new_rvec constructors use the existing coercion rules", {
+  expect_identical(new_rvec_dbl(2, 3, value = 2L), rvec(matrix(2, 2, 3)))
+  expect_identical(new_rvec_int(2, 3, value = 2), rvec(matrix(2L, 2, 3)))
+  expect_identical(new_rvec_lgl(2, 3, value = 1), rvec(matrix(TRUE, 2, 3)))
+  expect_identical(new_rvec_lgl(2, 3, value = 0L), rvec(matrix(FALSE, 2, 3)))
+  expect_identical(new_rvec_dbl(2, 3, value = TRUE), rvec(matrix(1, 2, 3)))
+  expect_identical(new_rvec_chr(2, 3, value = 42), rvec(matrix("42", 2, 3)))
+  expect_identical(new_rvec_chr(2, 3, value = FALSE), rvec(matrix("FALSE", 2, 3)))
+  expect_error(new_rvec_int(value = 2.5), class = "vctrs_error_cast_lossy")
+  expect_error(new_rvec_lgl(value = 2), class = "vctrs_error_cast_lossy")
+  expect_error(new_rvec_int(value = .Machine$integer.max + 1),
+               class = "vctrs_error_cast_lossy")
+  for (constructor in list(new_rvec_dbl, new_rvec_int, new_rvec_lgl))
+    expect_error(constructor(value = "42"), class = "vctrs_error_cast")
+  for (value in list(Inf, -Inf, NaN)) {
+    expect_identical(new_rvec_dbl(2, 3, value = value), rvec(matrix(value, 2, 3)))
+    expect_identical(new_rvec_chr(2, 3, value = value),
+                     rvec(matrix(as.character(value), 2, 3)))
+    if (is.nan(value)) {
+      expect_identical(new_rvec_int(2, 3, value = value), rvec(matrix(NA_integer_, 2, 3)))
+      expect_identical(new_rvec_lgl(2, 3, value = value), rvec(matrix(NA, 2, 3)))
+    }
+    else {
+      expect_error(new_rvec_int(value = value), class = "vctrs_error_cast_lossy")
+      expect_error(new_rvec_lgl(value = value), class = "vctrs_error_cast_lossy")
+    }
+  }
+})
+
+
+test_that("new_rvec constructors reject nonscalar and nonvector values", {
+  invalid <- list(NULL, numeric(), c(1, 2), list(1), matrix(1),
+                  array(1, c(1, 1, 1)), rvec(1), expression(1))
+  for (constructor in list(new_rvec_chr, new_rvec_dbl, new_rvec_int, new_rvec_lgl)) {
+    for (value in invalid) {
+      for (n in c(0, 2))
+        expect_error(constructor(length = n, value = value),
+                     "value.*must be an atomic vector of length 1")
+    }
+  }
+})
+
+
 ## 'rvec' ---------------------------------------------------------------------
 
 test_that("'rvec' works with rvec", {

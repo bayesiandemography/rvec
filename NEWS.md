@@ -15,6 +15,12 @@
   return empty index rvecs; nonempty draws with no valid index return `NA`
   with one summary warning per call. Ordinary inputs retain base R behaviour.
 
+## Constructors
+
+- `new_rvec_chr()`, `new_rvec_dbl()`, `new_rvec_int()`, and `new_rvec_lgl()`
+  now accept a scalar `value` to fill all elements and draws, including `NA`.
+  Existing defaults are unchanged.
+
 ## Summaries
 
 - `draws_ci()` now accepts `point = "mean"` to report a mean point estimate;

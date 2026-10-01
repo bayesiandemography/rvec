@@ -78,16 +78,27 @@ new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
 }
 
 
-#' Create an Empty Rvec
+#' Create an Rvec Filled with a Single Value
 #'
-#' Create an rvec, filled with `0`, `""`,
-#' or `FALSE`, with a given length
-#' or number of draws.
+#' Create an rvec with a given length and number of draws,
+#' using the same value for every element and every draw.
+#' Defaults are `0`, `""`, or `FALSE`, depending on the type.
 #'
 #' @param length Desired length of rvec.
 #' Default is `0`.
 #' @param n_draw Number of draws of rvec.
 #' Default is `1000`.
+#'
+#' @param value An atomic vector of length 1 used to fill the rvec.
+#' Can be `NA`. Matrices, arrays, lists, and rvecs are not accepted.
+#' Any name is ignored. Numeric and logical values are cast to the
+#' target type without loss; incompatible or lossy casts give an error.
+#' Character values are not parsed as numbers or logical values.
+#' `NaN` is preserved for doubles and converted to `NA` for integers
+#' and logicals. Infinite values are accepted for doubles but rejected
+#' for integers and logicals.
+#' For `new_rvec_chr()`, values are converted with [as.character()].
+#' `value` is checked even when `length` is 0.
 #'
 #' @return An rvec.
 #'
@@ -99,6 +110,8 @@ new_rvec <- function(x = double(), length = 0, n_draw = 1000) {
 #' @examples
 #' new_rvec_int()
 #' new_rvec_lgl(length = 1, n_draw = 5)
+#' new_rvec_dbl(length = 2, n_draw = 5, value = NA)
+#' new_rvec_int(length = 3, n_draw = 5, value = 2)
 #'
 #' x <- new_rvec_dbl(length = 2)
 #' x[1] <- rnorm_rvec(n = 1, n_draw = 1000)
@@ -108,26 +121,26 @@ NULL
 
 #' @export
 #' @rdname new_rvec_blank
-new_rvec_chr <- function(length = 0, n_draw = 1000) {
-  .new_rvec(type = "chr", length = length, n_draw = n_draw)
+new_rvec_chr <- function(length = 0, n_draw = 1000, value = "") {
+  .new_rvec(type = "chr", length = length, n_draw = n_draw, value = value)
 }
 
 #' @export
 #' @rdname new_rvec_blank
-new_rvec_dbl <- function(length = 0, n_draw = 1000) {
-  .new_rvec(type = "dbl", length = length, n_draw = n_draw)
+new_rvec_dbl <- function(length = 0, n_draw = 1000, value = 0) {
+  .new_rvec(type = "dbl", length = length, n_draw = n_draw, value = value)
 }
 
 #' @export
 #' @rdname new_rvec_blank
-new_rvec_int <- function(length = 0, n_draw = 1000) {
-  .new_rvec(type = "int", length = length, n_draw = n_draw)
+new_rvec_int <- function(length = 0, n_draw = 1000, value = 0L) {
+  .new_rvec(type = "int", length = length, n_draw = n_draw, value = value)
 }
 
 #' @export
 #' @rdname new_rvec_blank
-new_rvec_lgl <- function(length = 0, n_draw = 1000) {
-  .new_rvec(type = "lgl", length = length, n_draw = n_draw)
+new_rvec_lgl <- function(length = 0, n_draw = 1000, value = FALSE) {
+  .new_rvec(type = "lgl", length = length, n_draw = n_draw, value = value)
 }
 
 
@@ -448,30 +461,34 @@ rvec_lgl <- function(x = NULL) {
 
 ## Internal constructors ------------------------------------------------------
 
-#' Create New Empty Rvec
+#' Create New Rvec Filled with a Single Value
 #'
 #' @param type Character, double, integer, or logical
 #' @param length Length of resulting rvec
-#' @param number of draws of resulting rvec
+#' @param n_draw Number of draws of resulting rvec
+#' @param value Scalar fill value
 #'
 #' @returns An rvec
 #'
 #' @noRd
-.new_rvec <- function(type, length, n_draw) {
+.new_rvec <- function(type, length, n_draw,
+                      value = switch(type, chr = "", dbl = 0, int = 0L, lgl = FALSE)) {
   type <- match.arg(type, choices = c("chr", "dbl", "int", "lgl"))
   check_nonneg_num_scalar(length)
   length <- as.integer(length)
   check_nonneg_num_scalar(n_draw)
   n_draw <- as.integer(n_draw)
+  if (!is.atomic(value) || !is.null(dim(value)) || length(value) != 1L ||
+      is_rvec(value))
+    cli::cli_abort("{.arg value} must be an atomic vector of length 1, not a matrix, array, or rvec.")
+  value <- unname(value)
   if (type == "chr")
-    x <- ""
-  else if (type == "int")
-    x <- 0L
-  else if (type == "dbl")
-    x <- 0.0
-  else
-    x <- FALSE
-  m <- matrix(x, nrow = length, ncol = n_draw)
+    value <- as.character(value)
+  else {
+    target <- switch(type, dbl = double(), int = integer(), lgl = logical())
+    value <- vec_cast(value, target, x_arg = "value")
+  }
+  m <- matrix(value, nrow = length, ncol = n_draw)
   rvec(m)
 }
 
