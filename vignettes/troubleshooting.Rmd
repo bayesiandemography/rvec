@@ -25,6 +25,17 @@ Each recipe shows a symptom, explains its cause, and demonstrates a fix.
 library(rvec)
 ```
 
+
+# Rvec not displaying properly
+
+The `rvec` package may need to be loaded for an rvec to display properly. For instance, if you use `readRDS()` to read in a data frame that contains an rvec without calling `library(rvec)` first, then you may encounter an error such as
+```text
+Error in `format()`:
+! `format.rvec_dbl()` not implemented.
+```
+(Loading the [bage](https://CRAN.R-project.org/package=bage) package first also causes rvecs to be displayed properly, since `bage` automatically loads `rvec`.
+)
+
 # Summarise elements within draws
 
 ## Put the rvec first in min() {#min-argument-order}

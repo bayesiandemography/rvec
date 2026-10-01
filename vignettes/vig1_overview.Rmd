@@ -26,43 +26,37 @@ knitr::opts_chunk$set(
 ```
 
 
-# Aims of **rvec** {#sec:aims}
+# Introduction {#sec:intro}
 
-Statistical models -- particularly Bayesian statistical models -- often produce outputs consisting of random draws from a distribution. A useful feature of these draws is that they can be used to make inferences about derived quantities. The procedure is:
+The `rvec` package provides tools for working with random draws. The draws are held in a structure called an rvec. An rvec can, for many purposes, be treated like an ordinary R vector, and manipulated using standard functions from base R and the [tidyverse](https://tidyverse.org/). `rvec` also provides tools for summarising across draws to, for instance, produce point estimates or credible intervals.
 
-- Step 1. Calculate the derived quantity for each of the random draws.
-- Step 2. Summaries the distribution of these derived quantities.
+# Examples {#sec:examples}
 
-If, for instance, we have randoms draws from a posterior distribution for age-specific mortality rates, and we want make inferences about life expectancy (a summary indicator for mortality rates), then we proceed as follows:
+We start with some examples. Along with the `rvec` package, we will need some tidyverse packages,
 
-- Step 1. Derive life expectancy for each set of age-specific mortality rates.
-- Step 2. Calculate means, medians, or other statistics for these life expectancies.
+```{r, message = FALSE}
+library(rvec)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
 
-For more on the theory behind manipulating random draws, and for an argument that R needs high-level tools to help with this manipulation, see @kerman2007manipulating.
-
-Package `rvec` provides tools for working with random draws. The draws are held in a structure called an rvec, which can, for many purposes, be treated like an ordinary R vector, and manipulated using ordinary base R and [tidyverse](https://tidyverse.org/) code. `rvec` also contains functions for summarizing across random draws.
-
-
-# Examples
-
-## Toy example
-
-We begin with a toy example to illustrate basic functionality.
+We create an rvec called `theta` containing three draws,
 
 ```{r}
-library(rvec)
 l <- list(c(3, 1, 0))
 theta <- rvec(l)
 theta
 ```
 
-The header `<rvec_dbl<3>[1]>` describe the structure of `theta`:
+The header `<rvec_dbl<3>[1]>` describes the structure of `theta`:
 
 - `_dbl` indicates that `theta` is composed of [doubles](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/double)
 - `<3>` indicates that `theta` holds three random draws, and
 - `[1]` indicates that each draw has length 1.
 
-We can perform standard mathematical operations:
+We can perform standard mathematical operations on `theta`,
+
 ```{r}
 theta^2 + 1
 ```
@@ -74,72 +68,60 @@ beta <- theta + c(1, -1)
 beta
 ```
 
-`beta` consists of three draws:
+The new rvec `beta` consists of three draws of a vector of length 2:
 
-1. `c(4, 2)`, obtained from adding `3` and `c(1, -1)`,
-2. `c(2, 0)`, obtained from adding `1` and `c(1, -1)`, and
-3. `c(1, -1)`, obtained from adding `0` and `c(1, -1)`.
+1. the first vector, `c(4, 2)`, is obtained by adding `3` to `c(1, -1)`,
+2. the second vector, `c(2, 0)`, is obtained by adding `1` to `c(1, -1)`, and
+3. the third vector, `c(1, -1)`, is obtained by adding `0` to `c(1, -1)`.
 
-To summarize across random draws, we use `draws_*` functions, e.g.
+To summarize across random draws, we use `draws_*` functions, e.g.,
 
 ```{r}
 draws_mean(beta)
 ```
-
-
-## Divorce rates {#sec:divorce}
-
-Our next example is more involved, and includes the use of some standard tidyverse packages.
-
-```{r, message = FALSE}
-library(dplyr)
-library(tidyr)
-library(ggplot2)
+or 
+```{r}
+draws_sd(beta)
 ```
 
-We analyse a posterior sample from a Bayesian model of divorce rates in New Zealand. The rates are divorces per thousand people per year, disaggregated by age and sex. The rates are not stored as an rvec, but instead in a 'data base' format, where each row describes a single draw.
+Our next example is based on draws from the posterior distribution from a Bayesian analysis of divorce in New Zealand. The posterior distribution refers to divorces per thousand people per year, disaggregated by age and sex. In their original form, the draws are not stored as an rvec, but instead in a one-draw-per-row format,
 
 ```{r}
 divorce
 ```
 
-First we convert from database format to rvec format.
+We use function `collapse_to_rvec()` to convert from the one-draw-per-row format to an rvec,
 
 ```{r}
-divorce_rv <- divorce |>
-  collapse_to_rvec(value = rate)
-divorce_rv
+divorce_rvec <- divorce |>
+  collapse_to_rvec(values = rate)
+divorce_rvec
 ```
 
-When the number of draws is large, the print method  for rvecs of doubles displays `<median> (<2.5% quantile>, <97.5% quantile>)`, rather than the individual draws. 
+`collapse_to_rvec()` ensures that, internally, draw 1 for females aged 15-19 lines up with draw 1 for females aged 20-24, which lines up with draw 1 for females aged 25-29, and so on.
 
-We define the 'total divorce rate' to be the number of divorces that a person would expect to experience over their lifetime under prevailing divorce rates. The total divorce rate can be calculated as
+In this example, the rvec has many draws, so, rather than showing each draw, the print method shows the median value followed by the 2.5% and 97.5% quantiles.
 
-```{r}
-divorce_rv |>
-  group_by(sex) |>
-  summarise(TDR = sum(rate) * 5 / 1000)
-```
-
-We summarize across draws using `draws_ci()`, which, by default, calculates medians and 95% credible intervals. Function `draws_ci()` returns a tibble rather than a vector, so, following standard `mutate` rules, we do not explicitly create new columns.
+We calculate the ratio between female and male divorce rates,
 
 ```{r}
-divorce_rv |>
-  group_by(sex) |>
-  summarise(tdr = sum(rate) * 5 / 1000) |>
-  mutate(draws_ci(tdr))
-```
-
-Next we calculate the ratio between female and male divorce rates,
-
-```{r}
-divorce_ratio <- divorce_rv |>
+divorce_ratio <- divorce_rvec |>
   pivot_wider(names_from = sex, values_from = rate) |>
-  mutate(ratio = Female / Male) |>
-  mutate(draws_ci(ratio))
+  mutate(ratio = Female / Male)
+divorce_ratio
 ```
 
-and graph the result
+Note that although `rate`, `Female`, and `Male` in these calculations are all rvecs, the code is identical to the code that would be needed for an ordinary R vector.
+
+To obtain point estimates and uncertainty measures for rvecs, we use the `draw` functions. `draws_ci()`, for instance, returns medians and 95% credible intervals.
+
+```{r}
+divorce_ratio  <- divorce_ratio |>
+  mutate(draws_ci(ratio))
+divorce_ratio
+```
+
+Next we graph the results,
 
 ```{r, fig.width = 7, fig.height = 4}
 ggplot(divorce_ratio,
@@ -147,7 +129,9 @@ ggplot(divorce_ratio,
            ymin = ratio.lower, 
            y = ratio.mid,
            ymax = ratio.upper)) +
-  geom_pointrange()
+  geom_pointrange() +
+  ylab("Ratio") +
+  ggtitle("Ratio between female divorce rate and male divorce rate")
 ```
 
 # Structure of an rvec {#sec:structure}
@@ -157,7 +141,7 @@ The class `"rvec"` has four subclasses:
 - `"rvec_dbl"`, which holds doubles, e.g. `3.142`, `-1.01`;
 - `"rvec_int"`, which holds integers, e.g. `42`, `-1`;
 - `"rvec_lgl"`, which holds `TRUE`, `FALSE`, and `NA`; and
-- `"rvec_chr"`, which hold characters, e.g. `"a"`, `"Thomas Bayes"`.
+- `"rvec_chr"`, which holds characters, e.g. `"a"`, `"Thomas Bayes"`.
 
 Internally, an rvec is a matrix, with each row representing one unknown quantity, and each column representing one draw from the joint distribution of the unknown quantities,
 
@@ -227,7 +211,7 @@ rvec(x)
 rvec_dbl(x)
 rvec_chr(x)
 ```
-When the raw data take the form of a database with one draw per row, the most efficient way to create rvecs is to use `collapse_to_rvec()`. See Section \@ref(sec:divorce) for an example.
+When the raw data take the form of a data frame with one draw per row, the most efficient way to create rvecs is to use `collapse_to_rvec()`. See Section \@ref(sec:examples) for an example.
 
 Section \@ref(sec:prob) shows how to create an rvec consisting of draws from a standard probability distribution.
 
@@ -263,28 +247,7 @@ if (getRversion() >= "4.3.0") {
 }
 ```
 
-
-`rvec` contains a suite of functions for summarising weighted data: 
-
-- `weighted_mad()`
-- `weighted_mean()`
-- `weighted_median()`
-- `weighted_sd()`
-- `weighted_var()`
-
-All of these are built on functions from package [matrixStats](https://CRAN.R-project.org/package=matrixStats).
-
-The elements of an rvec do not have a well-defined order when there is more than one draw.  Functions `sort()` and `order()` fail when called on an rvec, unless `n_draw` is 1.
-
-Ranking does, however, have a useful interpretation. We apply the ranking operation independently to each draw, and return the results as an integer rvec.
-
-```{r}
-divorce_ratio |> 
-  select(age, ratio) |>
-  mutate(rank = rank(ratio))
-```
-In the example above, the rank of the 15-19 age group is uncertain, while the rank of the 65+ age group is estimated precisely.
-
+`rvec` contains a suite of functions for summarising weighted data, such as `weighted_mean()` and `weighted_var()`.
 
 # Probability distributions {#sec:prob}
 
@@ -307,6 +270,17 @@ This is a convenient way to create inputs to a simulation.
 
 # Manipulating rvecs
 
+## Compatibility with base R
+
+Most code for manipulating ordinary R vectors should continue to work when applied to rvecs. There are, however, important base R functions where things go wrong. In each case, however, there are alternatives.
+
+| Base R function(s) | What goes wrong | Alternative |
+|:------------|:-------------|:----------------------|
+| `rbind()`  | Creates a list matrix | `dplyr::bind_rows` or `vctrs::vec_rbind()`  |
+| `cbind()` | Creates a list matrix | `dplyr::bind_cols` or `vctrs::vec_cbind()` |
+| `ifelse()` | Doesn't preserve the rvec structure. | `rvec::if_else_rvec()`; `dplyr::if_else()` also works when `condition` is an ordinary vector |
+| `sapply()`, `vapply()` | Doesn't combine results into an rvec | `rvec::map_rvec()` or `lapply()`  |
+
 ## Subsetting
 
 Standard R ways of selecting elements from vectors work with rvecs. 
@@ -322,7 +296,7 @@ x[c(TRUE, FALSE, TRUE)]  ## logical flag
 
 ## If-Else {#sec:ifelse}
 
-The standard R function `ifelse()` does not work at all with rvecs. 
+The standard R function `ifelse()` does not preserve the structure of an rvec.
 
 The tidyverse function `if_else()` works when the `true`, `false`, or `missing` arguments are rvecs,
 ```{r}
@@ -370,14 +344,18 @@ df2 <- data.frame(x2)
 cbind(df1, df2)
 ```
 
-Tidyverse equivalents such as `dplyr::bind_rows()`, `dbplyr::bind_cols()`, `vctrs::vec_cbind()`, and `vctrs::vec_rbind()` *do* work with rvecs,
+With rvec columns in data frames, `dplyr::bind_rows()` and
+`vctrs::vec_rbind()` combine rows. To create columns from bare rvecs, use
+`dplyr::bind_cols()` or `vctrs::vec_cbind()`,
 ```{r}
 library(vctrs, warn.conflicts = FALSE)
 vec_cbind(a = x1, b = x2)
 ```
 
-
-Base R function `sapply()` does not work with rvecs (unless `simplify` is set to `FALSE`). `rvec` supplies a function called `map_rvec()` (based on map functions in package [purrr](https://purrr.tidyverse.org)) that does the same job:
+When each result is an rvec, base R's `sapply()` does not combine them into
+one rvec (`simplify = FALSE` keeps a list). `map_rvec()`, based on map
+functions in package [purrr](https://purrr.tidyverse.org), combines
+length-one rvec results:
 ```{r}
 l <- list(a = rvec(list(c(1, 4))),
           b = rvec(list(c(9, 16))))
@@ -399,9 +377,9 @@ Function `as_list_col()` returns a list of vectors
 ```{r}
 as_list_col(x)
 ```
-Functions such as [point_interval](https://mjskay.github.io/ggdist/reference/point_interval.html) in package [ggdist](https://mjskay.github.io/ggdist/) accept lists of vector. A good way to access the facilities for working with random draws in `ggdist`, or in packages such as [tidybayes](https://mjskay.github.io/tidybayes/) and [bayesplot](https://mc-stan.org/bayesplot/),  is to use `as_list_col()` to convert an rvec to a list column.
+Functions such as [point_interval](https://mjskay.github.io/ggdist/reference/point_interval.html) in package [ggdist](https://mjskay.github.io/ggdist/) accept lists of vectors. A good way to access the facilities for working with random draws in `ggdist`, or in packages such as [tidybayes](https://mjskay.github.io/tidybayes/) and [bayesplot](https://mc-stan.org/bayesplot/),  is to use `as_list_col()` to convert an rvec to a list column.
 
-Function `expand_from_rvec()` is the inverse of function `collapse_to_rvec()`, introduced in Section \@ref(sec:divorce).
+Function `expand_from_rvec()` is the inverse of function `collapse_to_rvec()`, introduced in Section \@ref(sec:examples).
 ```{r}
 divorce |>
   head(2)
@@ -418,68 +396,17 @@ divorce |>
 
 Most functions in `rvec` are concerned with deriving random vectors from other random vectors: that is, with the column-wise calculations described in Section \@ref(sec:structure). But once we have derived the random vectors, we typically want to summarise them, using statistics such as means or quantiles: that is, we want to carry out row-wise calculations.
 
-The functions for carrying out row-wise calculations on rvecs are:
+The functions for carrying out row-wise calculations on rvecs include, for instance, `draws_median()` to calculate the median values across draws, and `draws_var()` to calculate variance across draws.
 
-- `draws_all()`
-- `draws_any()`
-- `draws_median()`
-- `draws_mean()`
-- `draws_mode()`
-- `draws_sd()`
-- `draws_var()`
-- `draws_cv()`
-- `draws_ci()`
-- `draws_quantile()`
-- `draws_fun()`
-
-Internally, most of these functions call functions from [matrixStats](https://CRAN.R-project.org/package=matrixStats), and are therefore fast.
-
-`draws_ci()`, which calculates credible intervals, is the draws function that is used most often,
-
-```{r}
-divorce_rv <- divorce |>
-  collapse_to_rvec(value = rate)
-divorce_rv
-divorce_rv |>
-  mutate(draws_ci(rate))
-```
-
-# Pooling distributions
-
-Sometimes when working with simulation draws, we want to combine multiple samples of draws into a single overall sample. When using multiple imputation, for instance, we might want to combine posterior samples constructed from each of the $m = 1, \cdots, M$ imputed datasets into a single pooled posterior sample.
-
-To combine samples, we use function `pool_draws()`:
-
-```{r, echo = FALSE}
-set.seed(0)
-mi_data <- tibble::tibble(
-  sex = rep(c("Female", "Male"), each = 3),
-  imputed_dataset = rep(1:3, times = 2),
-  value = rnorm_rvec(n = 6,
-                     mean = c(0.9, 1.2, 1.1, 0.8, 0.7, 0.5),
-		     sd = 0.2,
-		     n_draw = 1000)
-  )
-```
-
-```{r}
-mi_data
-mi_data |>
-  pool_draws(by = sex)
-```
-
-# Other packages
-
-The first R package to provide a specialized object for handling multiple draws was [rv](https://CRAN.R-project.org/package=rv). The specialized object, called an rv, can be manipulated and summarized much like an rvec. However, in software terms, an rv is  not strictly a vector (calling `is.vector()` on one returns `FALSE`) and an rv does not always behave as expected inside a data frame. It is therefore not well suited to tidyverse-style work flows.
-
-R package [posterior](https://CRAN.R-project.org/package=posterior) provides several data structures for handling multiple draws. One of these -- the rvar -- is similar to an rvec. An rvar is, however, is not limited to a single dimension, and has special facilities for dealing with multiple chains (as produced by Markov chain Monte Carlo methods.) These features are essential for some analyses, but they can make rvars harder to master, and they are not needed for most tidyverse-style work flows. 
-
-Another impportant different between rvers and rvecs is that, whereas rvecs interpret summary functions such as `mean()` and `sum()` as operations to be applied independently on each draw, rvars interpret them as operations to be applied across draws. The result is that code written for ordinary R vectors will often work on rvecs, but need modification to work on rvars. The tidyverse function `count()`, for instance, works with rvecs but not rvars. This again makes rvecs easier to work with for many tasks.
-
-# References
+Most draws functions use [matrixStats](https://CRAN.R-project.org/package=matrixStats) internally and are therefore fast.
 
 
+# Similar packages
 
+The first R package to provide a specialized object for handling multiple draws was [rv](https://CRAN.R-project.org/package=rv). The specialized object, called an rv, can be manipulated and summarized much like an rvec. However, in software terms, an rv is  not strictly a vector and does not behave like one inside a data frame. It is therefore not well suited to tidyverse-style work flows.
 
+R package [posterior](https://CRAN.R-project.org/package=posterior) provides several data structures for handling multiple draws. One of these -- the rvar -- is similar to an rvec. An rvar is, however, not limited to a single dimension, and has special facilities for dealing with multiple chains (as produced by Markov chain Monte Carlo methods). These features are essential for some analyses, but they can make rvars harder to master, and they are not needed for most tidyverse-style work flows. 
 
+Another important difference between rvecs and rvars is the way that they implement standard functions such as `mean()` and `sum()`. Calling `mean()` on an rvec yields the mean across elements within each draw. Means across draws within each element are obtained by calling `draws_mean()`. In contrast, calling `mean()` on an rvar yields the mean across draws within each element. Means across elements with each draw are obtained by calling `rvar_mean()`.
 
+The differences in implementation imply that code written for an ordinary R vector generalises naturally to rvecs but not to rvars. Code such as `x <- median(y)` that was written originally for a numeric vector will continue to yield medians over elements of `y` if `y` is an rvec. If `y` is an rvar, however, then the code will yield medians over draws, which is a substantial change in meaning.

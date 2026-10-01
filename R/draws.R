@@ -296,10 +296,13 @@ draws_predicate <- function(x, predicate, all) {
 
 ## 'draws_ci' -----------------------------------------------------------------
 
-#' Credible Intervals from Random Draws
+#' Credible Intervals and Median from Random Draws
 #'
 #' Summarise the distribution of random draws
-#' in an rvec, using  credible intervals.
+#' in an rvec, using credible intervals and medians.
+#'
+#' The credible interval spans the range from
+#' `0.5 - 0.5 * width` to `0.5 + 0.5 * width`.
 #'
 #' @section Warning:
 #'
@@ -311,7 +314,7 @@ draws_predicate <- function(x, predicate, all) {
 #' `my_df$ci <- draws_ci(my_rvec)`
 #'
 #' However, creating columns in
-#' this way can corrupt an ordinary data frames.
+#' this way can corrupt an ordinary data frame.
 #' For safer options,
 #' see the examples below.
 #'
@@ -319,14 +322,18 @@ draws_predicate <- function(x, predicate, all) {
 #' @param width Width(s) of credible interval(s).
 #' One or more numbers greater than 0
 #' and less than or equal to 1.
-#' Default is `0.975`.
+#' Default is `0.95`.
 #' @param prefix String to be added to the
 #' names of columns in the result.
 #' Defaults to name of `x`.
 #'
 #' @returns A [tibble][tibble::tibble()]
-#' with three columns.
+#' with three columns:
 #'
+#' - `<name>.lower` The lower limit of the credible interval.
+#' - `<name>.mid` The median of the distribution.
+#' - `<name>.upper` The upper limit of the credible interval.
+#' 
 #' @seealso
 #' [draws_quantile()] gives more options
 #' for forming quantiles.
