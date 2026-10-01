@@ -55,6 +55,12 @@
 #' - [dunif_rvec()] Uniform
 #' - [dweibull_rvec()] Weibull
 #'
+#' **Selecting draws**
+#'
+#' - [extract_draw()] One draw as an ordinary vector
+#' - [extract_draws()] Draws selected by index, as an rvec
+#' - [thin_draws()] Random selection without replacement
+#'
 #' **Summarizing across draws**
 #'
 #' - [draws_all()] All

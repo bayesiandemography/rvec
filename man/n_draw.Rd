@@ -33,6 +33,8 @@ n_draw(x)
 }
 \seealso{
 \itemize{
+\item \code{\link[=extract_draws]{extract_draws()}} to select draws using indices.
+\item \code{\link[=thin_draws]{thin_draws()}} to randomly reduce the number of draws.
 \item \code{\link[=is_rvec]{is_rvec()}} to test if an object is an rvec.
 }
 }

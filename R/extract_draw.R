@@ -21,7 +21,9 @@
 #' - logical, if `x` has class `"rvec_lgl"`.
 #'
 #' @seealso
-#' [n_draw()] Number of draws
+#' - [n_draw()] Number of draws.
+#' - [extract_draws()] Select draws and return an rvec.
+#' - [thin_draws()] Randomly select draws without replacement.
 #' 
 #' @examples
 #' x <- rvec(matrix(1:50, ncol = 5))

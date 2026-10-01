@@ -35,5 +35,9 @@ extract_draw(x, i = 1)
 extract_draw(x)
 }
 \seealso{
-\code{\link[=n_draw]{n_draw()}} Number of draws
+\itemize{
+\item \code{\link[=n_draw]{n_draw()}} Number of draws.
+\item \code{\link[=extract_draws]{extract_draws()}} Select draws and return an rvec.
+\item \code{\link[=thin_draws]{thin_draws()}} Randomly select draws without replacement.
+}
 }

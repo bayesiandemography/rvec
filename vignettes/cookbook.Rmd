@@ -195,41 +195,6 @@ as.matrix(quantile(rate, probs = c(0.25, 0.5, 0.75), type = 1))
 - [Calculate a minimum, maximum, or range](#min-max-range).
 
 
-## Check whether values are increasing within each draw {#unsorted-within-draws}
-
-### Problem
-
-You have a sequence of values for each draw and want to know whether the
-values are in increasing order.
-
-### Solution
-
-Use `is.unsorted()` to check the element order independently within each draw.
-
-```{r unsorted-within-draws}
-sequence <- rvec(rbind(
-  first = c(1, 1, 2),
-  second = c(2, 3, 2),
-  third = c(3, 2, 1)
-))
-as.matrix(is.unsorted(sequence))
-```
-
-The result is a length-one logical rvec. A draw with `FALSE` is sorted in
-nondecreasing order. To require strictly increasing values, use
-`strictly = TRUE`; repeated values then count as unsorted.
-
-### Discussion
-
-Missing values give `NA` for draws with more than one element unless you use
-`na.rm = TRUE`. This check leaves the values in their original order.
-
-### See Also
-
-- `?is.unsorted` for the treatment of ties and missing values.
-- [Calculate a minimum, maximum, or range](#min-max-range).
-
-
 # Modify elements within draws
 
 ## Impose lower and upper bounds {#bound-values}

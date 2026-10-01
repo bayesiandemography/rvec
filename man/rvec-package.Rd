@@ -64,6 +64,13 @@ For instance, to calculate a credible interval, use \code{\link[=draws_ci]{draws
 \item \code{\link[=dweibull_rvec]{dweibull_rvec()}} Weibull
 }
 
+\strong{Selecting draws}
+\itemize{
+\item \code{\link[=extract_draw]{extract_draw()}} One draw as an ordinary vector
+\item \code{\link[=extract_draws]{extract_draws()}} Draws selected by index, as an rvec
+\item \code{\link[=thin_draws]{thin_draws()}} Random selection without replacement
+}
+
 \strong{Summarizing across draws}
 \itemize{
 \item \code{\link[=draws_all]{draws_all()}} All

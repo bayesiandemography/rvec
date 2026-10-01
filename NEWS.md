@@ -2,6 +2,9 @@
 
 ## New functions
 
+- Added `extract_draws()` for selection by index, including repeated indices,
+  and `thin_draws()` for random selection without replacement in original order.
+
 - Added `draws_any_na()`, `draws_all_na()`, `draws_any_infinite()`,
   `draws_all_infinite()`, `draws_any_finite()`, and `draws_all_finite()`
   to check missingness and finiteness across draws for each element.
@@ -11,7 +14,7 @@
   retain base R behaviour.
 
 - `which.min()` and `which.max()` now find the first extreme position within
-  each draw, and `is.unsorted()` checks each draw's element order. Empty rvecs
+  each draw. Empty rvecs
   return empty index rvecs; nonempty draws with no valid index return `NA`
   with one summary warning per call. Ordinary inputs retain base R behaviour.
 

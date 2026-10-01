@@ -1,4 +1,4 @@
-# Plan: within-draw which.min(), which.max(), and is.unsorted()
+# Plan: within-draw which.min() and which.max()
 
 ## Purpose and restart context
 
@@ -6,8 +6,6 @@ Add operations across elements independently within each draw:
 
 - `which.min(x)`: the position of the first minimum in each draw.
 - `which.max(x)`: the position of the first maximum in each draw.
-- `is.unsorted(x, na.rm = FALSE, strictly = FALSE)`: whether each draw is
-  unsorted in the existing element order.
 
 The user requested this saved plan so implementation could restart later.
 Implementation was subsequently authorised and the edge-case policies below
@@ -26,7 +24,7 @@ for future recipes. Use their Problem / Solution / Discussion / See Also style.
 **Explicit user decision:** do not implement draw-wise `sort()` or `order()`,
 now or as a future extension of this work. Their meaning is ambiguous and may
 confuse users. Preserve existing single-draw support and multi-draw restrictions,
-including `xtfrm.rvec`. An unsortedness check does not rearrange anything.
+including `xtfrm.rvec`.
 
 ## Proposed semantics
 
@@ -60,26 +58,11 @@ Explain that these indices describe uncertain positions. They cannot generally
 be used as an ordinary subscript to select one fixed row from a data frame.
 Do not add draw-wise subsetting, label extraction, or a general `which()` here.
 
-### is.unsorted()
-
-Return a length-one logical rvec with one base-R result per draw, including NA
-where base R returns it. Forward `na.rm` and `strictly` without changing their
-meaning. Check numeric, logical, and character inputs. Character ordering must
-follow the current locale, not a hard-coded lexical expectation.
-
-Match base behaviour for empty and singleton draws, which return FALSE,
-including a singleton NA. With more than one element, missing values normally
-produce NA unless removed. With `strictly = TRUE`, equal adjacent values count
-as unsorted. No decreasing-order option should be invented.
-
-Drop result names, consistent with a summary across elements.
-
 ## Dispatch and implementation
 
 1. Inspect base and vctrs implementations on supported R versions. In the local
-   R 4.6.1 inspection, `which.min()` and `which.max()` call internal routines;
-   `is.unsorted()` performs length and missingness checks before its internal
-   call. Merely registering an S3 method may not intercept all these paths.
+   R 4.6.1 inspection, `which.min()` and `which.max()` call internal routines.
+   Merely registering an S3 method may not intercept these paths.
 2. Prefer exported S3 generic wrappers with `.default` methods delegating to
    the base functions and `.rvec` methods for draw-wise calculations, following
    `rank()` in `R/order.R`. Verify this design before relying on it. Keep the
@@ -102,7 +85,7 @@ Drop result names, consistent with a summary across elements.
 Use independent column-wise base calculations as the oracle, applying only the
 explicitly agreed adaptation for missing indices. Test:
 
-- Draws with different selected positions and different sortedness outcomes,
+- Draws with different selected positions,
   using nonsquare matrices so the wrong aggregation direction cannot pass.
 - Ties, repeated infinities, NA versus NaN, all-missing draws, mixtures of valid
   and all-missing draws, and original positions after missing-value omission.
@@ -111,8 +94,6 @@ explicitly agreed adaptation for missing indices. Test:
 - Zero elements with several draws, one element with several draws, one draw
   with several elements, and named inputs. Assert exact dimensions, draw counts,
   storage types, and the agreed name policy, not just printed values.
-- For is.unsorted, all combinations of na.rm and strictly, ascending and
-  descending sequences, ties, and missing values at different positions.
 - Ordinary-input equivalence, including empty inputs, classed inputs where
   supported by base, invalid arguments, warning behaviour, and namespace use.
 - Input immutability and subclass dispatch for any new S3 generics.
@@ -126,7 +107,7 @@ functions; unlike ordinary S3-only methods, they are new public entry points.
 Document the missing-index and naming policies prominently.
 
 Add a cookbook recipe identifying which region has the largest value in each
-draw, and a recipe checking whether a sequence is increasing in every draw.
+draw.
 If useful, add troubleshooting for all-missing draws or treating random indices
 as ordinary row selectors. Cross-link existing rank and summary documentation
 and add NEWS under the then-current development version. Do not bump the

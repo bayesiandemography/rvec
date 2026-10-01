@@ -14,6 +14,8 @@
 #' including when it has zero elements.
 #'
 #' @seealso
+#' - [extract_draws()] to select draws using indices.
+#' - [thin_draws()] to randomly reduce the number of draws.
 #' - [is_rvec()] to test if an object is an rvec.
 #'
 #' @examples

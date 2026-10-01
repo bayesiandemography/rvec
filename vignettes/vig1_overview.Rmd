@@ -41,6 +41,10 @@ library(tidyr)
 library(ggplot2)
 ```
 
+When `rvec` is loaded, R emits messages about functions such as `sd()` and `var()`
+being "masked". However, these functions retain their usual behavior for ordinary
+vectors, while gaining new behavior for rvecs. No action is needed.
+
 We create an rvec called `theta` containing three draws,
 
 ```{r}
