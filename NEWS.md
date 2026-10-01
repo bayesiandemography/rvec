@@ -17,6 +17,9 @@
 
 ## Summaries
 
+- `draws_ci()` now accepts `point = "mean"` to report a mean point estimate;
+  the default remains `point = "median"` and interval limits are unchanged.
+
 - `min()`, `max()`, and `range()` now summarise elements independently
   within each draw, including multiple arguments and missing-value handling.
 

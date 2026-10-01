@@ -165,6 +165,61 @@ test_that("'draws_ci' throws correct error with rvec_chr", {
 })
 
 
+test_that("draws_ci selects the point estimate without changing intervals", {
+    x <- rvec(rbind(a = c(0, 1, 2, 3, 24), b = c(1, 1, 1, 2, 10)))
+    for (width in list(0.95, c(0.5, 0.8, 0.95))) {
+        default <- draws_ci(x, width = width, prefix = "var")
+        median <- draws_ci(x, width = width, prefix = "var", point = "median")
+        mean <- draws_ci(x, width = width, prefix = "var", point = "mean")
+        expect_identical(default, median)
+        expect_equal(unname(mean$var.mid), c(6, 3))
+        expect_false(isTRUE(all.equal(mean$var.mid, median$var.mid)))
+        mid <- length(width) + 1L
+        expect_identical(mean[-mid], median[-mid])
+        expect_identical(names(mean), names(median))
+    }
+    expect_identical(draws_ci(x, 0.8, "var", FALSE),
+                     draws_ci(x, width = 0.8, prefix = "var", point = "median"))
+    expect_identical(names(draws_ci(x, point = "mean")),
+                     c("x.lower", "x.mid", "x.upper"))
+})
+
+
+test_that("draws_ci mean supports numeric types and missing values", {
+    for (values in list(c(0, 0, 1, 9), c(0L, 0L, 1L, 9L),
+                        c(FALSE, FALSE, FALSE, TRUE))) {
+        x <- rvec(rbind(values, replace(values, 2L, NA)))
+        result <- draws_ci(x, point = "mean")
+        expect_equal(unname(result$x.mid), c(mean(values), NA_real_))
+        result <- draws_ci(x, point = "mean", na_rm = TRUE)
+        expect_equal(unname(result$x.mid), c(mean(values), mean(values[-2L])))
+        median <- draws_ci(x, na_rm = TRUE)
+        expect_identical(result[c(1, 3)], median[c(1, 3)])
+    }
+    x <- rvec(matrix(NA_real_, nrow = 1, ncol = 4))
+    expect_true(is.na(draws_ci(x, point = "mean")$x.mid))
+    expect_true(is.nan(draws_ci(x, point = "mean", na_rm = TRUE)$x.mid))
+})
+
+
+test_that("draws_ci mean preserves the empty input result structure", {
+    x <- rvec(matrix(integer(), nrow = 0, ncol = 5))
+    expect_identical(draws_ci(x, point = "mean"),
+                     tibble::tibble(x.lower = NA_real_, x.mid = NaN,
+                                    x.upper = NA_real_))
+})
+
+
+test_that("draws_ci validates point and continues to reject character inputs", {
+    x <- rvec(c(1, 2, 3))
+    expect_error(draws_ci(x, point = "mode"), "arg.*should be one of")
+    expect_error(draws_ci(x, point = "m"), "arg.*should be one of")
+    expect_identical(draws_ci(x, point = "mea"), draws_ci(x, point = "mean"))
+    expect_error(draws_ci(rvec_chr("a"), point = "mean"),
+                 "Credible intervals not defined for character.")
+})
+
+
 ## 'draws_max' ----------------------------------------------------------------
 
 test_that("'draws_max' works with rvec_dbl when nrow > 0", {

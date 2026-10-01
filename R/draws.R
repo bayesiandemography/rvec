@@ -296,13 +296,18 @@ draws_predicate <- function(x, predicate, all) {
 
 ## 'draws_ci' -----------------------------------------------------------------
 
-#' Credible Intervals and Median from Random Draws
+#' Credible Intervals and Point Estimates from Random Draws
 #'
 #' Summarise the distribution of random draws
-#' in an rvec, using credible intervals and medians.
+#' in an rvec, using credible intervals and point estimates.
 #'
-#' The credible interval spans the range from
-#' `0.5 - 0.5 * width` to `0.5 + 0.5 * width`.
+#' The credible intervals extend from the quantiles at
+#' `0.5 - 0.5 * width` to the quantiles `0.5 + 0.5 * width`.
+#'
+#' When `point` is `"mean"`,  point estimates
+#' can lie outside the associated credible intervals,
+#' though this only happens in unusual cases, such as when
+#' distributions are highly skewed.
 #'
 #' @section Warning:
 #'
@@ -326,13 +331,16 @@ draws_predicate <- function(x, predicate, all) {
 #' @param prefix String to be added to the
 #' names of columns in the result.
 #' Defaults to name of `x`.
+#' @param point Summary measure used for point estimate:
+#'  `"median"` (the default) or `"mean"`.
 #'
 #' @returns A [tibble][tibble::tibble()]
-#' with three columns:
+#' with `2 * length(width) + 1` columns.
+#' When `width` has length 1, the columns are
 #'
-#' - `<name>.lower` The lower limit of the credible interval.
-#' - `<name>.mid` The median of the distribution.
-#' - `<name>.upper` The upper limit of the credible interval.
+#' - `<name>.lower` Lower limit of credible interval
+#' - `<name>.mid` Point estimate
+#' - `<name>.upper` Upper limit of the credible interval
 #' 
 #' @seealso
 #' [draws_quantile()] gives more options
@@ -372,6 +380,7 @@ draws_predicate <- function(x, predicate, all) {
 #' x
 #' draws_ci(x)
 #' draws_ci(x, width = c(0.5, 0.99))
+#' draws_ci(x, point = "mean")
 #' draws_ci(x, prefix = "results")
 #'
 #' ## results from 'draws_ci'
@@ -389,7 +398,8 @@ draws_predicate <- function(x, predicate, all) {
 draws_ci <- function(x,
                      width = 0.95,
                      prefix = NULL,
-                     na_rm = FALSE) {
+                     na_rm = FALSE,
+                     point = c("median", "mean")) {
   UseMethod("draws_ci")
 }
 
@@ -399,8 +409,10 @@ draws_ci <- function(x,
 draws_ci.rvec <- function(x,
                           width = 0.95,
                           prefix = NULL,
-                          na_rm = FALSE) {
+                          na_rm = FALSE,
+                          point = c("median", "mean")) {
   x_str <- deparse1(substitute(x))
+  point <- match.arg(point)
   check_width(width)
   has_prefix <- !is.null(prefix)
   if (has_prefix)
@@ -418,6 +430,8 @@ draws_ci.rvec <- function(x,
     ans <- matrix_to_list_of_cols(ans)
   }
   n <- length(width)
+  if (point == "mean")
+    ans[[n + 1L]] <- draws_mean(x, na_rm = na_rm)
   lower <- rep(".lower", times = n)
   upper <- rep(".upper", times = n)
   if (n > 1L) {
@@ -441,7 +455,8 @@ draws_ci.rvec <- function(x,
 draws_ci.rvec_chr <- function(x,
                               width = 0.95,
                               prefix = NULL,
-                              na_rm = FALSE) {
+                              na_rm = FALSE,
+                              point = c("median", "mean")) {
   cli::cli_abort("Credible intervals not defined for character.")
 }
 
