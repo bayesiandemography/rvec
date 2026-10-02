@@ -115,6 +115,17 @@ instance, to calculate a credible interval, use
 - [`dweibull_rvec()`](https://bayesiandemography.github.io/rvec/reference/dweibull_rvec.md)
   Weibull
 
+**Selecting draws**
+
+- [`extract_draw()`](https://bayesiandemography.github.io/rvec/reference/extract_draw.md)
+  One draw as an ordinary vector
+
+- [`extract_draws()`](https://bayesiandemography.github.io/rvec/reference/extract_draws.md)
+  Draws selected by index, as an rvec
+
+- [`thin_draws()`](https://bayesiandemography.github.io/rvec/reference/thin_draws.md)
+  Random selection without replacement
+
 **Summarizing across draws**
 
 - [`draws_all()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
@@ -122,6 +133,18 @@ instance, to calculate a credible interval, use
 
 - [`draws_any()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
   Any
+
+- [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  Missing draws
+
+- [`draws_any_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_all_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  Infinite draws
+
+- [`draws_any_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  Finite draws
 
 - [`draws_min()`](https://bayesiandemography.github.io/rvec/reference/draws_min.md)
   Minimum
@@ -157,7 +180,21 @@ instance, to calculate a credible interval, use
   Arbitrary function
 
 - [`n_draw()`](https://bayesiandemography.github.io/rvec/reference/n_draw.md)
-  Number
+  Number of draws
+
+**Dealing with NAs and infinite values**
+
+- [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
 
 **Coercion, classes**
 
@@ -215,6 +252,10 @@ Useful links:
 ## Author
 
 **Maintainer**: John Bryant <john@bayesiandemography.com>
+
+Authors:
+
+- John Bryant <john@bayesiandemography.com>
 
 Other contributors:
 

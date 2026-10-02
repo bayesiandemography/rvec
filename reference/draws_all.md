@@ -26,7 +26,7 @@ draws_any(x, na_rm = FALSE)
 
 - x:
 
-  An object of class
+  An
   [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md).
 
 - na_rm:
@@ -65,6 +65,20 @@ Apply pre-specified functions across draws:
 Apply arbitrary function across draws:
 
 - [`draws_fun()`](https://bayesiandemography.github.io/rvec/reference/draws_fun.md)
+
+Check for missing or finite values:
+
+- [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
 
 ## Examples
 

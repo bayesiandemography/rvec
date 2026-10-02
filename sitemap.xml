@@ -25,6 +25,7 @@
 <url><loc>https://bayesiandemography.github.io/rvec/reference/dnorm_rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/dpois_rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/draws_all.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/draws_any_na.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/draws_ci.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/draws_fun.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/draws_median.html</loc></url>
@@ -35,6 +36,7 @@
 <url><loc>https://bayesiandemography.github.io/rvec/reference/dunif_rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/dweibull_rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/extract_draw.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/extract_draws.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/if_else_rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/index.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/is_rvec.html</loc></url>
@@ -43,6 +45,7 @@
 <url><loc>https://bayesiandemography.github.io/rvec/reference/n_draw.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/new_rvec_deprecated.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/pmin.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/pool_draws.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/prob.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/rank.html</loc></url>
@@ -51,7 +54,9 @@
 <url><loc>https://bayesiandemography.github.io/rvec/reference/rvec-package.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/rvec.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/sd.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/thin_draws.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/var.html</loc></url>
 <url><loc>https://bayesiandemography.github.io/rvec/reference/weighted_mean.html</loc></url>
+<url><loc>https://bayesiandemography.github.io/rvec/reference/which.min.html</loc></url>
 </urlset>
 

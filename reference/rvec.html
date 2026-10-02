@@ -15,7 +15,7 @@ on input data.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,7 +88,8 @@ a diffent type:</p><ul><li><p><code>"rvec_dbl"</code> doubles</p></li>
 <li><p><code>"rvec_int"</code> integers</p></li>
 <li><p><code>"rvec_lgl"</code> logical</p></li>
 <li><p><code>"rvec_chr"</code> character</p></li>
-</ul><p>These subclasses are analogous to <code><a href="https://rdrr.io/r/base/double.html" class="external-link">double()</a></code>,
+</ul><p>An rvec may have zero elements, but must have at least one draw.</p>
+<p>These subclasses are analogous to <code><a href="https://rdrr.io/r/base/double.html" class="external-link">double()</a></code>,
 <code><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer()</a></code>, <code><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical()</a></code>, and <code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>
 vectors.</p>
 <p>Function <code>rvec()</code> chooses the subclass, based on
@@ -125,7 +126,7 @@ representing probability distributions.</p></li>
 <span class="r-in"><span>          <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">100</span>, lambda <span class="op">=</span> <span class="fl">5.5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">rvec</span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;rvec_int&lt;100&gt;[2]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10 (5, 17) 4 (1, 9)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10 (5.5, 17) 5 (1.5, 11) </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">rvec</span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;rvec_chr&lt;1&gt;[5]&gt;</span>

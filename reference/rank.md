@@ -32,9 +32,9 @@ rank(
 
 ## Value
 
-An object of class
-[`rvec_int()`](https://bayesiandemography.github.io/rvec/reference/rvec.md)
-if `x` is an rvec. Otherwise an ordinary integer vector.
+An rvec if `x` is an rvec, otherwise an ordinary numeric vector. Average
+ranks are doubles, allowing fractional ranks for ties; other tie methods
+return integer ranks.
 
 ## Details
 
@@ -52,6 +52,6 @@ For details on the calculations, see the documentation for
 x <- rvec(list(c(3, 30),
                c(0, 100)))
 rank(x)
-#> <rvec_int<2>[2]>
+#> <rvec_dbl<2>[2]>
 #> [1] 2,1 1,2
 ```

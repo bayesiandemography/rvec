@@ -19,7 +19,7 @@ throws an error."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,12 +78,15 @@ eg an <a href="rvec.html">rvec</a>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An integer scalar.</p>
+    <p>A positive integer scalar. An rvec always has at least one draw,
+including when it has zero elements.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><code><a href="is_rvec.html">is_rvec()</a></code> to test if an object is an rvec.</p></li>
+<ul><li><p><code><a href="extract_draws.html">extract_draws()</a></code> to select draws using indices.</p></li>
+<li><p><code><a href="thin_draws.html">thin_draws()</a></code> to randomly reduce the number of draws.</p></li>
+<li><p><code><a href="is_rvec.html">is_rvec()</a></code> to test if an object is an rvec.</p></li>
 </ul></div>
     </div>
 

@@ -81,8 +81,15 @@
 - [`draws_all()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
   [`draws_any()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
   : Logical Operations Across Random Draws
+- [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  [`draws_any_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  [`draws_all_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  [`draws_any_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  : Missing and Finite Values Across Draws
 - [`draws_ci()`](https://bayesiandemography.github.io/rvec/reference/draws_ci.md)
-  : Credible Intervals from Random Draws
+  : Credible Intervals and Point Estimates from Random Draws
 - [`draws_fun()`](https://bayesiandemography.github.io/rvec/reference/draws_fun.md)
   : Apply Summary Function Across Random Draws
 - [`draws_median()`](https://bayesiandemography.github.io/rvec/reference/draws_median.md)
@@ -116,6 +123,8 @@
   : Weibull Distribution, Using Multiple Draws
 - [`extract_draw()`](https://bayesiandemography.github.io/rvec/reference/extract_draw.md)
   : Extract a Single Draw From an Rvec
+- [`extract_draws()`](https://bayesiandemography.github.io/rvec/reference/extract_draws.md)
+  : Extract Draws From an Rvec
 - [`if_else_rvec()`](https://bayesiandemography.github.io/rvec/reference/if_else_rvec.md)
   : Vectorised If-Else, When Condition is an Rvec
 - [`is_rvec()`](https://bayesiandemography.github.io/rvec/reference/is_rvec.md)
@@ -133,9 +142,12 @@
   [`new_rvec_dbl()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md)
   [`new_rvec_int()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md)
   [`new_rvec_lgl()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md)
-  : Create an Empty Rvec
+  : Create an Rvec Filled with a Single Value
 - [`new_rvec()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_deprecated.md)
   **\[deprecated\]** : Create a Blank Rvec
+- [`pmin()`](https://bayesiandemography.github.io/rvec/reference/pmin.md)
+  [`pmax()`](https://bayesiandemography.github.io/rvec/reference/pmin.md)
+  : Parallel Minima and Maxima with Rvecs
 - [`pool_draws()`](https://bayesiandemography.github.io/rvec/reference/pool_draws.md)
   : Pool Draws
 - [`prob()`](https://bayesiandemography.github.io/rvec/reference/prob.md)
@@ -157,6 +169,8 @@
   : Create an Rvec from Data
 - [`sd()`](https://bayesiandemography.github.io/rvec/reference/sd.md) :
   Standard Deviation, Including Rvecs
+- [`thin_draws()`](https://bayesiandemography.github.io/rvec/reference/thin_draws.md)
+  : Thin Draws in an Rvec
 - [`var()`](https://bayesiandemography.github.io/rvec/reference/var.md)
   : Correlation, Variance and Covariance (Matrices), Including Rvecs
 - [`weighted_mean()`](https://bayesiandemography.github.io/rvec/reference/weighted_mean.md)
@@ -165,3 +179,6 @@
   [`weighted_sd()`](https://bayesiandemography.github.io/rvec/reference/weighted_mean.md)
   [`weighted_var()`](https://bayesiandemography.github.io/rvec/reference/weighted_mean.md)
   : Calculate Weighted Summaries
+- [`which.min()`](https://bayesiandemography.github.io/rvec/reference/which.min.md)
+  [`which.max()`](https://bayesiandemography.github.io/rvec/reference/which.min.md)
+  : Find the Minimum or Maximum Position Within Each Draw

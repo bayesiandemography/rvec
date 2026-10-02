@@ -48,6 +48,8 @@ Class `"rvec"` has four subclasses, each dealing with a diffent type:
 
 - `"rvec_chr"` character
 
+An rvec may have zero elements, but must have at least one draw.
+
 These subclasses are analogous to
 [`double()`](https://rdrr.io/r/base/double.html),
 [`integer()`](https://rdrr.io/r/base/integer.html),
@@ -93,7 +95,7 @@ l <- list(rpois(100, lambda = 10.2),
           rpois(100, lambda = 5.5))
 rvec(l)
 #> <rvec_int<100>[2]>
-#> [1] 10 (5, 17) 4 (1, 9)  
+#> [1] 10 (5.5, 17) 5 (1.5, 11) 
 
 rvec(letters[1:5])
 #> <rvec_chr<1>[5]>

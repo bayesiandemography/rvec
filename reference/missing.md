@@ -92,6 +92,11 @@ functions.
 - [`vctrs::vec_detect_complete()`](https://vctrs.r-lib.org/reference/vec_detect_complete.html)
   Test whether any draws for an observation are missing
 
+- [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  Check missingness and finiteness across draws
+
 - [`draws_any()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md),
   [`draws_all()`](https://bayesiandemography.github.io/rvec/reference/draws_all.md)
   Summarise across draws

@@ -15,7 +15,7 @@ draws from a posterior distribution in a Bayesian analysis."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,8 +97,14 @@ For instance, to calculate a credible interval, use <code><a href="draws_ci.html
 <li><p><code><a href="dt_rvec.html">dt_rvec()</a></code> Student's T</p></li>
 <li><p><code><a href="dunif_rvec.html">dunif_rvec()</a></code> Uniform</p></li>
 <li><p><code><a href="dweibull_rvec.html">dweibull_rvec()</a></code> Weibull</p></li>
+</ul><p><strong>Selecting draws</strong></p><ul><li><p><code><a href="extract_draw.html">extract_draw()</a></code> One draw as an ordinary vector</p></li>
+<li><p><code><a href="extract_draws.html">extract_draws()</a></code> Draws selected by index, as an rvec</p></li>
+<li><p><code><a href="thin_draws.html">thin_draws()</a></code> Random selection without replacement</p></li>
 </ul><p><strong>Summarizing across draws</strong></p><ul><li><p><code><a href="draws_all.html">draws_all()</a></code> All</p></li>
 <li><p><code><a href="draws_all.html">draws_any()</a></code> Any</p></li>
+<li><p><code><a href="draws_any_na.html">draws_any_na()</a></code>, <code><a href="draws_any_na.html">draws_all_na()</a></code> Missing draws</p></li>
+<li><p><code><a href="draws_any_na.html">draws_any_infinite()</a></code>, <code><a href="draws_any_na.html">draws_all_infinite()</a></code> Infinite draws</p></li>
+<li><p><code><a href="draws_any_na.html">draws_any_finite()</a></code>, <code><a href="draws_any_na.html">draws_all_finite()</a></code> Finite draws</p></li>
 <li><p><code><a href="draws_min.html">draws_min()</a></code> Minimum</p></li>
 <li><p><code><a href="draws_min.html">draws_max()</a></code> Maximum</p></li>
 <li><p><code><a href="draws_median.html">draws_median()</a></code> Median</p></li>
@@ -110,7 +116,13 @@ For instance, to calculate a credible interval, use <code><a href="draws_ci.html
 <li><p><code><a href="draws_ci.html">draws_ci()</a></code> Credible intervals</p></li>
 <li><p><code><a href="draws_quantile.html">draws_quantile()</a></code> Quantiles</p></li>
 <li><p><code><a href="draws_fun.html">draws_fun()</a></code> Arbitrary function</p></li>
-<li><p><code><a href="n_draw.html">n_draw()</a></code> Number</p></li>
+<li><p><code><a href="n_draw.html">n_draw()</a></code> Number of draws</p></li>
+</ul><p><strong>Dealing with NAs and infinite values</strong></p><ul><li><p><code><a href="draws_any_na.html">draws_any_na()</a></code></p></li>
+<li><p><code><a href="draws_any_na.html">draws_all_na()</a></code></p></li>
+<li><p><code><a href="draws_any_na.html">draws_any_infinite()</a></code></p></li>
+<li><p><code><a href="draws_any_na.html">draws_all_infinite()</a></code></p></li>
+<li><p><code><a href="draws_any_na.html">draws_any_finite()</a></code></p></li>
+<li><p><code><a href="draws_any_na.html">draws_all_finite()</a></code></p></li>
 </ul><p><strong>Coercion, classes</strong></p><ul><li><p><code><a href="as_list_col.html">as_list_col()</a></code> Rvec or matrix to list</p></li>
 <li><p><code><a href="collapse_to_rvec.html">expand_from_rvec()</a></code> Inverse of <code><a href="collapse_to_rvec.html">collapse_to_rvec()</a></code></p></li>
 <li><p><code><a href="is_rvec.html">is_rvec()</a></code> Object an rvec?</p></li>
@@ -139,7 +151,8 @@ For instance, to calculate a credible interval, use <code><a href="draws_ci.html
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p><strong>Maintainer</strong>: John Bryant <a href="mailto:john@bayesiandemography.com">john@bayesiandemography.com</a></p>
-<p>Other contributors:</p><ul><li><p>Bayesian Demography Limited [copyright holder]</p></li>
+<p>Authors:</p><ul><li><p>John Bryant <a href="mailto:john@bayesiandemography.com">john@bayesiandemography.com</a></p></li>
+</ul><p>Other contributors:</p><ul><li><p>Bayesian Demography Limited [copyright holder]</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

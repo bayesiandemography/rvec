@@ -1,31 +1,49 @@
-# Credible Intervals from Random Draws
+# Credible Intervals and Point Estimates from Random Draws
 
 Summarise the distribution of random draws in an rvec, using credible
-intervals.
+intervals and point estimates.
 
 ## Usage
 
 ``` r
-draws_ci(x, width = 0.95, prefix = NULL, na_rm = FALSE)
+draws_ci(
+  x,
+  width = 0.95,
+  prefix = NULL,
+  na_rm = FALSE,
+  point = c("median", "mean")
+)
 
 # S3 method for class 'rvec'
-draws_ci(x, width = 0.95, prefix = NULL, na_rm = FALSE)
+draws_ci(
+  x,
+  width = 0.95,
+  prefix = NULL,
+  na_rm = FALSE,
+  point = c("median", "mean")
+)
 
 # S3 method for class 'rvec_chr'
-draws_ci(x, width = 0.95, prefix = NULL, na_rm = FALSE)
+draws_ci(
+  x,
+  width = 0.95,
+  prefix = NULL,
+  na_rm = FALSE,
+  point = c("median", "mean")
+)
 ```
 
 ## Arguments
 
 - x:
 
-  An object of class
+  An
   [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md).
 
 - width:
 
   Width(s) of credible interval(s). One or more numbers greater than 0
-  and less than or equal to 1. Default is `0.975`.
+  and less than or equal to 1. Default is `0.95`.
 
 - prefix:
 
@@ -37,10 +55,31 @@ draws_ci(x, width = 0.95, prefix = NULL, na_rm = FALSE)
   Whether to remove NAs before calculating summaries. Default is
   `FALSE`.
 
+- point:
+
+  Summary measure used for point estimate: `"median"` (the default) or
+  `"mean"`.
+
 ## Value
 
 A [tibble](https://tibble.tidyverse.org/reference/tibble.html) with
-three columns.
+`2 * length(width) + 1` columns. When `width` has length 1, the columns
+are
+
+- `<name>.lower` Lower limit of credible interval
+
+- `<name>.mid` Point estimate
+
+- `<name>.upper` Upper limit of the credible interval
+
+## Details
+
+The credible intervals extend from the quantiles at `0.5 - 0.5 * width`
+to the quantiles `0.5 + 0.5 * width`.
+
+When `point` is `"mean"`, point estimates can lie outside the associated
+credible intervals, though this only happens in unusual cases, such as
+when distributions are highly skewed.
 
 ## Warning
 
@@ -50,7 +89,7 @@ column in a data frame, as in
 `my_df$ci <- draws_ci(my_rvec)`
 
 However, creating columns in this way can corrupt an ordinary data
-frames. For safer options, see the examples below.
+frame. For safer options, see the examples below.
 
 ## See also
 
@@ -85,6 +124,20 @@ Apply arbitrary function across draws:
 
 - [`draws_fun()`](https://bayesiandemography.github.io/rvec/reference/draws_fun.md)
 
+Check for missing or finite values:
+
+- [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
 ## Examples
 
 ``` r
@@ -111,6 +164,13 @@ draws_ci(x, width = c(0.5, 0.99))
 #> 1    1.21     3.86  4.93     6.25    9.85
 #> 2   -7.81    -5.60 -3.61    -1.24    4.55
 #> 3  -48.1    -12.3   1.06    13.0    47.4 
+draws_ci(x, point = "mean")
+#> # A tibble: 3 × 3
+#>   x.lower x.mid x.upper
+#>     <dbl> <dbl>   <dbl>
+#> 1    2.02  5.05    8.23
+#> 2   -7.06 -3.14    2.87
+#> 3  -35.3   1.34   36.1 
 draws_ci(x, prefix = "results")
 #> # A tibble: 3 × 3
 #>   results.lower results.mid results.upper

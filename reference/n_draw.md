@@ -24,9 +24,16 @@ n_draw(x)
 
 ## Value
 
-An integer scalar.
+A positive integer scalar. An rvec always has at least one draw,
+including when it has zero elements.
 
 ## See also
+
+- [`extract_draws()`](https://bayesiandemography.github.io/rvec/reference/extract_draws.md)
+  to select draws using indices.
+
+- [`thin_draws()`](https://bayesiandemography.github.io/rvec/reference/thin_draws.md)
+  to randomly reduce the number of draws.
 
 - [`is_rvec()`](https://bayesiandemography.github.io/rvec/reference/is_rvec.md)
   to test if an object is an rvec.

@@ -35,8 +35,14 @@ A vector, with type
 
 ## See also
 
-[`n_draw()`](https://bayesiandemography.github.io/rvec/reference/n_draw.md)
-Number of draws
+- [`n_draw()`](https://bayesiandemography.github.io/rvec/reference/n_draw.md)
+  Number of draws.
+
+- [`extract_draws()`](https://bayesiandemography.github.io/rvec/reference/extract_draws.md)
+  Select draws and return an rvec.
+
+- [`thin_draws()`](https://bayesiandemography.github.io/rvec/reference/thin_draws.md)
+  Randomly select draws without replacement.
 
 ## Examples
 

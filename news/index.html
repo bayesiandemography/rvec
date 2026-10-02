@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,40 @@
       <small>Source: <a href="https://github.com/bayesiandemography/rvec/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.5" id="rvec-105">rvec 1.0.5<a class="anchor" aria-label="anchor" href="#rvec-105"></a></h2>
+<div class="section level3">
+<h3 id="new-functions-1-0-5">New functions<a class="anchor" aria-label="anchor" href="#new-functions-1-0-5"></a></h3>
+<ul><li><p>Added <code><a href="../reference/extract_draws.html">extract_draws()</a></code> for selection by index, including repeated indices, and <code><a href="../reference/thin_draws.html">thin_draws()</a></code> for random selection without replacement in original order.</p></li>
+<li><p>Added <code><a href="../reference/draws_any_na.html">draws_any_na()</a></code>, <code><a href="../reference/draws_any_na.html">draws_all_na()</a></code>, <code><a href="../reference/draws_any_na.html">draws_any_infinite()</a></code>, <code><a href="../reference/draws_any_na.html">draws_all_infinite()</a></code>, <code><a href="../reference/draws_any_na.html">draws_any_finite()</a></code>, and <code><a href="../reference/draws_any_na.html">draws_all_finite()</a></code> to check missingness and finiteness across draws for each element.</p></li>
+<li><p><code><a href="../reference/pmin.html">pmin()</a></code> and <code><a href="../reference/pmin.html">pmax()</a></code> now accept rvecs in any argument position for elementwise bounds and comparisons within each draw. Calls without rvecs retain base R behaviour.</p></li>
+<li><p><code><a href="../reference/which.min.html">which.min()</a></code> and <code><a href="../reference/which.min.html">which.max()</a></code> now find the first extreme position within each draw. Empty rvecs return empty index rvecs; nonempty draws with no valid index return <code>NA</code> with one summary warning per call. Ordinary inputs retain base R behaviour.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="constructors-1-0-5">Constructors<a class="anchor" aria-label="anchor" href="#constructors-1-0-5"></a></h3>
+<ul><li>
+<code><a href="../reference/new_rvec_blank.html">new_rvec_chr()</a></code>, <code><a href="../reference/new_rvec_blank.html">new_rvec_dbl()</a></code>, <code><a href="../reference/new_rvec_blank.html">new_rvec_int()</a></code>, and <code><a href="../reference/new_rvec_blank.html">new_rvec_lgl()</a></code> now accept a scalar <code>value</code> to fill all elements and draws, including <code>NA</code>. Existing defaults are unchanged.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="summaries-1-0-5">Summaries<a class="anchor" aria-label="anchor" href="#summaries-1-0-5"></a></h3>
+<ul><li><p><code><a href="../reference/draws_ci.html">draws_ci()</a></code> now accepts <code>point = "mean"</code> to report a mean point estimate; the default remains <code>point = "median"</code> and interval limits are unchanged.</p></li>
+<li><p><code><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min()</a></code>, <code><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max()</a></code>, and <code><a href="https://rdrr.io/r/base/range.html" class="external-link">range()</a></code> now summarise elements independently within each draw, including multiple arguments and missing-value handling.</p></li>
+<li><p><code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code> now calculates quantiles independently within each draw, preserving base R’s probability, missing-value, naming, and algorithm options.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-0-5">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-0-5"></a></h3>
+<ul><li>
+<code><a href="../reference/rank.html">rank()</a></code> now preserves fractional average ranks for tied values instead of failing when converting them to integers. Logical rvecs also use a compatible ranking method, and singleton and empty inputs retain their original draw counts.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-1-0-5">Documentation<a class="anchor" aria-label="anchor" href="#documentation-1-0-5"></a></h3>
+<ul><li>Improved documentation for draw summaries and resolved a roxygen warning about matrix multiplication methods while retaining support for R &lt; 4.3.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="clarifying-interface-1-0-5">Clarifying interface<a class="anchor" aria-label="anchor" href="#clarifying-interface-1-0-5"></a></h3>
+<ul><li>Internal functions now enforce the (previously implicit) constraint that rvecs must have at least one draw. Rvecs of length 0 (ie with 1+ columns but 0 rows internally) continue to be allowed.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.4" id="rvec-104">rvec 1.0.4<a class="anchor" aria-label="anchor" href="#rvec-104"></a></h2>
 <div class="section level3">

@@ -15,7 +15,7 @@ draws_fun(x, fun, ...)
 
 - x:
 
-  An object of class
+  An
   [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md).
 
 - fun:
@@ -58,6 +58,20 @@ Apply pre-specified functions across draws:
 - [`draws_ci()`](https://bayesiandemography.github.io/rvec/reference/draws_ci.md)
 
 - [`draws_quantile()`](https://bayesiandemography.github.io/rvec/reference/draws_quantile.md)
+
+Check for missing or finite values:
+
+- [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
 
 ## Examples
 

@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rvec</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,47 +71,32 @@
     
     
 <div class="section level2" number="1">
-<h2 id="sec:aims">
-<span class="header-section-number">1</span> Aims of <strong>rvec</strong><a class="anchor" aria-label="anchor" href="#sec:aims"></a>
+<h2 id="sec:intro">
+<span class="header-section-number">1</span> Introduction<a class="anchor" aria-label="anchor" href="#sec:intro"></a>
 </h2>
-<p>Statistical models – particularly Bayesian statistical models – often produce outputs consisting of random draws from a distribution. A useful feature of these draws is that they can be used to make inferences about derived quantities. The procedure is:</p>
-<ul>
-<li>Step 1. Calculate the derived quantity for each of the random draws.</li>
-<li>Step 2. Summaries the distribution of these derived quantities.</li>
-</ul>
-<p>If, for instance, we have randoms draws from a posterior distribution for age-specific mortality rates, and we want make inferences about life expectancy (a summary indicator for mortality rates), then we proceed as follows:</p>
-<ul>
-<li>Step 1. Derive life expectancy for each set of age-specific mortality rates.</li>
-<li>Step 2. Calculate means, medians, or other statistics for these life expectancies.</li>
-</ul>
-<p>For more on the theory behind manipulating random draws, and for an argument that R needs high-level tools to help with this manipulation, see <span class="citation">Kerman and Gelman (2007)</span>.</p>
-<p>Package <code>rvec</code> provides tools for working with random draws. The draws are held in a structure called an rvec, which can, for many purposes, be treated like an ordinary R vector, and manipulated using ordinary base R and <a href="https://tidyverse.org/" class="external-link">tidyverse</a> code. <code>rvec</code> also contains functions for summarizing across random draws.</p>
+<p>The <code>rvec</code> package provides tools for working with random draws. The draws are held in a structure called an rvec. An rvec can, for many purposes, be treated like an ordinary R vector, and manipulated using standard functions from base R and the <a href="https://tidyverse.org/" class="external-link">tidyverse</a>. <code>rvec</code> also provides tools for summarising across draws to, for instance, produce point estimates or credible intervals.</p>
 </div>
 <div class="section level2" number="2">
-<h2 id="examples">
-<span class="header-section-number">2</span> Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+<h2 id="sec:examples">
+<span class="header-section-number">2</span> Examples<a class="anchor" aria-label="anchor" href="#sec:examples"></a>
 </h2>
-<div class="section level3" number="2.1">
-<h3 id="toy-example">
-<span class="header-section-number">2.1</span> Toy example<a class="anchor" aria-label="anchor" href="#toy-example"></a>
-</h3>
-<p>We begin with a toy example to illustrate basic functionality.</p>
+<p>We start with some examples. Along with the <code>rvec</code> package, we will need some tidyverse packages,</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bayesiandemography.github.io/rvec/">rvec</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'rvec'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     sd, var</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     rank</span></span>
-<span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+<p>When <code>rvec</code> is loaded, R emits messages about functions such as <code><a href="../reference/sd.html">sd()</a></code> and <code><a href="../reference/var.html">var()</a></code>
+being “masked”. However, these functions retain their usual behavior for ordinary
+vectors, while gaining new behavior for rvecs. No action is needed.</p>
+<p>We create an rvec called <code>theta</code> containing three draws,</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span>
 <span><span class="va">theta</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;3&gt;[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 3,1,0</span></span></code></pre></div>
-<p>The header <code>&lt;rvec_dbl&lt;3&gt;[1]&gt;</code> describe the structure of <code>theta</code>:</p>
+<p>The header <code>&lt;rvec_dbl&lt;3&gt;[1]&gt;</code> describes the structure of <code>theta</code>:</p>
 <ul>
 <li>
 <code>_dbl</code> indicates that <code>theta</code> is composed of <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/double" class="external-link">doubles</a>
@@ -121,42 +106,33 @@
 <li>
 <code>[1]</code> indicates that each draw has length 1.</li>
 </ul>
-<p>We can perform standard mathematical operations:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>We can perform standard mathematical operations on <code>theta</code>,</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;3&gt;[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 10,2,1</span></span></code></pre></div>
 <p><code>theta</code> recycles to match the length of other vectors,</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="va">theta</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">beta</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;3&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 4,2,1  2,0,-1</span></span></code></pre></div>
-<p><code>beta</code> consists of three draws:</p>
+<p>The new rvec <code>beta</code> consists of three draws of a vector of length 2:</p>
 <ol style="list-style-type: decimal">
-<li>
-<code>c(4, 2)</code>, obtained from adding <code>3</code> and <code>c(1, -1)</code>,</li>
-<li>
-<code>c(2, 0)</code>, obtained from adding <code>1</code> and <code>c(1, -1)</code>, and</li>
-<li>
-<code>c(1, -1)</code>, obtained from adding <code>0</code> and <code>c(1, -1)</code>.</li>
+<li>the first vector, <code>c(4, 2)</code>, is obtained by adding <code>3</code> to <code>c(1, -1)</code>,</li>
+<li>the second vector, <code>c(2, 0)</code>, is obtained by adding <code>1</code> to <code>c(1, -1)</code>, and</li>
+<li>the third vector, <code>c(1, -1)</code>, is obtained by adding <code>0</code> to <code>c(1, -1)</code>.</li>
 </ol>
-<p>To summarize across random draws, we use <code>draws_*</code> functions, e.g.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>To summarize across random draws, we use <code>draws_*</code> functions, e.g.,</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/draws_median.html">draws_mean</a></span><span class="op">(</span><span class="va">beta</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2.3333333 0.3333333</span></span></code></pre></div>
-</div>
-<div class="section level3" number="2.2">
-<h3 id="sec:divorce">
-<span class="header-section-number">2.2</span> Divorce rates<a class="anchor" aria-label="anchor" href="#sec:divorce"></a>
-</h3>
-<p>Our next example is more involved, and includes the use of some standard tidyverse packages.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<p>We analyse a posterior sample from a Bayesian model of divorce rates in New Zealand. The rates are divorces per thousand people per year, disaggregated by age and sex. The rates are not stored as an rvec, but instead in a ‘data base’ format, where each row describes a single draw.</p>
+<p>or</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/draws_sd.html">draws_sd</a></span><span class="op">(</span><span class="va">beta</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1.527525 1.527525</span></span></code></pre></div>
+<p>Our next example is based on draws from the posterior distribution from a Bayesian analysis of divorce in New Zealand. The posterior distribution refers to divorces per thousand people per year, disaggregated by age and sex. In their original form, the draws are not stored as an rvec, but instead in a one-draw-per-row format,</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">divorce</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 22,000 × 4</span></span></span>
 <span><span class="co">#&gt;    age   sex     draw   rate</span></span>
@@ -172,11 +148,11 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 15-19 Female     9 0.033<span style="text-decoration: underline;">9</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 15-19 Female    10 0.042<span style="text-decoration: underline;">5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 21,990 more rows</span></span></span></code></pre></div>
-<p>First we convert from database format to rvec format.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">divorce_rv</span> <span class="op">&lt;-</span> <span class="va">divorce</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/collapse_to_rvec.html">collapse_to_rvec</a></span><span class="op">(</span>value <span class="op">=</span> <span class="va">rate</span><span class="op">)</span></span>
-<span><span class="va">divorce_rv</span></span>
+<p>We use function <code><a href="../reference/collapse_to_rvec.html">collapse_to_rvec()</a></code> to convert from the one-draw-per-row format to an rvec,</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">divorce_rvec</span> <span class="op">&lt;-</span> <span class="va">divorce</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/collapse_to_rvec.html">collapse_to_rvec</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">rate</span><span class="op">)</span></span>
+<span><span class="va">divorce_rvec</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 22 × 3</span></span></span>
 <span><span class="co">#&gt;    age   sex                    rate</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span></span></span>
@@ -191,44 +167,60 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 55-59 Female       4.4 (4.2, 4.7)</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 60-64 Female         2.7 (2.5, 3)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more rows</span></span></span></code></pre></div>
-<p>When the number of draws is large, the print method for rvecs of doubles displays <code>&lt;median&gt; (&lt;2.5% quantile&gt;, &lt;97.5% quantile&gt;)</code>, rather than the individual draws.</p>
-<p>We define the ‘total divorce rate’ to be the number of divorces that a person would expect to experience over their lifetime under prevailing divorce rates. The total divorce rate can be calculated as</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">divorce_rv</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>TDR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 2</span></span></span>
-<span><span class="co">#&gt;   sex                  TDR</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Female 0.22 (0.22, 0.23)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Male   0.23 (0.22, 0.23)</span></span></code></pre></div>
-<p>We summarize across draws using <code><a href="../reference/draws_ci.html">draws_ci()</a></code>, which, by default, calculates medians and 95% credible intervals. Function <code><a href="../reference/draws_ci.html">draws_ci()</a></code> returns a tibble rather than a vector, so, following standard <code>mutate</code> rules, we do not explicitly create new columns.</p>
+<p><code><a href="../reference/collapse_to_rvec.html">collapse_to_rvec()</a></code> ensures that, internally, draw 1 for females aged 15-19 lines up with draw 1 for females aged 20-24, which lines up with draw 1 for females aged 25-29, and so on.</p>
+<p>In this example, the rvec has many draws, so, rather than showing each draw, the print method shows the median value followed by the 2.5% and 97.5% quantiles.</p>
+<p>We calculate the ratio between female and male divorce rates,</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">divorce_rv</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>tdr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="../reference/draws_ci.html">draws_ci</a></span><span class="op">(</span><span class="va">tdr</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
-<span><span class="co">#&gt;   sex                  tdr tdr.lower tdr.mid tdr.upper</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Female 0.22 (0.22, 0.23)     0.218   0.223     0.228</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Male   0.23 (0.22, 0.23)     0.221   0.226     0.231</span></span></code></pre></div>
-<p>Next we calculate the ratio between female and male divorce rates,</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">divorce_ratio</span> <span class="op">&lt;-</span> <span class="va">divorce_rv</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">divorce_ratio</span> <span class="op">&lt;-</span> <span class="va">divorce_rvec</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">sex</span>, values_from <span class="op">=</span> <span class="va">rate</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="va">Female</span> <span class="op">/</span> <span class="va">Male</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="../reference/draws_ci.html">draws_ci</a></span><span class="op">(</span><span class="va">ratio</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>and graph the result</p>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="va">Female</span> <span class="op">/</span> <span class="va">Male</span><span class="op">)</span></span>
+<span><span class="va">divorce_ratio</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 4</span></span></span>
+<span><span class="co">#&gt;    age                 Female                 Male             ratio</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 15-19 0.036 (0.019, 0.068) 0.022 (0.012, 0.041)   1.7 (0.66, 4.3)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 20-24    0.67 (0.58, 0.78)     0.33 (0.27, 0.4)    2.1 (1.6, 2.6)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 25-29         3.2 (3, 3.4)         2 (1.9, 2.2)    1.6 (1.4, 1.7)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 30-34       5.8 (5.5, 6.1)         4.7 (4.5, 5)    1.2 (1.1, 1.3)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 35-39       6.5 (6.2, 6.9)       6.1 (5.8, 6.4)      1.1 (1, 1.2)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 40-44       7.1 (6.8, 7.4)       6.9 (6.6, 7.2)     1 (0.98, 1.1)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 45-49       7.2 (6.9, 7.6)       7.3 (6.9, 7.6)     1 (0.93, 1.1)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 50-54         6 (5.8, 6.3)       6.8 (6.5, 7.1) 0.89 (0.83, 0.94)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 55-59       4.4 (4.2, 4.7)       5.6 (5.3, 5.9) 0.79 (0.74, 0.85)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 60-64         2.7 (2.5, 3)         3.7 (3.5, 4) 0.73 (0.65, 0.82)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 65+      0.84 (0.76, 0.93)       1.7 (1.5, 1.8) 0.51 (0.45, 0.57)</span></span></code></pre></div>
+<p>Note that although <code>rate</code>, <code>Female</code>, and <code>Male</code> in these calculations are all rvecs, the code is identical to the code that would be needed for an ordinary R vector.</p>
+<p>To obtain point estimates and uncertainty measures for rvecs, we use the <code>draw</code> functions. <code><a href="../reference/draws_ci.html">draws_ci()</a></code>, for instance, returns medians and 95% credible intervals.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">divorce_ratio</span>  <span class="op">&lt;-</span> <span class="va">divorce_ratio</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="../reference/draws_ci.html">draws_ci</a></span><span class="op">(</span><span class="va">ratio</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">divorce_ratio</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 7</span></span></span>
+<span><span class="co">#&gt;    age                 Female                 Male             ratio ratio.lower</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 15-19 0.036 (0.019, 0.068) 0.022 (0.012, 0.041)   1.7 (0.66, 4.3)       0.662</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 20-24    0.67 (0.58, 0.78)     0.33 (0.27, 0.4)    2.1 (1.6, 2.6)       1.59 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 25-29         3.2 (3, 3.4)         2 (1.9, 2.2)    1.6 (1.4, 1.7)       1.42 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 30-34       5.8 (5.5, 6.1)         4.7 (4.5, 5)    1.2 (1.1, 1.3)       1.15 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 35-39       6.5 (6.2, 6.9)       6.1 (5.8, 6.4)      1.1 (1, 1.2)       1.00 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 40-44       7.1 (6.8, 7.4)       6.9 (6.6, 7.2)     1 (0.98, 1.1)       0.982</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 45-49       7.2 (6.9, 7.6)       7.3 (6.9, 7.6)     1 (0.93, 1.1)       0.934</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 50-54         6 (5.8, 6.3)       6.8 (6.5, 7.1) 0.89 (0.83, 0.94)       0.831</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 55-59       4.4 (4.2, 4.7)       5.6 (5.3, 5.9) 0.79 (0.74, 0.85)       0.735</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 60-64         2.7 (2.5, 3)         3.7 (3.5, 4) 0.73 (0.65, 0.82)       0.651</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 65+      0.84 (0.76, 0.93)       1.7 (1.5, 1.8) 0.51 (0.45, 0.57)       0.447</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: ratio.mid &lt;dbl&gt;, ratio.upper &lt;dbl&gt;</span></span></span></code></pre></div>
+<p>Next we graph the results,</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">divorce_ratio</span>,</span>
 <span>       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age</span>, </span>
 <span>           ymin <span class="op">=</span> <span class="va">ratio.lower</span>, </span>
 <span>           y <span class="op">=</span> <span class="va">ratio.mid</span>,</span>
 <span>           ymax <span class="op">=</span> <span class="va">ratio.upper</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_pointrange</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_pointrange</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Ratio"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ratio between female divorce rate and male divorce rate"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vig1_overview_files/figure-html/unnamed-chunk-12-1.png"><!-- --></p>
-</div>
 </div>
 <div class="section level2" number="3">
 <h2 id="sec:structure">
@@ -243,7 +235,7 @@
 <li>
 <code>"rvec_lgl"</code>, which holds <code>TRUE</code>, <code>FALSE</code>, and <code>NA</code>; and</li>
 <li>
-<code>"rvec_chr"</code>, which hold characters, e.g. <code>"a"</code>, <code>"Thomas Bayes"</code>.</li>
+<code>"rvec_chr"</code>, which holds characters, e.g. <code>"a"</code>, <code>"Thomas Bayes"</code>.</li>
 </ul>
 <p>Internally, an rvec is a matrix, with each row representing one unknown quantity, and each column representing one draw from the joint distribution of the unknown quantities,</p>
 <table style="width:100%;" class="table">
@@ -388,7 +380,7 @@
 <span><span class="fu"><a href="../reference/rvec.html">rvec_chr</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_chr&lt;3&gt;[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] "1","2","3"</span></span></code></pre></div>
-<p>When the raw data take the form of a database with one draw per row, the most efficient way to create rvecs is to use <code><a href="../reference/collapse_to_rvec.html">collapse_to_rvec()</a></code>. See Section <a href="#sec:divorce">2.2</a> for an example.</p>
+<p>When the raw data take the form of a data frame with one draw per row, the most efficient way to create rvecs is to use <code><a href="../reference/collapse_to_rvec.html">collapse_to_rvec()</a></code>. See Section <a href="#sec:examples">2</a> for an example.</p>
 <p>Section <a href="#sec:prob">6</a> shows how to create an rvec consisting of draws from a standard probability distribution.</p>
 </div>
 <div class="section level2" number="5">
@@ -432,43 +424,14 @@
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 4,6 3,4</span></span></code></pre></div>
-<p><code>rvec</code> contains a suite of functions for summarising weighted data:</p>
-<ul>
-<li><code><a href="../reference/weighted_mean.html">weighted_mad()</a></code></li>
-<li><code><a href="../reference/weighted_mean.html">weighted_mean()</a></code></li>
-<li><code><a href="../reference/weighted_mean.html">weighted_median()</a></code></li>
-<li><code><a href="../reference/weighted_mean.html">weighted_sd()</a></code></li>
-<li><code><a href="../reference/weighted_mean.html">weighted_var()</a></code></li>
-</ul>
-<p>All of these are built on functions from package <a href="https://CRAN.R-project.org/package=matrixStats" class="external-link">matrixStats</a>.</p>
-<p>The elements of an rvec do not have a well-defined order when there is more than one draw. Functions <code><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort()</a></code> and <code><a href="https://rdrr.io/r/base/order.html" class="external-link">order()</a></code> fail when called on an rvec, unless <code>n_draw</code> is 1.</p>
-<p>Ranking does, however, have a useful interpretation. We apply the ranking operation independently to each draw, and return the results as an integer rvec.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">divorce_ratio</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">age</span>, <span class="va">ratio</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rank <span class="op">=</span> <span class="fu"><a href="../reference/rank.html">rank</a></span><span class="op">(</span><span class="va">ratio</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 3</span></span></span>
-<span><span class="co">#&gt;    age               ratio         rank</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span> <span style="color: #949494; font-style: italic;">&lt;rint&lt;1000&gt;&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 15-19   1.7 (0.66, 4.3)   10 (2, 11)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 20-24    2.1 (1.6, 2.6)  11 (10, 11)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 25-29    1.6 (1.4, 1.7)    9 (9, 10)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 30-34    1.2 (1.1, 1.3)     8 (8, 9)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 35-39      1.1 (1, 1.2)     7 (5, 8)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 40-44     1 (0.98, 1.1)     6 (5, 7)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 45-49     1 (0.93, 1.1)     5 (5, 7)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 50-54 0.89 (0.83, 0.94)     4 (4, 5)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 55-59 0.79 (0.74, 0.85)     3 (2, 4)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 60-64 0.73 (0.65, 0.82)     2 (2, 3)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 65+   0.51 (0.45, 0.57)     1 (1, 1)</span></span></code></pre></div>
-<p>In the example above, the rank of the 15-19 age group is uncertain, while the rank of the 65+ age group is estimated precisely.</p>
+<p><code>rvec</code> contains a suite of functions for summarising weighted data, such as <code><a href="../reference/weighted_mean.html">weighted_mean()</a></code> and <code><a href="../reference/weighted_mean.html">weighted_var()</a></code>.</p>
 </div>
 <div class="section level2" number="6">
 <h2 id="sec:prob">
 <span class="header-section-number">6</span> Probability distributions<a class="anchor" aria-label="anchor" href="#sec:prob"></a>
 </h2>
 <p>Standard R probability functions such as <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm()</a></code> or <code><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom()</a></code> do not allow rvec arguments. Package <code>rvec</code> provides modified functions that do. For instance,</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
 <span>               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="op">-</span><span class="fl">7</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -480,7 +443,7 @@
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 8,8  11,2</span></span></code></pre></div>
 <p>The return value from an <code>rvec</code> probability function is an rvec if and only if at least one argument to the function is an rvec, with one exception. The exception is random variate functions, where a value can be supplied for a special argument called <code>n_draw</code>. When a value for <code>n_draw</code> is supplied, the return value is an rvec with <code>n_draw</code> draws,</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dnorm_rvec.html">rnorm_rvec</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">10</span>, n_draw <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[3]&gt;</span></span>
 <span><span class="co">#&gt; [1] 93.38,93.98 94.69,96.82 96.99,103.1</span></span></code></pre></div>
@@ -491,11 +454,60 @@
 <span class="header-section-number">7</span> Manipulating rvecs<a class="anchor" aria-label="anchor" href="#manipulating-rvecs"></a>
 </h2>
 <div class="section level3" number="7.1">
+<h3 id="compatibility-with-base-r">
+<span class="header-section-number">7.1</span> Compatibility with base R<a class="anchor" aria-label="anchor" href="#compatibility-with-base-r"></a>
+</h3>
+<p>Most code for manipulating ordinary R vectors should continue to work when applied to rvecs. There are, however, important base R functions where things go wrong. In each case, however, there are alternatives.</p>
+<table class="table">
+<colgroup>
+<col width="26%">
+<col width="28%">
+<col width="46%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Base R function(s)</th>
+<th align="left">What goes wrong</th>
+<th align="left">Alternative</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code></td>
+<td align="left">Creates a list matrix</td>
+<td align="left">
+<code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows</a></code> or <code><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vctrs::vec_rbind()</a></code>
+</td>
+</tr>
+<tr class="even">
+<td align="left"><code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind()</a></code></td>
+<td align="left">Creates a list matrix</td>
+<td align="left">
+<code><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">dplyr::bind_cols</a></code> or <code><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vctrs::vec_cbind()</a></code>
+</td>
+</tr>
+<tr class="odd">
+<td align="left"><code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code></td>
+<td align="left">Doesn’t preserve the rvec structure.</td>
+<td align="left">
+<code><a href="../reference/if_else_rvec.html">rvec::if_else_rvec()</a></code>; <code><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">dplyr::if_else()</a></code> also works when <code>condition</code> is an ordinary vector</td>
+</tr>
+<tr class="even">
+<td align="left">
+<code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply()</a></code>, <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply()</a></code>
+</td>
+<td align="left">Doesn’t combine results into an rvec</td>
+<td align="left">
+<code><a href="../reference/map_rvec.html">rvec::map_rvec()</a></code> or <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply()</a></code>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3" number="7.2">
 <h3 id="subsetting">
-<span class="header-section-number">7.1</span> Subsetting<a class="anchor" aria-label="anchor" href="#subsetting"></a>
+<span class="header-section-number">7.2</span> Subsetting<a class="anchor" aria-label="anchor" href="#subsetting"></a>
 </h3>
 <p>Standard R ways of selecting elements from vectors work with rvecs.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span>
 <span>               b <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>,</span>
 <span>               c <span class="op">=</span> <span class="fl">5</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
@@ -512,13 +524,13 @@
 <span><span class="co">#&gt;   a   c </span></span>
 <span><span class="co">#&gt; 1,2 5,6</span></span></code></pre></div>
 </div>
-<div class="section level3" number="7.2">
+<div class="section level3" number="7.3">
 <h3 id="sec:ifelse">
-<span class="header-section-number">7.2</span> If-Else<a class="anchor" aria-label="anchor" href="#sec:ifelse"></a>
+<span class="header-section-number">7.3</span> If-Else<a class="anchor" aria-label="anchor" href="#sec:ifelse"></a>
 </h3>
-<p>The standard R function <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> does not work at all with rvecs.</p>
+<p>The standard R function <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> does not preserve the structure of an rvec.</p>
 <p>The tidyverse function <code><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else()</a></code> works when the <code>true</code>, <code>false</code>, or <code>missing</code> arguments are rvecs,</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span>
 <span>               <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, </span>
@@ -527,12 +539,12 @@
 <span><span class="co">#&gt; &lt;rvec_int&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 1,2   -3,-4</span></span></code></pre></div>
 <p>However, <code><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else()</a></code> does not work when the <code>condition</code> argument is an rvec. For this we need <code>rvec</code> function <code><a href="../reference/if_else_rvec.html">if_else_rvec()</a></code>,</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/if_else_rvec.html">if_else_rvec</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">2</span>, <span class="va">x</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 1,2 2,2</span></span></code></pre></div>
 <p>Function <code><a href="../reference/if_else_rvec.html">if_else_rvec()</a></code> can be used to independently transform or recode values across different draws,</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3.3</span><span class="op">)</span>,</span>
 <span>               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x</span></span>
@@ -543,12 +555,12 @@
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 1,3.3 99,-2</span></span></code></pre></div>
 </div>
-<div class="section level3" number="7.3">
+<div class="section level3" number="7.4">
 <h3 id="combining">
-<span class="header-section-number">7.3</span> Combining<a class="anchor" aria-label="anchor" href="#combining"></a>
+<span class="header-section-number">7.4</span> Combining<a class="anchor" aria-label="anchor" href="#combining"></a>
 </h3>
 <p>The standard R concatenation function <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code> works with rvecs,</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.6</span><span class="op">)</span>,</span>
@@ -557,7 +569,7 @@
 <span><span class="co">#&gt; &lt;rvec_dbl&lt;2&gt;[4]&gt;</span></span>
 <span><span class="co">#&gt; [1] 0.1,0.2 0.3,0.4 0.5,0.6 0.7,0.8</span></span></code></pre></div>
 <p>Unfortunately, <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind()</a></code> and <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> cannot be made to work properly on raw rvecs,</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    data     </span></span>
 <span><span class="co">#&gt; x1 numeric,4</span></span>
@@ -566,22 +578,27 @@
 <span><span class="co">#&gt;      x1        x2       </span></span>
 <span><span class="co">#&gt; data numeric,4 numeric,4</span></span></code></pre></div>
 <p>though <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind()</a></code> does work if the rvecs are contained in data frames</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">x1</span><span class="op">)</span></span>
 <span><span class="va">df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">x2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        x1      x2</span></span>
 <span><span class="co">#&gt; 1 0.1,0.2 0.5,0.6</span></span>
 <span><span class="co">#&gt; 2 0.3,0.4 0.7,0.8</span></span></code></pre></div>
-<p>Tidyverse equivalents such as <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows()</a></code>, <code>dbplyr::bind_cols()</code>, <code><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vctrs::vec_cbind()</a></code>, and <code><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vctrs::vec_rbind()</a></code> <em>do</em> work with rvecs,</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<p>With rvec columns in data frames, <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows()</a></code> and
+<code><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vctrs::vec_rbind()</a></code> combine rows. To create columns from bare rvecs, use
+<code><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">dplyr::bind_cols()</a></code> or <code><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vctrs::vec_cbind()</a></code>,</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://vctrs.r-lib.org/" class="external-link">vctrs</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vec_cbind</a></span><span class="op">(</span>a <span class="op">=</span> <span class="va">x1</span>, b <span class="op">=</span> <span class="va">x2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         a       b</span></span>
 <span><span class="co">#&gt; 1 0.1,0.2 0.5,0.6</span></span>
 <span><span class="co">#&gt; 2 0.3,0.4 0.7,0.8</span></span></code></pre></div>
-<p>Base R function <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply()</a></code> does not work with rvecs (unless <code>simplify</code> is set to <code>FALSE</code>). <code>rvec</code> supplies a function called <code><a href="../reference/map_rvec.html">map_rvec()</a></code> (based on map functions in package <a href="https://purrr.tidyverse.org" class="external-link">purrr</a>) that does the same job:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<p>When each result is an rvec, base R’s <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply()</a></code> does not combine them into
+one rvec (<code>simplify = FALSE</code> keeps a list). <code><a href="../reference/map_rvec.html">map_rvec()</a></code>, based on map
+functions in package <a href="https://purrr.tidyverse.org" class="external-link">purrr</a>, combines
+length-one rvec results:</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>          b <span class="op">=</span> <span class="fu"><a href="../reference/rvec.html">rvec</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">16</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">l</span></span>
@@ -597,12 +614,12 @@
 <span><span class="co">#&gt;   a   b </span></span>
 <span><span class="co">#&gt; 1,2 3,4</span></span></code></pre></div>
 </div>
-<div class="section level3" number="7.4">
+<div class="section level3" number="7.5">
 <h3 id="coercing">
-<span class="header-section-number">7.4</span> Coercing<a class="anchor" aria-label="anchor" href="#coercing"></a>
+<span class="header-section-number">7.5</span> Coercing<a class="anchor" aria-label="anchor" href="#coercing"></a>
 </h3>
 <p>Function <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> returns the data underlying an rvec.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, nr <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">m</span></span>
 <span><span class="co">#&gt;      [,1] [,2] [,3]</span></span>
@@ -617,16 +634,16 @@
 <span><span class="co">#&gt; [1,]    1    3    5</span></span>
 <span><span class="co">#&gt; [2,]    2    4    6</span></span></code></pre></div>
 <p>Function <code><a href="../reference/as_list_col.html">as_list_col()</a></code> returns a list of vectors</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as_list_col.html">as_list_col</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; [1] 1 3 5</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; [1] 2 4 6</span></span></code></pre></div>
-<p>Functions such as <a href="https://mjskay.github.io/ggdist/reference/point_interval.html" class="external-link">point_interval</a> in package <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> accept lists of vector. A good way to access the facilities for working with random draws in <code>ggdist</code>, or in packages such as <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> and <a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a>, is to use <code><a href="../reference/as_list_col.html">as_list_col()</a></code> to convert an rvec to a list column.</p>
-<p>Function <code><a href="../reference/collapse_to_rvec.html">expand_from_rvec()</a></code> is the inverse of function <code><a href="../reference/collapse_to_rvec.html">collapse_to_rvec()</a></code>, introduced in Section <a href="#sec:divorce">2.2</a>.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<p>Functions such as <a href="https://mjskay.github.io/ggdist/reference/point_interval.html" class="external-link">point_interval</a> in package <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> accept lists of vectors. A good way to access the facilities for working with random draws in <code>ggdist</code>, or in packages such as <a href="https://mjskay.github.io/tidybayes/" class="external-link">tidybayes</a> and <a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a>, is to use <code><a href="../reference/as_list_col.html">as_list_col()</a></code> to convert an rvec to a list column.</p>
+<p>Function <code><a href="../reference/collapse_to_rvec.html">expand_from_rvec()</a></code> is the inverse of function <code><a href="../reference/collapse_to_rvec.html">collapse_to_rvec()</a></code>, introduced in Section <a href="#sec:examples">2</a>.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">divorce</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
@@ -658,98 +675,17 @@
 <span class="header-section-number">8</span> Summarising distributions<a class="anchor" aria-label="anchor" href="#summarising-distributions"></a>
 </h2>
 <p>Most functions in <code>rvec</code> are concerned with deriving random vectors from other random vectors: that is, with the column-wise calculations described in Section <a href="#sec:structure">3</a>. But once we have derived the random vectors, we typically want to summarise them, using statistics such as means or quantiles: that is, we want to carry out row-wise calculations.</p>
-<p>The functions for carrying out row-wise calculations on rvecs are:</p>
-<ul>
-<li><code><a href="../reference/draws_all.html">draws_all()</a></code></li>
-<li><code><a href="../reference/draws_all.html">draws_any()</a></code></li>
-<li><code><a href="../reference/draws_median.html">draws_median()</a></code></li>
-<li><code><a href="../reference/draws_median.html">draws_mean()</a></code></li>
-<li><code><a href="../reference/draws_median.html">draws_mode()</a></code></li>
-<li><code><a href="../reference/draws_sd.html">draws_sd()</a></code></li>
-<li><code><a href="../reference/draws_sd.html">draws_var()</a></code></li>
-<li><code><a href="../reference/draws_sd.html">draws_cv()</a></code></li>
-<li><code><a href="../reference/draws_ci.html">draws_ci()</a></code></li>
-<li><code><a href="../reference/draws_quantile.html">draws_quantile()</a></code></li>
-<li><code><a href="../reference/draws_fun.html">draws_fun()</a></code></li>
-</ul>
-<p>Internally, most of these functions call functions from <a href="https://CRAN.R-project.org/package=matrixStats" class="external-link">matrixStats</a>, and are therefore fast.</p>
-<p><code><a href="../reference/draws_ci.html">draws_ci()</a></code>, which calculates credible intervals, is the draws function that is used most often,</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">divorce_rv</span> <span class="op">&lt;-</span> <span class="va">divorce</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/collapse_to_rvec.html">collapse_to_rvec</a></span><span class="op">(</span>value <span class="op">=</span> <span class="va">rate</span><span class="op">)</span></span>
-<span><span class="va">divorce_rv</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 22 × 3</span></span></span>
-<span><span class="co">#&gt;    age   sex                    rate</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 15-19 Female 0.036 (0.019, 0.068)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 20-24 Female    0.67 (0.58, 0.78)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 25-29 Female         3.2 (3, 3.4)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 30-34 Female       5.8 (5.5, 6.1)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 35-39 Female       6.5 (6.2, 6.9)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 40-44 Female       7.1 (6.8, 7.4)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 45-49 Female       7.2 (6.9, 7.6)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 50-54 Female         6 (5.8, 6.3)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 55-59 Female       4.4 (4.2, 4.7)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 60-64 Female         2.7 (2.5, 3)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more rows</span></span></span>
-<span><span class="va">divorce_rv</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="../reference/draws_ci.html">draws_ci</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 22 × 6</span></span></span>
-<span><span class="co">#&gt;    age   sex                    rate rate.lower rate.mid rate.upper</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 15-19 Female 0.036 (0.019, 0.068)     0.019<span style="text-decoration: underline;">3</span>   0.036<span style="text-decoration: underline;">0</span>     0.067<span style="text-decoration: underline;">8</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 20-24 Female    0.67 (0.58, 0.78)     0.579    0.673      0.782 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 25-29 Female         3.2 (3, 3.4)     3.02     3.22       3.45  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 30-34 Female       5.8 (5.5, 6.1)     5.54     5.80       6.06  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 35-39 Female       6.5 (6.2, 6.9)     6.21     6.54       6.86  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 40-44 Female       7.1 (6.8, 7.4)     6.85     7.13       7.42  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 45-49 Female       7.2 (6.9, 7.6)     6.87     7.22       7.57  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 50-54 Female         6 (5.8, 6.3)     5.77     6.03       6.33  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 55-59 Female       4.4 (4.2, 4.7)     4.17     4.40       4.66  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 60-64 Female         2.7 (2.5, 3)     2.48     2.72       2.99  </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more rows</span></span></span></code></pre></div>
+<p>The functions for carrying out row-wise calculations on rvecs include, for instance, <code><a href="../reference/draws_median.html">draws_median()</a></code> to calculate the median values across draws, and <code><a href="../reference/draws_sd.html">draws_var()</a></code> to calculate variance across draws.</p>
+<p>Most draws functions use <a href="https://CRAN.R-project.org/package=matrixStats" class="external-link">matrixStats</a> internally and are therefore fast.</p>
 </div>
 <div class="section level2" number="9">
-<h2 id="pooling-distributions">
-<span class="header-section-number">9</span> Pooling distributions<a class="anchor" aria-label="anchor" href="#pooling-distributions"></a>
+<h2 id="similar-packages">
+<span class="header-section-number">9</span> Similar packages<a class="anchor" aria-label="anchor" href="#similar-packages"></a>
 </h2>
-<p>Sometimes when working with simulation draws, we want to combine multiple samples of draws into a single overall sample. When using multiple imputation, for instance, we might want to combine posterior samples constructed from each of the <span class="math inline">\(m = 1, \cdots, M\)</span> imputed datasets into a single pooled posterior sample.</p>
-<p>To combine samples, we use function <code><a href="../reference/pool_draws.html">pool_draws()</a></code>:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mi_data</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
-<span><span class="co">#&gt;   sex    imputed_dataset             value</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;1000&gt;&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Female               1   0.9 (0.52, 1.3)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Female               2   1.2 (0.79, 1.6)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Female               3   1.1 (0.69, 1.5)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Male                 1  0.81 (0.43, 1.2)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Male                 2   0.7 (0.32, 1.1)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Male                 3 0.48 (0.12, 0.88)</span></span>
-<span><span class="va">mi_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/pool_draws.html">pool_draws</a></span><span class="op">(</span>by <span class="op">=</span> <span class="va">sex</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 2</span></span></span>
-<span><span class="co">#&gt;   sex               value</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;rdbl&lt;3000&gt;&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Female  1.1 (0.61, 1.5)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Male   0.67 (0.19, 1.1)</span></span></code></pre></div>
-</div>
-<div class="section level2" number="10">
-<h2 id="other-packages">
-<span class="header-section-number">10</span> Other packages<a class="anchor" aria-label="anchor" href="#other-packages"></a>
-</h2>
-<p>The first R package to provide a specialized object for handling multiple draws was <a href="https://CRAN.R-project.org/package=rv" class="external-link">rv</a>. The specialized object, called an rv, can be manipulated and summarized much like an rvec. However, in software terms, an rv is not strictly a vector (calling <code><a href="https://rdrr.io/r/base/vector.html" class="external-link">is.vector()</a></code> on one returns <code>FALSE</code>) and an rv does not always behave as expected inside a data frame. It is therefore not well suited to tidyverse-style work flows.</p>
-<p>R package <a href="https://CRAN.R-project.org/package=posterior" class="external-link">posterior</a> provides several data structures for handling multiple draws. One of these – the rvar – is similar to an rvec. An rvar is, however, is not limited to a single dimension, and has special facilities for dealing with multiple chains (as produced by Markov chain Monte Carlo methods.) These features are essential for some analyses, but they can make rvars harder to master, and they are not needed for most tidyverse-style work flows.</p>
-<p>Another impportant different between rvers and rvecs is that, whereas rvecs interpret summary functions such as <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> and <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code> as operations to be applied independently on each draw, rvars interpret them as operations to be applied across draws. The result is that code written for ordinary R vectors will often work on rvecs, but need modification to work on rvars. The tidyverse function <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code>, for instance, works with rvecs but not rvars. This again makes rvecs easier to work with for many tasks.</p>
-</div>
-<div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-kerman2007manipulating" class="csl-entry">
-Kerman, Jouni, and Andrew Gelman. 2007. <span>“Manipulating and Summarizing Posterior Simulations Using Random Variable Objects.”</span> <em>Statistics and Computing</em> 17: 235–44.
-</div>
-</div>
+<p>The first R package to provide a specialized object for handling multiple draws was <a href="https://CRAN.R-project.org/package=rv" class="external-link">rv</a>. The specialized object, called an rv, can be manipulated and summarized much like an rvec. However, in software terms, an rv is not strictly a vector and does not behave like one inside a data frame. It is therefore not well suited to tidyverse-style work flows.</p>
+<p>R package <a href="https://CRAN.R-project.org/package=posterior" class="external-link">posterior</a> provides several data structures for handling multiple draws. One of these – the rvar – is similar to an rvec. An rvar is, however, not limited to a single dimension, and has special facilities for dealing with multiple chains (as produced by Markov chain Monte Carlo methods). These features are essential for some analyses, but they can make rvars harder to master, and they are not needed for most tidyverse-style work flows.</p>
+<p>Another important difference between rvecs and rvars is the way that they implement standard functions such as <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> and <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code>. Calling <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> on an rvec yields the mean across elements within each draw. Means across draws within each element are obtained by calling <code><a href="../reference/draws_median.html">draws_mean()</a></code>. In contrast, calling <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> on an rvar yields the mean across draws within each element. Means across elements with each draw are obtained by calling <code>rvar_mean()</code>.</p>
+<p>The differences in implementation imply that code written for an ordinary R vector generalises naturally to rvecs but not to rvars. Code such as <code>x &lt;- median(y)</code> that was written originally for a numeric vector will continue to yield medians over elements of <code>y</code> if <code>y</code> is an rvec. If <code>y</code> is an rvar, however, then the code will yield medians over draws, which is a substantial change in meaning.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

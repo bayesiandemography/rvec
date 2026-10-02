@@ -1,6 +1,8 @@
 # Quantiles Across Random Draws
 
 Summarise the distribution of random draws in an rvec, using quantiles.
+To calculate quantiles across elements within each draw instead, use
+[`stats::quantile()`](https://rdrr.io/r/stats/quantile.html).
 
 ## Usage
 
@@ -18,7 +20,7 @@ draws_quantile(x, probs = c(0.025, 0.25, 0.5, 0.75, 0.975), na_rm = FALSE)
 
 - x:
 
-  An object of class
+  An
   [rvec](https://bayesiandemography.github.io/rvec/reference/rvec.md).
 
 - probs:
@@ -82,6 +84,20 @@ Other functions for applying pre-specified functions across draws are:
 Apply arbitrary function across draws:
 
 - [`draws_fun()`](https://bayesiandemography.github.io/rvec/reference/draws_fun.md)
+
+Check for missing or finite values:
+
+- [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_any_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+
+- [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
 
 ## Examples
 

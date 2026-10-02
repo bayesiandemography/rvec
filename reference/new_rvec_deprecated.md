@@ -21,7 +21,7 @@ new_rvec(x = double(), length = 0, n_draw = 1000)
 
 - n_draw:
 
-  Number of draws of rvec. Default is `1000`.
+  Number of draws of rvec. Must be at least 1. Default is `1000`.
 
 ## Value
 

@@ -1,5 +1,86 @@
 # Changelog
 
+## rvec 1.0.5
+
+### New functions
+
+- Added
+  [`extract_draws()`](https://bayesiandemography.github.io/rvec/reference/extract_draws.md)
+  for selection by index, including repeated indices, and
+  [`thin_draws()`](https://bayesiandemography.github.io/rvec/reference/thin_draws.md)
+  for random selection without replacement in original order.
+
+- Added
+  [`draws_any_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_all_na()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_any_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_all_infinite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  [`draws_any_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md),
+  and
+  [`draws_all_finite()`](https://bayesiandemography.github.io/rvec/reference/draws_any_na.md)
+  to check missingness and finiteness across draws for each element.
+
+- [`pmin()`](https://bayesiandemography.github.io/rvec/reference/pmin.md)
+  and
+  [`pmax()`](https://bayesiandemography.github.io/rvec/reference/pmin.md)
+  now accept rvecs in any argument position for elementwise bounds and
+  comparisons within each draw. Calls without rvecs retain base R
+  behaviour.
+
+- [`which.min()`](https://bayesiandemography.github.io/rvec/reference/which.min.md)
+  and
+  [`which.max()`](https://bayesiandemography.github.io/rvec/reference/which.min.md)
+  now find the first extreme position within each draw. Empty rvecs
+  return empty index rvecs; nonempty draws with no valid index return
+  `NA` with one summary warning per call. Ordinary inputs retain base R
+  behaviour.
+
+### Constructors
+
+- [`new_rvec_chr()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md),
+  [`new_rvec_dbl()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md),
+  [`new_rvec_int()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md),
+  and
+  [`new_rvec_lgl()`](https://bayesiandemography.github.io/rvec/reference/new_rvec_blank.md)
+  now accept a scalar `value` to fill all elements and draws, including
+  `NA`. Existing defaults are unchanged.
+
+### Summaries
+
+- [`draws_ci()`](https://bayesiandemography.github.io/rvec/reference/draws_ci.md)
+  now accepts `point = "mean"` to report a mean point estimate; the
+  default remains `point = "median"` and interval limits are unchanged.
+
+- [`min()`](https://rdrr.io/r/base/Extremes.html),
+  [`max()`](https://rdrr.io/r/base/Extremes.html), and
+  [`range()`](https://rdrr.io/r/base/range.html) now summarise elements
+  independently within each draw, including multiple arguments and
+  missing-value handling.
+
+- [`quantile()`](https://rdrr.io/r/stats/quantile.html) now calculates
+  quantiles independently within each draw, preserving base R’s
+  probability, missing-value, naming, and algorithm options.
+
+### Bug fixes
+
+- [`rank()`](https://bayesiandemography.github.io/rvec/reference/rank.md)
+  now preserves fractional average ranks for tied values instead of
+  failing when converting them to integers. Logical rvecs also use a
+  compatible ranking method, and singleton and empty inputs retain their
+  original draw counts.
+
+### Documentation
+
+- Improved documentation for draw summaries and resolved a roxygen
+  warning about matrix multiplication methods while retaining support
+  for R \< 4.3.
+
+### Clarifying interface
+
+- Internal functions now enforce the (previously implicit) constraint
+  that rvecs must have at least one draw. Rvecs of length 0 (ie with 1+
+  columns but 0 rows internally) continue to be allowed.
+
 ## rvec 1.0.4
 
 ### Memory use
